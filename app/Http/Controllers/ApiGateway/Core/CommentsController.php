@@ -1,0 +1,58 @@
+<?php
+
+
+namespace App\Http\Controllers\ApiGateway\Core;
+
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Core\IndexCommentsForMerchantRequest;
+use App\Http\Requests\Core\StoreMerchantRequestComment;
+use App\Http\Requests\Core\UpdateCommentRequest;
+use App\Modules\Core\Models\Comment;
+
+class CommentsController extends Controller
+{
+    public function index(IndexCommentsForMerchantRequest $request)
+    {
+        $comments = Comment::query()
+            ->filterRequest($request);
+
+        if ($request->query('object') == 'true') {
+            return $comments->first();
+        }
+        return $comments->paginate($request->query('per_page'));
+    }
+
+    public function store(StoreMerchantRequestComment $request)
+    {
+        $comment = new Comment();
+        $comment->body = $request->input('body');
+        $comment->commentable_type = $request->input('commentable_type');
+        $comment->commentable_id = $request->input('commentable_id');
+        $comment->save();
+        return $comment->load('created_by');
+    }
+
+    public function update($id, UpdateCommentRequest $request)
+    {
+        $comment = Comment::with('created_by')->findOrFail($id);
+        if (!$comment->fresh || $comment->created_by_id != auth()->id()) {
+            return response()->json(['message' => 'Комментарий не может быть изменен'], 400);
+        }
+
+        $comment->body = $request->input('body');
+        $comment->save();
+
+        return $comment;
+    }
+
+    public function destroy($id)
+    {
+        $comment = Comment::query()->findOrFail($id);
+        if (!$comment->fresh || $comment->created_by_id != auth()->id()) {
+            return response()->json(['message' => 'Комментарий не может быть изменен'], 400);
+        }
+        $comment->delete();
+        return response()->json(['message' => 'Успешно удалено']);
+    }
+}

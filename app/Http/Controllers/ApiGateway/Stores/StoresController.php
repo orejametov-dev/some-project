@@ -1,0 +1,67 @@
+<?php
+
+namespace App\Http\Controllers\ApiGateway\Stores;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\ApiPrm\Stores\StoreStoresRequest;
+use App\Http\Requests\ApiPrm\Stores\UpdateStoresRequest;
+use App\Modules\Merchants\Models\Merchant;
+use App\Modules\Merchants\Models\Store;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+class StoresController extends Controller
+{
+    public function index(Request $request)
+    {
+        $stores = Store::query()->with(['merchant'])->filterRequest($request);
+
+        if ($request->query('object') == 'true') {
+            return $stores->first();
+        }
+        return $stores->paginate($request->query('per_page'));
+
+    }
+
+    public function show($store_id)
+    {
+        $store = Store::findOrFail($store_id);
+        return $store;
+    }
+
+    public function store(StoreStoresRequest $request)
+    {
+        $merchant = Merchant::findOrFail($request->merchant_id);
+
+        if ($merchant->stores()->count()) {
+            return $store = $merchant->stores()->create($request->all());
+        }
+        $store = $merchant->stores()->create(array_merge($request->all(), ['is_main' => true]));
+
+        return $store;
+    }
+
+    public function update(UpdateStoresRequest $request, $store_id)
+    {
+        $store = Store::query()->findOrFail($store_id);
+
+        $store->fill($request->all());
+        $store->save();
+
+        return $store;
+    }
+
+    public function destroy($id)
+    {
+        $store = Store::findOrFail($id);
+
+        // TODO fix
+        DB::transaction(function () use ($store) {
+            $store->application_conditions()->delete();
+            $store->delete();
+        });
+
+        return response()->json(['message' => 'Успешно удалено']);
+    }
+
+}
