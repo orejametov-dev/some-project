@@ -50,7 +50,7 @@ class RouteServiceProvider extends ServiceProvider
             Route::prefix('gateway')
                 ->middleware(['api', 'gateway-access'])
                 ->namespace($this->namespace)
-                ->group(base_path('routes/api_gateway.php'));
+                ->group(base_path('routes/gateway.php'));
         });
     }
 
