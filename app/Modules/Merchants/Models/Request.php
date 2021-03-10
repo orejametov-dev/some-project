@@ -4,6 +4,7 @@ namespace App\Modules\Merchants\Models;
 
 
 use App\Modules\Core\Traits\HasHooks;
+use App\Modules\Merchants\Services\RequestStatus;
 use App\Modules\Merchants\Traits\MerchantRequestStatusesTrait;
 use App\Traits\SortableByQueryParams;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,6 +19,7 @@ class Request extends Model
     use HasHooks;
 
     public const TABLE_NAME = 'requests';
+    protected $appends = ['status'];
     protected $fillable = [
         'name',
         'legal_name',
@@ -27,6 +29,11 @@ class Request extends Model
         'information',
         'region'
     ];
+
+    public function getStatusAttribute()
+    {
+        return RequestStatus::getOneById($this->status_id);
+    }
 
     public function scopeFilterRequest(Builder $query, \Illuminate\Http\Request $request)
     {

@@ -27,12 +27,9 @@ class MerchantRequestsController extends Controller
 
     public function index(Request $request)
     {
-        $merchants = MerchantRequest::query()->with([
-            'status',
-            'engaged_by'
-        ])
+        $merchants = MerchantRequest::query()
             ->orderRequest($request)->filterRequest($request);
-
+        //TODO сделать запрос что бы получить user списки для engaged_by
         if ($request->query('object') == 'true') {
             return $merchants->first();
         }
@@ -47,10 +44,11 @@ class MerchantRequestsController extends Controller
 
     public function store(MerchantRequestStore $request)
     {
-        $user = User::query()->where('phone', $request->user_phone)->first();
-        if (optional($user)->isMerchantUser()) {
-            return response()->json(['message' => 'Пользователь с текущим номером телефона уже является партнером.'], 400);
-        }
+        //Заменить на HTTP
+//        $user = User::query()->where('phone', $request->user_phone)->first();
+//        if (optional($user)->isMerchantUser()) {
+//            return response()->json(['message' => 'Пользователь с текущим номером телефона уже является партнером.'], 400);
+//        }
 
         $merchant_request = new MerchantRequest([
             'name' => $request->input('merchant_name'),
@@ -103,12 +101,6 @@ class MerchantRequestsController extends Controller
         if (!$merchant_request->isInProcess()) {
             return response()->json(['message' => 'Статус заявки должен быть "На переговорах"'], 400);
         }
-
-        //TODO заменить на http
-//        $user = User::query()->where(['phone' => $merchant_request->user_phone])->first();//
-//        if (optional($user)->isMerchantUser()) {
-//            return response()->json(['message' => 'Пользователь с текущим номером телефона уже является партнером.'], 400);
-//        }
 
         $merchant_name_exists = Merchant::query()->where('name', $merchant_request->name)->exists();
         if ($merchant_name_exists) {

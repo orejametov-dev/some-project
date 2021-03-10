@@ -11,6 +11,30 @@ class RequestStatus
     public const TRASH = 3;
     public const IN_PROCESS = 4;
 
+    private static $statuses = [
+        self::NEW => [
+            'id' => self::NEW,
+            'name' => 'новый',
+        ],
+        self::ALLOWED => [
+            'id' => self::ALLOWED,
+            'name' => 'Одобрено',
+        ],
+        self::TRASH => [
+            'id' => self::TRASH,
+            'name' => 'В корзине',
+        ],
+        self::IN_PROCESS => [
+            'id' => self::IN_PROCESS,
+            'name' => 'На переговорах',
+        ]
+    ];
+
+    public static function getOneById(int $id)
+    {
+        return json_decode(json_encode(self::$statuses[$id]));
+    }
+
     public static function statusLists(): array
     {
         return [

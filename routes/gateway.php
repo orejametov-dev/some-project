@@ -20,7 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::prefix('prm')
-    ->middleware(['service', 'gateway-auth-user', 'prm'])
+    ->middleware(['service', 'gateway-auth-user'])
     ->group(function () {
 
         Route::prefix('merchants/requests')

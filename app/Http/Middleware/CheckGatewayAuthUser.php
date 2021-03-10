@@ -48,7 +48,12 @@ class CheckGatewayAuthUser
                 'id' => 1,
                 'name' => 'asd',
                 'phone' => '998998921652',
-                'created_at' => 'sadas'
+                'created_at' => 'sadas',
+                'avatar_link' => null,
+                'prm_admin' => [
+                    'id' => 6,
+                    'user_id' => 6
+                ]
             ];
         }
         $user = new User($auth_user);
