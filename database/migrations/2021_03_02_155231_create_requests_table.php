@@ -26,7 +26,7 @@ class CreateRequestsTable extends Migration
             $table->integer('status_id')->unsigned();
             $table->string('region')->nullable();
             $table->unsignedBigInteger('engaged_by_id')->nullable();
-            $table->timestamp('engaged_at');
+            $table->timestamp('engaged_at')->nullable();
 
             $table->timestamp('status_updated_at');
             $table->timestamps();

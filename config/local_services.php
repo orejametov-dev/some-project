@@ -21,5 +21,9 @@ return [
     ],
     'alifshop' => [
         'domain' => env('ALIFSHOP_DOMAIN'),
+    ],
+    'service_core' => [
+        'domain' => env('SERVICE_CORE_URL'),
+        'service_token' => env('SERVICE_CORE_TOKEN')
     ]
 ];

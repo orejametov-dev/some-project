@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\ApiGateway\Merchants;
 
+use App\Exceptions\BusinessException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestStore;
 use App\Modules\Core\Models\Comment;
@@ -9,6 +10,7 @@ use App\Modules\Core\Models\ModelHook;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Request as MerchantRequest;
 use App\Services\Alifshop\AlifshopService;
+use App\Services\Core\ServiceCore;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -27,28 +29,51 @@ class MerchantRequestsController extends Controller
 
     public function index(Request $request)
     {
-        $merchants = MerchantRequest::query()
+        $merchantRequests = MerchantRequest::query()
             ->orderRequest($request)->filterRequest($request);
-        //TODO сделать запрос что бы получить user списки для engaged_by
-        if ($request->query('object') == 'true') {
-            return $merchants->first();
-        }
-        return $merchants->paginate($request->query('per_page'));
 
+        if ($request->query('object') == 'true') {
+            return $merchantRequests->first();
+        }
+        $paginated_requests = $merchantRequests->paginate($request->query('per_page'));
+
+        $engages = ServiceCore::request('GET', 'users', new Request([
+            'user_ids' => implode(';', $paginated_requests->pluck('engaged_by_id')->toArray()),
+        ]));
+
+        foreach ($paginated_requests as $request)
+        {
+            $request->engaged_by = collect($engages)->where('id', $request->engaged_by_id)->first();
+        }
+
+        return $paginated_requests;
     }
 
     public function show($id)
     {
-        return MerchantRequest::query()->with(['status', 'engaged_by'])->findOrFail($id);
+        $request = MerchantRequest::query()->findOrFail($id);
+
+        $user = ServiceCore::request('GET', 'users', new Request([
+            'id' => $request->engaged_by_id,
+            'object' => 'true'
+        ]));
+        $request->engaged_by = $user;
+
+        return $request;
     }
 
     public function store(MerchantRequestStore $request)
     {
-        //Заменить на HTTP
-//        $user = User::query()->where('phone', $request->user_phone)->first();
-//        if (optional($user)->isMerchantUser()) {
-//            return response()->json(['message' => 'Пользователь с текущим номером телефона уже является партнером.'], 400);
-//        }
+        $user = ServiceCore::request('GET', 'users', new Request([
+            'q' => $request->input('user_phone'),
+            'object' => 'true',
+        ]));
+
+        if($user)
+            throw new BusinessException(
+                'Пользователь с таким номером уже существует',
+                'user_already_exists',
+                400);
 
         $merchant_request = new MerchantRequest([
             'name' => $request->input('merchant_name'),
@@ -80,13 +105,21 @@ class MerchantRequestsController extends Controller
         $this->validate($request, [
             'engaged_by_id' => 'required|integer'
         ]);
-        $merchant_request = MerchantRequest::with('engaged_by')->findOrFail($id);
+
+        $user = ServiceCore::request('GET', 'users', new Request([
+            'user_id' => $request->input('engaged_by_id'),
+            'object' => 'true'
+        ]));
+
+        $merchant_request = MerchantRequest::findOrFail($id);
 
         if($merchant_request->isStatusNew() || $merchant_request->isInProcess()) {
             $merchant_request->engaged_by_id = $request->input('engaged_by_id');
             $merchant_request->engaged_at = now();
             $merchant_request->setStatusInProcess();
             $merchant_request->save();
+
+            $merchant_request->engaged_by = $user;
 
             return $merchant_request;
         }
@@ -134,6 +167,6 @@ class MerchantRequestsController extends Controller
         $comment->commentable_id = $id;
         $comment->save();
 
-        return $request;
+        return $merchant_request;
     }
 }

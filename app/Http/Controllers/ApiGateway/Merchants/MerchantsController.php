@@ -2,17 +2,20 @@
 
 namespace App\Http\Controllers\ApiGateway\Merchants;
 
+use App\Exceptions\BusinessException;
+use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiPrm\Files\StoreFileRequest;
 use App\HttpServices\Telegram\TelegramService;
 use App\Modules\Merchants\Models\Merchant;
 use App\Services\Alifshop\AlifshopService;
+use App\Services\Core\ServiceCore;
 use App\Services\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
-class MerchantsController extends Controller
+class MerchantsController extends ApiBaseController
 {
     /**
      * @var AlifshopService
@@ -21,12 +24,12 @@ class MerchantsController extends Controller
 
     public function __construct(AlifshopService $alifshopService)
     {
+        parent::__construct();
         $this->alifshopService = $alifshopService;
     }
 
     public function index(Request $request)
     {
-//        dd(1);
         $merchants = Merchant::query()->with(['stores', 'tags'])
             ->filterRequest($request)
             ->orderRequest($request);
@@ -53,7 +56,7 @@ class MerchantsController extends Controller
         ]);
 
         $merchant = new Merchant($validated_data);
-        $merchant->maintainer()->associate(app(User::class)->id);
+        $merchant->maintainer()->associate($this->user);
         $merchant->save();
 
         $this->alifshopService->storeOrUpdateMerchant($merchant);
@@ -157,8 +160,13 @@ class MerchantsController extends Controller
             'maintainer_id' => 'required|integer'
         ]);
 
-        //TODO check user to prm_admin
-//        PrmAdmin::findOrFail($request->maintainer_id);
+        $user = ServiceCore::request('GET', 'users', new Request([
+            'user_id' => $request->input('maintainer_id'),
+            'object' => 'true'
+        ]));
+
+        if(!$user)
+            throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
 
         $merchant = Merchant::findOrFail($id);
         $merchant->maintainer_id = $request->maintainer_id;

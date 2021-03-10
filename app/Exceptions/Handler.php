@@ -2,7 +2,11 @@
 
 namespace App\Exceptions;
 
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Client\RequestException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -37,5 +41,31 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    public function render($request, Throwable $exception)
+    {
+        if (config('app.env') == 'production' && $exception instanceof RequestException) {
+            $response = $exception->response->json();
+            $message = isset($response['message']) ? $response['message'] : 'Ошибка сервиса';
+            return response()->json(['error' => true, 'message' => $message], 400);
+        }
+
+        if (config('app.env') == 'production' && $exception instanceof ModelNotFoundException && $request->expectsJson()) {
+            return response()->json(['code' => 'object_not_found', 'message' => 'Объект не найден'], 404);
+        }
+
+        if (config('app.env') == 'production' && $exception instanceof ClientException) {
+            $response = $exception->getResponse();
+            $content = json_decode($response->getBody()->getContents(), true);
+
+            $message = isset($content['message']) ? $content['message'] : 'Ошибка сервиса';
+            return response()->json(['error' => true, 'message' => $message], 400);
+        }
+
+        if (config('app.env') == 'production' && $exception instanceof ServerException) {
+            return response()->json(['error' => true, 'message' => 'Ошибка во внутренних сервисах'], 400);
+        }
+        return parent::render($request, $exception);
     }
 }

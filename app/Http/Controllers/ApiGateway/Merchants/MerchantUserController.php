@@ -4,12 +4,14 @@
 namespace App\Http\Controllers\ApiGateway\Merchants;
 
 
+use App\Exceptions\BusinessException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiPrm\MerchantUsers\StoreMerchantUsers;
 use App\Http\Requests\ApiPrm\MerchantUsers\UpdateMerchantUsers;
 use App\Modules\Core\Models\ModelHook;
 use App\Modules\Merchants\Models\MerchantUser;
 use App\Modules\Merchants\Models\Store;
+use App\Services\Core\ServiceCore;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -17,18 +19,38 @@ class MerchantUserController extends Controller
 {
     public function index(Request $request)
     {
-        $merchantUsersQuery = MerchantUser::query()->with('user', 'store')
+        $merchantUsersQuery = MerchantUser::query()->with('store')
             ->filterRequest($request)->orderRequest($request);
+
 
         if ($request->query('object') == true) {
             return $merchantUsersQuery->first();
         }
 
-        return $merchantUsersQuery->paginate($request->query('per_page'));
+        $paginatedMerchantUsers = $merchantUsersQuery->paginate($request->query('per_page'));
+
+        $users = ServiceCore::request('GET', 'users', new Request([
+            'user_ids' => implode(';', $paginatedMerchantUsers->pluck('user_id')->toArray()),
+        ]));
+
+        foreach ($paginatedMerchantUsers as $merchantUser)
+        {
+            $merchantUser->user = collect($users)->where('id', $merchantUser->user_id)->first();
+        }
+
+        return $paginatedMerchantUsers;
     }
 
     public function store(StoreMerchantUsers $request)
     {
+        $user = ServiceCore::request('GET', 'users', new Request([
+            'id' => $request->input('user_id'),
+            'object' => 'true'
+        ]));
+
+        if(!$user)
+            throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
+
         $merchant_user_exists = MerchantUser::query()
             ->where(['user_id' => $request->input('user_id')])
             ->exists();
