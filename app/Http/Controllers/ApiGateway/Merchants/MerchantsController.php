@@ -213,18 +213,18 @@ class MerchantsController extends ApiBaseController
         $merchant_query = DB::table('merchants')->select([
             'merchants.id',
             'merchants.name',
-            DB::raw('sum(merchant_additional_agreements.limit) as agreement_sum'),
+            DB::raw('sum(additional_agreements.limit) as agreement_sum'),
             'merchants.current_sales',
             'merchant_infos.limit'
         ])
             ->leftJoin('merchant_infos', 'merchants.id', '=', 'merchant_infos.merchant_id')
-            ->leftJoin('merchant_additional_agreements', 'merchants.id', '=', 'merchant_additional_agreements.merchant_id')
+            ->leftJoin('additional_agreements', 'merchants.id', '=', 'additional_agreements.merchant_id')
             ->whereExists(function ($query) {
                 $query->select(DB::raw(1))
                     ->from('merchant_infos')
                     ->whereColumn('merchants.id', 'merchant_infos.merchant_id');
             })
-            ->groupBy(['merchants.id', 'merchants.name']);
+            ->groupBy(['merchants.id', 'merchants.name', 'merchant_infos.limit']);
 
         return DB::table(DB::raw("({$merchant_query->toSql()}) as sub_query"))
             ->select([
