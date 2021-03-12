@@ -13,7 +13,6 @@ use App\Modules\Merchants\Models\MerchantUser;
 use App\Modules\Merchants\Models\Store;
 use App\Services\Core\ServiceCore;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 class MerchantUserController extends Controller
 {
@@ -33,8 +32,7 @@ class MerchantUserController extends Controller
             'user_ids' => implode(';', $paginatedMerchantUsers->pluck('user_id')->toArray()),
         ]));
 
-        foreach ($paginatedMerchantUsers as $merchantUser)
-        {
+        foreach ($paginatedMerchantUsers as $merchantUser) {
             $merchantUser->user = collect($users)->where('id', $merchantUser->user_id)->first();
         }
 
@@ -48,7 +46,7 @@ class MerchantUserController extends Controller
             'object' => 'true'
         ]));
 
-        if(!$user)
+        if (!$user)
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
 
         $merchant_user_exists = MerchantUser::query()
@@ -70,9 +68,13 @@ class MerchantUserController extends Controller
         $merchant_user->merchant()->associate($merchant);
         $merchant_user->store()->associate($store->id);
 
-        $merchant_user->save();
+        ServiceCore::request('POST', 'merchant-users', new Request([
+            'merchant_id' => $merchant->id,
+            'store_id' => $store->id,
+            'user_id' => $merchant_user->user_id
+        ]));
 
-        Cache::forget('merchant_user_middleware_' . $request->input('user_id'));
+        $merchant_user->save();
 
         ModelHook::make($merchant,
             'Сотрудник создан',
@@ -80,6 +82,7 @@ class MerchantUserController extends Controller
             'create',
             'info'
         );
+
         return $merchant_user;
     }
 
@@ -117,15 +120,12 @@ class MerchantUserController extends Controller
             ], 400);
         }
 
-        $merchant_user->fill($validatedRequest);
+        $merchant_user->fill($request->validated());
         $merchant_user->store()->associate($store);
-        $merchant_user->save();
 
-        Cache::forget('merchant_user_permission_application_middleware_' . $merchant_user->user_id);
-        Cache::forget('merchant_user_permission_deliveries_middleware_' . $merchant_user->user_id);
-        Cache::forget('merchant_user_permission_manager_middleware_' . $merchant_user->user_id);
-        Cache::forget('merchant_user_permission_orders_middleware_' . $merchant_user->user_id);
-        Cache::forget('merchant_user_permission_upload_goods_middleware_' . $merchant_user->user_id);
+        ServiceCore::request('POST', 'merchant-users/' . $merchant_user->id, new Request($request->validated()));
+
+        $merchant_user->save();
 
         ModelHook::make($merchant,
             'Сотрудник обновлен',
@@ -139,10 +139,12 @@ class MerchantUserController extends Controller
     public function destroy($id)
     {
         $merchant_user = MerchantUser::query()->findOrFail($id);
+
+        ServiceCore::request('DELETE', 'merchant-users/' . $merchant_user->id);
+
         $merchant_user->delete();
 
         $merchant = $merchant_user->merchant;
-        Cache::forget('merchant_user_middleware_' . $merchant_user->user_id);
 
         ModelHook::make($merchant,
             'Сотрудник удален',

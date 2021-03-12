@@ -19,8 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::prefix('prm')
-    ->middleware(['service', 'gateway-auth-user'])
+Route::middleware(['service', 'gateway-auth-user'])
     ->group(function () {
 
         Route::prefix('merchants/requests')
@@ -107,12 +106,6 @@ Route::prefix('prm')
                 Route::delete('comments/{id}', [App\Http\Controllers\ApiGateway\Core\CommentsController::class, 'destroy']);
 
                 Route::get('model_hooks', [App\Http\Controllers\ApiGateway\Core\ModelHooksController::class, 'index']);
-            });
-
-        Route::prefix('dashboard')
-            ->group(function () {
-                Route::get('/merchant-trends', [App\Http\Controllers\ApiGateway\Dashboard\CreditsController::class, 'index']);
-                Route::get('/merchant-trends/{merchant_id}', [App\Http\Controllers\ApiGateway\Dashboard\CreditsController::class, 'show']);
             });
 
         Route::prefix('dashboard')
