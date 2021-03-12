@@ -30,7 +30,7 @@ class CreateMerchantsTable extends Migration
 
             $table->string('paymo_terminal');
             $table->unsignedBigInteger('maintainer_id')->nullable();
-            $table->unsignedInteger('current_sales')->nullable();
+            $table->unsignedBigInteger('current_sales')->nullable();
 
             $table->timestamps();
         });
