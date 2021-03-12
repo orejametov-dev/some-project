@@ -22,9 +22,9 @@ class CreateAdditionalAgreementsTable extends Migration
             $table->string('number');
 
             $table->date('registration_date');
-            $table->unsignedInteger('limit')->default(1000000000);
+            $table->unsignedBigInteger('limit');
             $table->date('limit_expired_at')->nullable();
-            $table->unsignedInteger('rest_limit')->default(0);
+            $table->unsignedBigInteger('rest_limit')->default(0);
             $table->timestamps();
         });
     }

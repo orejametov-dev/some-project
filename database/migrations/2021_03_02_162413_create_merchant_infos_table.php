@@ -32,9 +32,9 @@ class CreateMerchantInfosTable extends Migration
 
             $table->date('contact_date');
 
-            $table->unsignedInteger('limit');
+            $table->unsignedBigInteger('limit')->default(100000000000);
             $table->date('limit_expired_at');
-            $table->unsignedInteger('rest_limit')->default(0);
+            $table->unsignedBigInteger('rest_limit')->default(0);
 
             $table->timestamps();
         });
