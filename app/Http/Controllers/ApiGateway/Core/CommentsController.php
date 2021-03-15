@@ -9,6 +9,8 @@ use App\Http\Requests\Core\IndexCommentsForMerchantRequest;
 use App\Http\Requests\Core\StoreMerchantRequestComment;
 use App\Http\Requests\Core\UpdateCommentRequest;
 use App\Modules\Core\Models\Comment;
+use App\Services\Core\ServiceCore;
+use Illuminate\Http\Request;
 
 class CommentsController extends Controller
 {
@@ -30,7 +32,14 @@ class CommentsController extends Controller
         $comment->commentable_type = $request->input('commentable_type');
         $comment->commentable_id = $request->input('commentable_id');
         $comment->save();
-        return $comment->load('created_by');
+
+        $user = ServiceCore::request('GET', 'users', new Request([
+            'id' => $comment->created_by_id,
+            'object' => 'true'
+        ]));
+
+        $comment->created_by = $user;
+        return $comment;
     }
 
     public function update($id, UpdateCommentRequest $request)
