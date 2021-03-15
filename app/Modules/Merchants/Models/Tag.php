@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Tag extends Model
 {
     use HasFactory;
-    protected $table = 'merchant_tag';
+    protected $table = 'merchant_tags';
 
     public function merchants()
     {
