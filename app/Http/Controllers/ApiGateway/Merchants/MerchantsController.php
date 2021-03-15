@@ -57,7 +57,7 @@ class MerchantsController extends ApiBaseController
         ]);
 
         $merchant = new Merchant($validated_data);
-        $merchant->maintainer()->associate($this->user);
+        $merchant->maintainer_id = $this->user->id;
         $merchant->save();
 
         $this->alifshopService->storeOrUpdateMerchant($merchant);
