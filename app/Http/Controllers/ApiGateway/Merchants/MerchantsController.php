@@ -7,6 +7,7 @@ use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiPrm\Files\StoreFileRequest;
 use App\HttpServices\Telegram\TelegramService;
+use App\Modules\Merchants\Models\AdditionalAgreement;
 use App\Modules\Merchants\Models\Merchant;
 use App\Services\Alifshop\AlifshopService;
 use App\Services\Core\ServiceCore;
@@ -209,16 +210,16 @@ class MerchantsController extends ApiBaseController
     public function hotMerchants(Request $request)
     {
         $percentage_of_limit = Merchant::$percentage_of_limit;
-
+        $additional_agreement_table_name = with(new AdditionalAgreement())->getTable();
         $merchant_query = DB::table('merchants')->select([
             'merchants.id',
             'merchants.name',
-            DB::raw('sum(additional_agreements.limit) as agreement_sum'),
+            DB::raw("sum($additional_agreement_table_name.limit) as agreement_sum"),
             'merchants.current_sales',
             'merchant_infos.limit'
         ])
             ->leftJoin('merchant_infos', 'merchants.id', '=', 'merchant_infos.merchant_id')
-            ->leftJoin('additional_agreements', 'merchants.id', '=', 'additional_agreements.merchant_id')
+            ->leftJoin("$additional_agreement_table_name", 'merchants.id', '=', "$additional_agreement_table_name.merchant_id")
             ->whereExists(function ($query) {
                 $query->select(DB::raw(1))
                     ->from('merchant_infos')
