@@ -22,7 +22,7 @@ class File extends Model
 {
     use HasFactory;
     public $timestamps = false;
-
+    protected $table = 'merchant_files';
     public static $file_types = [
         'passport' => 'Паспорт',
         'law_registration_doc' => 'Свидетельство о регистрации юр лица',

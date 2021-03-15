@@ -34,6 +34,7 @@ class Store extends Model
     use StoreRelationshipsTrait;
     use SortableByQueryParams;
 
+    protected $table = 'stores';
     protected $fillable = ['name', 'is_main', 'phone', 'address', 'region', 'lat', 'long', 'responsible_person', 'responsible_person_phone'];
 
     public function scopeFilterRequest(Builder $query, Request $request)

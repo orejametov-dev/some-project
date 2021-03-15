@@ -21,6 +21,7 @@ class Merchant extends Model
     use SortableByQueryParams;
     use HasHooks;
 
+    protected $table = 'merchants';
     protected $fillable = [
         'name',
         'legal_name',

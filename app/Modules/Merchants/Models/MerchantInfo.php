@@ -29,6 +29,7 @@ use Illuminate\Http\Request;
 class MerchantInfo extends Model
 {
     use HasFactory;
+    protected $table = 'merchant_infos';
     protected $fillable = [
         'legal_name',
         'director_name',

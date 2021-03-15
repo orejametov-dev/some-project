@@ -30,7 +30,7 @@ class Condition extends Model
     use HasFactory;
 
     use SortableByQueryParams;
-
+    protected $table = 'application_conditions';
     protected $fillable = [
         'duration',
         'notice',

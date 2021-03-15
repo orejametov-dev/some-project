@@ -22,6 +22,7 @@ use Illuminate\Http\Request;
 class AdditionalAgreement extends Model
 {
     use HasFactory;
+    protected $table = 'merchant_additional_agreements';
     protected $fillable = [
         'limit',
         'registration_date',

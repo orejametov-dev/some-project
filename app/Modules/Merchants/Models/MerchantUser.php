@@ -17,6 +17,7 @@ class MerchantUser extends Model
     use SortableByQueryParams;
     use HasHooks;
 
+    protected $table = 'merchant_users';
     protected $fillable = [
         'permission_manager',
         'permission_orders',
