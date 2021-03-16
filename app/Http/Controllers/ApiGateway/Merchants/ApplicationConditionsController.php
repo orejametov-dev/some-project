@@ -9,6 +9,7 @@ use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Core\Models\ModelHook;
 use App\Services\Alifshop\AlifshopService;
+use App\Services\Core\ServiceCore;
 use Illuminate\Http\Request;
 
 class ApplicationConditionsController extends Controller
@@ -49,9 +50,16 @@ class ApplicationConditionsController extends Controller
     {
         /** @var Condition $condition */
         $condition = Condition::query()->findOrFail($condition_id);
-        if ($condition->applications()->exists()) { //TODO заменить на HTTP
+
+        $application = ServiceCore::request('GET', 'applications', new Request([
+            'condition_id' => $condition_id,
+            'object' => 'true'
+        ]));
+
+        if ($application) { //TODO заменить на HTTP
             return response()->json(['message' => 'Условие не может быть изменено'], 400);
         }
+
 
         $merchant = $condition->merchant;
 
@@ -72,8 +80,13 @@ class ApplicationConditionsController extends Controller
     {
         $condition = Condition::query()->findOrFail($condition_id);
 
-        if ($condition->applications()->exists()) {
-            return response()->json(['message' => 'Условие не может быть удалено'], 400);
+        $application = ServiceCore::request('GET', 'applications', new Request([
+            'condition_id' => $condition_id,
+            'object' => 'true'
+        ]));
+
+        if ($application) {
+            return response()->json(['message' => 'Условие не может быть изменено'], 400);
         }
 
         $merchant = $condition->merchant;
