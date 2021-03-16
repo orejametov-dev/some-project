@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Http;
 
 class StorageMicroService
 {
-    public static function uploadFile(UploadedFile $file, $client_number = null)
+    public static function uploadFile(UploadedFile $file, $client_number = ' ')
     {
         return static::http()
             ->attach(
@@ -33,7 +33,7 @@ class StorageMicroService
     }
 
     protected static function http()
-    {
+    {;
         return Http::baseUrl(config('local_services.services_storage.domain') . '/')
             ->withHeaders([
                 'Accept' => 'application/json',
