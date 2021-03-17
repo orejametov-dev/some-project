@@ -76,6 +76,9 @@ class MerchantUserController extends Controller
 
         $merchant_user->save();
 
+        ServiceCore::request('POST', 'merchant-users/' . $merchant_user->id . '/forget-role');
+
+
         ModelHook::make($merchant,
             'Сотрудник создан',
             'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id,
