@@ -13,5 +13,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('monitoring/status/general', 'MonitoringController@general');
+Route::get('monitoring/status/health', 'MonitoringController@general');
 
