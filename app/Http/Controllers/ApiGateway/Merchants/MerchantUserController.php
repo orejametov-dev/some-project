@@ -76,9 +76,6 @@ class MerchantUserController extends Controller
 
         $merchant_user->save();
 
-        ServiceCore::request('POST', 'merchant-users/' . $merchant_user->id . '/forget-role');
-
-
         ModelHook::make($merchant,
             'Сотрудник создан',
             'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id,
@@ -91,7 +88,6 @@ class MerchantUserController extends Controller
 
     public function update($id, UpdateMerchantUsers $request)
     {
-        $validatedRequest = $request->validated();
 
         /** @var MerchantUser $merchant_user */
         $merchant_user = MerchantUser::query()->findOrFail($id);
@@ -142,8 +138,6 @@ class MerchantUserController extends Controller
     public function destroy($id)
     {
         $merchant_user = MerchantUser::query()->findOrFail($id);
-
-        ServiceCore::request('POST', 'merchant-users/' . $merchant_user->id . '/forget-role');
 
         $merchant_user->delete();
 
