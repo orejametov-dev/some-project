@@ -120,5 +120,9 @@ class Merchant extends Model
                 $query->where('region', $region);
             });
         }
+
+        if($token = $request->query('token')){
+            $query->where('token', $token);
+        }
     }
 }

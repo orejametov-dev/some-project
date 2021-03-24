@@ -53,6 +53,10 @@ class Store extends Model
             $query->whereIn('id', $store_ids);
         }
 
+        if ($is_main = $request->query('is_main')) {
+            $query->where('is_main', $is_main);
+        }
+
         if ($searchIndex) {
             $query->where('name', 'like', '%' . $searchIndex . '%');
         }
