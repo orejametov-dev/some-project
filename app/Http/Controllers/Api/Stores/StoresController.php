@@ -16,13 +16,18 @@ class StoresController extends Controller
             'relations' => 'nullable|array'
         ]);
 
-        $merchants = Store::query()->with($request->query('relations') ?? [])
+        $stores = Store::query()->with($request->query('relations') ?? [])
             ->filterRequest($request);
 
         if ($request->query('object') == 'true') {
-            return $merchants->first();
+            return $stores->first();
         }
-        return $merchants->paginate($request->query('per_page'));
+
+        if ($request->has('paginate') && $request->query('paginate') == false) {
+            return $stores->get();
+        }
+
+        return $stores->paginate($request->query('per_page'));
     }
 
     public function show(Request $request, $id)

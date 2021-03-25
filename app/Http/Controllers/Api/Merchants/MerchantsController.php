@@ -22,6 +22,11 @@ class MerchantsController extends Controller
         if ($request->query('object') == 'true') {
             return $merchants->first();
         }
+
+        if ($request->has('paginate') && $request->query('paginate') == false) {
+            return $merchants->get();
+        }
+
         return $merchants->paginate($request->query('per_page'));
     }
 

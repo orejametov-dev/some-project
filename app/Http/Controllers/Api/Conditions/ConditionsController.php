@@ -17,6 +17,7 @@ class ConditionsController extends Controller
         ]);
 
         $merchants = Condition::query()->with($request->query('relations') ?? [])
+            ->active()
             ->filterRequest($request);
 
         if ($request->query('object') == 'true') {
