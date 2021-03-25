@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\App\CountersController;
 use App\Http\Controllers\Api\Conditions\ConditionsController;
 use App\Http\Controllers\Api\Merchants\MerchantsController;
 use App\Http\Controllers\Api\Merchants\MerchantUsersController;
@@ -29,4 +30,4 @@ Route::get('/merchant/users/{id}', [MerchantUsersController::class, 'show']);
 Route::get('/stores', [StoresController::class, 'index']);
 Route::get('/stores/{id}', [StoresController::class, 'show']);
 
-
+Route::get('/counters', [CountersController::class, 'index']);
