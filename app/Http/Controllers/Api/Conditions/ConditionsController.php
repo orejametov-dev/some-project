@@ -31,6 +31,9 @@ class ConditionsController extends Controller
             'relations' => 'nullable|array'
         ]);
 
-        return Condition::with($request->query('relations') ?? [])->findOrFail($id);
+        $condition = Condition::with($request->query('relations') ?? [])->filterRequest($request)
+            ->findOrFail($id);
+
+        return $condition;
     }
 }
