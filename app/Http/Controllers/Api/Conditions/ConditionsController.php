@@ -16,14 +16,19 @@ class ConditionsController extends Controller
             'relations' => 'nullable|array'
         ]);
 
-        $merchants = Condition::query()->with($request->query('relations') ?? [])
+        $conditions = Condition::query()->with($request->query('relations') ?? [])
             ->active()
             ->filterRequest($request);
 
         if ($request->query('object') == 'true') {
-            return $merchants->first();
+            return $conditions->first();
         }
-        return $merchants->paginate($request->query('per_page'));
+
+        if ($request->has('paginate') && $request->query('paginate') == false) {
+            return $conditions->get();
+        }
+
+        return $conditions->paginate($request->query('per_page'));
     }
 
     public function show(Request $request, $id)
