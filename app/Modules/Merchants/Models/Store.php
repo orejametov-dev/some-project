@@ -45,7 +45,11 @@ class Store extends Model
         }
 
         if ($store_id = $request->query('store_id')) {
-            $query->where('store_id', $store_id);
+            $query->where('id', $store_id);
+        }
+
+        if ($store_id = $request->query('id')) {
+            $query->where('id', $store_id);
         }
 
         if ($store_ids = $request->query('store_ids')) {
