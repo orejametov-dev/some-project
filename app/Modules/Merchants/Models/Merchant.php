@@ -71,7 +71,11 @@ class Merchant extends Model
         }
 
         if ($merchant_id = $request->query('merchant_id')) {
-            $query->where('merchant_id', $merchant_id);
+            $query->where('id', $merchant_id);
+        }
+
+        if ($merchant_id = $request->query('id')) {
+            $query->where('id', $merchant_id);
         }
 
         if ($legal_name = $request->query('legal_name')) {
