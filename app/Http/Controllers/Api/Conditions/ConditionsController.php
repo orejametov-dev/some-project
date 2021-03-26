@@ -33,7 +33,6 @@ class ConditionsController extends Controller
         ]);
 
         $condition = Condition::with($request->query('relations') ?? [])
-            ->active()
             ->filterRequest($request)
             ->findOrFail($id);
 
