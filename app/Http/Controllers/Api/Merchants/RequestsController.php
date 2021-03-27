@@ -18,18 +18,6 @@ class RequestsController extends Controller
 {
     public function register(Request $request)
     {
-
-        $user = ServiceCore::request('GET', 'users', new Request([
-            'q' => $request->input('user_phone'),
-            'object' => 'true',
-        ]));
-
-        if($user)
-            throw new BusinessException(
-                'Пользователь с таким номером уже существует',
-                'user_already_exists',
-                400);
-
         $merchant_request = new MerchantRequest([
             'name' => $request->input('merchant_name'),
             'information' => $request->input('merchant_information'),
