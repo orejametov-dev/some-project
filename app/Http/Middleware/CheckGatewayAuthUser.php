@@ -26,18 +26,12 @@ class CheckGatewayAuthUser
 
         if (is_string($auth_user)) {
             $auth_user = json_decode($auth_user, true);
-            if (!$auth_user['prm_admin']) {
-                throw new BusinessException('Unauthenticated', 401);
-            }
 
             if (!array_key_exists('avatar_link', $auth_user)) {
                 $auth_user['avatar_link'] = null;
             }
         } else if (is_array($auth_user)) {
 
-            if (!$auth_user['prm_admin']) {
-                throw new BusinessException('Unauthenticated', 401);
-            }
 
             if (!array_key_exists('avatar_link', $auth_user)) {
                 $auth_user['avatar_link'] = null;
