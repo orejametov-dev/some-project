@@ -98,4 +98,12 @@ class TicketsController extends Controller
             return response()->json(['message' => 'Соответствующий статус не найден'], 400);
         return $this->ticketsService->setStatus($id, $status['id']);
     }
+
+    public function status(Request $request, int $id)
+    {
+        $request->validate([
+            'status' => 'required|integer'
+        ]);
+        return $this->ticketsService->setStatus($id, $request->input('status'));
+    }
 }
