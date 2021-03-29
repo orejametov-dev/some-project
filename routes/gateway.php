@@ -127,6 +127,8 @@ Route::middleware(['service', 'gateway-auth-user'])
                 Route::match(['put', 'patch'], '/{id}/assign', [App\Http\Controllers\ApiGateway\Tickets\TicketsController::class, 'assign']);
                 Route::match(['put', 'patch'], '/{id}/tags', [App\Http\Controllers\ApiGateway\Tickets\TicketsController::class, 'tags']);
                 Route::match(['put', 'patch'], '/{id}/reject', [App\Http\Controllers\ApiGateway\Tickets\TicketsController::class, 'reject']);
+                Route::match(['put', 'patch'], '/{id}/status', [App\Http\Controllers\ApiGateway\Tickets\TicketsController::class, 'status']);
+
             });
 
         Route::prefix('merchants')
