@@ -34,6 +34,10 @@ class AppController extends ApiBaseController
 
         $authUser = $this->user;
 
+        $tickets_problem_subject_id = config('local_services.services_tickets.problem_subject_id');
+        $ticket_statuses = $this->ticketsService->getStatuses($tickets_problem_subject_id);
+        $ticket_tags = $this->ticketsService->getTags($tickets_problem_subject_id);
+
         $file_types = File::$file_types;
 
         $regions = RegionService::getRegions();
@@ -50,6 +54,8 @@ class AppController extends ApiBaseController
             'merchants_count',
             'stores_count',
             'me',
+            'ticket_statuses',
+            'ticket_tags',
             'merchant_request_statuses',
             'file_types',
             'regions'
