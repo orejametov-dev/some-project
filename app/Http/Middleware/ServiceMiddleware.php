@@ -24,7 +24,7 @@ class ServiceMiddleware
         }
 
         $webService = WebService::findCached($service_token, 'token');
-        Log::info($webService, $service_token);
+
         if (!$webService) {
             return response()->json(['message' => 'Service token expired'], 401);
         }
