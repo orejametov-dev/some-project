@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ApiGateway\Merchants\MerchantsController;
+use App\Http\Controllers\ApiGateway\ExtraServices\MerchantsController as ExtraMerchantsController;
+use App\Http\Controllers\ApiGateway\Online\MerchantsController as OnlineMerchantsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +23,20 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::middleware(['service', 'gateway-auth-user'])
     ->group(function () {
+
+        Route::prefix('online')
+            ->group(function () {
+                Route::prefix('merchants')
+                    ->group(function () {
+                        Route::get('/', [OnlineMerchantsController::class, 'index']);
+                        Route::get('tags', [OnlineMerchantsController::class, 'tags']);
+                    });
+            });
+
+        Route::prefix('extra-services')->group(function () {
+            Route::get('merchants', [ExtraMerchantsController::class, 'index']);
+            Route::get('merchants/{merchant_id}/store', [ExtraMerchantsController::class, 'merchantStoreInfo']);
+        });
 
         Route::prefix('merchants/requests')
             ->group(function () {
@@ -127,6 +143,8 @@ Route::middleware(['service', 'gateway-auth-user'])
                 Route::match(['put', 'patch'], '/{id}/assign', [App\Http\Controllers\ApiGateway\Tickets\TicketsController::class, 'assign']);
                 Route::match(['put', 'patch'], '/{id}/tags', [App\Http\Controllers\ApiGateway\Tickets\TicketsController::class, 'tags']);
                 Route::match(['put', 'patch'], '/{id}/reject', [App\Http\Controllers\ApiGateway\Tickets\TicketsController::class, 'reject']);
+                Route::match(['put', 'patch'], '/{id}/status', [App\Http\Controllers\ApiGateway\Tickets\TicketsController::class, 'status']);
+
             });
 
         Route::prefix('merchants')

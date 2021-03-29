@@ -5,7 +5,6 @@ namespace App\Console\Commands\Settings;
 use App\Modules\Merchants\Models\Merchant;
 use App\Services\Core\ServiceCore;
 use Illuminate\Console\Command;
-use Illuminate\Http\Request;
 
 class UpdateCurrentSales extends Command
 {
@@ -73,9 +72,9 @@ class UpdateCurrentSales extends Command
 
         Merchant::query()
             ->leftJoin("merchant_infos", "merchants.id", "=", "merchant_infos.merchant_id")
-            ->leftJoin('additional_agreements', 'merchants.id', '=', 'additional_agreements.merchant_id')
-            ->whereRaw("(IFNULL(merchant_infos.limit, 0) + IFNULL(additional_agreements.limit, 0)) $percentage_of_limit <= merchants.current_sales")
-            ->whereNull('additional_agreements.limit_expired_at')
-            ->update(['additional_agreements.limit_expired_at' => now()]);
+            ->leftJoin('merchant_additional_agreements', 'merchants.id', '=', 'merchant_additional_agreements.merchant_id')
+            ->whereRaw("(IFNULL(merchant_infos.limit, 0) + IFNULL(merchant_additional_agreements.limit, 0)) $percentage_of_limit <= merchants.current_sales")
+            ->whereNull('merchant_additional_agreements.limit_expired_at')
+            ->update(['merchant_additional_agreements.limit_expired_at' => now()]);
     }
 }
