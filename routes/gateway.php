@@ -118,6 +118,8 @@ Route::middleware(['service', 'gateway-auth-user'])
         Route::prefix('tickets')
             ->group(function () {
                 Route::get('', [App\Http\Controllers\ApiGateway\Tickets\TicketsController::class, 'index']);
+                Route::get('/statuses', [App\Http\Controllers\ApiGateway\Tickets\StatusesController::class, 'index']);
+                Route::get('/tags', [App\Http\Controllers\ApiGateway\Tickets\TagsController::class, 'index']);
                 Route::get('/new', [App\Http\Controllers\ApiGateway\App\CountersController::class, 'tickets']);
                 Route::get('/{id}', [App\Http\Controllers\ApiGateway\Tickets\TicketsController::class, 'show']);
 
