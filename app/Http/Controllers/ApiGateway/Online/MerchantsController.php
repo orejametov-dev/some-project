@@ -11,6 +11,7 @@ use App\Http\Resources\OnlineGateway\MerchantTagResource;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class MerchantsController extends Controller
 {
@@ -19,6 +20,8 @@ class MerchantsController extends Controller
         $query = Merchant::query()
             ->filterRequest($request);
 
+        Log::info('otparvlayu, zapros!!!');
+        Log::info($query->paginate($request->query('per_page')));
         return MerchantResource::collection($query->paginate($request->query('per_page')));
     }
 
