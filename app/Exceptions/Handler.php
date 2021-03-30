@@ -43,6 +43,16 @@ class Handler extends ExceptionHandler
         });
     }
 
+    public function report(Throwable $exception)
+    {
+        if ($this->shouldReport($exception) && app()->bound('sentry')) {
+            app('sentry')->captureException($exception);
+        }
+
+        parent::report($exception);
+    }
+
+
     public function render($request, Throwable $exception)
     {
         if (config('app.env') == 'production' && $exception instanceof RequestException) {
