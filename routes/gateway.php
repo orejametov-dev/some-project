@@ -28,7 +28,7 @@ Route::middleware(['service', 'gateway-auth-user'])
             ->group(function () {
                 Route::prefix('merchants')
                     ->group(function () {
-                        Route::get('/', [OnlineMerchantsController::class, 'index']);
+                        Route::delete('/', [OnlineMerchantsController::class, 'index']);
                         Route::get('tags', [OnlineMerchantsController::class, 'tags']);
                     });
             });
