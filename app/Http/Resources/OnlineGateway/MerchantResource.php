@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources\OnlineGateway;
 
-use App\Modules\Partners\Models\Merchant;
+use App\Modules\Merchants\Models\Merchant;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
