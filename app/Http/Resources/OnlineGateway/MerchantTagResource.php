@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources\OnlineGateway;
 
-use App\Modules\Partners\Models\MerchantTag;
+use App\Modules\Merchants\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -16,7 +16,7 @@ class MerchantTagResource extends JsonResource
      */
     public function toArray($request)
     {
-        /** @var MerchantTag|MerchantTagResource $this */
+        /** @var Tag|MerchantTagResource $this */
         return [
             'id' => $this->id,
             'name' => $this->title,
