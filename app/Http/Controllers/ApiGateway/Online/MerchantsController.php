@@ -20,8 +20,6 @@ class MerchantsController extends Controller
         $query = Merchant::query()
             ->filterRequest($request);
 
-        Log::info('otparvlayu, zapros!!!');
-        Log::info($query->paginate($request->query('per_page')));
         return MerchantResource::collection($query->paginate($request->query('per_page')));
     }
 
