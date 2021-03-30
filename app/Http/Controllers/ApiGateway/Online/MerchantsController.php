@@ -17,8 +17,7 @@ class MerchantsController extends Controller
     public function index(Request $request)
     {
         $query = Merchant::query()
-            ->filterRequest($request)
-            ->inRandomOrder();
+            ->filterRequest($request);
 
         return MerchantResource::collection($query->paginate($request->query('per_page')));
     }
