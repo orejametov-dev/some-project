@@ -28,8 +28,8 @@ Route::middleware(['service', 'gateway-auth-user'])
             ->group(function () {
                 Route::prefix('merchants')
                     ->group(function () {
-                        Route::put('/', [OnlineMerchantsController::class, 'index']);
-                        Route::put('tags', [OnlineMerchantsController::class, 'tags']);
+                        Route::get('/', [OnlineMerchantsController::class, 'index']);
+                        Route::get('tags', [OnlineMerchantsController::class, 'tags']);
                     });
             });
 
