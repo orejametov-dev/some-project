@@ -19,8 +19,12 @@ class StoresController extends Controller
         if ($request->query('object') == 'true') {
             return $stores->first();
         }
-        return $stores->paginate($request->query('per_page'));
 
+        if ($request->has('paginate') && $request->query('paginate') == 'false') {
+            return $stores->get();
+        }
+
+        return $stores->paginate($request->query('per_page'));
     }
 
     public function show($store_id)
