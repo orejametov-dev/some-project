@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRequestsTable extends Migration
+class CreateMerchantRequestsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class CreateRequestsTable extends Migration
      */
     public function up()
     {
-        Schema::create('requests', function (Blueprint $table) {
-            $table->id();
+        Schema::create('merchant_requests', function (Blueprint $table) {
+            $table->bigIncrements('id');
 
             $table->string('name');
             $table->string('information');
@@ -23,13 +23,19 @@ class CreateRequestsTable extends Migration
             $table->string('user_name');
             $table->string('user_phone');
 
-            $table->integer('status_id')->unsigned();
+            $table->bigInteger('status_id')->unsigned();
+            $table->foreign('status_id')->references('id')->on('merchant_request_statuses');
+
+
             $table->string('region')->nullable();
+
             $table->unsignedBigInteger('engaged_by_id')->nullable();
+
             $table->timestamp('engaged_at')->nullable();
 
-            $table->timestamp('status_updated_at');
             $table->timestamps();
+            $table->timestamp('status_updated_at')->nullable();
+
         });
     }
 

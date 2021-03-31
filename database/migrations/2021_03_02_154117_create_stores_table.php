@@ -27,6 +27,8 @@ class CreateStoresTable extends Migration
             $table->double('long')->nullable();
             $table->string('phone')->nullable();
 
+            $table->string('region')->nullable();
+
             $table->string('responsible_person')->nullable();
             $table->string('responsible_person_phone')->nullable();
             $table->timestamps();
