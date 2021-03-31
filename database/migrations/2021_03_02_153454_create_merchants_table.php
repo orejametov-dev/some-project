@@ -24,8 +24,8 @@ class CreateMerchantsTable extends Migration
 
             $table->boolean('has_deliveries')->default(false);
             $table->boolean('has_manager')->default(false);
-            $table->boolean('has_application')->default(false);
-            $table->boolean('has_order')->default(false);
+            $table->boolean('has_applications')->default(false);
+            $table->boolean('has_orders')->default(false);
             $table->string('logo_url')->nullable();
 
             $table->string('paymo_terminal')->nullable();
