@@ -16,9 +16,6 @@ class CreateMerchantInfosTable extends Migration
         Schema::create('merchant_infos', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('merchant_id');
-            $table->foreign('merchant_id')->references('id')->on('merchants');
-
             $table->string('legal_name');
             $table->string('director_name');
             $table->string('phone');
@@ -29,14 +26,17 @@ class CreateMerchantInfosTable extends Migration
             $table->text('address');
             $table->string('bank_account');
             $table->string('bank_name');
+            $table->integer('contract_number');
 
-            $table->date('contact_date');
+            $table->unsignedBigInteger('merchant_id')->unique();
+            $table->foreign('merchant_id')->references('id')->on('merchants');
 
-            $table->unsignedBigInteger('limit')->default(100000000000);
-            $table->date('limit_expired_at')->nullable();
-            $table->unsignedBigInteger('rest_limit')->default(0);
+            $table->bigInteger('limit')->nullable();
+            $table->dateTime('limit_expired_at')->nullable();
 
-            $table->timestamps();
+            $table->dateTime('contract_date')->nullable();
+
+            $table->bigInteger('rest_limit')->nullable();
         });
     }
 
