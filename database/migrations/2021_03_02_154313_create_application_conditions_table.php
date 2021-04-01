@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateConditionsTable extends Migration
+class CreateApplicationConditionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class CreateConditionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('conditions', function (Blueprint $table) {
+        Schema::create('application_conditions', function (Blueprint $table) {
             $table->id();
 
             $table->unsignedBigInteger('merchant_id');
             $table->foreign('merchant_id')->references('id')->on('merchants');
 
-//            $table->unsignedBigInteger('store_id');
-//            $table->foreign('store_id')->references('id')->on('stores');
+            $table->unsignedBigInteger('store_id');
+            $table->foreign('store_id')->references('id')->on('stores');
 
             $table->integer('duration');
             $table->integer('commission');
@@ -28,7 +28,7 @@ class CreateConditionsTable extends Migration
             $table->string('notice')->nullable();
             $table->boolean('active')->default(false);
 
-            $table->integer('discount');
+            $table->integer('discount')->default(0);
             $table->boolean('is_promotional')->default(false);
 
             $table->string('special_offer')->nullable();

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAdditionalAgreementsTable extends Migration
+class CreateMerchantActiveNotesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,14 @@ class CreateAdditionalAgreementsTable extends Migration
      */
     public function up()
     {
-        Schema::create('additional_agreements', function (Blueprint $table) {
+        Schema::create('merchant_active_notes', function (Blueprint $table) {
             $table->id();
+            $table->text('body');
 
-            $table->unsignedBigInteger('merchant_id');
+            $table->unsignedBigInteger('merchant_id')->unique();
             $table->foreign('merchant_id')->references('id')->on('merchants');
-
-            $table->string('number');
-
-            $table->date('registration_date');
-            $table->unsignedBigInteger('limit');
-            $table->date('limit_expired_at')->nullable();
-            $table->unsignedBigInteger('rest_limit')->default(0);
+            $table->string('created_by_str');
+            $table->string('updated_by_str');
             $table->timestamps();
         });
     }
@@ -36,6 +32,6 @@ class CreateAdditionalAgreementsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('additional_agreements');
+        Schema::dropIfExists('merchant_active_notes');
     }
 }

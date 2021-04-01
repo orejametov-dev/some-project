@@ -15,20 +15,20 @@ class CreateMerchantsTable extends Migration
     {
         Schema::create('merchants', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('legal_name');
+            $table->string('name')->unique();
+            $table->string('legal_name')->nullable();
             $table->string('information')->nullable();
             $table->string('token')->nullable();
             $table->string('alifshop_slug');
-            $table->string('telegram_chat_id');
+            $table->string('telegram_chat_id')->nullable();
 
             $table->boolean('has_deliveries')->default(false);
             $table->boolean('has_manager')->default(false);
-            $table->boolean('has_application')->default(false);
-            $table->boolean('has_order')->default(false);
+            $table->boolean('has_applications')->default(false);
+            $table->boolean('has_orders')->default(false);
             $table->string('logo_url')->nullable();
 
-            $table->string('paymo_terminal');
+            $table->string('paymo_terminal')->nullable();
             $table->unsignedBigInteger('maintainer_id')->nullable();
             $table->unsignedBigInteger('current_sales')->nullable();
 
