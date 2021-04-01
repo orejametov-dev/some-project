@@ -139,6 +139,8 @@ class MerchantUserController extends Controller
     {
         $merchant_user = MerchantUser::query()->findOrFail($id);
 
+        ServiceCore::request('DELETE', 'merchant-users/' . $merchant_user->id);
+
         $merchant_user->delete();
 
         $merchant = $merchant_user->merchant;
