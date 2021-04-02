@@ -17,8 +17,11 @@ class MerchantsController extends Controller
             'relations' => 'nullable|array'
         ]);
 
-        $merchants = Merchant::query()->with($request->query('relations') ?? [])
-            ->filterRequest($request);
+        $merchants = Merchant::query()->filterRequest($request);
+
+        if($request->query('relations')){
+            $merchants->with($request->query('relations'));
+        }
 
         if ($request->query('object') == 'true') {
             return $merchants->first();
@@ -42,7 +45,13 @@ class MerchantsController extends Controller
             'relations' => 'nullable|array'
         ]);
 
-        return Merchant::with($request->query('relations') ?? [])->findOrFail($id);
+        $merchant = Merchant::query();
+
+        if($request->query('relations')){
+            $merchant->with($request->query('relations'));
+        }
+
+        return $merchant->findOrFail($id);
     }
 
 }
