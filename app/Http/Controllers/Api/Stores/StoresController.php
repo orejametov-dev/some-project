@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Api\Stores;
 use App\Http\Controllers\Controller;
 use App\Modules\Merchants\Models\Store;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class StoresController extends Controller
 {
@@ -24,10 +25,14 @@ class StoresController extends Controller
         }
 
         if ($request->has('paginate') && $request->query('paginate') == false) {
-            return $stores->get();
+            return Cache::remember($request->fullUrl(), 600, function () use ($stores) {
+                return $stores->get();
+            });
         }
 
-        return $stores->paginate($request->query('per_page'));
+        return Cache::remember($request->fullUrl(), 120, function () use ($stores, $request) {
+            return $stores->paginate($request->query('per_page'));
+        });
     }
 
     public function show(Request $request, $id)

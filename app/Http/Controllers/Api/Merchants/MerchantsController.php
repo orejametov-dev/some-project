@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Api\Merchants;
 use App\Http\Controllers\Controller;
 use App\Modules\Merchants\Models\Merchant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class MerchantsController extends Controller
 {
@@ -24,10 +25,15 @@ class MerchantsController extends Controller
         }
 
         if ($request->has('paginate') && $request->query('paginate') == false) {
-            return $merchants->get();
+            return Cache::remember($request->fullUrl(), 600, function () use ($merchants) {
+                return $merchants->get();
+            });
         }
 
-        return $merchants->paginate($request->query('per_page'));
+        return Cache::remember($request->fullUrl(), 120, function () use ($merchants, $request) {
+            return $merchants->paginate($request->query('per_page'));
+        });
+
     }
 
     public function show(Request $request, $id)
