@@ -17,8 +17,11 @@ class StoresController extends Controller
             'relations' => 'nullable|array'
         ]);
 
-        $stores = Store::query()->with($request->query('relations') ?? [])
-            ->filterRequest($request);
+        $stores = Store::query()->filterRequest($request);
+
+        if ($request->query('relations')){
+            $stores->with($request->query('relations'));
+        }
 
         if ($request->query('object') == 'true') {
             return $stores->first();
@@ -41,6 +44,12 @@ class StoresController extends Controller
             'relations' => 'nullable|array'
         ]);
 
-        return Store::with($request->query('relations') ?? [])->findOrFail($id);
+        $store = Store::query()->filterRequest($request);
+
+        if ($request->query('relations')){
+            $store->with($request->query('relations'));
+        }
+
+        return $store->findOrFail($id);
     }
 }

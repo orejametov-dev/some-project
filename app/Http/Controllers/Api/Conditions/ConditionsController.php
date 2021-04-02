@@ -16,9 +16,13 @@ class ConditionsController extends Controller
             'relations' => 'nullable|array'
         ]);
 
-        $conditions = Condition::query()->with($request->query('relations') ?? [])
-            ->active()
-            ->filterRequest($request);
+        $conditions = Condition::query();
+
+        if($request->input('relations')) {
+            $conditions->with($request->input('relations'));
+        }
+
+        $conditions = $conditions->active()->filterRequest($request);
 
         if ($request->query('object') == 'true') {
             return $conditions->first();
@@ -37,9 +41,13 @@ class ConditionsController extends Controller
             'relations' => 'nullable|array'
         ]);
 
-        $condition = Condition::with($request->query('relations') ?? [])
-            ->filterRequest($request)
-            ->findOrFail($id);
+        $condition = Condition::query()->filterRequest($request);
+
+        if($request->input('relations')) {
+            $condition->with($request->input('relations'));
+        }
+
+        $condition = $condition->findOrFail($id);
 
         return $condition;
     }

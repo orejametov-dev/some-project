@@ -16,7 +16,11 @@ class MerchantUsersController extends Controller
             'relations' => 'nullable|array'
         ]);
 
-        $merchant_users = MerchantUser::with($request->query('relations') ?? [])->filterRequest($request);
+        $merchant_users = MerchantUser::query()->filterRequest($request);
+
+        if($request->query('relations')) {
+            $merchant_users->with($request->query('relations'));
+        }
 
         if ($request->query('object') == 'true') {
             return $merchant_users->first();
