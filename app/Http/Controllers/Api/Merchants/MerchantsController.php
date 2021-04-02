@@ -30,7 +30,7 @@ class MerchantsController extends Controller
             });
         }
 
-        return Cache::remember($request->fullUrl(), 120, function () use ($merchants, $request) {
+        return Cache::remember($request->fullUrl(), 180, function () use ($merchants, $request) {
             return $merchants->paginate($request->query('per_page'));
         });
 

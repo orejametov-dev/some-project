@@ -30,7 +30,7 @@ class StoresController extends Controller
             });
         }
 
-        return Cache::remember($request->fullUrl(), 120, function () use ($stores, $request) {
+        return Cache::remember($request->fullUrl(), 180, function () use ($stores, $request) {
             return $stores->paginate($request->query('per_page'));
         });
     }
