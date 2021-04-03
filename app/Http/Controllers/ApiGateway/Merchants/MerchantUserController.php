@@ -68,13 +68,15 @@ class MerchantUserController extends Controller
         $merchant_user->merchant()->associate($merchant);
         $merchant_user->store()->associate($store->id);
 
-//        ServiceCore::request('POST', 'merchant-users', new Request([
-//            'merchant_id' => $merchant->id,
-//            'store_id' => $store->id,
-//            'user_id' => $merchant_user->user_id
-//        ]));
-
         $merchant_user->save();
+
+        ServiceCore::request('POST', 'merchant-users', new Request([
+            'merchant_id' => $merchant->id,
+            'store_id' => $store->id,
+            'user_id' => $merchant_user->user_id,
+            'merchant_user_id' => $merchant_user->id
+        ]));
+
 
         ModelHook::make($merchant,
             'Сотрудник создан',
@@ -122,7 +124,7 @@ class MerchantUserController extends Controller
         $merchant_user->fill($request->validated());
         $merchant_user->store()->associate($store);
 
-//        ServiceCore::request('POST', 'merchant-users/' . $merchant_user->id, new Request($request->validated()));
+        ServiceCore::request('POST', 'merchant-users/' . $merchant_user->id, new Request($request->validated()));
 
         $merchant_user->save();
 
@@ -138,6 +140,8 @@ class MerchantUserController extends Controller
     public function destroy($id)
     {
         $merchant_user = MerchantUser::query()->findOrFail($id);
+
+        ServiceCore::request('DELETE', 'merchant-users/' . $merchant_user->id);
 
         $merchant_user->delete();
 

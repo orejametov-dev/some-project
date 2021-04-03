@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Api\Stores;
 use App\Http\Controllers\Controller;
 use App\Modules\Merchants\Models\Store;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class StoresController extends Controller
 {
@@ -16,18 +17,25 @@ class StoresController extends Controller
             'relations' => 'nullable|array'
         ]);
 
-        $stores = Store::query()->with($request->query('relations') ?? [])
-            ->filterRequest($request);
+        $stores = Store::query()->filterRequest($request);
+
+        if ($request->query('relations')){
+            $stores->with($request->query('relations'));
+        }
 
         if ($request->query('object') == 'true') {
             return $stores->first();
         }
 
         if ($request->has('paginate') && $request->query('paginate') == false) {
-            return $stores->get();
+            return Cache::remember($request->fullUrl(), 600, function () use ($stores) {
+                return $stores->get();
+            });
         }
 
-        return $stores->paginate($request->query('per_page'));
+        return Cache::remember($request->fullUrl(), 180, function () use ($stores, $request) {
+            return $stores->paginate($request->query('per_page'));
+        });
     }
 
     public function show(Request $request, $id)
@@ -36,6 +44,12 @@ class StoresController extends Controller
             'relations' => 'nullable|array'
         ]);
 
-        return Store::with($request->query('relations') ?? [])->findOrFail($id);
+        $store = Store::query()->filterRequest($request);
+
+        if ($request->query('relations')){
+            $store->with($request->query('relations'));
+        }
+
+        return $store->findOrFail($id);
     }
 }
