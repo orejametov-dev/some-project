@@ -5,16 +5,15 @@ namespace App\Http\Controllers\ApiGateway\Merchants;
 
 
 use App\Exceptions\BusinessException;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\MerchantUsers\StoreMerchantUsers;
 use App\Http\Requests\ApiPrm\MerchantUsers\UpdateMerchantUsers;
-use App\Modules\Core\Models\ModelHook;
 use App\Modules\Merchants\Models\MerchantUser;
 use App\Modules\Merchants\Models\Store;
 use App\Services\Core\ServiceCore;
 use Illuminate\Http\Request;
 
-class MerchantUserController extends Controller
+class MerchantUserController extends ApiBaseController
 {
     public function index(Request $request)
     {
@@ -77,13 +76,17 @@ class MerchantUserController extends Controller
             'merchant_user_id' => $merchant_user->id
         ]));
 
-
-        ModelHook::make($merchant,
-            'Сотрудник создан',
-            'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id,
-            'create',
-            'info'
-        );
+        ServiceCore::request('POST', 'model-hooks', new Request([
+            'body' => 'Сотрудник создан',
+            'keyword' => 'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id,
+            'action' => 'create',
+            'class' => 'info',
+            'model' => [
+                'id' => $merchant->id,
+                'table_name' => $merchant->getTable()
+            ],
+            'created_by_id' => $this->user->id
+        ]));
 
         return $merchant_user;
     }
@@ -128,12 +131,18 @@ class MerchantUserController extends Controller
 
         $merchant_user->save();
 
-        ModelHook::make($merchant,
-            'Сотрудник обновлен',
-            'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id,
-            'update',
-            'warning'
-        );
+        ServiceCore::request('POST', 'model-hooks', new Request([
+            'body' => 'Сотрудник обновлен',
+            'keyword' => 'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id,
+            'action' => 'update',
+            'class' => 'warning',
+            'model' => [
+                'id' => $merchant->id,
+                'table_name' => $merchant->getTable()
+            ],
+            'created_by_id' => $this->user->id
+        ]));
+
         return $merchant_user;
     }
 
@@ -147,12 +156,17 @@ class MerchantUserController extends Controller
 
         $merchant = $merchant_user->merchant;
 
-        ModelHook::make($merchant,
-            'Сотрудник удален',
-            'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id,
-            'delete',
-            'danger'
-        );
+        ServiceCore::request('POST', 'model-hooks', new Request([
+            'body' => 'Сотрудник удален',
+            'keyword' => 'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id,
+            'action' => 'delete',
+            'class' => 'danger',
+            'model' => [
+                'id' => $merchant->id,
+                'table_name' => $merchant->getTable()
+            ],
+            'created_by_id' => $this->user->id
+        ]));
         return response()->json(['message' => 'Сотрудник удален']);
     }
 }

@@ -3,19 +3,16 @@
 namespace App\Http\Controllers\ApiGateway\Merchants;
 
 use App\Exceptions\BusinessException;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestStore;
 use App\Modules\Core\Models\Comment;
-use App\Modules\Core\Models\ModelHook;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Request as MerchantRequest;
 use App\Services\Alifshop\AlifshopService;
 use App\Services\Core\ServiceCore;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
-class MerchantRequestsController extends Controller
+class MerchantRequestsController extends ApiBaseController
 {
     /**
      * @var AlifshopService
@@ -41,8 +38,7 @@ class MerchantRequestsController extends Controller
             'user_ids' => implode(';', $paginated_requests->pluck('engaged_by_id')->toArray()),
         ]));
 
-        foreach ($paginated_requests as $request)
-        {
+        foreach ($paginated_requests as $request) {
             $request->engaged_by = collect($engages)->where('id', $request->engaged_by_id)->first();
         }
 
@@ -69,7 +65,7 @@ class MerchantRequestsController extends Controller
             'object' => 'true',
         ]));
 
-        if($user)
+        if ($user)
             throw new BusinessException(
                 'Пользователь с таким номером уже существует',
                 'user_already_exists',
@@ -87,12 +83,16 @@ class MerchantRequestsController extends Controller
         $merchant_request->setStatusNew();
         $merchant_request->save();
 
-        ModelHook::make(
-            $merchant_request,
-            'Изменен статус на',
-            'новый',
-            'store'
-        );
+        ServiceCore::request('POST', 'model-hooks', new Request([
+            'body' => 'Изменен статус на',
+            'keyword' => 'новый',
+            'action' => 'store',
+            'model' => [
+                'id' => $merchant_request->id,
+                'table_name' => $merchant_request->getTable()
+            ],
+            'created_by_id' => $this->user->id
+        ]));
 
         return response()->json([
             'code' => 'merchant_request_created',
@@ -113,7 +113,7 @@ class MerchantRequestsController extends Controller
 
         $merchant_request = MerchantRequest::findOrFail($id);
 
-        if($merchant_request->isStatusNew() || $merchant_request->isInProcess()) {
+        if ($merchant_request->isStatusNew() || $merchant_request->isInProcess()) {
             $merchant_request->engaged_by_id = $request->input('engaged_by_id');
             $merchant_request->engaged_at = now();
             $merchant_request->setStatusInProcess();
