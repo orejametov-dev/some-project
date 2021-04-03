@@ -68,13 +68,15 @@ class MerchantUserController extends Controller
         $merchant_user->merchant()->associate($merchant);
         $merchant_user->store()->associate($store->id);
 
+        $merchant_user->save();
+
         ServiceCore::request('POST', 'merchant-users', new Request([
             'merchant_id' => $merchant->id,
             'store_id' => $store->id,
-            'user_id' => $merchant_user->user_id
+            'user_id' => $merchant_user->user_id,
+            'merchant_user_id' => $merchant_user->id
         ]));
 
-        $merchant_user->save();
 
         ModelHook::make($merchant,
             'Сотрудник создан',
