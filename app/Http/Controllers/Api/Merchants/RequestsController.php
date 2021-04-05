@@ -4,15 +4,9 @@
 namespace App\Http\Controllers\Api\Merchants;
 
 
-use App\Exceptions\BusinessException;
 use App\Http\Controllers\Controller;
-use App\Modules\Core\Models\ModelHook;
-use App\Modules\Core\Models\WebService;
 use App\Modules\Merchants\Models\Request as MerchantRequest;
-use App\Services\Core\ServiceCore;
-use App\Services\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 
 class RequestsController extends Controller
 {
