@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers\ApiGateway\Merchants;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Applications\StoreApplicationConditions;
 use App\Http\Requests\ApiPrm\Applications\UpdateApplicationConditions;
 use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\Merchant;
-use App\Modules\Core\Models\ModelHook;
 use App\Services\Alifshop\AlifshopService;
 use App\Services\Core\ServiceCore;
 use Illuminate\Http\Request;
 
-class ApplicationConditionsController extends Controller
+class ApplicationConditionsController extends ApiBaseController
 {
     public function index(Request $request)
     {
@@ -36,12 +35,17 @@ class ApplicationConditionsController extends Controller
         $condition->store()->associate($store);
         $condition->save();
 
-        ModelHook::make($merchant,
-            'Создано условие',
-            'id: ' . $condition->id . ' ' . $condition->title,
-            'create',
-            'info'
-        );
+        ServiceCore::request('POST', 'model-hooks', new Request([
+            'body' => 'Создано условие',
+            'keyword' => 'id: ' . $condition->id . ' ' . $condition->title,
+            'action' => 'create',
+            'class' => 'info',
+            'model' => [
+                'id' => $merchant->id,
+                'table_name' => $merchant->getTable()
+            ],
+            'created_by_id' => $this->user->id
+        ]));
 
         return $condition;
     }
@@ -66,12 +70,17 @@ class ApplicationConditionsController extends Controller
         $condition->fill($request->validated());
         $condition->save();
 
-        ModelHook::make($merchant,
-            'Изменено условие',
-            'id: ' . $condition->id . ' ' . $condition->title,
-            'update',
-            'warning'
-        );
+        ServiceCore::request('POST', 'model-hooks', new Request([
+            'body' => 'Изменено условие',
+            'keyword' => 'id: ' . $condition->id . ' ' . $condition->title,
+            'action' => 'update',
+            'class' => 'warning',
+            'model' => [
+                'id' => $merchant->id,
+                'table_name' => $merchant->getTable()
+            ],
+            'created_by_id' => $this->user->id
+        ]));
 
         return $condition;
     }
@@ -86,19 +95,25 @@ class ApplicationConditionsController extends Controller
         ]));
 
         if ($application) {
-            return response()->json(['message' => 'Условие не может быть изменено'], 400);
+            return response()->json(['message' => 'Условие не может быть удалено'], 400);
         }
 
         $merchant = $condition->merchant;
 
         $condition->delete();
 
-        ModelHook::make($merchant,
-            'Условие удалено',
-            'id: ' . $condition->id . ' ' . $condition->title,
-            'delete',
-            'danger'
-        );
+        ServiceCore::request('POST', 'model-hooks', new Request([
+            'body' => 'Условие удалено',
+            'keyword' => 'id: ' . $condition->id . ' ' . $condition->title,
+            'action' => 'delete',
+            'class' => 'danger',
+            'model' => [
+                'id' => $merchant->id,
+                'table_name' => $merchant->getTable()
+            ],
+            'created_by_id' => $this->user->id
+        ]));
+
         return response()->json(['message' => 'Условие удалено']);
     }
 
@@ -110,12 +125,17 @@ class ApplicationConditionsController extends Controller
 
         $merchant = $condition->merchant;
 
-        ModelHook::make($merchant,
-            'Изменено условие',
-            'id: ' . $condition->id . ' ' . $condition->title . ' на ' . ($condition->active) ? 'активный' : 'не активный',
-            'update',
-            'warning'
-        );
+        ServiceCore::request('POST', 'model-hooks', new Request([
+            'body' => 'Изменено условие',
+            'keyword' => 'id: ' . $condition->id . ' ' . $condition->title . ' на ' . ($condition->active) ? 'активный' : 'не активный',
+            'action' => 'update',
+            'class' => 'warning',
+            'model' => [
+                'id' => $merchant->id,
+                'table_name' => $merchant->getTable()
+            ],
+            'created_by_id' => $this->user->id
+        ]));
 
         $merchant->load(['application_conditions' => function ($q) {
             $q->active();
