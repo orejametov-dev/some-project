@@ -131,24 +131,6 @@ Route::middleware(['service', 'gateway-auth-user'])
                 Route::get('/merchant-trends/{merchant_id}', [App\Http\Controllers\ApiGateway\Dashboard\CreditsController::class, 'show']);
             });
 
-        Route::prefix('tickets')
-            ->group(function () {
-                Route::get('', [App\Http\Controllers\ApiGateway\Tickets\TicketsController::class, 'index']);
-                Route::get('/statuses', [App\Http\Controllers\ApiGateway\Tickets\StatusesController::class, 'index']);
-                Route::get('/tags', [App\Http\Controllers\ApiGateway\Tickets\TagsController::class, 'index']);
-                Route::get('/new', [App\Http\Controllers\ApiGateway\App\CountersController::class, 'tickets']);
-                Route::get('/{id}', [App\Http\Controllers\ApiGateway\Tickets\TicketsController::class, 'show']);
-
-                Route::match(['put', 'patch'], '/{id}/comment', [App\Http\Controllers\ApiGateway\Tickets\TicketsController::class, 'comment']);
-                Route::match(['put', 'patch'], '/{id}/finish', [App\Http\Controllers\ApiGateway\Tickets\TicketsController::class, 'finish']);
-                Route::match(['put', 'patch'], '/{id}/deadline', [App\Http\Controllers\ApiGateway\Tickets\TicketsController::class, 'deadline']);
-                Route::match(['put', 'patch'], '/{id}/assign', [App\Http\Controllers\ApiGateway\Tickets\TicketsController::class, 'assign']);
-                Route::match(['put', 'patch'], '/{id}/tags', [App\Http\Controllers\ApiGateway\Tickets\TicketsController::class, 'tags']);
-                Route::match(['put', 'patch'], '/{id}/reject', [App\Http\Controllers\ApiGateway\Tickets\TicketsController::class, 'reject']);
-                Route::match(['put', 'patch'], '/{id}/status', [App\Http\Controllers\ApiGateway\Tickets\TicketsController::class, 'status']);
-
-            });
-
         Route::prefix('merchants')
             ->group(function () {
                 Route::get('/', [MerchantsController::class, 'index']);
