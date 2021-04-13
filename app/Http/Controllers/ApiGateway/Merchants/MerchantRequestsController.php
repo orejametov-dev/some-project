@@ -33,29 +33,12 @@ class MerchantRequestsController extends ApiBaseController
         if ($request->query('object') == 'true') {
             return $merchantRequests->first();
         }
-        $paginated_requests = $merchantRequests->paginate($request->query('per_page'));
-
-        $engages = ServiceCore::request('GET', 'users', new Request([
-            'user_ids' => implode(';', $paginated_requests->pluck('engaged_by_id')->toArray()),
-        ]));
-
-        foreach ($paginated_requests as $request) {
-            $request->engaged_by = collect($engages)->where('id', $request->engaged_by_id)->first();
-        }
-
-        return $paginated_requests;
+        return $merchantRequests->paginate($request->query('per_page'));
     }
 
     public function show($id)
     {
         $request = MerchantRequest::query()->findOrFail($id);
-
-        $user = ServiceCore::request('GET', 'users', new Request([
-            'id' => $request->engaged_by_id,
-            'object' => 'true'
-        ]));
-        $request->engaged_by = $user;
-
         return $request;
     }
 
