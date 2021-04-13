@@ -25,17 +25,7 @@ class MerchantUserController extends ApiBaseController
             return $merchantUsersQuery->first();
         }
 
-        $paginatedMerchantUsers = $merchantUsersQuery->paginate($request->query('per_page'));
-
-        $users = ServiceCore::request('GET', 'users', new Request([
-            'user_ids' => implode(';', $paginatedMerchantUsers->pluck('user_id')->toArray()),
-        ]));
-
-        foreach ($paginatedMerchantUsers as $merchantUser) {
-            $merchantUser->user = collect($users)->where('id', $merchantUser->user_id)->first();
-        }
-
-        return $paginatedMerchantUsers;
+        return $merchantUsersQuery->paginate($request->query('per_page'));
     }
 
     public function store(StoreMerchantUsers $request)
