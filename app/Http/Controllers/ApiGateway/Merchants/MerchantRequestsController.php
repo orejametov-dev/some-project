@@ -21,6 +21,7 @@ class MerchantRequestsController extends ApiBaseController
 
     public function __construct(AlifshopService $alifshopService)
     {
+        parent::__construct();
         $this->alifshopService = $alifshopService;
     }
 
@@ -93,7 +94,6 @@ class MerchantRequestsController extends ApiBaseController
             ],
             'created_by_id' => $this->user->id
         ]));
-
         return response()->json([
             'code' => 'merchant_request_created',
             'message' => 'Запрос на регистрацию отправлен. В ближайшее время с вами свяжется сотрудник Alifshop.'
@@ -110,6 +110,9 @@ class MerchantRequestsController extends ApiBaseController
             'user_id' => $request->input('engaged_by_id'),
             'object' => 'true'
         ]));
+
+        if (!$user)
+            throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
 
         $merchant_request = MerchantRequest::findOrFail($id);
 
