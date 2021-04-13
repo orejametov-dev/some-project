@@ -97,7 +97,7 @@ Route::middleware(['service', 'gateway-auth-user'])
                 Route::get('/', [App\Http\Controllers\ApiGateway\Stores\StoresController::class, 'index']);
                 Route::get('/{id}', [App\Http\Controllers\ApiGateway\Stores\StoresController::class, 'show']);
                 Route::post('/', [App\Http\Controllers\ApiGateway\Stores\StoresController::class, 'store']);
-                Route::match(['put', 'patch'], '/{id}', [App\Http\Controllers\ApiGateway\Stores\StoresController::class, 'index']);
+                Route::match(['put', 'patch'], '/{id}', [App\Http\Controllers\ApiGateway\Stores\StoresController::class, 'update']);
             });
 
         Route::prefix('app')

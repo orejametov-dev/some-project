@@ -17,9 +17,8 @@ class CheckGatewayAuthUser
      */
     public function handle($request, Closure $next)
     {
-
-
         $auth_user = $request->input('auth_user');
+
         if (!$auth_user) {
             throw new BusinessException('Unauthenticated', 401);
         }
@@ -39,7 +38,6 @@ class CheckGatewayAuthUser
         }
         $user = new User($auth_user);
         app()->instance(User::class, $user);
-
         return $next($request);
     }
 }
