@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Api\Merchants;
 use App\Http\Controllers\Controller;
 use App\Modules\Merchants\Models\MerchantUser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class MerchantUsersController extends Controller
 {
@@ -35,6 +36,15 @@ class MerchantUsersController extends Controller
         ]);
 
         return MerchantUser::with($request->query('relations') ?? [])->findOrFail($id);
+    }
+
+    public function getByUserId($user_id)
+    {
+        $merchant_user = MerchantUser::query()->with(['merchant', 'store']);
+
+        return Cache::remember('merchant_user_id_' . $user_id , 3600, function () use ($merchant_user, $user_id) {
+            return $merchant_user->byUserId($user_id)->first();
+        });
     }
 
     public function updatePermissions($id, Request $request)
@@ -93,5 +103,9 @@ class MerchantUsersController extends Controller
         $merchant_user->store()->associate($store);
 
         $merchant_user->save();
+
+        Cache::forget('merchant_user_id_' . $merchant_user->user_id);
+
+        return $merchant_user;
     }
 }

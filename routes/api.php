@@ -24,7 +24,7 @@ Route::get('/conditions/{id}', [ConditionsController::class, 'show']);
 
 
 Route::get('/merchants/users', [MerchantUsersController::class, 'index']);
-Route::get('/merchants/users/{id}', [MerchantUsersController::class, 'show']);
+Route::get('/merchants/users/{user_id}', [MerchantUsersController::class, 'getByUserId']);
 Route::post('/merchants/users/{id}/update-permissions', [MerchantUsersController::class, 'updatePermissions']);
 
 Route::post('/merchants/requests', [RequestsController::class, 'register']);

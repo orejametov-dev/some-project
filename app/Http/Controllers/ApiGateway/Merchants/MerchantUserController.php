@@ -12,6 +12,7 @@ use App\Modules\Merchants\Models\MerchantUser;
 use App\Modules\Merchants\Models\Store;
 use App\Services\Core\ServiceCore;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class MerchantUserController extends ApiBaseController
 {
@@ -88,6 +89,8 @@ class MerchantUserController extends ApiBaseController
             'created_by_id' => $this->user->id
         ]));
 
+        Cache::forget('merchant_user_id_' . $merchant_user->user_id);
+
         return $merchant_user;
     }
 
@@ -143,6 +146,8 @@ class MerchantUserController extends ApiBaseController
             'created_by_id' => $this->user->id
         ]));
 
+        Cache::forget('merchant_user_id_' . $merchant_user->user_id);
+
         return $merchant_user;
     }
 
@@ -167,6 +172,9 @@ class MerchantUserController extends ApiBaseController
             ],
             'created_by_id' => $this->user->id
         ]));
+
+        Cache::forget('merchant_user_id_' . $merchant_user->user_id);
+
         return response()->json(['message' => 'Сотрудник удален']);
     }
 }
