@@ -82,4 +82,9 @@ class MerchantUser extends Model
     {
         $query->where('store_id', $store_id);
     }
+
+    public function scopeByUserId(Builder $query, $user_id)
+    {
+        $query->where('user_id', $user_id);
+    }
 }

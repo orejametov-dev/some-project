@@ -22,11 +22,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/conditions', [ConditionsController::class, 'index']);
 Route::get('/conditions/{id}', [ConditionsController::class, 'show']);
 
-Route::get('/merchants', [MerchantsController::class, 'index']);
-Route::get('/merchants/{id}', [MerchantsController::class, 'show']);
 
 Route::get('/merchants/users', [MerchantUsersController::class, 'index']);
-Route::get('/merchants/users/{id}', [MerchantUsersController::class, 'show']);
+Route::get('/merchants/users/{user_id}', [MerchantUsersController::class, 'getByUserId']);
 Route::post('/merchants/users/{id}/update-permissions', [MerchantUsersController::class, 'updatePermissions']);
 
 Route::post('/merchants/requests', [RequestsController::class, 'register']);
@@ -35,3 +33,6 @@ Route::get('/stores', [StoresController::class, 'index']);
 Route::get('/stores/{id}', [StoresController::class, 'show']);
 
 Route::get('/counters', [CountersController::class, 'index']);
+
+Route::get('/merchants', [MerchantsController::class, 'index']);
+Route::get('/merchants/{id}', [MerchantsController::class, 'show']);
