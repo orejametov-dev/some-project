@@ -15,7 +15,7 @@ trait MerchantFileTrait
         if ($this->logo_url) {
             StorageMicroService::destroy($this->logo_url);
         }
-        $storage_file = StorageMicroService::uploadFile($uploadedAvatar);
+        $storage_file = StorageMicroService::uploadFile($uploadedAvatar, 'merchants');
 
         $this->logo_url = $storage_file['url'];
         $this->save();
@@ -34,7 +34,7 @@ trait MerchantFileTrait
 
     public function uploadFile(UploadedFile $uploadedFile, $type)
     {
-        $storage_file = StorageMicroService::uploadFile($uploadedFile);
+        $storage_file = StorageMicroService::uploadFile($uploadedFile, 'merchants');
         $merchant_file = new File();
         $merchant_file->file_type = $type;
         $merchant_file->mime_type = $storage_file['mime_type'];

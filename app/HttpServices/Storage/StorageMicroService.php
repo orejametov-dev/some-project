@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Http;
 
 class StorageMicroService
 {
-    public static function uploadFile(UploadedFile $file, $client_number = ' ')
+    public static function uploadFile(UploadedFile $file, $type)
     {
         return static::http()
             ->attach(
@@ -16,8 +16,8 @@ class StorageMicroService
                 $file->getClientOriginalName()
             )
             ->attach(
-                'client_number',
-                $client_number
+                'type',
+                $type
             )
             ->post('files')
             ->throw()
