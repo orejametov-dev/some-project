@@ -42,7 +42,7 @@ class MerchantUsersController extends Controller
     {
         $merchant_user = MerchantUser::query()->with(['merchant', 'store']);
 
-        return Cache::remember('merchant_user_id_' . $user_id , 3600, function () use ($merchant_user, $user_id) {
+        return Cache::remember('merchant_user_id_' . $user_id , 86400, function () use ($merchant_user, $user_id) {
             return $merchant_user->byUserId($user_id)->first();
         });
     }
