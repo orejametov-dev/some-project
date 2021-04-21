@@ -56,6 +56,11 @@ class MerchantUser extends Model
             $query->where('user_id', $user);
         }
 
+        if ($user_ids = $request->query('user_ids')) {
+            $user_ids = explode(';', $user_ids);
+            $query->whereIn('user_id', $user_ids);
+        }
+
         if ($permission_applications = $request->query('permission_applications')) {
             $query->where('permission_applications', $permission_applications);
         }
