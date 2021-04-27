@@ -17,7 +17,7 @@ class CheckGatewayAuthUser
      */
     public function handle($request, Closure $next)
     {
-        $auth_user = $request->input('auth_user');
+        $auth_user = $request->header('x-auth_user');
 
         if (!$auth_user) {
             throw new BusinessException('Unauthenticated', 401);
