@@ -60,13 +60,6 @@ class MerchantUserController extends ApiBaseController
 
         $merchant_user->save();
 
-        ServiceCore::request('POST', 'merchant-users', new Request([
-            'merchant_id' => $merchant->id,
-            'store_id' => $store->id,
-            'user_id' => $merchant_user->user_id,
-            'merchant_user_id' => $merchant_user->id
-        ]));
-
         ServiceCore::request('POST', 'model-hooks', new Request([
             'body' => 'Сотрудник создан',
             'keyword' => 'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id,
@@ -120,8 +113,6 @@ class MerchantUserController extends ApiBaseController
         $merchant_user->fill($request->validated());
         $merchant_user->store()->associate($store);
 
-        ServiceCore::request('POST', 'merchant-users/' . $merchant_user->id, new Request($request->validated()));
-
         $merchant_user->save();
 
         ServiceCore::request('POST', 'model-hooks', new Request([
@@ -144,8 +135,6 @@ class MerchantUserController extends ApiBaseController
     public function destroy($id)
     {
         $merchant_user = MerchantUser::query()->findOrFail($id);
-
-        ServiceCore::request('DELETE', 'merchant-users/' . $merchant_user->id);
 
         $merchant_user->delete();
 
