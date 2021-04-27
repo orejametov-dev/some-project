@@ -23,19 +23,8 @@ class CheckGatewayAuthUser
             throw new BusinessException('Unauthenticated', 401);
         }
 
-        if (is_string($auth_user)) {
-            $auth_user = json_decode($auth_user, true);
+        $auth_user = json_decode($auth_user, true);
 
-            if (!array_key_exists('avatar_link', $auth_user)) {
-                $auth_user['avatar_link'] = null;
-            }
-        } else if (is_array($auth_user)) {
-
-
-            if (!array_key_exists('avatar_link', $auth_user)) {
-                $auth_user['avatar_link'] = null;
-            }
-        }
         $user = new User($auth_user);
         app()->instance(User::class, $user);
         return $next($request);
