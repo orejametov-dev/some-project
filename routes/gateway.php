@@ -54,7 +54,7 @@ Route::middleware(['service', 'gateway-auth-user'])
                 Route::post('/', [App\Http\Controllers\ApiGateway\Merchants\MerchantUserController::class, 'store']);
                 Route::get('/', [App\Http\Controllers\ApiGateway\Merchants\MerchantUserController::class, 'index']);
                 Route::delete('/{id}', [App\Http\Controllers\ApiGateway\Merchants\MerchantUserController::class, 'destroy']);
-                Route::get('/{id}', [App\Http\Controllers\ApiGateway\Merchants\MerchantUserController::class, 'destroy']);
+                Route::get('/{id}', [App\Http\Controllers\ApiGateway\Merchants\MerchantUserController::class, 'show']);
                 Route::match(['put', 'patch'], '/{id}', [App\Http\Controllers\ApiGateway\Merchants\MerchantUserController::class, 'update']);
             });
 
