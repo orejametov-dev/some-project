@@ -15,7 +15,7 @@ class ApiBaseController extends Controller
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
-            $input = $request->header('x-auth_user');
+            $input = $request->header('x-auth-user');
             $this->user = app(User::class);
             $user = is_array($input) ? $input : json_decode($input,true);
             if(array_key_exists('prm_admin', $input)) $this->prm_admin = $user['prm_admin'];
