@@ -23,7 +23,6 @@ class CheckGatewayAuthUser
         }
         $auth_user = json_decode($auth_user, true);
         app()->instance(User::class, $auth_user);
-        dd();
         return $next($request);
     }
 }
