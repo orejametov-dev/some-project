@@ -18,7 +18,7 @@ class MerchantUserController extends ApiBaseController
 {
     public function index(Request $request)
     {
-        $merchantUsersQuery = MerchantUser::query()->with('store')
+        $merchantUsersQuery = MerchantUser::query()->with(['merchant', 'store'])
             ->filterRequest($request)->orderRequest($request);
 
 
@@ -27,6 +27,12 @@ class MerchantUserController extends ApiBaseController
         }
 
         return $merchantUsersQuery->paginate($request->query('per_page'));
+    }
+
+    public function show($id)
+    {
+        $merchant_user = MerchantUser::with(['merchant', 'store'])->findOrFail($id);
+        return $merchant_user;
     }
 
     public function store(StoreMerchantUsers $request)
