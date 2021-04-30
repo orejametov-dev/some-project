@@ -29,7 +29,7 @@ class StoresController extends Controller
 
     public function show($store_id)
     {
-        $store = Store::findOrFail($store_id);
+        $store = Store::with('merchant')->findOrFail($store_id);
         return $store;
     }
 
