@@ -60,7 +60,7 @@ class MerchantsController extends ApiBaseController
         $merchant->maintainer_id = $this->user->prm_admin->id;
         $merchant->save();
 
-//        $this->alifshopService->storeOrUpdateMerchant($merchant);
+        $this->alifshopService->storeOrUpdateMerchant($merchant);
         return $merchant;
     }
 
