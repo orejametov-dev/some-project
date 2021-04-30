@@ -10,7 +10,6 @@ use App\Services\User;
 class ApiBaseController extends Controller
 {
     protected $user;
-    protected $prm_admin;
 
     public function __construct()
     {
