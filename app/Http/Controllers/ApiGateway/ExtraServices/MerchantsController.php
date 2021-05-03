@@ -28,7 +28,7 @@ class MerchantsController extends Controller
         /** @var Merchant $merchant */
         $merchant = Merchant::query()->findOrFail($merchant_id);
         $store = $merchant->stores()->where('name', $request->query('store_name'))
-            ->get(['name', 'address', 'phone', 'responsible_person']);
+            ->get(['id', 'merchant_id', 'name', 'address', 'phone', 'responsible_person']);
         return response()->json($store);
     }
 }
