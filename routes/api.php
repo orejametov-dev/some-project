@@ -37,4 +37,5 @@ Route::get('/stores/{id}', [StoresController::class, 'show']);
 Route::get('/counters', [CountersController::class, 'index']);
 
 Route::get('/merchants', [MerchantsController::class, 'index']);
+Route::post('/merchants/verify', [MerchantsController::class, 'verifyToken']);
 Route::get('/merchants/{id}', [MerchantsController::class, 'show']);
