@@ -57,7 +57,6 @@ class MerchantsController extends ApiBaseController
         ]);
 
         $merchant = new Merchant($validated_data);
-        $merchant->maintainer_id = $this->user->prm_admin->id;
         $merchant->save();
 
         $this->alifshopService->storeOrUpdateMerchant($merchant);
