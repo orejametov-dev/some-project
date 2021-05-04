@@ -14,7 +14,7 @@ class MakeNullableInfomationColumnOnMerchantRequestsTable extends Migration
     public function up()
     {
         Schema::table('merchant_requests', function (Blueprint $table) {
-            $table->string('information')->nullable(true)->change();
+            $table->text('information')->nullable(true)->change();
         });
     }
 
