@@ -3,7 +3,6 @@
 namespace App\Modules\Merchants\Models;
 
 
-use App\Modules\Core\Traits\HasHooks;
 use App\Traits\SortableByQueryParams;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -15,7 +14,6 @@ class MerchantUser extends Model
 {
     use HasFactory;
     use SortableByQueryParams;
-    use HasHooks;
 
     protected $table = 'merchant_users';
     protected $fillable = [
