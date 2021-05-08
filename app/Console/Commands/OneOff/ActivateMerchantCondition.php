@@ -20,7 +20,7 @@ class ActivateMerchantCondition extends Command
      *
      * @var string
      */
-    protected $description = 'Команда создас и активирует новое условие для мерчантов';
+    protected $description = 'Команда создает и активирует новое условие для мерчантов';
 
     /**
      * Create a new command instance.
@@ -56,29 +56,35 @@ class ActivateMerchantCondition extends Command
         $count = $query->count();
         $progressBar = $this->output->createProgressBar($count);
         $progressBar->start();
+        $successCount = 0;
 
-        $query->chunk(100, function ($merchants) use ($progressBar) {
+        $query->chunk(100, function ($merchants) use ($progressBar, &$successCount) {
             foreach ($merchants as $merchant)  {
                 if (! in_array($merchant->id, [3, 13])) {
                     $main_store = $merchant->stores()->where(['is_main' => true])->first();
 
-                    $new_condition = new Condition();
-                    $new_condition->duration = 15;
-                    $new_condition->commission = 47;
-                    $new_condition->discount = 0;
-                    $new_condition->active = 1;
-                    $new_condition->merchant_id = $merchant->id;
-                    $new_condition->store_id = $main_store->id;
-                    $new_condition->save();
+                    if ($main_store) {
+                        $new_condition = new Condition();
+                        $new_condition->duration = 15;
+                        $new_condition->commission = 47;
+                        $new_condition->discount = 0;
+                        $new_condition->active = 1;
+                        $new_condition->merchant_id = $merchant->id;
+                        $new_condition->store_id = $main_store->id;
+                        $new_condition->save();
+
+                        $successCount++;
+                    }
                 }
 
                 $progressBar->advance();
             }
 
-            $progressBar->finish();
-            $this->newLine(2);
-            $this->info('Completed!');
         });
+
+        $progressBar->finish();
+        $this->newLine(2);
+        $this->info('Success count: ' . $successCount . ' from ' . $count - 2);
 
         return 0;
     }
