@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api\Merchants;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Merchants\Models\Merchant;
+use App\Services\Merchants\MerchantsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -52,6 +53,15 @@ class MerchantsController extends Controller
         }
 
         return $merchant->findOrFail($id);
+    }
+
+    public function verifyToken(Request $request)
+    {
+        $isTokenValid = Merchant::query()->where('token', $request->token)->exists();
+
+        return [
+            'is_token_valid' => $isTokenValid
+        ];
     }
 
 }

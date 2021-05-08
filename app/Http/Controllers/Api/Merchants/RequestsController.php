@@ -5,12 +5,13 @@ namespace App\Http\Controllers\Api\Merchants;
 
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestStore;
 use App\Modules\Merchants\Models\Request as MerchantRequest;
 use Illuminate\Http\Request;
 
 class RequestsController extends Controller
 {
-    public function register(Request $request)
+    public function register(MerchantRequestStore $request)
     {
         $merchant_request = new MerchantRequest([
             'name' => $request->input('merchant_name'),
