@@ -21,6 +21,8 @@ use Illuminate\Http\Request;
  * @property string $notice
  * @property bool $is_promotional
  * @property string $special_offer
+ * @property int $merchant_id
+ * @property int $store_id
  *
  * @property Merchant $merchant
  * @property Store $store
