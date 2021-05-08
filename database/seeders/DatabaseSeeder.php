@@ -13,6 +13,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+       $this->call([
+           WebServicesSeeder::class,
+           MerchantsSeeder::class,
+           StoresSeeder::class,
+           MerchantUsersSeeder::class,
+           MerchantInfosSeeder::class,
+           MerchantAdditionalAgreementsSeeder::class,
+           MerchantRequestStatusesSeeder::class,
+           MerchantRequestsSeeder::class,
+           MerchantCommentsSeeder::class,
+           ApplicationConditionsSeeder::class
+       ]);
     }
 }
