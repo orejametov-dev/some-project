@@ -84,7 +84,7 @@ class ActivateMerchantCondition extends Command
 
         $progressBar->finish();
         $this->newLine(2);
-        $this->info('Success count: ' . $successCount . ' from ' . $count - 2);
+        $this->info('Success count: ' . $successCount . ' from ' . $count);
 
         return 0;
     }
