@@ -38,7 +38,7 @@ class DeactivateMerchantCondition extends Command
      */
     public function handle()
     {
-        $this->info('Creating new condition for merchants...');
+        $this->info('Deactivating conditions on merchants...');
         $this->newLine(2);
         $ids = (array)$this->argument('id');
 
@@ -71,10 +71,11 @@ class DeactivateMerchantCondition extends Command
                 $progressBar->advance();
             }
 
-            $progressBar->finish();
-            $this->newLine(2);
-            $this->info('Completed!');
         });
+
+        $progressBar->finish();
+        $this->newLine(2);
+        $this->info('Completed!');
 
         return 0;
     }
