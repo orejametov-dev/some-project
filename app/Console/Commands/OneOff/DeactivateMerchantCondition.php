@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\OneOff;
 
-use App\Modules\Merchants\Models\Merchant;
+use App\Modules\Merchants\Models\Condition;
 use Illuminate\Console\Command;
 
 class DeactivateMerchantCondition extends Command
@@ -42,7 +42,11 @@ class DeactivateMerchantCondition extends Command
         $this->newLine(2);
         $ids = (array)$this->argument('id');
 
-        $query = Merchant::query();
+        $query = Condition::query()
+            ->where('duration', 15)
+            ->where('commission', 50)
+            ->active();
+
         if (count($ids) === 1 && $ids[0] === 'all') {
             if (($from = $this->option('from')) && ($to = $this->option('to'))) {
                 $query->whereBetween('id', [$from, $to]);
@@ -55,22 +59,13 @@ class DeactivateMerchantCondition extends Command
         $progressBar = $this->output->createProgressBar($count);
         $progressBar->start();
 
-        $query->chunk(100, function ($merchants) use ($progressBar) {
-            foreach ($merchants as $merchant) {
-                if (! in_array($merchant->id, [3, 13])) {
-                    $conditions = $merchant->application_conditions;
-
-                    foreach ($conditions as $condition) {
-                        if ($condition->duration == 15) {
-                            $condition->active = false;
-                            $condition->save();
-                        }
-                    }
-                }
-
-                $progressBar->advance();
+        $query->chunk(100, function ($conditions) use ($progressBar) {
+            foreach ($conditions as $condition) {
+                $condition->active = false;
+                $condition->save();
             }
 
+            $progressBar->advance();
         });
 
         $progressBar->finish();

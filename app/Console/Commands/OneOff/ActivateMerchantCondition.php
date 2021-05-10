@@ -44,7 +44,12 @@ class ActivateMerchantCondition extends Command
         $this->newLine(2);
         $ids = (array)$this->argument('id');
 
-        $query = Merchant::query();
+        $query = Merchant::query()
+            ->whereNotIn('id', [3, 13])
+            ->with('stores', function ($q) {
+                $q->where('is_main', 1);
+            });
+
         if (count($ids) === 1 && $ids[0] === 'all') {
             if (($from = $this->option('from')) && ($to = $this->option('to'))) {
                 $query->whereBetween('id', [$from, $to]);
@@ -56,26 +61,23 @@ class ActivateMerchantCondition extends Command
         $count = $query->count();
         $progressBar = $this->output->createProgressBar($count);
         $progressBar->start();
-        $successCount = 0;
 
-        $query->chunk(100, function ($merchants) use ($progressBar, &$successCount) {
-            foreach ($merchants as $merchant)  {
-                if (! in_array($merchant->id, [3, 13])) {
-                    $main_store = $merchant->stores()->where(['is_main' => true])->first();
+        $query->chunk(100, function ($merchants) use ($progressBar) {
 
-                    if ($main_store) {
-                        $new_condition = new Condition();
-                        $new_condition->duration = 15;
-                        $new_condition->commission = 47;
-                        $new_condition->discount = 0;
-                        $new_condition->active = 1;
-                        $new_condition->merchant_id = $merchant->id;
-                        $new_condition->store_id = $main_store->id;
-                        $new_condition->save();
-
-                        $successCount++;
-                    }
+            foreach ($merchants as $merchant) {
+                $main_store = $merchant->stores->first();
+                if (!$main_store) {
+                    continue;
                 }
+
+                $new_condition = new Condition();
+                $new_condition->duration = 15;
+                $new_condition->commission = 47;
+                $new_condition->discount = 0;
+                $new_condition->active = 1;
+                $new_condition->merchant_id = $merchant->id;
+                $new_condition->store_id = $main_store->id;
+                $new_condition->save();
 
                 $progressBar->advance();
             }
@@ -84,7 +86,6 @@ class ActivateMerchantCondition extends Command
 
         $progressBar->finish();
         $this->newLine(2);
-        $this->info('Success count: ' . $successCount . ' from ' . $count);
 
         return 0;
     }
