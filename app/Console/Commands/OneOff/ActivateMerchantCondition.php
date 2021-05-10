@@ -5,6 +5,7 @@ namespace App\Console\Commands\OneOff;
 use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\Merchant;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Model;
 
 class ActivateMerchantCondition extends Command
 {
@@ -71,8 +72,17 @@ class ActivateMerchantCondition extends Command
                 }
 
                 $new_condition = new Condition();
-                $new_condition->duration = 15;
-                $new_condition->commission = 47;
+                $new_condition->duration = 1;
+                $new_condition->commission = 7;
+                $new_condition->discount = 0;
+                $new_condition->active = 1;
+                $new_condition->merchant_id = $merchant->id;
+                $new_condition->store_id = $main_store->id;
+                $new_condition->save();
+
+                $new_condition = new Condition();
+                $new_condition->duration = 3;
+                $new_condition->commission = 15;
                 $new_condition->discount = 0;
                 $new_condition->active = 1;
                 $new_condition->merchant_id = $merchant->id;
