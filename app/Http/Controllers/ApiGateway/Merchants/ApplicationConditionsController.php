@@ -15,7 +15,10 @@ class ApplicationConditionsController extends ApiBaseController
 {
     public function index(Request $request)
     {
-        $conditionQuery = Condition::query()->filterRequest($request)->orderRequest($request);
+        $conditionQuery = Condition::query()
+            ->filterRequest($request)
+            ->orderRequest($request);
+
         if ($request->query('object') == true) {
             return $conditionQuery->first();
         }

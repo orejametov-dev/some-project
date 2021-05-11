@@ -27,7 +27,8 @@ class MerchantRequestsController extends ApiBaseController
     public function index(Request $request)
     {
         $merchantRequests = MerchantRequest::query()
-            ->orderRequest($request)->filterRequest($request);
+            ->filterRequest($request)
+            ->orderRequest($request);
 
         if ($request->query('object') == 'true') {
             return $merchantRequests->first();

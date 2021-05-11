@@ -18,8 +18,10 @@ class MerchantUserController extends ApiBaseController
 {
     public function index(Request $request)
     {
-        $merchantUsersQuery = MerchantUser::query()->with(['merchant', 'store'])
-            ->filterRequest($request)->orderRequest($request);
+        $merchantUsersQuery = MerchantUser::query()
+            ->with(['merchant', 'store'])
+            ->filterRequest($request)
+            ->orderRequest($request);
 
 
         if ($request->query('object') == true) {
