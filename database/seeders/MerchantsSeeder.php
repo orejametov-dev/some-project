@@ -16,6 +16,7 @@ class MerchantsSeeder extends Seeder
     {
         $merchants = [
             [
+                'id' => 1,
                 'name' => 'Crediton',
                 'legal_name' => 'OOO "Crediton"',
                 'information' => 'Lorem ipsum dolar set',
@@ -31,9 +32,10 @@ class MerchantsSeeder extends Seeder
                 'current_sales' => 1000000,
             ],
             [
-                'name' => 'Арена Марказ',
+                'id' => 2,
+                'name' => 'Arena Markaz',
                 'legal_name' => 'ООО «RETAIL OPERATION GROUP»',
-                'token' => '0efdfd8dac7be7620e686bc340e020b3',
+                'token' => '1pr065t5n5s7akbuxorisicwheob9lua7n19xkmzfyg',
                 'alifshop_slug' => 'arena-markaz',
                 'information' => 'Lorem ipsum dolar set',
                 'telegram_chat_id' => '222222',
@@ -46,9 +48,10 @@ class MerchantsSeeder extends Seeder
                 'current_sales' => 2000000,
             ],
             [
+                'id' => 3,
                 'name' => 'Idea Store',
                 'legal_name' => 'OOO "Idea Store"',
-                'token' => 't56ubiudt6lhn3prmk872qqf5rcfabkzvc7dy5cc9q',
+                'token' => 'hjeoxakzpc4q6xpawkp3tdhg195uiad4ja1ikc6w1a9h',
                 'alifshop_slug' => 'idea-store',
                 'information' => 'Lorem ipsum dolar set',
                 'telegram_chat_id' => '333333',
