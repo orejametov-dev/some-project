@@ -2,7 +2,6 @@
 
 namespace App\Modules\Merchants\Models;
 
-use App\Modules\Core\Traits\HasHooks;
 use App\Modules\Merchants\Traits\MerchantFileTrait;
 use App\Modules\Merchants\Traits\MerchantRelationshipsTrait;
 use App\Traits\SortableByQueryParams;
@@ -19,7 +18,6 @@ class Merchant extends Model
     use MerchantRelationshipsTrait;
     use MerchantFileTrait;
     use SortableByQueryParams;
-    use HasHooks;
 
     protected $table = 'merchants';
     protected $fillable = [
