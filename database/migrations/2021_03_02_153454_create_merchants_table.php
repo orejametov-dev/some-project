@@ -28,7 +28,6 @@ class CreateMerchantsTable extends Migration
             $table->boolean('has_orders')->default(false);
             $table->string('logo_url')->nullable();
 
-            $table->string('paymo_terminal')->nullable();
             $table->unsignedBigInteger('maintainer_id')->nullable();
             $table->unsignedBigInteger('current_sales')->nullable();
 
