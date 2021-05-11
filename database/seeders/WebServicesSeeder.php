@@ -16,11 +16,6 @@ class WebServicesSeeder extends Seeder
     {
         $web_services = [
             [
-                'name' => 'CRM',
-                'token' => 'service-token-crm',
-                'note' => 'some note text',
-            ],
-            [
                 'name' => 'MERCHANT',
                 'token' => 'service-token-merchant',
                 'note' => 'some note text',
@@ -87,7 +82,7 @@ class WebServicesSeeder extends Seeder
             ],
             [
                 'name' => 'PRM',
-                'token' => 'service-token-crm',
+                'token' => 'service-token-prm',
                 'note' => 'some note text',
             ],
             [
