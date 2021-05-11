@@ -16,7 +16,6 @@ class Request extends Model
     use MerchantRequestStatusesTrait;
     use SortableByQueryParams;
 
-    public const TABLE_NAME = 'requests';
     protected $table = 'merchant_requests';
     protected $appends = ['status'];
     protected $fillable = [

@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Api\Merchants;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Merchants\Models\Merchant;
-use App\Services\Merchants\MerchantsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
