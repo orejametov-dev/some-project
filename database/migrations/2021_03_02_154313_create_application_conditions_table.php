@@ -24,11 +24,10 @@ class CreateApplicationConditionsTable extends Migration
 
             $table->integer('duration');
             $table->integer('commission');
+            $table->integer('discount')->default(0);
 
-            $table->string('notice')->nullable();
             $table->boolean('active')->default(false);
 
-            $table->integer('discount')->default(0);
             $table->boolean('is_promotional')->default(false);
 
             $table->string('special_offer')->nullable();

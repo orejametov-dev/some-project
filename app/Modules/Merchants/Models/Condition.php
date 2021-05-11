@@ -18,9 +18,10 @@ use Illuminate\Http\Request;
  * @property int $duration
  * @property int $commission
  * @property int $discount
- * @property string $notice
  * @property bool $is_promotional
  * @property string $special_offer
+ * @property int $merchant_id
+ * @property int $store_id
  *
  * @property Merchant $merchant
  * @property Store $store
@@ -33,7 +34,6 @@ class Condition extends Model
     protected $table = 'application_conditions';
     protected $fillable = [
         'duration',
-        'notice',
         'commission',
         'active',
         'discount',
