@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Modules\Merchants\Models\MerchantUser;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class MerchantUsersSeeder extends Seeder
 {
@@ -50,6 +51,6 @@ class MerchantUsersSeeder extends Seeder
             ],
         ];
 
-        MerchantUser::query()->insert($merchant_users);
+        DB::table('merchant_users')->insert($merchant_users);
     }
 }

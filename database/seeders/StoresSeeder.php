@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Modules\Merchants\Models\Store;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class StoresSeeder extends Seeder
 {
@@ -53,6 +54,6 @@ class StoresSeeder extends Seeder
             ]
         ];
 
-        Store::query()->insert($stores);
+        DB::table('stores')->insert($stores);
     }
 }

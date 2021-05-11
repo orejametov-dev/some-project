@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Modules\Merchants\Models\AdditionalAgreement;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class MerchantAdditionalAgreementsSeeder extends Seeder
 {
@@ -38,6 +39,6 @@ class MerchantAdditionalAgreementsSeeder extends Seeder
             ],
         ];
 
-        AdditionalAgreement::query()->insert($additional_agreements);
+        DB::table('additional_agreements')->insert($additional_agreements);
     }
 }

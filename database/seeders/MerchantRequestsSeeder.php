@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Modules\Merchants\Models\Request;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class MerchantRequestsSeeder extends Seeder
 {
@@ -53,6 +54,6 @@ class MerchantRequestsSeeder extends Seeder
             ],
         ];
 
-        Request::query()->insert($merchant_requests);
+        DB::table('merchant_requests')->insert($merchant_requests);
     }
 }

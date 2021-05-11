@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Modules\Merchants\Models\MerchantInfo;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class MerchantInfosSeeder extends Seeder
 {
@@ -68,6 +69,6 @@ class MerchantInfosSeeder extends Seeder
             ],
         ];
 
-        MerchantInfo::query()->insert($merchant_infos);
+        DB::table('merchant_infos')->insert($merchant_infos);
     }
 }

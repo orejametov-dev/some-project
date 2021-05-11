@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Modules\Merchants\Models\Condition;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class ApplicationConditionsSeeder extends Seeder
 {
@@ -113,8 +114,8 @@ class ApplicationConditionsSeeder extends Seeder
             ],
         ];
 
-        Condition::query()->insert($merchant_1_conditions);
-        Condition::query()->insert($merchant_2_conditions);
-        Condition::query()->insert($merchant_3_conditions);
+        DB::table('application_conditions')->insert($merchant_1_conditions);
+        DB::table('application_conditions')->insert($merchant_2_conditions);
+        DB::table('application_conditions')->insert($merchant_3_conditions);
     }
 }

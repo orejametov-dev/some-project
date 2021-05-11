@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Modules\Core\Models\WebService;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class WebServicesSeeder extends Seeder
 {
@@ -92,6 +93,6 @@ class WebServicesSeeder extends Seeder
             ],
         ];
 
-        WebService::query()->insert($web_services);
+        DB::table('web_services')->insert($web_services);
     }
 }
