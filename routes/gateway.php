@@ -115,16 +115,6 @@ Route::middleware(['service', 'gateway-auth-user'])
                 Route::delete('/{id}', [App\Http\Controllers\ApiGateway\Merchants\ApplicationConditionsController::class, 'delete']);
             });
 
-        Route::prefix('core')
-            ->group(function () {
-                Route::get('comments', [App\Http\Controllers\ApiGateway\Core\CommentsController::class, 'index']);
-                Route::post('comments', [App\Http\Controllers\ApiGateway\Core\CommentsController::class, 'store']);
-                Route::match(['put', 'patch'], 'comments/{id}', [App\Http\Controllers\ApiGateway\Core\CommentsController::class, 'update']);
-                Route::delete('comments/{id}', [App\Http\Controllers\ApiGateway\Core\CommentsController::class, 'destroy']);
-
-                Route::get('model_hooks', [App\Http\Controllers\ApiGateway\Core\ModelHooksController::class, 'index']);
-            });
-
         Route::prefix('dashboard')
             ->group(function () {
                 Route::get('/hot-merchants', [MerchantsController::class, 'hotMerchants']);

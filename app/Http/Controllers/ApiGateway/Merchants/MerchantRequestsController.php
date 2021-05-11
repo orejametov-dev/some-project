@@ -5,7 +5,6 @@ namespace App\Http\Controllers\ApiGateway\Merchants;
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestStore;
-use App\Modules\Core\Models\Comment;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Request as MerchantRequest;
 use App\Services\Alifshop\AlifshopService;
@@ -147,12 +146,6 @@ class MerchantRequestsController extends ApiBaseController
 
         $merchant_request->setStatusTrash();
         $merchant_request->save();
-
-        $comment = new Comment();
-        $comment->body = $request->input('body');
-        $comment->commentable_type = MerchantRequest::TABLE_NAME;
-        $comment->commentable_id = $id;
-        $comment->save();
 
         return $merchant_request;
     }

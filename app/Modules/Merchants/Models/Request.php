@@ -3,7 +3,6 @@
 namespace App\Modules\Merchants\Models;
 
 
-use App\Modules\Core\Traits\HasHooks;
 use App\Modules\Merchants\Services\RequestStatus;
 use App\Modules\Merchants\Traits\MerchantRequestStatusesTrait;
 use App\Traits\SortableByQueryParams;
@@ -16,9 +15,7 @@ class Request extends Model
     use HasFactory;
     use MerchantRequestStatusesTrait;
     use SortableByQueryParams;
-    use HasHooks;
 
-    public const TABLE_NAME = 'requests';
     protected $table = 'merchant_requests';
     protected $appends = ['status'];
     protected $fillable = [

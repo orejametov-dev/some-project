@@ -7,7 +7,6 @@ namespace App\Http\Controllers\Api\Merchants;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestStore;
 use App\Modules\Merchants\Models\Request as MerchantRequest;
-use Illuminate\Http\Request;
 
 class RequestsController extends Controller
 {
@@ -20,7 +19,7 @@ class RequestsController extends Controller
 
             'user_phone' => $request->input('user_phone'),
             'user_name' => $request->input('user_name'),
-            'region' => $request->region
+            'region' => $request->input('region')
         ]);
         $merchant_request->setStatusNew();
         $merchant_request->save();
