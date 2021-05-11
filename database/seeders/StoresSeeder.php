@@ -15,10 +15,11 @@ class StoresSeeder extends Seeder
      */
     public function run()
     {
+
         $stores = [
             [
                 'name' => 'Crediton - Online',
-                'merchant_id' => 1,
+                'merchant_id' => SeedConfig::MERCHANT_1,
                 'is_main' => 1,
                 'address' => 'ulitsa Pushkina, dom Kolotushkina',
                 'region' => 'tashkent_city',
