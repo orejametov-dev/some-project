@@ -17,20 +17,18 @@ class CreateMerchantRequestsTable extends Migration
             $table->bigIncrements('id');
 
             $table->string('name');
-            $table->string('information');
+            $table->text('information');
             $table->string('legal_name')->nullable(true);
 
             $table->string('user_name');
             $table->string('user_phone');
 
             $table->bigInteger('status_id')->unsigned();
-            $table->foreign('status_id')->references('id')->on('merchant_request_statuses');
-
 
             $table->string('region')->nullable();
 
             $table->unsignedBigInteger('engaged_by_id')->nullable();
-
+            $table->string('engaged_by_name')->nullable();
             $table->timestamp('engaged_at')->nullable();
 
             $table->timestamps();
