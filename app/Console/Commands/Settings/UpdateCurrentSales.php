@@ -41,7 +41,7 @@ class UpdateCurrentSales extends Command
     {
         $percentage_of_limit = Merchant::$percentage_of_limit;
 
-        $amount_of_merchants = ServiceCore::request('GET', 'merchant-sales');
+        $amount_of_merchants = ServiceCore::request('GET', 'merchant-sales', []);
 
         foreach ($amount_of_merchants as $amount_of_merchant) {
             $merchant = Merchant::findOrFail($amount_of_merchant->merchant_id);

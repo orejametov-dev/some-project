@@ -28,7 +28,7 @@ class MerchantRequestStore extends FormRequest
             'user_phone' => 'required|digits:12',
             'region' => 'required|string',
             'merchant_name' => 'required|string',
-            'merchant_information' => 'required|string',
+            'merchant_information' => 'nullable|string',
             'merchant_legal_name' => 'nullable|string',
         ];
     }

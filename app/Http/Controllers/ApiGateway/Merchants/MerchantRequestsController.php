@@ -44,17 +44,6 @@ class MerchantRequestsController extends ApiBaseController
 
     public function store(MerchantRequestStore $request)
     {
-        $user = ServiceCore::request('GET', 'users', new Request([
-            'q' => $request->input('user_phone'),
-            'object' => 'true',
-        ]));
-
-        if ($user)
-            throw new BusinessException(
-                'Пользователь с таким номером уже существует',
-                'user_already_exists',
-                400);
-
         $merchant_request = new MerchantRequest([
             'name' => $request->input('merchant_name'),
             'information' => $request->input('merchant_information'),
@@ -62,21 +51,13 @@ class MerchantRequestsController extends ApiBaseController
 
             'user_phone' => $request->input('user_phone'),
             'user_name' => $request->input('user_name'),
-            'region' => $request->region
+            'region' => $request->input('region')
         ]);
         $merchant_request->setStatusNew();
         $merchant_request->save();
 
-        ServiceCore::request('POST', 'model-hooks', new Request([
-            'body' => 'Изменен статус на',
-            'keyword' => 'новый',
-            'action' => 'store',
-            'model' => [
-                'id' => $merchant_request->id,
-                'table_name' => $merchant_request->getTable()
-            ],
-            'created_by_id' => $this->user->id
-        ]));
+
+
         return response()->json([
             'code' => 'merchant_request_created',
             'message' => 'Запрос на регистрацию отправлен. В ближайшее время с вами свяжется сотрудник Alifshop.'
@@ -89,10 +70,10 @@ class MerchantRequestsController extends ApiBaseController
             'engaged_by_id' => 'required|integer'
         ]);
 
-        $user = ServiceCore::request('GET', 'users', new Request([
+        $user = ServiceCore::request('GET', 'users', [
             'user_id' => $request->input('engaged_by_id'),
             'object' => 'true'
-        ]));
+        ]);
 
         if (!$user)
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);

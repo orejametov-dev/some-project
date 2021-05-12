@@ -3,16 +3,18 @@
 namespace App\Modules\Merchants\Models;
 
 use App\Traits\SortableByQueryParams;
+use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 /**
  * Class ApplicationCondition
- * @package App\Modules\Applications\Models
  *
+ * @package App\Modules\Applications\Models
  * @property int $id
  * @property bool $active
  * @property int $duration
@@ -22,15 +24,25 @@ use Illuminate\Http\Request;
  * @property string $special_offer
  * @property int $merchant_id
  * @property int $store_id
- *
  * @property Merchant $merchant
  * @property Store $store
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read mixed $title
+ * @method static Builder|Condition active()
+ * @method static Builder|Condition filterRequest(Request $request)
+ * @method static Builder|Condition newModelQuery()
+ * @method static Builder|Condition newQuery()
+ * @method static Builder|Condition orderRequest(Request $request, string $default_order_str = 'id:desc')
+ * @method static Builder|Condition query()
+ * @mixin Eloquent
  */
 class Condition extends Model
 {
     use HasFactory;
 
     use SortableByQueryParams;
+
     protected $table = 'application_conditions';
     protected $fillable = [
         'duration',

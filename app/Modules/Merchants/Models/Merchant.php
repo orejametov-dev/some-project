@@ -6,11 +6,54 @@ use App\Modules\Merchants\Traits\MerchantFileTrait;
 use App\Modules\Merchants\Traits\MerchantRelationshipsTrait;
 use App\Traits\SortableByQueryParams;
 use Carbon\Carbon;
+use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
+/**
+ * App\Modules\Merchants\Models\Merchant
+ *
+ * @property int $id
+ * @property string $name
+ * @property string|null $legal_name
+ * @property string|null $information
+ * @property string|null $token
+ * @property string $alifshop_slug
+ * @property string|null $telegram_chat_id
+ * @property int $has_deliveries
+ * @property int $has_manager
+ * @property int $has_applications
+ * @property int $has_orders
+ * @property string|null $logo_url
+ * @property string|null $paymo_terminal
+ * @property int|null $maintainer_id
+ * @property int|null $current_sales
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Collection|AdditionalAgreement[] $additional_agreements
+ * @property-read int|null $additional_agreements_count
+ * @property-read Collection|Condition[] $application_conditions
+ * @property-read int|null $application_conditions_count
+ * @property-read Collection|File[] $files
+ * @property-read int|null $files_count
+ * @property-read mixed $logo_path
+ * @property-read MerchantInfo|null $merchant_info
+ * @property-read Collection|MerchantUser[] $merchant_users
+ * @property-read int|null $merchant_users_count
+ * @property-read Collection|Store[] $stores
+ * @property-read int|null $stores_count
+ * @property-read Collection|Tag[] $tags
+ * @property-read int|null $tags_count
+ * @method static Builder|Merchant filterRequest(Request $request)
+ * @method static Builder|Merchant newModelQuery()
+ * @method static Builder|Merchant newQuery()
+ * @method static Builder|Merchant orderRequest(Request $request, string $default_order_str = 'id:desc')
+ * @method static Builder|Merchant query()
+ * @mixin Eloquent
+ */
 class Merchant extends Model
 {
     use HasFactory;
@@ -123,7 +166,7 @@ class Merchant extends Model
             });
         }
 
-        if($token = $request->query('token')){
+        if ($token = $request->query('token')) {
             $query->where('token', $token);
         }
     }
