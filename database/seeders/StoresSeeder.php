@@ -16,45 +16,77 @@ class StoresSeeder extends Seeder
     public function run()
     {
 
-        $stores = [
-            [
-                'name' => 'Crediton - Online',
-                'merchant_id' => SeedConfig::MERCHANT_1,
-                'is_main' => 1,
-                'address' => 'ulitsa Pushkina, dom Kolotushkina',
-                'region' => 'tashkent_city',
-                'lat' => '1000',
-                'long' => '2000',
-                'phone' => '998781130408',
-                'responsible_person' => 'Palonchi Palonchiev',
-                'responsible_person_phone' => '998901234567',
-            ],
-            [
-                'name' => 'Arena Markaz - Compas',
-                'merchant_id' => 2,
-                'is_main' => 1,
-                'address' => 'ulitsa Pushkina, dom Kolotushkina',
-                'region' => 'tashkent_city',
-                'lat' => '2000',
-                'long' => '3000',
-                'phone' => '998712002020',
-                'responsible_person' => 'Palonchi Palonchiev2',
-                'responsible_person_phone' => '998911234567',
-            ],
-            [
-                'name' => 'Idea - Nurafshon',
-                'merchant_id' => 3,
-                'is_main' => 1,
-                'address' => 'ulitsa Pushkina, dom Kolotushkina',
-                'region' => 'tashkent_city',
-                'lat' => '4000',
-                'long' => '5000',
-                'phone' => '998712240000',
-                'responsible_person' => 'Palonchi Palonchiev3',
-                'responsible_person_phone' => '998921234567',
-            ]
+        $store_1 =  [
+            'name' => 'Idea - Nurafshon',
+            'merchant_id' => 1,
+            'is_main' => 1,
+            'address' => 'ulitsa Pushkina, dom Kolotushkina',
+            'region' => 'tashkent_city',
+            'lat' => '10020',
+            'long' => '20020',
+            'phone' => '998901112233',
+            'responsible_person' => 'Shokhrukh',
+            'responsible_person_phone' => '998901112233',
         ];
 
-        DB::table('stores')->insert($stores);
+        $store_2 =  [
+            'name' => 'Idea - Oqtepa',
+            'merchant_id' => 1,
+            'is_main' => 0,
+            'address' => 'ulitsa Pushkina, dom Kolotushkina',
+            'region' => 'tashkent_city',
+            'lat' => '10021',
+            'long' => '20021',
+            'phone' => '998901112233',
+            'responsible_person' => 'Iskandar',
+            'responsible_person_phone' => '998901112233',
+        ];
+
+        $store_3 =  [
+            'name' => 'Arena Markaz - Compas',
+            'merchant_id' => 2,
+            'is_main' => 1,
+            'address' => 'ulitsa Pushkina, dom Kolotushkina',
+            'region' => 'tashkent_city',
+            'lat' => '10022',
+            'long' => '20022',
+            'phone' => '998912223344',
+            'responsible_person' => 'Bekhzod',
+            'responsible_person_phone' => '998912223344',
+        ];
+
+        $store_4 =  [
+            'name' => 'Arena Markaz - Malika',
+            'merchant_id' => 2,
+            'is_main' => 0,
+            'address' => 'ulitsa Pushkina, dom Kolotushkina',
+            'region' => 'tashkent_city',
+            'lat' => '10023',
+            'long' => '20023',
+            'phone' => '998912223344',
+            'responsible_person' => 'Vera',
+            'responsible_person_phone' => '998912223344',
+        ];
+
+        $store_5 =  [
+            'name' => 'Mobilezone - Oybek',
+            'merchant_id' => 3,
+            'is_main' => 1,
+            'address' => 'ulitsa Pushkina, dom Kolotushkina',
+            'region' => 'tashkent_city',
+            'lat' => '10024',
+            'long' => '20024',
+            'phone' => '998923334455',
+            'responsible_person' => 'Sabokhat',
+            'responsible_person_phone' => '998923334455',
+        ];
+
+        DB::table('stores')->insert([
+            $store_1,
+            $store_2,
+            $store_3,
+            $store_4,
+            $store_5,
+        ]);
     }
 }

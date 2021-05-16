@@ -15,57 +15,79 @@ class MerchantsSeeder extends Seeder
      */
     public function run()
     {
-        $merchants = [
-            [
-                'id' => 1,
-                'name' => 'Crediton',
-                'legal_name' => 'OOO "Crediton"',
-                'information' => 'Lorem ipsum dolar set',
-                'token' => 'qzkflpugv68i03dtq9h44p4stesk7h9nf2wkcwwlcj',
-                'alifshop_slug' => 'crediton',
-                'telegram_chat_id' => 1,
-                'has_deliveries' => 1,
-                'has_manager' => 1,
-                'has_applications' => 1,
-                'has_orders' => 1,
-                'paymo_terminal' => 1,
-                'maintainer_id' => 1,
-                'current_sales' => 1000000,
-            ],
-            [
-                'id' => 2,
-                'name' => 'Arena Markaz',
-                'legal_name' => 'ООО «RETAIL OPERATION GROUP»',
-                'token' => '1pr065t5n5s7akbuxorisicwheob9lua7n19xkmzfyg',
-                'alifshop_slug' => 'arena-markaz',
-                'information' => 'Lorem ipsum dolar set',
-                'telegram_chat_id' => 2,
-                'has_deliveries' => 1,
-                'has_manager' => 1,
-                'has_applications' => 1,
-                'has_orders' => 1,
-                'paymo_terminal_id' => 2,
-                'maintainer_id' => 2,
-                'current_sales' => 2000000,
-            ],
-            [
-                'id' => 3,
-                'name' => 'Idea Store',
-                'legal_name' => 'OOO "Idea Store"',
-                'token' => 'hjeoxakzpc4q6xpawkp3tdhg195uiad4ja1ikc6w1a9h',
-                'alifshop_slug' => 'idea-store',
-                'information' => 'Lorem ipsum dolar set',
-                'telegram_chat_id' => 3,
-                'has_deliveries' => 1,
-                'has_manager' => 1,
-                'has_applications' => 1,
-                'has_orders' => 1,
-                'paymo_terminal_id' => 3,
-                'maintainer_id' => 3,
-                'current_sales' => 3000000,
-            ]
+        $merchant_1 = [
+            'id' => 1,
+            'name' => 'Idea Store',
+            'legal_name' => 'OOO "Idea"',
+            'information' => 'Lorem ipsum dolar set',
+            'token' => 'token-idea',
+            'alifshop_slug' => 'idea',
+            'telegram_chat_id' => 1,
+            'has_deliveries' => 1,
+            'has_manager' => 1,
+            'has_applications' => 1,
+            'has_orders' => 1,
+            'paymo_terminal' => 1,
+            'maintainer_id' => 1,
+            'current_sales' => 1000000,
         ];
 
-        DB::table('merchants')->insert($merchants);
+        $merchant_2 = [
+            'id' => 2,
+            'name' => 'Arena Markaz',
+            'legal_name' => 'ООО «RETAIL OPERATION GROUP»',
+            'token' => 'token-arenamarkaz',
+            'alifshop_slug' => 'arena_markaz',
+            'information' => 'Lorem ipsum dolar set',
+            'telegram_chat_id' => 2,
+            'has_deliveries' => 1,
+            'has_manager' => 1,
+            'has_applications' => 1,
+            'has_orders' => 1,
+            'paymo_terminal_id' => 2,
+            'maintainer_id' => 2,
+            'current_sales' => 2000000,
+        ];
+
+        $merchant_3 = [
+            'id' => 3,
+            'name' => 'Mobilezone',
+            'legal_name' => 'OOO "Mobilezone Store"',
+            'token' => 'token-mobilezone',
+            'alifshop_slug' => 'mobilezone',
+            'information' => 'Lorem ipsum dolar set',
+            'telegram_chat_id' => 3,
+            'has_deliveries' => 1,
+            'has_manager' => 1,
+            'has_applications' => 1,
+            'has_orders' => 1,
+            'paymo_terminal_id' => 3,
+            'maintainer_id' => 3,
+            'current_sales' => 3000000,
+        ];
+
+        $merchant_4 = [
+            'id' => 4,
+            'name' => 'GSHOP',
+            'legal_name' => 'OOO "GSHOP"',
+            'token' => 'token-gshop',
+            'alifshop_slug' => 'gshop',
+            'information' => 'Lorem ipsum dolar set',
+            'telegram_chat_id' => 4,
+            'has_deliveries' => 0,
+            'has_manager' => 1,
+            'has_applications' => 0,
+            'has_orders' => 0,
+            'paymo_terminal_id' => 4,
+            'maintainer_id' => 4,
+            'current_sales' => 3000000,
+        ];
+
+        DB::table('merchants')->insert([
+            $merchant_1,
+            $merchant_2,
+            $merchant_3,
+            $merchant_4,
+        ]);
     }
 }
