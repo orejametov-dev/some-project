@@ -22,7 +22,7 @@ class MerchantAdditionalAgreementsSeeder extends Seeder
             'limit' => 1000000000,
         ];
 
-        DB::table('additional_agreements')->insert([
+        DB::table('merchant_additional_agreements')->insert([
             $additional_agreement_1
         ]);
     }

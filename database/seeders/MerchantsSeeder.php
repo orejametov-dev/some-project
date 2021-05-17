@@ -26,8 +26,6 @@ class MerchantsSeeder extends Seeder
             'has_deliveries' => 1,
             'has_manager' => 1,
             'has_applications' => 1,
-            'has_orders' => 1,
-            'paymo_terminal' => 1,
             'maintainer_id' => 1,
             'current_sales' => 1000000,
         ];
@@ -43,8 +41,6 @@ class MerchantsSeeder extends Seeder
             'has_deliveries' => 1,
             'has_manager' => 1,
             'has_applications' => 1,
-            'has_orders' => 1,
-            'paymo_terminal_id' => 2,
             'maintainer_id' => 2,
             'current_sales' => 2000000,
         ];
@@ -60,8 +56,6 @@ class MerchantsSeeder extends Seeder
             'has_deliveries' => 1,
             'has_manager' => 1,
             'has_applications' => 1,
-            'has_orders' => 1,
-            'paymo_terminal_id' => 3,
             'maintainer_id' => 3,
             'current_sales' => 3000000,
         ];
@@ -77,8 +71,6 @@ class MerchantsSeeder extends Seeder
             'has_deliveries' => 0,
             'has_manager' => 1,
             'has_applications' => 0,
-            'has_orders' => 0,
-            'paymo_terminal_id' => 4,
             'maintainer_id' => 4,
             'current_sales' => 3000000,
         ];
