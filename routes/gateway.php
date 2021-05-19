@@ -134,6 +134,7 @@ Route::middleware(['service', 'gateway-auth-user'])
                 Route::post('/{id}/upload-logo', [MerchantsController::class, 'uploadLogo']);
                 Route::post('/{id}/remove-logo', [MerchantsController::class, 'removeLogo']);
                 Route::post('/{id}/set-responsible-user', [MerchantsController::class, 'setResponsibleUser']);
+                Route::post('/{id}/set-status', [MerchantsController::class, 'setStatus']);
 
                 Route::match(['put', 'patch'], '/{id}/update-modules', [MerchantsController::class, 'updateModules']);
             });
