@@ -15,7 +15,10 @@ class ApplicationConditionsController extends ApiBaseController
 {
     public function index(Request $request)
     {
-        $conditionQuery = Condition::query()->filterRequest($request)->orderRequest($request);
+        $conditionQuery = Condition::query()
+            ->filterRequest($request)
+            ->orderRequest($request);
+
         if ($request->query('object') == true) {
             return $conditionQuery->first();
         }
@@ -35,17 +38,13 @@ class ApplicationConditionsController extends ApiBaseController
         $condition->store()->associate($store);
         $condition->save();
 
-        ServiceCore::request('POST', 'model-hooks', new Request([
-            'body' => 'Создано условие',
-            'keyword' => 'id: ' . $condition->id . ' ' . $condition->title,
-            'action' => 'create',
-            'class' => 'info',
-            'model' => [
-                'id' => $merchant->id,
-                'table_name' => $merchant->getTable()
-            ],
-            'created_by_id' => $this->user->id
-        ]));
+        ServiceCore::storeHook(
+            'Создано условие',
+            'id: ' . $condition->id . ' ' . $condition->title,
+            'create',
+            'info',
+            $merchant
+        );
 
         return $condition;
     }
@@ -55,32 +54,27 @@ class ApplicationConditionsController extends ApiBaseController
         /** @var Condition $condition */
         $condition = Condition::query()->findOrFail($condition_id);
 
-        $application = ServiceCore::request('GET', 'applications', new Request([
+        $applications = ServiceCore::request('GET', 'applications', [
             'condition_id' => $condition_id,
             'object' => 'true'
-        ]));
+        ]);
 
-        if ($application) { //TODO заменить на HTTP
+        if ($applications) {
             return response()->json(['message' => 'Условие не может быть изменено'], 400);
         }
-
 
         $merchant = $condition->merchant;
 
         $condition->fill($request->validated());
         $condition->save();
 
-        ServiceCore::request('POST', 'model-hooks', new Request([
-            'body' => 'Изменено условие',
-            'keyword' => 'id: ' . $condition->id . ' ' . $condition->title,
-            'action' => 'update',
-            'class' => 'warning',
-            'model' => [
-                'id' => $merchant->id,
-                'table_name' => $merchant->getTable()
-            ],
-            'created_by_id' => $this->user->id
-        ]));
+        ServiceCore::storeHook(
+            'Изменено условие',
+            'id: ' . $condition->id . ' ' . $condition->title,
+            'update',
+            'warning',
+            $merchant
+        );
 
         return $condition;
     }
@@ -89,12 +83,12 @@ class ApplicationConditionsController extends ApiBaseController
     {
         $condition = Condition::query()->findOrFail($condition_id);
 
-        $application = ServiceCore::request('GET', 'applications', new Request([
+        $applications = ServiceCore::request('GET', 'applications', [
             'condition_id' => $condition_id,
             'object' => 'true'
-        ]));
+        ]);
 
-        if ($application) {
+        if ($applications) {
             return response()->json(['message' => 'Условие не может быть удалено'], 400);
         }
 
@@ -102,17 +96,13 @@ class ApplicationConditionsController extends ApiBaseController
 
         $condition->delete();
 
-        ServiceCore::request('POST', 'model-hooks', new Request([
-            'body' => 'Условие удалено',
-            'keyword' => 'id: ' . $condition->id . ' ' . $condition->title,
-            'action' => 'delete',
-            'class' => 'danger',
-            'model' => [
-                'id' => $merchant->id,
-                'table_name' => $merchant->getTable()
-            ],
-            'created_by_id' => $this->user->id
-        ]));
+        ServiceCore::storeHook(
+            'Условие удалено',
+            'id: ' . $condition->id . ' ' . $condition->title,
+            'delete',
+            'danger',
+            $merchant
+        );
 
         return response()->json(['message' => 'Условие удалено']);
     }
@@ -125,17 +115,13 @@ class ApplicationConditionsController extends ApiBaseController
 
         $merchant = $condition->merchant;
 
-        ServiceCore::request('POST', 'model-hooks', new Request([
-            'body' => 'Изменено условие',
-            'keyword' => 'id: ' . $condition->id . ' ' . $condition->title . ' на ' . ($condition->active) ? 'активный' : 'не активный',
-            'action' => 'update',
-            'class' => 'warning',
-            'model' => [
-                'id' => $merchant->id,
-                'table_name' => $merchant->getTable()
-            ],
-            'created_by_id' => $this->user->id
-        ]));
+        ServiceCore::storeHook(
+            'Изменено условие',
+            'id: ' . $condition->id . ' ' . $condition->title . ' на ' . ($condition->active) ? 'активный' : 'не активный',
+            'update',
+            'warning',
+            $merchant
+        );
 
         $merchant->load(['application_conditions' => function ($q) {
             $q->active();

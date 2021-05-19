@@ -1,29 +1,40 @@
 <?php
 
-
 namespace App\Services\Core;
-
 
 use App\Exceptions\ServiceCoreException;
 use App\Modules\Core\Models\WebService;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
-use Illuminate\Http\Request;
 use Psr\Http\Message\ResponseInterface;
 
 class ServiceCore
 {
-    public static function request($method, $route, Request $request = null, $token = null, $should_return_response = false)
+    public static function storeHook($body, $keyword, $action, $class, $model)
     {
-        $token = isset($token) ? $token : app(WebService::class)->token;
-        $params = isset($request) ? $request->all() : [];
+        ServiceCore::request('POST', 'model-hooks', [
+            'body' => $body,
+            'keyword' => $keyword,
+            'action' => $action,
+            'class' => $class,
+            'model' => [
+                'id' => $model->id,
+                'table_name' => $model->getTable()
+            ]
+        ]);
+    }
+
+
+    public static function request($method, $route, $params, $should_return_response = false)
+    {
+        $token = app(WebService::class)->token;
         $client = self::createRequest();
         $key = $method == 'GET' ? 'query' : 'json';
         try {
             $response = $client->request($method, $route, [
                 'headers' => [
-                    'Service-Token' => config('local_services.service_core.service_token'),
+                    'Service-Token' => $token,
                 ],
                 $key => $params
             ]);
@@ -36,7 +47,6 @@ class ServiceCore
             throw new ServiceCoreException($e->getResponse()->getBody()->getContents(), $e->getCode());
         }
     }
-
 
     protected static function createRequest(): ClientInterface
     {

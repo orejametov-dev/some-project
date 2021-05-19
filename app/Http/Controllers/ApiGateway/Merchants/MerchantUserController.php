@@ -18,8 +18,10 @@ class MerchantUserController extends ApiBaseController
 {
     public function index(Request $request)
     {
-        $merchantUsersQuery = MerchantUser::query()->with(['merchant', 'store'])
-            ->filterRequest($request)->orderRequest($request);
+        $merchantUsersQuery = MerchantUser::query()
+            ->with(['merchant', 'store'])
+            ->filterRequest($request)
+            ->orderRequest($request);
 
 
         if ($request->query('object') == true) {
@@ -37,10 +39,10 @@ class MerchantUserController extends ApiBaseController
 
     public function store(StoreMerchantUsers $request)
     {
-        $user = ServiceCore::request('GET', 'users', new Request([
+        $user = ServiceCore::request('GET', 'users', [
             'id' => $request->input('user_id'),
             'object' => 'true'
-        ]));
+        ]);
 
         if (!$user)
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
@@ -66,17 +68,13 @@ class MerchantUserController extends ApiBaseController
 
         $merchant_user->save();
 
-        ServiceCore::request('POST', 'model-hooks', new Request([
-            'body' => 'Сотрудник создан',
-            'keyword' => 'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id,
-            'action' => 'create',
-            'class' => 'info',
-            'model' => [
-                'id' => $merchant->id,
-                'table_name' => $merchant->getTable()
-            ],
-            'created_by_id' => $this->user->id
-        ]));
+        ServiceCore::storeHook(
+            'Сотрудник создан',
+            'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id,
+            'create',
+            'info',
+            $merchant
+        );
 
         Cache::forget('merchant_user_id_' . $merchant_user->user_id);
 
@@ -121,17 +119,13 @@ class MerchantUserController extends ApiBaseController
 
         $merchant_user->save();
 
-        ServiceCore::request('POST', 'model-hooks', new Request([
-            'body' => 'Сотрудник обновлен',
-            'keyword' => 'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id,
-            'action' => 'update',
-            'class' => 'warning',
-            'model' => [
-                'id' => $merchant->id,
-                'table_name' => $merchant->getTable()
-            ],
-            'created_by_id' => $this->user->id
-        ]));
+        ServiceCore::storeHook(
+            'Сотрудник обновлен',
+            'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id,
+            'update',
+            'warning',
+            $merchant
+        );
 
         Cache::forget('merchant_user_id_' . $merchant_user->user_id);
 
@@ -146,17 +140,13 @@ class MerchantUserController extends ApiBaseController
 
         $merchant = $merchant_user->merchant;
 
-        ServiceCore::request('POST', 'model-hooks', new Request([
-            'body' => 'Сотрудник удален',
-            'keyword' => 'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id,
-            'action' => 'delete',
-            'class' => 'danger',
-            'model' => [
-                'id' => $merchant->id,
-                'table_name' => $merchant->getTable()
-            ],
-            'created_by_id' => $this->user->id
-        ]));
+        ServiceCore::storeHook(
+            'Сотрудник удален',
+            'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id,
+            'delete',
+            'danger',
+            $merchant
+        );
 
         Cache::forget('merchant_user_id_' . $merchant_user->user_id);
 

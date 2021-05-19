@@ -3,6 +3,7 @@
 namespace App\Modules\Merchants\Models;
 
 use Carbon\Carbon;
+use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,25 +11,35 @@ use Illuminate\Http\Request;
 
 /**
  * Class MerchantInfo
+ *
  * @package App\Modules\Partners\Models
- * @property string legal_name
- * @property string director_name
- * @property string phone
- * @property string vat_number
- * @property string mfo
- * @property string tin
- * @property string oked
- * @property string address
- * @property string bank_account
- * @property string bank_name
- * @property integer contract_number
- * @property integer limit
- * @property Carbon $limit_expared_at
- * @property Carbon $contract_date
+ * @property int $id
+ * @property string $legal_name
+ * @property string $director_name
+ * @property string $phone
+ * @property string $vat_number
+ * @property string $mfo
+ * @property string $tin
+ * @property string $oked
+ * @property string $address
+ * @property string $bank_account
+ * @property string $bank_name
+ * @property int $contract_number
+ * @property int $merchant_id
+ * @property int|null $limit
+ * @property string|null $limit_expired_at
+ * @property int|null $rest_limit
+ * @property-read Merchant $merchant
+ * @method static Builder|MerchantInfo filterRequest(Request $request)
+ * @method static Builder|MerchantInfo newModelQuery()
+ * @method static Builder|MerchantInfo newQuery()
+ * @method static Builder|MerchantInfo query()
+ * @mixin Eloquent
  */
 class MerchantInfo extends Model
 {
     use HasFactory;
+
     protected $table = 'merchant_infos';
     protected $fillable = [
         'legal_name',

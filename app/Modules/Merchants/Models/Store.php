@@ -5,15 +5,18 @@ namespace App\Modules\Merchants\Models;
 
 use App\Modules\Merchants\Traits\StoreRelationshipsTrait;
 use App\Traits\SortableByQueryParams;
+use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 /**
  * Class Store
- * @package App\Modules\Partners\Models
  *
+ * @package App\Modules\Partners\Models
  * @property $id
  * @property $name
  * @property $is_main
@@ -26,8 +29,18 @@ use Illuminate\Http\Request;
  * @property $responsible_person_phone
  * @property $merchant_id
  * @property Merchant $merchant
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Collection|Condition[] $application_conditions
+ * @property-read int|null $application_conditions_count
+ * @method static Builder|Store filterRequest(Request $request)
+ * @method static Builder|Store main()
+ * @method static Builder|Store newModelQuery()
+ * @method static Builder|Store newQuery()
+ * @method static Builder|Store orderRequest(Request $request, string $default_order_str = 'id:desc')
+ * @method static Builder|Store query()
+ * @mixin Eloquent
  */
-
 class Store extends Model
 {
     use HasFactory;

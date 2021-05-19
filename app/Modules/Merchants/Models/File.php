@@ -2,11 +2,14 @@
 
 namespace App\Modules\Merchants\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class MerchantFile
+ *
  * @package App\Modules\Partners\Models
  * @property int $id
  * @property string $file_type
@@ -15,12 +18,19 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $size
  * @property int $file_id
  * @property string $url
+ * @property string|null $created_at
+ * @property string|null $updated_at
+ * @property-read mixed $link
+ * @property-read Merchant $merchant
+ * @method static Builder|File newModelQuery()
+ * @method static Builder|File newQuery()
+ * @method static Builder|File query()
+ * @mixin Eloquent
  */
-
-
 class File extends Model
 {
     use HasFactory;
+
     public $timestamps = false;
     protected $table = 'merchant_files';
     public static $file_types = [
