@@ -56,8 +56,6 @@ class MerchantRequestsController extends ApiBaseController
         $merchant_request->setStatusNew();
         $merchant_request->save();
 
-
-
         return response()->json([
             'code' => 'merchant_request_created',
             'message' => 'Запрос на регистрацию отправлен. В ближайшее время с вами свяжется сотрудник Alifshop.'

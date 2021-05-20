@@ -19,12 +19,17 @@ class CheckGatewayAuthUser
     {
         $auth_user = $request->header('x-auth-user');
 
-        if(config('app.env') != 'production') {
+        if(config('app.env') != 'production'){
             $auth_user = json_encode([
-                'id' => 6,
+                'id' => 1,
                 'name' => 'Oybek Rejametov',
+                'phone' => '998998921652',
                 'avatar_link' => null,
-                'phone' => '998998921652'
+                'merchant_user' => [
+                    'user_id' => 6,
+                    'id' => 6,
+                    'merchant_id' => 1
+                ]
             ]);
         }
 
