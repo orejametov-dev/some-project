@@ -68,4 +68,13 @@ class StoresController extends Controller
         return response()->json(['message' => 'Успешно удалено']);
     }
 
+    public function setStatus($id)
+    {
+        $store = Store::findOrFail($id);
+        $store->is_archived = !$store->is_archived;
+        $store->save();
+
+        return $store;
+    }
+
 }
