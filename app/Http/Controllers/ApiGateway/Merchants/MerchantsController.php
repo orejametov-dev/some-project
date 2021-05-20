@@ -7,6 +7,7 @@ use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Files\StoreFileRequest;
 use App\HttpServices\Telegram\TelegramService;
 use App\Modules\Merchants\Models\Merchant;
+use App\Modules\Merchants\Services\MerchantStatus;
 use App\Services\Alifshop\AlifshopService;
 use App\Services\Core\ServiceCore;
 use Illuminate\Http\Request;
@@ -55,6 +56,7 @@ class MerchantsController extends ApiBaseController
 
         $merchant = new Merchant($validated_data);
         $merchant->maintainer_id = $this->user->id;
+        $merchant->setStatusActive();
         $merchant->save();
 
         $this->alifshopService->storeOrUpdateMerchant($merchant);
@@ -229,6 +231,19 @@ class MerchantsController extends ApiBaseController
                 'sub_query.id',
                 'sub_query.name'
             ])->whereRaw("(IFNULL(sub_query.limit, 0) + IFNULL(sub_query.agreement_sum, 0)) $percentage_of_limit <= sub_query.current_sales")->get();
+    }
+
+    public function setStatus($id, Request $request)
+    {
+        $this->validate($request, [
+            'status_id' => 'integer|required|in:' . MerchantStatus::ACTIVE . ', ' . MerchantStatus::ARCHIVE . ', '. MerchantStatus::BLOCK
+        ]);
+
+        $merchant = Merchant::findOrFail($id);
+        $merchant->setStatus($request->input('status_id'));
+        $merchant->save();
+
+        return $merchant;
     }
 
 }
