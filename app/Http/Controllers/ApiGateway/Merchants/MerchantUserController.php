@@ -63,6 +63,7 @@ class MerchantUserController extends ApiBaseController
         $merchant = $store->merchant;
         $merchant_user = new MerchantUser();
         $merchant_user->user_id = $request->input('user_id');
+        $merchant_user->user_name = $user->name;
         $merchant_user->merchant()->associate($merchant);
         $merchant_user->store()->associate($store->id);
 

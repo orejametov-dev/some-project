@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
  * @property int $merchant_id
  * @property int $store_id
  * @property int $user_id
+ * @property string $user_name
  * @property int $permission_applications
  * @property int $permission_deliveries
  * @property int $permission_orders
