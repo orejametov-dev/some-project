@@ -19,14 +19,6 @@ class AddStatusKeyColumnsToMerchantsTable extends Migration
             $table->string('status_key')->default(MerchantStatus::getOneById(MerchantStatus::ACTIVE)->key);
             $table->timestamp('status_updated_at')->default(now());
         });
-
-//        $merchants = \App\Modules\Merchants\Models\Merchant::chunkById(100, function ($merchants) {
-//            foreach ($merchants as $merchant) {
-//                $merchant->timestamps = false;
-//                $merchant->setStatusActive();
-//                $merchant->save();
-//            }
-//        });
     }
 
     /**
