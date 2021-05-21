@@ -110,7 +110,7 @@ Route::middleware(['service', 'gateway-auth-user'])
         Route::prefix('application-conditions')
             ->group(function () {
                 Route::get('/', [App\Http\Controllers\ApiGateway\Merchants\ApplicationConditionsController::class, 'index']);
-                Route::get('/actives', [App\Http\Controllers\ApiGateway\Merchants\ApplicationConditionsController::class, 'activeindex']);
+                Route::get('/actives', [App\Http\Controllers\ApiGateway\Merchants\ApplicationConditionsController::class, 'activeIndex']);
                 Route::post('/', [App\Http\Controllers\ApiGateway\Merchants\ApplicationConditionsController::class, 'store']);
                 Route::match(['put', 'patch'],'/{id}', [App\Http\Controllers\ApiGateway\Merchants\ApplicationConditionsController::class, 'update']);
                 Route::post('/{id}/toggle', [App\Http\Controllers\ApiGateway\Merchants\ApplicationConditionsController::class, 'toggle']);
