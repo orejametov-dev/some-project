@@ -56,7 +56,7 @@ Route::middleware(['service', 'gateway-auth-user'])
                 Route::delete('/{id}', [App\Http\Controllers\ApiGateway\Merchants\MerchantUserController::class, 'destroy']);
                 Route::get('/{id}', [App\Http\Controllers\ApiGateway\Merchants\MerchantUserController::class, 'show']);
                 Route::match(['put', 'patch'], '/{id}', [App\Http\Controllers\ApiGateway\Merchants\MerchantUserController::class, 'update']);
-                Route::match(['put', 'patch'], '/{id}/update-permissions-api-merchants', [App\Http\Controllers\ApiGateway\Merchants\MerchantUserController::class, 'updatePermissionsForApiMerchants']);
+                Route::post( '/{id}/update-permissions-api-merchants', [App\Http\Controllers\ApiGateway\Merchants\MerchantUserController::class, 'updatePermissionsForApiMerchants']);
             });
 
         Route::prefix('merchants/files')
