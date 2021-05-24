@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Modules\Merchants\Models\Merchant;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -28,6 +29,8 @@ class MerchantsSeeder extends Seeder
             'has_applications' => 1,
             'maintainer_id' => 1,
             'current_sales' => 1000000,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
 
         $merchant_2 = [
@@ -43,6 +46,8 @@ class MerchantsSeeder extends Seeder
             'has_applications' => 1,
             'maintainer_id' => 2,
             'current_sales' => 2000000,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
 
         $merchant_3 = [
@@ -58,6 +63,8 @@ class MerchantsSeeder extends Seeder
             'has_applications' => 1,
             'maintainer_id' => 3,
             'current_sales' => 3000000,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
 
         $merchant_4 = [
@@ -73,6 +80,8 @@ class MerchantsSeeder extends Seeder
             'has_applications' => 0,
             'maintainer_id' => 4,
             'current_sales' => 3000000,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
 
         DB::table('merchants')->insert([

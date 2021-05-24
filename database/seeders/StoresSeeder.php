@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Modules\Merchants\Models\Store;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -27,6 +28,8 @@ class StoresSeeder extends Seeder
             'phone' => '998901112233',
             'responsible_person' => 'Shokhrukh',
             'responsible_person_phone' => '998901112233',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
 
         $store_2 =  [
@@ -40,6 +43,8 @@ class StoresSeeder extends Seeder
             'phone' => '998901112233',
             'responsible_person' => 'Iskandar',
             'responsible_person_phone' => '998901112233',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
 
         $store_3 =  [
@@ -53,6 +58,8 @@ class StoresSeeder extends Seeder
             'phone' => '998912223344',
             'responsible_person' => 'Bekhzod',
             'responsible_person_phone' => '998912223344',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
 
         $store_4 =  [
@@ -66,6 +73,8 @@ class StoresSeeder extends Seeder
             'phone' => '998912223344',
             'responsible_person' => 'Vera',
             'responsible_person_phone' => '998912223344',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
 
         $store_5 =  [
@@ -79,6 +88,8 @@ class StoresSeeder extends Seeder
             'phone' => '998923334455',
             'responsible_person' => 'Sabokhat',
             'responsible_person_phone' => '998923334455',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
 
         DB::table('stores')->insert([
