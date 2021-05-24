@@ -56,10 +56,11 @@ class MerchantsController extends Controller
 
     public function verifyToken(Request $request)
     {
-        $isTokenValid = Merchant::query()->where('token', $request->token)->exists();
+        $merchant = Merchant::query()->where('token', $request->token)->firstOrFail();
 
         return [
-            'is_token_valid' => $isTokenValid
+            'name' => $merchant->name,
+            'merchant_id' => $merchant->id
         ];
     }
 
