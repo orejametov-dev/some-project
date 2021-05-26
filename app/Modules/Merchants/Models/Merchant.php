@@ -170,5 +170,9 @@ class Merchant extends Model
         if ($token = $request->query('token')) {
             $query->where('token', $token);
         }
+
+        if($status_id = $request->query('status_id')) {
+            $query->where('status_id', $status_id);
+        }
     }
 }
