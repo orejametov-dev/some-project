@@ -236,7 +236,7 @@ class MerchantsController extends ApiBaseController
     public function setStatus($id, Request $request)
     {
         $this->validate($request, [
-            'status_id' => 'integer|required|in:' . MerchantStatus::ACTIVE . ', ' . MerchantStatus::ARCHIVE . ', '. MerchantStatus::BLOCK
+            'status_id' => 'integer|required|in:' . MerchantStatus::ACTIVE . ', ' . MerchantStatus::ARCHIVE
         ]);
 
         $merchant = Merchant::findOrFail($id);

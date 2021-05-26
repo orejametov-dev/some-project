@@ -8,7 +8,6 @@ class MerchantStatus
 {
     public const ACTIVE = 1;
     public const ARCHIVE = 2;
-    public const BLOCK = 3;
 
     private static $statuses = [
         self::ACTIVE => [
@@ -20,11 +19,6 @@ class MerchantStatus
             'id' => self::ARCHIVE,
             'key' => 'ARCHIVE',
             'name' => 'архивированный'
-        ],
-        self::BLOCK => [
-            'id' => self::BLOCK,
-            'key' => 'BLOCK',
-            'name' => 'блокированный'
         ]
     ];
 
