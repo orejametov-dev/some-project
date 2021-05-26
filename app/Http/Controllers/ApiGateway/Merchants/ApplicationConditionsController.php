@@ -23,7 +23,7 @@ class ApplicationConditionsController extends ApiBaseController
             return $conditionQuery->first();
         }
 
-        if($request->query('paginate') == false) {
+        if($request->has('paginate') and $request->query('paginate') == false) {
             return $conditionQuery->get();
         }
 
@@ -41,7 +41,7 @@ class ApplicationConditionsController extends ApiBaseController
             return $conditionQuery->first();
         }
 
-        if($request->query('paginate') == false) {
+        if($request->has('paginate') and $request->query('paginate') == false) {
             return $conditionQuery->get();
         }
 
