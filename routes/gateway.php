@@ -56,6 +56,7 @@ Route::middleware(['service', 'gateway-auth-user'])
                 Route::delete('/{id}', [App\Http\Controllers\ApiGateway\Merchants\MerchantUserController::class, 'destroy']);
                 Route::get('/{id}', [App\Http\Controllers\ApiGateway\Merchants\MerchantUserController::class, 'show']);
                 Route::match(['put', 'patch'], '/{id}', [App\Http\Controllers\ApiGateway\Merchants\MerchantUserController::class, 'update']);
+                Route::post( '/{id}/update-permissions-api-merchants', [App\Http\Controllers\ApiGateway\Merchants\MerchantUserController::class, 'updatePermissionsForApiMerchants']);
             });
 
         Route::prefix('merchants/files')
@@ -110,6 +111,7 @@ Route::middleware(['service', 'gateway-auth-user'])
         Route::prefix('application-conditions')
             ->group(function () {
                 Route::get('/', [App\Http\Controllers\ApiGateway\Merchants\ApplicationConditionsController::class, 'index']);
+                Route::get('/actives', [App\Http\Controllers\ApiGateway\Merchants\ApplicationConditionsController::class, 'activeIndex']);
                 Route::post('/', [App\Http\Controllers\ApiGateway\Merchants\ApplicationConditionsController::class, 'store']);
                 Route::match(['put', 'patch'],'/{id}', [App\Http\Controllers\ApiGateway\Merchants\ApplicationConditionsController::class, 'update']);
                 Route::post('/{id}/toggle', [App\Http\Controllers\ApiGateway\Merchants\ApplicationConditionsController::class, 'toggle']);
