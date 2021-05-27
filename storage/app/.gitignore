@@ -1,6 +1,6 @@
 *
 !public/
 !.gitignore
-!public/prm_merchant_contract.docx
-!public/prm_merchant_contract_trust.docx
+!prm_merchant_contract.docx
+!prm_merchant_contract_trust.docx
 !additional_agreement.docx
