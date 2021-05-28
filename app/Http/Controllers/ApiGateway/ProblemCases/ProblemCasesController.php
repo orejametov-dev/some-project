@@ -11,11 +11,11 @@ class ProblemCasesController extends Controller
 {
     public function index()
     {
-        $problemCases = ProblemCase::query();
+        $problemCases = ProblemCase::query();// need set relationship with tags
     }
 
     public function store()
     {
-
+        
     }
 }
