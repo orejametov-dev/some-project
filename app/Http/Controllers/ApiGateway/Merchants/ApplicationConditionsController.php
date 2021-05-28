@@ -22,7 +22,30 @@ class ApplicationConditionsController extends ApiBaseController
         if ($request->query('object') == true) {
             return $conditionQuery->first();
         }
-        return $conditionQuery->paginate($request->query('per_page'));
+
+        if($request->has('paginate') and $request->query('paginate') == false) {
+            return $conditionQuery->get();
+        }
+
+        return $conditionQuery->paginate($request->query('per_page') ?? 15);
+    }
+
+    public function activeIndex(Request $request)
+    {
+        $conditionQuery = Condition::query()
+            ->active()
+            ->filterRequest($request)
+            ->orderRequest($request);
+
+        if ($request->query('object') == true) {
+            return $conditionQuery->first();
+        }
+
+        if($request->has('paginate') and $request->query('paginate') == false) {
+            return $conditionQuery->get();
+        }
+
+        return $conditionQuery->paginate($request->query('per_page') ?? 15);
     }
 
     public function store(StoreApplicationConditions $request)
