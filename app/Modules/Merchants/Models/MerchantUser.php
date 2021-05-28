@@ -66,8 +66,8 @@ class MerchantUser extends Model
 
     public function scopeFilterRequest(Builder $query, Request $request)
     {
-        if ($searchIndex = $request->query('q')) {
-            $query->where('user_name', 'like', '%' . $searchIndex . '%');
+        if ($q = $request->query('q')) {
+            $query->where('user_name', 'LIKE', '%' . $q . '%');
         }
 
         if ($request->query('date')) {
