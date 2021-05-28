@@ -66,6 +66,10 @@ class MerchantUser extends Model
 
     public function scopeFilterRequest(Builder $query, Request $request)
     {
+        if ($q = $request->query('q')) {
+            $query->where('user_name', 'LIKE', '%' . $q . '%');
+        }
+
         if ($request->query('date')) {
             $date = Carbon::parse($request->query('date') ?? today());
             $query->whereDate('created_at', $date);
