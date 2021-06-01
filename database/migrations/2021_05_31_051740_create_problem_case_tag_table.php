@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProblemCaseTagsTable extends Migration
+class CreateProblemCaseTagTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,10 @@ class CreateProblemCaseTagsTable extends Migration
      */
     public function up()
     {
-        Schema::create('problem_case_tags', function (Blueprint $table) {
+        Schema::create('problem_case_tag', function (Blueprint $table) {
             $table->id();
-            $table->string('body');
+            $table->unsignedBigInteger('problem_case_id');
+            $table->unsignedBigInteger('problem_case_tag_id');
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ class CreateProblemCaseTagsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('problem_case_tags');
+        Schema::dropIfExists('problem_case_tag');
     }
 }
