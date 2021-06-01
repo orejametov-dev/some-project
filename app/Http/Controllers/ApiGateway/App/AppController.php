@@ -9,7 +9,9 @@ use App\Modules\Merchants\Models\File;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Request;
 use App\Modules\Merchants\Models\Store;
+use App\Modules\Merchants\Services\ProblemCaseStatus;
 use App\Modules\Merchants\Services\RequestStatus;
+use App\Modules\Merchants\Traits\ProblemCaseStatuses;
 use App\Services\RegionService;
 
 class AppController extends ApiBaseController
@@ -20,6 +22,7 @@ class AppController extends ApiBaseController
         $merchants_count = Merchant::query()->count();
         $stores_count = Store::query()->count();
         $merchant_request_statuses = RequestStatus::statusLists();
+        $problem_case_statuses = ProblemCaseStatus::statusLists();
 
         $authUser = $this->user;
 
@@ -40,6 +43,7 @@ class AppController extends ApiBaseController
             'stores_count',
             'me',
             'merchant_request_statuses',
+            'problem_case_statuses',
             'file_types',
             'regions'
         ));
