@@ -76,6 +76,15 @@ Route::middleware(['service', 'gateway-auth-user'])
                 Route::post('/{id}/contract', [App\Http\Controllers\ApiGateway\Merchants\MerchantInfoController::class, 'getContract']);
             });
 
+        Route::prefix('merchants/problem-cases')
+            ->group(function () {
+                Route::get('/', [\App\Http\Controllers\ApiGateway\ProblemCases\ProblemCasesController::class, 'index']);
+                Route::post('/', [\App\Http\Controllers\ApiGateway\ProblemCases\ProblemCasesController::class, 'store']);
+                Route::get('/{id}', [\App\Http\Controllers\ApiGateway\ProblemCases\ProblemCasesController::class, 'show']);
+                Route::match(['put', 'patch'], '/{id}', [\App\Http\Controllers\ApiGateway\ProblemCases\ProblemCasesController::class, 'update']);
+                Route::post('/{id}/set-engage', [\App\Http\Controllers\ApiGateway\ProblemCases\ProblemCasesController::class, 'setEngage']);
+            });
+
         Route::prefix('merchants/additional-agreements')
             ->group(function(){
                 Route::get('/',[App\Http\Controllers\ApiGateway\Merchants\AdditionalAgreementsController::class,'index']);
