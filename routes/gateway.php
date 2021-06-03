@@ -84,6 +84,7 @@ Route::middleware(['service', 'gateway-auth-user'])
                 Route::get('/{id}', [\App\Http\Controllers\ApiGateway\ProblemCases\ProblemCasesController::class, 'show']);
                 Route::match(['put', 'patch'], '/{id}', [\App\Http\Controllers\ApiGateway\ProblemCases\ProblemCasesController::class, 'update']);
                 Route::match(['put', 'patch'], '/{id}/attach-tags', [\App\Http\Controllers\ApiGateway\ProblemCases\ProblemCasesController::class, 'attachTags']);
+                Route::match(['put', 'patch'], '/{id}/set-status', [\App\Http\Controllers\ApiGateway\ProblemCases\ProblemCasesController::class, 'setStatus']);
 
             });
 
