@@ -26,14 +26,6 @@ class ProblemCase extends Model
         'application_items'
     ];
 
-////    protected $hidden = ['application_items'];
-//    protected $appends = ['application_items'];
-//
-//    public function getApplicationItemsAttribute()
-//    {
-//        return json_decode($this->application_items);
-//    }
-
     protected $casts = [
         'application_items' => 'array'
     ];
@@ -50,7 +42,7 @@ class ProblemCase extends Model
 
     public function tags()
     {
-        return $this->belongsToMany(ProblemCaseTag::class, 'problem_case_tag', 'problem_case_tag_id');
+        return $this->belongsToMany(ProblemCaseTag::class, 'problem_case_tag', 'problem_case_id', 'problem_case_tag_id');
     }
 
     public function scopeFilterRequests(Builder $query, \Illuminate\Http\Request $request)
@@ -69,6 +61,10 @@ class ProblemCase extends Model
 
         if($request->query('client_id')) {
             $query->where('client_id', $request->query('client_id'));
+        }
+
+        if($request->query('q')) {
+            $query->where('search_index', 'LIKE', "%{$request->input('q')}%");
         }
     }
 }

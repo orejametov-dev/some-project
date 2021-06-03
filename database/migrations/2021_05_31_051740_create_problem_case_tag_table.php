@@ -17,6 +17,8 @@ class CreateProblemCaseTagTable extends Migration
             $table->id();
             $table->unsignedBigInteger('problem_case_id');
             $table->unsignedBigInteger('problem_case_tag_id');
+
+            $table->unique(['problem_case_id', 'problem_case_tag_id']);
             $table->timestamps();
         });
     }

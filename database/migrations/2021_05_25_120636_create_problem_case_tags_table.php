@@ -16,6 +16,7 @@ class CreateProblemCaseTagsTable extends Migration
         Schema::create('problem_case_tags', function (Blueprint $table) {
             $table->id();
             $table->string('body');
+            $table->smallInteger('type_id');
             $table->timestamps();
         });
     }

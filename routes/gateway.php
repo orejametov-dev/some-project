@@ -78,11 +78,13 @@ Route::middleware(['service', 'gateway-auth-user'])
 
         Route::prefix('merchants/problem-cases')
             ->group(function () {
+                Route::get('/tags', [\App\Http\Controllers\ApiGateway\ProblemCases\ProblemCaseTagsController::class, 'index']);
                 Route::get('/', [\App\Http\Controllers\ApiGateway\ProblemCases\ProblemCasesController::class, 'index']);
                 Route::post('/', [\App\Http\Controllers\ApiGateway\ProblemCases\ProblemCasesController::class, 'store']);
                 Route::get('/{id}', [\App\Http\Controllers\ApiGateway\ProblemCases\ProblemCasesController::class, 'show']);
                 Route::match(['put', 'patch'], '/{id}', [\App\Http\Controllers\ApiGateway\ProblemCases\ProblemCasesController::class, 'update']);
-                Route::post('/{id}/set-engage', [\App\Http\Controllers\ApiGateway\ProblemCases\ProblemCasesController::class, 'setEngage']);
+                Route::match(['put', 'patch'], '/{id}/attach-tags', [\App\Http\Controllers\ApiGateway\ProblemCases\ProblemCasesController::class, 'attachTags']);
+
             });
 
         Route::prefix('merchants/additional-agreements')

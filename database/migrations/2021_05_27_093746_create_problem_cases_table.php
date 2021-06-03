@@ -37,7 +37,7 @@ class CreateProblemCasesTable extends Migration
 
             $table->unsignedBigInteger('assigned_to_id')->nullable();
             $table->string('assigned_to_name')->nullable();
-            $table->timestamp('assigned_at')->nullable();
+            $table->date('deadline')->nullable();
 
             $table->text('manager_comment')->nullable();
             $table->text('merchant_comment')->nullable();
