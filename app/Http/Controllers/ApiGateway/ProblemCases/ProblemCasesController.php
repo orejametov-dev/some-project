@@ -79,15 +79,15 @@ class ProblemCasesController extends Controller
     public function update($id, Request $request)
     {
         $this->validate($request, [
-            'manager_comment' => 'required|string',
-            'merchant_comment' => 'required_without:application_id|string',
+            'manager_comment' => 'nullable|string',
+            'merchant_comment' => 'nullable|string',
             'deadline' => 'nullable|date_format:Y-m-d',
         ]);
 
         $problemCase = ProblemCase::findOrFail($id);
         $problemCase->manager_comment = $request->input('manager_comment');
         $problemCase->merchant_comment = $request->input('merchant_comment');
-        $problemCase->deadine = $request->input('deadline');
+        $problemCase->deadline = $request->input('deadline');
 
         $problemCase->save();
 
@@ -110,6 +110,7 @@ class ProblemCasesController extends Controller
             $tags[] = $tag->id;
         }
         $problemCase->tags()->attach($tags);
+
 
         return response()->json($problemCase->load('tags'));
     }
