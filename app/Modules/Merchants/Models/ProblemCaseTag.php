@@ -9,6 +9,9 @@ class ProblemCaseTag extends Model
 {
     use HasFactory;
 
+    public const BEFORE_TYPE = 1;
+    public const AFTER_TYPE = 2;
+
     public function problem_cases()
     {
         return $this->belongsToMany(ProblemCase::class, 'problem_case_tag', 'problem_case_id');

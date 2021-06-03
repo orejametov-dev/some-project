@@ -6,6 +6,7 @@ namespace App\Http\Controllers\ApiGateway\ProblemCases;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Merchants\Models\ProblemCase;
+use App\Modules\Merchants\Models\ProblemCaseTag;
 use App\Services\Core\ServiceCore;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,8 @@ class ProblemCasesController extends Controller
     public function index(Request $request)
     {
         $problemCases = ProblemCase::query()
-            ->filterRequests($request);
+            ->filterRequests($request)
+            ->orderBy('created_at', 'DESC');
 
         if ($request->has('object') and $request->query('object') == true) {
             return $problemCases->first();
@@ -34,7 +36,7 @@ class ProblemCasesController extends Controller
             'application_id' => 'required_without:credit_number|integer',
             'assigned_to_id' => 'required|integer',
             'assigned_to_name' => 'required|string',
-            'search_index' => 'required|string'
+            'search_index' => 'required|string',
         ]);
         $problemCase = new ProblemCase();
 
@@ -59,6 +61,7 @@ class ProblemCasesController extends Controller
 
         $problemCase->assigned_to_id = $request->input('assigned_to_id');
         $problemCase->assigned_to_name = $request->input('assigned_to_name');
+
         $problemCase->setStatusNew();
         $problemCase->save();
 
@@ -74,6 +77,44 @@ class ProblemCasesController extends Controller
     }
 
     public function update($id, Request $request)
+    {
+        $this->validate($request, [
+            'manager_comment' => 'required|string',
+            'merchant_comment' => 'required_without:application_id|string',
+            'deadline' => 'nullable|date_format:Y-m-d',
+        ]);
+
+        $problemCase = ProblemCase::findOrFail($id);
+        $problemCase->manager_comment = $request->input('manager_comment');
+        $problemCase->merchant_comment = $request->input('merchant_comment');
+        $problemCase->deadine = $request->input('deadline');
+
+        $problemCase->save();
+
+        return $problemCase;
+    }
+
+    public function attachTags(Request $request, $id)
+    {
+        $request->validate([
+            'tags' => 'required|array',
+            'tags.*.name' => 'required|string',
+            'tags.*.type_id' => 'required|integer|in:' . ProblemCaseTag::BEFORE_TYPE .', '. ProblemCaseTag::AFTER_TYPE
+        ]);
+
+        $problemCase = ProblemCase::findOrFail($id);
+        $problemCase->tags()->detach();
+        $tags = [];
+        foreach ($request->input('tags') as $item) {
+            $tag = ProblemCaseTag::query()->firstOrCreate(['body' => $item['name'], 'type_id' => $item['type_id']]);
+            $tags[] = $tag->id;
+        }
+        $problemCase->tags()->attach($tags);
+
+        return response()->json($problemCase->load('tags'));
+    }
+
+    public function setStatus($id)
     {
 
     }
