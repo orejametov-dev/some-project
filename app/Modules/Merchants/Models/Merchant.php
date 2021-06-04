@@ -4,6 +4,7 @@ namespace App\Modules\Merchants\Models;
 
 use App\Modules\Merchants\Traits\MerchantFileTrait;
 use App\Modules\Merchants\Traits\MerchantRelationshipsTrait;
+use App\Modules\Merchants\Traits\MerchantStatusesTrait;
 use App\Traits\SortableByQueryParams;
 use Carbon\Carbon;
 use Eloquent;
@@ -58,7 +59,7 @@ class Merchant extends Model
 {
     use HasFactory;
 
-    use MerchantRelationshipsTrait;
+    use MerchantRelationshipsTrait, MerchantStatusesTrait;
     use MerchantFileTrait;
     use SortableByQueryParams;
 
@@ -168,6 +169,10 @@ class Merchant extends Model
 
         if ($token = $request->query('token')) {
             $query->where('token', $token);
+        }
+
+        if($status_id = $request->query('status_id')) {
+            $query->where('status_id', $status_id);
         }
     }
 }

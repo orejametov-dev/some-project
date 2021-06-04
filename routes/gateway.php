@@ -111,6 +111,7 @@ Route::middleware(['service', 'gateway-auth-user'])
                 Route::get('/', [App\Http\Controllers\ApiGateway\Stores\StoresController::class, 'index']);
                 Route::get('/{id}', [App\Http\Controllers\ApiGateway\Stores\StoresController::class, 'show']);
                 Route::post('/', [App\Http\Controllers\ApiGateway\Stores\StoresController::class, 'store']);
+                Route::post('/{id}/set-status', [App\Http\Controllers\ApiGateway\Stores\StoresController::class, 'setStatus']);
                 Route::match(['put', 'patch'], '/{id}', [App\Http\Controllers\ApiGateway\Stores\StoresController::class, 'update']);
             });
 
@@ -148,6 +149,7 @@ Route::middleware(['service', 'gateway-auth-user'])
                 Route::post('/{id}/upload-logo', [MerchantsController::class, 'uploadLogo']);
                 Route::post('/{id}/remove-logo', [MerchantsController::class, 'removeLogo']);
                 Route::post('/{id}/set-responsible-user', [MerchantsController::class, 'setResponsibleUser']);
+                Route::post('/{id}/set-status', [MerchantsController::class, 'setStatus']);
 
                 Route::match(['put', 'patch'], '/{id}/update-modules', [MerchantsController::class, 'updateModules']);
             });
