@@ -51,6 +51,11 @@ class RouteServiceProvider extends ServiceProvider
                 ->middleware(['api', 'service', 'gateway-access'])
                 ->namespace($this->namespace)
                 ->group(base_path('routes/gateway.php'));
+
+            Route::prefix('gateway-merchant')
+                ->middleware(['api', 'service', 'gateway-access'])
+                ->namespace($this->namespace)
+                ->group(base_path('routes/gateway_merchant.php'));
         });
     }
 

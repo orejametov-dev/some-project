@@ -14,7 +14,7 @@ trait ProblemCaseStatuses
         return $this->status_id == ProblemCaseStatus::NEW;
     }
 
-    public function isInProcess()
+    public function isStatusInProcess()
     {
         return $this->status_id == ProblemCaseStatus::IN_PROCESS;
     }
