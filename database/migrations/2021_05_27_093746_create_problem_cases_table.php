@@ -46,6 +46,10 @@ class CreateProblemCasesTable extends Migration
 
             $table->string('search_index');
 
+            $table->unsignedBigInteger('engaged_by_id')->nullable();
+            $table->string('engaged_by_name')->nullable();
+            $table->timestamp('engaged_at')->nullable();
+
             $table->timestamps();
         });
     }

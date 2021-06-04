@@ -45,6 +45,12 @@ class ProblemCase extends Model
         return $this->belongsToMany(ProblemCaseTag::class, 'problem_case_tag', 'problem_case_id', 'problem_case_tag_id');
     }
 
+    public function before_tags()
+    {
+        return $this->belongsToMany(ProblemCaseTag::class, 'problem_case_tag', 'problem_case_id', 'problem_case_tag_id')
+            ->where('type_id', ProblemCaseTag::BEFORE_TYPE);
+    }
+
     public function scopeFilterRequests(Builder $query, \Illuminate\Http\Request $request)
     {
         if($request->query('merchant_id')) {
