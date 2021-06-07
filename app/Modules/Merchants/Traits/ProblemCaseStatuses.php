@@ -72,6 +72,7 @@ trait ProblemCaseStatuses
     public function setStatus(int $status_id)
     {
         $status = ProblemCaseStatus::getOneById($status_id);
+        $this->assertStateSwitchTo($status_id);
         $this->status_updated_at = now();
         $this->status_id = $status_id;
         $this->status_key = $status->name;

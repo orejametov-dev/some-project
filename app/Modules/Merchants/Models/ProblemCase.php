@@ -3,14 +3,84 @@
 namespace App\Modules\Merchants\Models;
 
 use App\Modules\Merchants\Traits\ProblemCaseStatuses;
+use App\Services\SimpleStateMachine\SimpleStateMachinable;
+use App\Services\SimpleStateMachine\SimpleStateMachineTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ProblemCase extends Model
+class ProblemCase extends Model implements SimpleStateMachinable
 {
     use HasFactory;
     use ProblemCaseStatuses;
+    use SimpleStateMachineTrait;
+
+    public const NEW = 1;
+    public const IN_PROCESS = 2;
+    public const DONE = 3;
+    public const FINISHED = 4;
+
+    public static $statuses = [
+        self::NEW => [
+            'id' => self::NEW,
+            'name' => 'Новый',
+            'lang' => [
+                'uz' => 'Yangi',
+                'ru' => 'Новый'
+            ]
+        ],
+        self::IN_PROCESS => [
+            'id' => self::IN_PROCESS,
+            'name' => 'В процессе',
+            'lang' => [
+                'uz' => 'Ko\'rib chiqilmoqda',
+                'ru' => 'В процессе'
+            ]
+        ],
+        self::DONE => [
+            'id' => self::DONE,
+            'name' => 'Выполнено',
+            'lang' => [
+                'uz' => 'Bajarildi',
+                'ru' => 'Выполнено'
+            ]
+        ],
+        self::FINISHED => [
+            'id' => self::FINISHED,
+            'name' => 'Завершен',
+            'lang' => [
+                'uz' => 'Tugatildi',
+                'ru' => 'Завершен'
+            ]
+        ]
+    ];
+
+    public static function getOneById(int $id)
+    {
+        return json_decode(json_encode(self::$statuses[$id]));
+    }
+
+    public function getStateAttribute()
+    {
+        return $this->status_id;
+    }
+
+    public function getSimpleStateMachineMap(): array
+    {
+        return [
+            self::NEW => [
+                self::IN_PROCESS
+            ],
+            self::IN_PROCESS => [
+                self::DONE,
+            ],
+            self::DONE => [
+                self::IN_PROCESS,
+                self::FINISHED
+            ],
+            self::FINISHED => []
+        ];
+    }
 
     protected $fillable = [
         'status_id',
