@@ -14,19 +14,35 @@ class ProblemCaseStatus
     private static $statuses = [
         self::NEW => [
             'id' => self::NEW,
-            'name' => 'новый',
+            'name' => 'Новый',
+            'lang' => [
+                'uz' => 'Yangi',
+                'ru' => 'Новый'
+            ]
         ],
         self::IN_PROCESS => [
             'id' => self::IN_PROCESS,
             'name' => 'В процессе',
+            'lang' => [
+                'uz' => 'Ko\'rib chiqilmoqda',
+                'ru' => 'В процессе'
+            ]
         ],
         self::DONE => [
             'id' => self::DONE,
             'name' => 'Выполнено',
+            'lang' => [
+                'uz' => 'Bajarildi',
+                'ru' => 'Выполнено'
+            ]
         ],
         self::FINISHED => [
             'id' => self::FINISHED,
             'name' => 'Завершен',
+            'lang' => [
+                'uz' => 'Tugatildi',
+                'ru' => 'Завершен'
+            ]
         ]
     ];
 
