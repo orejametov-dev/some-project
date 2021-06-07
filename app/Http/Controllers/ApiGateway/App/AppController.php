@@ -24,7 +24,7 @@ class AppController extends ApiBaseController
         $stores_count = Store::query()->count();
         $merchant_request_statuses = RequestStatus::statusLists();
         $merchant_statuses = MerchantStatus::get();
-        $problem_case_statuses = ProblemCaseStatus::statusLists();
+        $problem_case_statuses = array_values(ProblemCaseStatus::$statuses);
 
         $authUser = $this->user;
 

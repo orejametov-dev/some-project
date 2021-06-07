@@ -36,32 +36,18 @@ class ProblemCasesController extends ApiBaseController
         return new ProblemCaseResource($problemCase);
     }
 
-    public function setStatusInProcess($id)
+    public function setStatus($id, Request $request)
     {
-        $problemCase = ProblemCase::findOrFail($id);
-
-        if (!$problemCase->isStatusNew()) {
-            return response()->json(['message' => 'Статус должен быть только новым'], 400);
-        }
-        $problemCase->setStatusInProcess();
-        $problemCase->save();
-
-        return new ProblemCaseResource($problemCase);
-    }
-
-    public function setStatusDone($id)
-    {
+        $this->validate($request, [
+            'status_id' => 'required|integer'
+        ]);
 
         $problemCase = ProblemCase::findOrFail($id);
+        $problemCase->setStatus($request->input('status_id'));
 
-        if (!$problemCase->isStatusDone()) {
-            return response()->json(['message' => 'Статус должен быть только в процессе'], 400);
-        }
-
-        $problemCase->setStatusDone();
         $problemCase->save();
 
-        return new ProblemCaseResource($problemCase);
+        return $problemCase;
     }
 
     public function setEngage($id)
