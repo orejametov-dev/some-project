@@ -54,7 +54,7 @@ class ProblemCaseStatus
     public static function statusLists(): array
     {
         return [
-            array('id' => self::NEW, 'name' => 'Новый', ),
+            array('id' => self::NEW, 'name' => 'Новый'),
             array('id' => self::IN_PROCESS, 'name' => 'В процесс'),
             array('id' => self::DONE, 'name' => 'Выполнено'),
             array('id' => self::FINISHED, 'name' => 'Завершен')
