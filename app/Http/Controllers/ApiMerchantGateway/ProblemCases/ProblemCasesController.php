@@ -7,8 +7,8 @@ namespace App\Http\Controllers\ApiMerchantGateway\ProblemCases;
 use App\Http\Controllers\ApiMerchantGateway\ApiBaseController;
 use App\Http\Resources\ApiMerchantGateway\ProblemCases\ProblemCaseResource;
 use App\Modules\Merchants\Models\ProblemCase;
+use App\Modules\Merchants\Services\ProblemCaseStatus;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProblemCasesController extends ApiBaseController
 {
@@ -75,6 +75,11 @@ class ProblemCasesController extends ApiBaseController
         $problemCase->save();
 
         return new ProblemCaseResource($problemCase);
+    }
+
+    public function getStatuses()
+    {
+        return ProblemCaseStatus::statusLists();
     }
 
 }
