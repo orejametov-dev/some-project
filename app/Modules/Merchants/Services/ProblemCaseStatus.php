@@ -11,7 +11,7 @@ class ProblemCaseStatus
     public const DONE = 3;
     public const FINISHED = 4;
 
-    private static $statuses = [
+    public static $statuses = [
         self::NEW => [
             'id' => self::NEW,
             'name' => 'Новый',
@@ -54,7 +54,7 @@ class ProblemCaseStatus
     public static function statusLists(): array
     {
         return [
-            array('id' => self::NEW, 'name' => 'Новый'),
+            array('id' => self::NEW, 'name' => 'Новый', ),
             array('id' => self::IN_PROCESS, 'name' => 'В процесс'),
             array('id' => self::DONE, 'name' => 'Выполнено'),
             array('id' => self::FINISHED, 'name' => 'Завершен')
