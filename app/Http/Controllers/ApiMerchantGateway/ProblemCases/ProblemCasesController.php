@@ -79,7 +79,7 @@ class ProblemCasesController extends ApiBaseController
 
     public function getStatuses()
     {
-        return ProblemCaseStatus::statusLists();
+        return array_values(ProblemCaseStatus::$statuses);
     }
 
 }
