@@ -18,8 +18,10 @@ class MerchantUserController extends ApiBaseController
 {
     public function index(Request $request)
     {
-        $merchantUsersQuery = MerchantUser::query()->with(['merchant', 'store'])
-            ->filterRequest($request)->orderRequest($request);
+        $merchantUsersQuery = MerchantUser::query()
+            ->with(['merchant', 'store'])
+            ->filterRequest($request)
+            ->orderRequest($request);
 
 
         if ($request->query('object') == true) {
@@ -37,10 +39,10 @@ class MerchantUserController extends ApiBaseController
 
     public function store(StoreMerchantUsers $request)
     {
-        $user = ServiceCore::request('GET', 'users', new Request([
+        $user = ServiceCore::request('GET', 'users', [
             'id' => $request->input('user_id'),
             'object' => 'true'
-        ]));
+        ]);
 
         if (!$user)
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
@@ -61,22 +63,19 @@ class MerchantUserController extends ApiBaseController
         $merchant = $store->merchant;
         $merchant_user = new MerchantUser();
         $merchant_user->user_id = $request->input('user_id');
+        $merchant_user->user_name = $user->name;
         $merchant_user->merchant()->associate($merchant);
         $merchant_user->store()->associate($store->id);
 
         $merchant_user->save();
 
-        ServiceCore::request('POST', 'model-hooks', new Request([
-            'body' => 'Сотрудник создан',
-            'keyword' => 'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id,
-            'action' => 'create',
-            'class' => 'info',
-            'model' => [
-                'id' => $merchant->id,
-                'table_name' => $merchant->getTable()
-            ],
-            'created_by_id' => $this->user->id
-        ]));
+        ServiceCore::storeHook(
+            'Сотрудник создан',
+            'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id,
+            'create',
+            'info',
+            $merchant
+        );
 
         Cache::forget('merchant_user_id_' . $merchant_user->user_id);
 
@@ -121,17 +120,64 @@ class MerchantUserController extends ApiBaseController
 
         $merchant_user->save();
 
-        ServiceCore::request('POST', 'model-hooks', new Request([
-            'body' => 'Сотрудник обновлен',
-            'keyword' => 'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id,
-            'action' => 'update',
-            'class' => 'warning',
-            'model' => [
-                'id' => $merchant->id,
-                'table_name' => $merchant->getTable()
-            ],
-            'created_by_id' => $this->user->id
-        ]));
+        ServiceCore::storeHook(
+            'Сотрудник обновлен',
+            'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id,
+            'update',
+            'warning',
+            $merchant
+        );
+
+        Cache::forget('merchant_user_id_' . $merchant_user->user_id);
+
+        return $merchant_user;
+    }
+
+    public function updatePermissionsForApiMerchants($id, Request $request)
+    {
+        $validatedRequest = $this->validate($request, [
+            'permission_applications' => 'nullable|boolean',
+            'permission_deliveries' => 'nullable|boolean',
+            'permission_orders' => 'nullable|boolean',
+            'store_id' => 'required|integer',
+        ]);
+
+        /** @var MerchantUser $merchant_user */
+        $merchant_user = MerchantUser::query()->findOrFail($id);
+        $merchant = $merchant_user->merchant;
+
+        $store = $merchant->stores()->findOrFail($request->input('store_id'));
+
+        if ($request->input('permission_applications') == true && !$merchant->has_applications) {
+            return response()->json([
+                'code' => 'module_is_not_switched_on',
+                'message' => 'Невозможно включить разрешение заявок, т.к. соответствующий модуль у партнера отключен.'
+            ], 400);
+        }
+        if ($request->input('permission_deliveries') == true && !$merchant->has_deliveries) {
+            return response()->json([
+                'code' => 'module_is_not_switched_on',
+                'message' => 'Невозможно включить разрешение доставок, т.к. соответствующий модуль у партнера отключен.'
+            ], 400);
+        }
+        if ($request->input('permission_orders') == true && !$merchant->has_orders) {
+            return response()->json([
+                'code' => 'module_is_not_switched_on',
+                'message' => 'Невозможно включить разрешение заказов, т.к. соответствующий модуль у партнера отключен.'
+            ], 400);
+        }
+
+        if (!isset($validatedRequest['permission_applications']))
+            $validatedRequest['permission_applications'] = false;
+        if (!isset($validatedRequest['permission_deliveries']))
+            $validatedRequest['permission_deliveries'] = false;
+        if (!isset($validatedRequest['permission_orders']))
+            $validatedRequest['permission_orders'] = false;
+
+        $merchant_user->fill($validatedRequest);
+        $merchant_user->store()->associate($store);
+
+        $merchant_user->save();
 
         Cache::forget('merchant_user_id_' . $merchant_user->user_id);
 
@@ -146,17 +192,13 @@ class MerchantUserController extends ApiBaseController
 
         $merchant = $merchant_user->merchant;
 
-        ServiceCore::request('POST', 'model-hooks', new Request([
-            'body' => 'Сотрудник удален',
-            'keyword' => 'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id,
-            'action' => 'delete',
-            'class' => 'danger',
-            'model' => [
-                'id' => $merchant->id,
-                'table_name' => $merchant->getTable()
-            ],
-            'created_by_id' => $this->user->id
-        ]));
+        ServiceCore::storeHook(
+            'Сотрудник удален',
+            'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id,
+            'delete',
+            'danger',
+            $merchant
+        );
 
         Cache::forget('merchant_user_id_' . $merchant_user->user_id);
 

@@ -4,14 +4,12 @@ namespace App\Http\Controllers\ApiGateway\Merchants;
 
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiPrm\Files\StoreFileRequest;
 use App\HttpServices\Telegram\TelegramService;
-use App\Modules\Merchants\Models\AdditionalAgreement;
 use App\Modules\Merchants\Models\Merchant;
+use App\Modules\Merchants\Services\MerchantStatus;
 use App\Services\Alifshop\AlifshopService;
 use App\Services\Core\ServiceCore;
-use App\Services\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -58,6 +56,7 @@ class MerchantsController extends ApiBaseController
 
         $merchant = new Merchant($validated_data);
         $merchant->maintainer_id = $this->user->id;
+        $merchant->setStatusActive();
         $merchant->save();
 
         $this->alifshopService->storeOrUpdateMerchant($merchant);
@@ -161,16 +160,16 @@ class MerchantsController extends ApiBaseController
             'maintainer_id' => 'required|integer'
         ]);
 
-        $user = ServiceCore::request('GET', 'users', new Request([
+        $user = ServiceCore::request('GET', 'users', [
             'user_id' => $request->input('maintainer_id'),
             'object' => 'true'
-        ]));
+        ]);
 
-        if(!$user)
+        if (!$user)
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
 
-        $merchant = Merchant::findOrFail($id);
-        $merchant->maintainer_id = $request->maintainer_id;
+        $merchant = Merchant::query()->findOrFail($id);
+        $merchant->maintainer_id = $request->input('maintainer_id');
         $merchant->save();
 
         return $merchant;
@@ -187,7 +186,7 @@ class MerchantsController extends ApiBaseController
             'is_main' => true
         ]);
 
-        $merchant->stores()->where('id', '<>', $request->store_id)->update([
+        $merchant->stores()->where('id', '<>', $request->input('store_id'))->update([
             'is_main' => false
         ]);
         return $merchant;
@@ -207,19 +206,19 @@ class MerchantsController extends ApiBaseController
         return $merchant;
     }
 
-    public function hotMerchants(Request $request)
+    public function hotMerchants()
     {
         $percentage_of_limit = Merchant::$percentage_of_limit;
-        $additional_agreement_table_name = with(new AdditionalAgreement())->getTable();
+
         $merchant_query = DB::table('merchants')->select([
             'merchants.id',
             'merchants.name',
-            DB::raw("sum($additional_agreement_table_name.limit) as agreement_sum"),
+            DB::raw('sum(merchant_additional_agreements.limit) as agreement_sum'),
             'merchants.current_sales',
             'merchant_infos.limit'
         ])
             ->leftJoin('merchant_infos', 'merchants.id', '=', 'merchant_infos.merchant_id')
-            ->leftJoin("$additional_agreement_table_name", 'merchants.id', '=', "$additional_agreement_table_name.merchant_id")
+            ->leftJoin('merchant_additional_agreements', 'merchants.id', '=', 'merchant_additional_agreements.merchant_id')
             ->whereExists(function ($query) {
                 $query->select(DB::raw(1))
                     ->from('merchant_infos')
@@ -232,6 +231,19 @@ class MerchantsController extends ApiBaseController
                 'sub_query.id',
                 'sub_query.name'
             ])->whereRaw("(IFNULL(sub_query.limit, 0) + IFNULL(sub_query.agreement_sum, 0)) $percentage_of_limit <= sub_query.current_sales")->get();
+    }
+
+    public function setStatus($id, Request $request)
+    {
+        $this->validate($request, [
+            'status_id' => 'integer|required|in:' . MerchantStatus::ACTIVE . ', ' . MerchantStatus::ARCHIVE
+        ]);
+
+        $merchant = Merchant::findOrFail($id);
+        $merchant->setStatus($request->input('status_id'));
+        $merchant->save();
+
+        return $merchant;
     }
 
 }

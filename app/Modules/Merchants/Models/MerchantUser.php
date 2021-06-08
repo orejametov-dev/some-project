@@ -5,11 +5,40 @@ namespace App\Modules\Merchants\Models;
 
 use App\Traits\SortableByQueryParams;
 use Carbon\Carbon;
+use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
+/**
+ * App\Modules\Merchants\Models\MerchantUser
+ *
+ * @property int $id
+ * @property int $merchant_id
+ * @property int $store_id
+ * @property int $user_id
+ * @property string $user_name
+ * @property int $permission_applications
+ * @property int $permission_deliveries
+ * @property int $permission_orders
+ * @property int $permission_manager
+ * @property int $permission_upload_goods
+ * @property int $permission_oso
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Merchant $merchant
+ * @property-read Store $store
+ * @method static Builder|MerchantUser byMerchant($merchant_id)
+ * @method static Builder|MerchantUser byStore($store_id)
+ * @method static Builder|MerchantUser byUserId($user_id)
+ * @method static Builder|MerchantUser filterRequest(Request $request)
+ * @method static Builder|MerchantUser newModelQuery()
+ * @method static Builder|MerchantUser newQuery()
+ * @method static Builder|MerchantUser orderRequest(Request $request, string $default_order_str = 'id:desc')
+ * @method static Builder|MerchantUser query()
+ * @mixin Eloquent
+ */
 class MerchantUser extends Model
 {
     use HasFactory;
@@ -37,6 +66,10 @@ class MerchantUser extends Model
 
     public function scopeFilterRequest(Builder $query, Request $request)
     {
+        if ($q = $request->query('q')) {
+            $query->where('user_name', 'LIKE', '%' . $q . '%');
+        }
+
         if ($request->query('date')) {
             $date = Carbon::parse($request->query('date') ?? today());
             $query->whereDate('created_at', $date);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\ApiGateway\Stores;
 
+use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiPrm\Stores\StoreStoresRequest;
 use App\Http\Requests\ApiPrm\Stores\UpdateStoresRequest;
@@ -10,7 +11,7 @@ use App\Modules\Merchants\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class StoresController extends Controller
+class StoresController extends ApiBaseController
 {
     public function index(Request $request)
     {
@@ -20,7 +21,8 @@ class StoresController extends Controller
             return $stores->first();
         }
 
-        if ($request->has('paginate') && $request->query('paginate') == 'false') {
+        if ($request->has('paginate') && ($request->query('paginate') == 'false'
+                OR $request->query('paginate') == 0)) {
             return $stores->get();
         }
 
@@ -66,6 +68,15 @@ class StoresController extends Controller
         });
 
         return response()->json(['message' => 'Успешно удалено']);
+    }
+
+    public function setStatus($id)
+    {
+        $store = Store::findOrFail($id);
+        $store->is_archived = !$store->is_archived;
+        $store->save();
+
+        return $store;
     }
 
 }

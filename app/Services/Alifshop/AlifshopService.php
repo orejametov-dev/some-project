@@ -6,23 +6,6 @@ use GuzzleHttp\Client as HttpClient;
 
 class AlifshopService
 {
-    public static function getItems($query, $token)
-    {
-        $http_client = new HttpClient([
-            'base_uri' => config('local_services.alifshop.domain'),
-            'headers' => [
-                'Accept' => 'application/json',
-                'Token' => $token
-            ]
-        ]);
-
-        $response = $http_client->request('GET', 'api/partner/items/show', [
-            'json' => ['q' => $query]
-        ]);
-
-        return json_decode($response->getBody()->getContents(), true);
-    }
-
     public function storeOrUpdateMerchant($merchant, $conditions = null)
     {
         $partner = [
