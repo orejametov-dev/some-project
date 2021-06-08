@@ -25,10 +25,8 @@ class CreateMerchantsTable extends Migration
             $table->boolean('has_deliveries')->default(false);
             $table->boolean('has_manager')->default(false);
             $table->boolean('has_applications')->default(false);
-            $table->boolean('has_orders')->default(false);
             $table->string('logo_url')->nullable();
 
-            $table->string('paymo_terminal')->nullable();
             $table->unsignedBigInteger('maintainer_id')->nullable();
             $table->unsignedBigInteger('current_sales')->nullable();
 

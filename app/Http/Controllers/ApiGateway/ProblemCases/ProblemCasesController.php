@@ -15,7 +15,7 @@ class ProblemCasesController extends Controller
 {
     public function index(Request $request)
     {
-        $problemCases = ProblemCase::query()
+        $problemCases = ProblemCase::with('tags')->query()
             ->filterRequests($request)
             ->orderBy('created_at', 'DESC');
 

@@ -127,6 +127,10 @@ class ProblemCase extends Model implements SimpleStateMachinable
             $query->where('merchant_id', $request->query('merchant_id'));
         }
 
+        if($request->query('store_id')) {
+            $query->where('store_id', $request->query('store_id'));
+        }
+
         if($request->query('engaged_by_id')) {
             $query->where('engaged_by_id', $request->query('engaged_by_id'));
         }

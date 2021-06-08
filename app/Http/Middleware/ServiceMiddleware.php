@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Modules\Core\Models\WebService;
 use Closure;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class ServiceMiddleware
 {
@@ -23,6 +24,7 @@ class ServiceMiddleware
         }
 
         $webService = WebService::findCached($service_token, 'token');
+
         if (!$webService) {
             return response()->json(['message' => 'Service token expired'], 401);
         }

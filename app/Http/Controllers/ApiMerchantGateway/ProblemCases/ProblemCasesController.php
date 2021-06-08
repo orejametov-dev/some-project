@@ -6,9 +6,11 @@ namespace App\Http\Controllers\ApiMerchantGateway\ProblemCases;
 
 use App\Http\Controllers\ApiMerchantGateway\ApiBaseController;
 use App\Http\Resources\ApiMerchantGateway\ProblemCases\ProblemCaseResource;
+use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\ProblemCase;
 use App\Modules\Merchants\Services\ProblemCaseStatus;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class ProblemCasesController extends ApiBaseController
 {
@@ -66,6 +68,13 @@ class ProblemCasesController extends ApiBaseController
     public function getStatuses()
     {
         return array_values(ProblemCaseStatus::$statuses);
+    }
+
+    public function getNewProblemCasesCounter(Request $request)
+    {
+        return Cache::remember('new-problem-cases-counter_' . $request->store_id, 60, function () use ($request){
+            return ProblemCase::filterRequests($request)->count();
+        });
     }
 
 }
