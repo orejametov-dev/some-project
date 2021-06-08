@@ -7,7 +7,6 @@ namespace App\Http\Controllers\ApiGateway\ProblemCases;
 use App\Http\Controllers\Controller;
 use App\Modules\Merchants\Models\ProblemCase;
 use App\Modules\Merchants\Models\ProblemCaseTag;
-use App\Modules\Merchants\Services\ProblemCaseStatus;
 use App\Services\Core\ServiceCore;
 use Illuminate\Http\Request;
 
@@ -15,7 +14,7 @@ class ProblemCasesController extends Controller
 {
     public function index(Request $request)
     {
-        $problemCases = ProblemCase::with('tags')->query()
+        $problemCases = ProblemCase::with('tags')
             ->filterRequests($request)
             ->orderBy('created_at', 'DESC');
 

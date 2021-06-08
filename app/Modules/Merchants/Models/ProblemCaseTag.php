@@ -20,7 +20,7 @@ class ProblemCaseTag extends Model
         return $this->belongsToMany(ProblemCase::class, 'problem_cases', 'problem_case_tag_id', 'problem_case_id');
     }
 
-    public function filterRequests(Builder $query, \Illuminate\Http\Request $request)
+    public function scopeFilterRequests(Builder $query, \Illuminate\Http\Request $request)
     {
         if($request->query('q')){
             $query->where('body', 'LIKE', '%' . $request->query('q') . '%');
