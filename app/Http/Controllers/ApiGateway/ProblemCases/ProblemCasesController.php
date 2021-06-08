@@ -120,10 +120,10 @@ class ProblemCasesController extends Controller
     {
         $this->validate($request, [
             'status_id' => 'required|integer|in:'
-                . ProblemCaseStatus::NEW . ','
-                . ProblemCaseStatus::IN_PROCESS . ','
-                . ProblemCaseStatus::DONE . ','
-                . ProblemCaseStatus::FINISHED
+                . ProblemCase::NEW . ','
+                . ProblemCase::IN_PROCESS . ','
+                . ProblemCase::DONE . ','
+                . ProblemCase::FINISHED
         ]);
         $problemCase = ProblemCase::findOrFail($id);
         $problemCase->setStatus($request->input('status_id'));
