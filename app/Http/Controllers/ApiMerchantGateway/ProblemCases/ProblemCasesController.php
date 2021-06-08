@@ -70,9 +70,11 @@ class ProblemCasesController extends ApiBaseController
 
     public function getNewProblemCasesCounter(Request $request)
     {
-        return Cache::remember('new-problem-cases-counter_' . $request->store_id, 60, function () use ($request) {
+        $counter =  Cache::remember('new-problem-cases-counter_' . $request->store_id, 60, function () use ($request) {
             return ProblemCase::filterRequests($request)->count();
         });
+
+        return response()->json(['count' => $counter]);
     }
 
 }
