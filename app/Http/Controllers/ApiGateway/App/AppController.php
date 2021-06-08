@@ -7,12 +7,11 @@ namespace App\Http\Controllers\ApiGateway\App;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Modules\Merchants\Models\File;
 use App\Modules\Merchants\Models\Merchant;
+use App\Modules\Merchants\Models\ProblemCase;
 use App\Modules\Merchants\Models\Request;
 use App\Modules\Merchants\Models\Store;
 use App\Modules\Merchants\Services\MerchantStatus;
-use App\Modules\Merchants\Services\ProblemCaseStatus;
 use App\Modules\Merchants\Services\RequestStatus;
-use App\Modules\Merchants\Traits\ProblemCaseStatuses;
 use App\Services\RegionService;
 
 class AppController extends ApiBaseController
@@ -24,7 +23,7 @@ class AppController extends ApiBaseController
         $stores_count = Store::query()->count();
         $merchant_request_statuses = RequestStatus::statusLists();
         $merchant_statuses = MerchantStatus::get();
-        $problem_case_statuses = array_values(ProblemCaseStatus::$statuses);
+        $problem_case_statuses = array_values(ProblemCase::$statuses);
 
         $authUser = $this->user;
 
