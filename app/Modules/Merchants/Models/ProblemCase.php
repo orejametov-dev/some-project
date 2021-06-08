@@ -152,5 +152,9 @@ class ProblemCase extends Model implements SimpleStateMachinable
                 $query->where('problem_case_tag_id', $request->query('tag_id'));
             });
         }
+
+        if($request->query('status_id')) {
+            $query->where('status_id', $request->query('status_id'));
+        }
     }
 }
