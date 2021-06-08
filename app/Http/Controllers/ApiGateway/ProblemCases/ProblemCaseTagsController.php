@@ -16,12 +16,12 @@ class ProblemCaseTagsController extends Controller
             ->filterRequests($request)
             ->orderBy('created_at', 'DESC');
 
-        if($request->query('object') == true) {
-            $tags->first();
+        if($request->has('object') and $request->query('object') == true) {
+            return $tags->first();
         }
 
-        if($request->query('paginate') == false) {
-            $tags->get();
+        if($request->has('paginate') and $request->query('paginate') == false) {
+            return $tags->get();
         }
 
         return $tags->paginate($request->query('per_page') ?? 15);
