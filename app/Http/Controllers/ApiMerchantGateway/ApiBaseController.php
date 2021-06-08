@@ -16,7 +16,10 @@ class ApiBaseController extends Controller
         $this->middleware(function ($request, $next) {
             $this->user = app(User::class);
             if($merchant_user = optional($this->user)->merchant_user) {
-                $request->request->add(['merchant_id' => $merchant_user->merchant_id]);
+                $request->request->add([
+                    'merchant_id' => $merchant_user->merchant_id,
+                    'store_id' => $merchant_user->store_id
+                ]);
             }
             return $next($request);
         });

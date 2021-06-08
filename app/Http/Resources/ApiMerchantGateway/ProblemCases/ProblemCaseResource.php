@@ -32,7 +32,9 @@ class ProblemCaseResource extends JsonResource
             'application_items' => $this->application_items,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'tags' => $this->before_tags
+            'tags' => $this->before_tags,
+            'engaged_by_id' => $this->engaged_by_id,
+            'engaged_by_name' => $this->engaged_by_name
         ];
     }
 }
