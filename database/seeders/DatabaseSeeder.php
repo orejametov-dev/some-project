@@ -21,7 +21,9 @@ class DatabaseSeeder extends Seeder
            MerchantInfosSeeder::class,
            MerchantAdditionalAgreementsSeeder::class,
            MerchantRequestsSeeder::class,
-           ApplicationConditionsSeeder::class
+           ApplicationConditionsSeeder::class,
+           MerchantTags::class,
+           MerchantTag::class,
        ]);
     }
 }
