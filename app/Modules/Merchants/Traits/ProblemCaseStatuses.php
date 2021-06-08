@@ -47,7 +47,10 @@ trait ProblemCaseStatuses
 
     public function setStatusNew()
     {
-        return $this->setStatus(self::NEW);
+        $status = self::getOneById(self::NEW);
+        $this->status_updated_at = now();
+        $this->status_id = $status->id;
+        $this->status_key = $status->name;
     }
 
     public function setStatusInProcess()
