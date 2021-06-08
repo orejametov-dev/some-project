@@ -146,5 +146,11 @@ class ProblemCase extends Model implements SimpleStateMachinable
         if($request->query('q')) {
             $query->where('search_index', 'LIKE', "%{$request->input('q')}%");
         }
+
+        if($request->query('tag_id')) {
+            $query->whereHas('tags', function ($query) use ($request) {
+                $query->where('id', $request->query('tag_id'));
+            });
+        }
     }
 }
