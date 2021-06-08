@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -16,32 +17,44 @@ class MerchantTag extends Seeder
     {
         $merchant_1_tag_2 = [
             'merchant_id' => 1,
-            'tag_id' => 2
+            'tag_id' => 2,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
 
         $merchant_1_tag_3 = [
             'merchant_id' => 1,
-            'tag_id' => 3
+            'tag_id' => 3,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
 
         $merchant_2_tag_3 = [
             'merchant_id' => 1,
-            'tag_id' => 3
+            'tag_id' => 3,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
 
         $merchant_2_tag_4 = [
             'merchant_id' => 1,
-            'tag_id' => 4
+            'tag_id' => 4,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
 
         $merchant_3_tag_4 = [
             'merchant_id' => 1,
-            'tag_id' => 4
+            'tag_id' => 4,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
 
         $merchant_4_tag_1 = [
             'merchant_id' => 1,
-            'tag_id' => 1
+            'tag_id' => 1,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
 
         DB::table('merchant_tag')->insert([

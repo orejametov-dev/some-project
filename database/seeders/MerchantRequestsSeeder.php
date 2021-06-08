@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Modules\Merchants\Models\Request;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -27,6 +28,8 @@ class MerchantRequestsSeeder extends Seeder
             'engaged_by_id' => 1,
             'engaged_at' => '2021-05-14 10:00:00',
             'status_updated_at' => null,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
 
         $merchant_request_2 = [
@@ -41,6 +44,8 @@ class MerchantRequestsSeeder extends Seeder
             'engaged_by_id' => 2,
             'engaged_at' => '2021-05-14 11:00:01',
             'status_updated_at' => '2021-05-14 11:00:01',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
 
         $merchant_request_3 = [
@@ -55,6 +60,8 @@ class MerchantRequestsSeeder extends Seeder
             'engaged_by_id' => 3,
             'engaged_at' => '2021-05-14 12:00:02',
             'status_updated_at' => '2021-05-14 12:00:02',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
 
         $merchant_request_4 = [
@@ -69,6 +76,8 @@ class MerchantRequestsSeeder extends Seeder
             'engaged_by_id' => 4,
             'engaged_at' => '2021-05-14 13:00:03',
             'status_updated_at' => '2021-05-14 13:00:03',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
 
         DB::table('merchant_requests')->insert([
