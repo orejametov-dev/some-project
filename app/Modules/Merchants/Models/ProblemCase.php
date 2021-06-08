@@ -149,7 +149,7 @@ class ProblemCase extends Model implements SimpleStateMachinable
 
         if($request->query('tag_id')) {
             $query->whereHas('tags', function ($query) use ($request) {
-                $query->where('id', $request->query('tag_id'));
+                $query->where('problem_case_tag_id', $request->query('tag_id'));
             });
         }
     }
