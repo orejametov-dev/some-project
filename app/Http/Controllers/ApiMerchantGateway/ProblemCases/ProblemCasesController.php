@@ -67,7 +67,7 @@ class ProblemCasesController extends ApiBaseController
 
     public function getStatuses()
     {
-        return array_values(ProblemCaseStatus::$statuses);
+        return array_values(ProblemCase::$statuses);
     }
 
     public function getNewProblemCasesCounter(Request $request)
