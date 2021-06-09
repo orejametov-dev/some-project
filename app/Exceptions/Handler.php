@@ -63,7 +63,7 @@ class Handler extends ExceptionHandler
         }
 
         if ($exception instanceof SimpleStateMachineException) {
-            return response()->json(['error' => ['message' => $exception->getMessage(), 'code' => $exception->getErrorCode()]], $exception->getCode());
+            return response()->json(['message' => $exception->getMessage(), 'code' => $exception->getErrorCode()], $exception->getCode());
         }
 
         if (config('app.env') == 'production' && $exception instanceof ModelNotFoundException && $request->expectsJson()) {
