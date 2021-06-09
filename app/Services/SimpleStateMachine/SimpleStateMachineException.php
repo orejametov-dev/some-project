@@ -10,7 +10,7 @@ class SimpleStateMachineException extends \Exception
     private $error_code;
 
     public function __construct(
-        $message = 'Cannot switch from current status to the specified one.',
+        $message = 'Невозможно переключиться с текущего статуса на указанный.',
         $error_code = 'STATE_MACHINE_ASSERTION_FAILED',
         $code = 400,
         Throwable $previous = null)
