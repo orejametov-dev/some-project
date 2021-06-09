@@ -7,6 +7,7 @@ namespace App\Http\Controllers\ApiGateway\App;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Modules\Merchants\Models\File;
 use App\Modules\Merchants\Models\Merchant;
+use App\Modules\Merchants\Models\ProblemCase;
 use App\Modules\Merchants\Models\Request;
 use App\Modules\Merchants\Models\Store;
 use App\Modules\Merchants\Services\MerchantStatus;
@@ -22,6 +23,7 @@ class AppController extends ApiBaseController
         $stores_count = Store::query()->count();
         $merchant_request_statuses = RequestStatus::statusLists();
         $merchant_statuses = MerchantStatus::get();
+        $problem_case_statuses = array_values(ProblemCase::$statuses);
 
         $authUser = $this->user;
 
@@ -43,6 +45,7 @@ class AppController extends ApiBaseController
             'me',
             'merchant_request_statuses',
             'merchant_statuses',
+            'problem_case_statuses',
             'file_types',
             'regions'
         ));
