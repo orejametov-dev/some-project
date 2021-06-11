@@ -24,6 +24,7 @@ class ProblemCaseResource extends JsonResource
             'application_id' => $this->application_id ?? null,
             'client_id' => $this->client_id,
             'title' => $this->search_index,
+            'description' => $this->description,
             'status_key' => $this->status_key,
             'status_id' => $this->status_id,
             'created_by_id' => $this->created_by_id ?? null,
