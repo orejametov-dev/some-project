@@ -14,7 +14,7 @@ class AddNewDescriptionColumnToProblemCasesTable extends Migration
     public function up()
     {
         Schema::table('problem_cases', function (Blueprint $table) {
-            $table->string('description', 300);
+            $table->string('description', 300)->nullable();
         });
     }
 
