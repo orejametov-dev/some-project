@@ -20,6 +20,8 @@ class ProblemCase extends Model implements SimpleStateMachinable
     public const DONE = 3;
     public const FINISHED = 4;
 
+    public static $sources = ['CALLS', 'LAW', 'COMPLIANCE'];
+
     public static $statuses = [
         self::NEW => [
             'id' => self::NEW,
@@ -151,6 +153,10 @@ class ProblemCase extends Model implements SimpleStateMachinable
             $query->whereHas('tags', function ($query) use ($request) {
                 $query->where('problem_case_tag_id', $request->query('tag_id'));
             });
+        }
+
+        if($request->query('source')){
+            $query->where('created_from_name', 'LIKE', '%' . $request->query('source'). '%');
         }
 
         if($request->query('status_id')) {

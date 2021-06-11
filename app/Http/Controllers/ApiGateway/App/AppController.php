@@ -24,6 +24,7 @@ class AppController extends ApiBaseController
         $merchant_request_statuses = RequestStatus::statusLists();
         $merchant_statuses = MerchantStatus::get();
         $problem_case_statuses = array_values(ProblemCase::$statuses);
+        $problem_case_sources = ProblemCase::$sources;
 
         $authUser = $this->user;
 
@@ -47,7 +48,8 @@ class AppController extends ApiBaseController
             'merchant_statuses',
             'problem_case_statuses',
             'file_types',
-            'regions'
+            'regions',
+            'problem_case_sources'
         ));
     }
 }
