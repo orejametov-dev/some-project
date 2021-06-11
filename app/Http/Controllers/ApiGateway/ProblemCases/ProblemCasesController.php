@@ -50,14 +50,18 @@ class ProblemCasesController extends Controller
 
         $problemCase->merchant_id = $data->merchant_id;
         $problemCase->store_id = $data->store_id;
-        $problemCase->client_id = $data->client_id;
+        $problemCase->client_id = $data->client->id;
+
+        $problemCase->search_index = $data->client->name
+            . ' ' . $data->client->surname
+            . ' ' . $data->client->patronymic
+            . ' ' . $data->client->phone;
+
         $problemCase->application_items = $data->application_items;
 
         $problemCase->created_by_id = $data->merchant_engaged_by->id;
         $problemCase->created_by_name = $data->merchant_engaged_by->name;
         $problemCase->created_from_name = $request->input('created_from_name');
-
-        $problemCase->search_index = $request->input('search_index');
 
         $problemCase->assigned_to_id = $request->input('assigned_to_id');
         $problemCase->assigned_to_name = $request->input('assigned_to_name');
