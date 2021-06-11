@@ -65,6 +65,7 @@ class ProblemCasesController extends Controller
 
         $problemCase->assigned_to_id = $request->input('assigned_to_id');
         $problemCase->assigned_to_name = $request->input('assigned_to_name');
+        $problemCase->description = $request->input('description');
 
         $problemCase->setStatusNew();
         $problemCase->save();
