@@ -3,6 +3,7 @@
 namespace App\Modules\Merchants\Models;
 
 
+use App\HttpServices\Storage\StorageMicroService;
 use App\Modules\Merchants\Services\RequestStatus;
 use App\Modules\Merchants\Traits\MerchantRequestStatusesTrait;
 use App\Traits\SortableByQueryParams;
@@ -10,6 +11,7 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
 
 /**
@@ -49,19 +51,65 @@ class Request extends Model
 
     protected $table = 'merchant_requests';
     protected $appends = ['status'];
+    protected $casts = ['categories' => 'array'];
     protected $fillable = [
         'name',
-        'legal_name',
-        'info',
         'user_name',
         'user_phone',
         'information',
-        'region'
+        'region',
+        'stores_count',
+        'merchant_users_count',
+        'address',
+        'approximate_sales',
+        'categories',
+        'legal_name',
+
+        'director_name',
+        'legal_name',
+        'phone',
+        'vat_number',
+        'mfo',
+        'tin',
+        'oked',
+        'bank_account',
+        'bank_name',
+        'address'
     ];
+
+
+
+    public function getCheckersAttribute()
+    {
+
+//            'user_name' => 'required|string',
+//            'user_phone' => 'required|digits:12',
+//            'legal_name' => 'required|string',
+//            'name' => 'required|string',
+//            'categories' => 'required|array',
+//            'stores_count' => 'required|integer',
+//            'merchant_users_count' => 'required|integer',
+//            'address' => 'required|string',
+//            'approximate_sales' => 'required|integer',
+//            'information' => 'nullable|string'
+
+        $main = $this->user_name && $this->user_phone && $this->legal_name && $this->name
+            && $this->categories && $this->stores_count && $this->merchant_users_count && $this->address
+            && $this->approximate_sales;
+
+//        $documents = $this->
+    }
+
+
 
     public function getStatusAttribute()
     {
         return RequestStatus::getOneById($this->status_id);
+    }
+
+    public function files()
+    {
+        return $this->hasMany(File::class, 'request_id', 'id');
     }
 
     public function scopeFilterRequest(Builder $query, \Illuminate\Http\Request $request)
@@ -77,5 +125,18 @@ class Request extends Model
         if ($status = $request->query('status_id')) {
             $query->where('status_id', $status);
         }
+    }
+
+    public function uploadFile(UploadedFile $uploadedFile, $type)
+    {
+        $storage_file = StorageMicroService::uploadFile($uploadedFile, 'merchants');
+        $merchant_request_file = new File();
+        $merchant_request_file->file_type = $type;
+        $merchant_request_file->mime_type = $storage_file['mime_type'];
+        $merchant_request_file->size = $storage_file['size'];
+        $merchant_request_file->url = $storage_file['url'];
+        $merchant_request_file->request_id = $this->id;
+        $merchant_request_file->save();
+        return $merchant_request_file;
     }
 }

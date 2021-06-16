@@ -17,3 +17,14 @@ Route::prefix('merchants/problem-cases')
         Route::match(['put', 'patch'], '/{id}/set-status', [\App\Http\Controllers\ApiMerchantGateway\ProblemCases\ProblemCasesController::class, 'setStatus']);
         Route::match(['put', 'patch'], '/{id}/set-engage', [\App\Http\Controllers\ApiMerchantGateway\ProblemCases\ProblemCasesController::class, 'setEngage']);
     });
+
+Route::prefix('merchants/requests')
+    ->group(function () {
+        Route::get('/app', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'app']);
+        Route::get('/{id}', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'show'])
+            ->where('id', '/[a-z0-9A-Z@]*/');;
+
+        Route::post('/', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'store']);
+        Route::put('/{id}', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'update']);
+        Route::post('/{id}/upload-files', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'upload']);
+    });
