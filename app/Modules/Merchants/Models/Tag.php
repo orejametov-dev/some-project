@@ -33,4 +33,11 @@ class Tag extends Model
     {
         return $this->belongsToMany(Merchant::class, 'merchant_tag', 'tag_id', 'merchant_id')->withTimestamps();
     }
+
+    public function scopeFilterRequests(Builder $query, \Illuminate\Http\Request $request)
+    {
+        if($request->query('q')) {
+            $query->where('body', 'LIKE', '%' . $request->query('q') . '%');
+        }
+    }
 }

@@ -26,3 +26,8 @@ Route::prefix('merchants/requests')
         Route::put('/{id}', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'update'])->withoutMiddleware(['gateway-access', 'gateway-auth-user']);
         Route::post('/{id}/upload-files', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'upload'])->withoutMiddleware(['gateway-access', 'gateway-auth-user']);
     });
+
+Route::prefix('merchants/tags')
+    ->group(function () {
+        Route::get('/', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantTagsController::class, 'index'] );
+    });
