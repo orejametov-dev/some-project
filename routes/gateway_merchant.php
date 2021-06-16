@@ -20,9 +20,9 @@ Route::prefix('merchants/problem-cases')
 
 Route::prefix('merchants/requests')
     ->group(function () {
-        Route::get('/app', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'app']);
-        Route::get('/{id}', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'show']);
-        Route::post('/', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'store']);
-        Route::put('/{id}', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'update']);
-        Route::post('/{id}/upload-files', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'upload']);
+        Route::get('/app', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'app'])->withoutMiddleware(['gateway-access', 'gateway-auth-user']);
+        Route::get('/{id}', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'show'])->withoutMiddleware(['gateway-access', 'gateway-auth-user']);
+        Route::post('/', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'store'])->withoutMiddleware(['gateway-access', 'gateway-auth-user']);
+        Route::put('/{id}', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'update'])->withoutMiddleware(['gateway-access', 'gateway-auth-user']);
+        Route::post('/{id}/upload-files', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'upload'])->withoutMiddleware(['gateway-access', 'gateway-auth-user']);
     });

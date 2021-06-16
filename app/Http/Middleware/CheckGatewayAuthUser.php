@@ -19,10 +19,6 @@ class CheckGatewayAuthUser
     {
         $auth_user = $request->header('x-auth-user');
 
-        $auth_user = json_encode([
-            'id' => 1
-        ]);
-
         if (!$auth_user) {
             throw new BusinessException('Unauthenticated', 401);
         }
