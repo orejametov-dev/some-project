@@ -7,6 +7,7 @@ namespace App\Http\Controllers\ApiMerchantGateway\Merchants;
 use App\Http\Controllers\Controller;
 use App\Modules\Merchants\Models\File;
 use App\Modules\Merchants\Models\Merchant;
+use App\Services\RegionService;
 use Illuminate\Http\Request;
 use App\Modules\Merchants\Models\Request as MerchantRequest;
 use Illuminate\Support\Str;
@@ -17,17 +18,19 @@ class MerchantRequestsController extends Controller
     public function app()
     {
         $registration_file_types = File::$registration_file_types;
+        $regions = RegionService::getRegions();
 
         return [
-            'registration_file_types' => $registration_file_types
+            'registration_file_types' => $registration_file_types,
+            'regions' => $regions
         ];
     }
 
     public function show($id) {
 
-        if(preg_match('[0-9]+', $id)) {
+        if(preg_match('/^\d+$/', $id)) {
             $merchant_request = MerchantRequest::with('files')->find($id);
-        } elseif (preg_match('[a-z]+', $id)) {
+        } else {
             $merchant_request = MerchantRequest::with('files')->where('token', $id)->first();
         }
 
