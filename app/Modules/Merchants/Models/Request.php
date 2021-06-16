@@ -50,7 +50,7 @@ class Request extends Model
     use SortableByQueryParams;
 
     protected $table = 'merchant_requests';
-    protected $appends = ['status'];
+    protected $appends = ['status', 'checkers'];
     protected $casts = ['categories' => 'array'];
     protected $fillable = [
         'name',
@@ -81,23 +81,19 @@ class Request extends Model
 
     public function getCheckersAttribute()
     {
+        $main = $this->user_name && $this->user_phone && $this->name && $this->region
+            && $this->categories && $this->stores_count && $this->merchant_users_count && $this->approximate_sales;
 
-//            'user_name' => 'required|string',
-//            'user_phone' => 'required|digits:12',
-//            'legal_name' => 'required|string',
-//            'name' => 'required|string',
-//            'categories' => 'required|array',
-//            'stores_count' => 'required|integer',
-//            'merchant_users_count' => 'required|integer',
-//            'address' => 'required|string',
-//            'approximate_sales' => 'required|integer',
-//            'information' => 'nullable|string'
+        $documents = $this->director_name && $this->legal_name && $this->phone && $this->vat_number && $this->mfo
+            && $this->tin && $this->oked && $this->bank_account && $this->bank_name && $this->address;
 
-        $main = $this->user_name && $this->user_phone && $this->legal_name && $this->name
-            && $this->categories && $this->stores_count && $this->merchant_users_count && $this->address
-            && $this->approximate_sales;
+        $files = $this->files()->count() >= 7;
 
-//        $documents = $this->
+        return [
+            'main' => $main,
+            'documents' => $documents,
+            'files' => $files
+        ];
     }
 
 
