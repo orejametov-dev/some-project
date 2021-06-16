@@ -29,5 +29,5 @@ Route::prefix('merchants/requests')
 
 Route::prefix('merchants/tags')
     ->group(function () {
-        Route::get('/', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantTagsController::class, 'index'] );
+        Route::get('/', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantTagsController::class, 'index'] )->withoutMiddleware(['gateway-access', 'gateway-auth-user']);
     });
