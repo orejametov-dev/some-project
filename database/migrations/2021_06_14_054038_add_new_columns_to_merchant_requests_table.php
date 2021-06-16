@@ -31,8 +31,6 @@ class AddNewColumnsToMerchantRequestsTable extends Migration
             $table->string('oked')->nullable();
             $table->string('bank_account')->nullable();
             $table->string('bank_name')->nullable();
-
-            $table->json('files')->nullable();
         });
     }
 
