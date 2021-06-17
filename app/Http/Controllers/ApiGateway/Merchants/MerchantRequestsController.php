@@ -5,6 +5,8 @@ namespace App\Http\Controllers\ApiGateway\Merchants;
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestStore;
+use App\Http\Resources\ApiMerchantGateway\ProblemCases\ProblemCaseResource;
+use App\Http\Resources\ApiPrmGateway\Merchants\MerchantRequestsResource;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Request as MerchantRequest;
 use App\Services\Alifshop\AlifshopService;
@@ -13,53 +15,27 @@ use Illuminate\Http\Request;
 
 class MerchantRequestsController extends ApiBaseController
 {
-    /**
-     * @var AlifshopService
-     */
-    private $alifshopService;
-
-    public function __construct(AlifshopService $alifshopService)
-    {
-        parent::__construct();
-        $this->alifshopService = $alifshopService;
-    }
-
     public function index(Request $request)
     {
         $merchantRequests = MerchantRequest::query()
             ->filterRequest($request)
             ->orderRequest($request);
 
-        if ($request->query('object') == 'true') {
+        if ($request->query('object') == true) {
             return $merchantRequests->first();
         }
-        return $merchantRequests->paginate($request->query('per_page'));
+
+        if($request->has('paginate') && $request->query('paginate') == false) {
+            return $merchantRequests->get();
+        }
+
+        return MerchantRequestsResource::collection($merchantRequests->paginate($request->query('per_page') ?? 15));
     }
 
     public function show($id)
     {
-        $request = MerchantRequest::query()->findOrFail($id);
-        return $request;
-    }
-
-    public function store(MerchantRequestStore $request)
-    {
-        $merchant_request = new MerchantRequest([
-            'name' => $request->input('merchant_name'),
-            'information' => $request->input('merchant_information'),
-            'legal_name' => $request->input('merchant_legal_name'),
-
-            'user_phone' => $request->input('user_phone'),
-            'user_name' => $request->input('user_name'),
-            'region' => $request->input('region')
-        ]);
-        $merchant_request->setStatusNew();
-        $merchant_request->save();
-
-        return response()->json([
-            'code' => 'merchant_request_created',
-            'message' => 'Запрос на регистрацию отправлен. В ближайшее время с вами свяжется сотрудник Alifshop.'
-        ]);
+        $merchant_request = MerchantRequest::query()->with('files')->findOrFail($id);
+        return $merchant_request;
     }
 
     public function setEngage(Request $request, $id)
@@ -79,7 +55,7 @@ class MerchantRequestsController extends ApiBaseController
         $merchant_request = MerchantRequest::findOrFail($id);
 
         if ($merchant_request->isStatusNew() || $merchant_request->isInProcess()) {
-            $merchant_request->engaged_by_id = $request->input('engaged_by_id');
+            $merchant_request->engaged_by_id = $user->id;
             $merchant_request->engaged_by_name = $user->name;
             $merchant_request->engaged_at = now();
             $merchant_request->setStatusInProcess();
