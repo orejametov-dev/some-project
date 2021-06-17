@@ -4,12 +4,9 @@ namespace App\Http\Controllers\ApiGateway\Merchants;
 
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
-use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestStore;
-use App\Http\Resources\ApiMerchantGateway\ProblemCases\ProblemCaseResource;
 use App\Http\Resources\ApiPrmGateway\Merchants\MerchantRequestsResource;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Request as MerchantRequest;
-use App\Services\Alifshop\AlifshopService;
 use App\Services\Core\ServiceCore;
 use Illuminate\Http\Request;
 
@@ -25,7 +22,7 @@ class MerchantRequestsController extends ApiBaseController
             return $merchantRequests->first();
         }
 
-        if($request->has('paginate') && $request->query('paginate') == false) {
+        if ($request->has('paginate') && $request->query('paginate') == false) {
             return $merchantRequests->get();
         }
 
@@ -55,9 +52,7 @@ class MerchantRequestsController extends ApiBaseController
         $merchant_request = MerchantRequest::findOrFail($id);
 
         if ($merchant_request->isStatusNew() || $merchant_request->isInProcess()) {
-            $merchant_request->engaged_by_id = $user->id;
-            $merchant_request->engaged_by_name = $user->name;
-            $merchant_request->engaged_at = now();
+           $merchant_request->setEngage($user);
             $merchant_request->setStatusInProcess();
             $merchant_request->save();
 
@@ -83,6 +78,7 @@ class MerchantRequestsController extends ApiBaseController
         }
 
         $merchant_request->setStatusAllowed();
+
         $merchant_request->save();
 
         return $merchant_request;

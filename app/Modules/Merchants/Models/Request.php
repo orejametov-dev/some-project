@@ -135,4 +135,10 @@ class Request extends Model
         $merchant_request_file->save();
         return $merchant_request_file;
     }
+
+    public function setEngage($user) {
+        $this->engaged_by_id = $user->id;
+        $this->engaged_by_name = $user->name;
+        $this->engaged_at = now();
+    }
 }
