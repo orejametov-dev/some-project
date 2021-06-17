@@ -79,10 +79,10 @@ class Condition extends Model
             $query->where('id', $condition_id);
         }
 
-        if ($store_id = $request->query('store_id')) {
+        if ($store_id = $request->store_id) {
             $query->where('store_id', $store_id);
         }
-        if ($merchant_id = $request->query('merchant_id')) {
+        if ($merchant_id = $request->merchant_id) {
             $query->where('merchant_id', $merchant_id);
         }
         if ($updated_at = $request->query('updated_at')) {
