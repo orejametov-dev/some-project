@@ -11,13 +11,6 @@ use App\Modules\Merchants\Models\MerchantInfo;
 
 class MerchantsService
 {
-//    private $merchantsDTO;
-//
-//    public function __construct(MerchantsDTO $merchantsDTO)
-//    {
-//        $this->merchantsDTO = $merchantsDTO;
-//    }
-
     public function create(MerchantsDTO $merchantsDTO)
     {
         $merchant = new Merchant();
@@ -48,7 +41,6 @@ class MerchantsService
         $merchantInfo->bank_account = $merchantInfoDTO->bank_account;
         $merchantInfo->bank_name = $merchantInfoDTO->bank_name;
         $merchantInfo->address = $merchantInfoDTO->address;
-        $merchantInfo->contract_number = 999;
 
         $merchantInfo->save();
     }
