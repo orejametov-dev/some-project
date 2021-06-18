@@ -34,6 +34,7 @@ use Illuminate\Support\Carbon;
  * @property-read mixed $status
  * @method static Builder|Request allowed()
  * @method static Builder|Request filterRequest(\Illuminate\Http\Request $request)
+ * @method static Builder|Request onlyCompletedRequests(\Illuminate\Http\Request $request)
  * @method static Builder|Request inProcess()
  * @method static Builder|Request new()
  * @method static Builder|Request newModelQuery()
@@ -129,6 +130,16 @@ class Request extends Model
         if ($status = $request->query('status_id')) {
             $query->where('status_id', $status);
         }
+    }
+
+    public function scopeOnlyByToken(Builder $query, $token)
+    {
+        $query->where('token', $token);
+    }
+
+    public function scopeOnlyCompletedRequests(Builder $query, \Illuminate\Http\Request $request)
+    {
+        $query->where('completed', true);
     }
 
     public function uploadFile(UploadedFile $uploadedFile, $type)
