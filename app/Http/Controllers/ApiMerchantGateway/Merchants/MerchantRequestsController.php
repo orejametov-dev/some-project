@@ -50,7 +50,12 @@ class MerchantRequestsController extends Controller
             'information' => 'nullable|string',
             'region' => 'required|string',
         ]);
-        $merchant_request = MerchantRequest::updateOrCreate(['token' => $request->input('token')], $validatedRequest);
+        if($merchant_request = MerchantRequest::onlyByToken($request->input('token'))->first()){
+            $merchant_request->fill($validatedRequest);
+        } else {
+            $merchant_request = new MerchantRequest();
+            $merchant_request->fill($validatedRequest);
+        }
         $merchant_request->setStatusNew();
         $merchant_request->save();
         $merchant_request->checkToCompleted();
@@ -74,7 +79,12 @@ class MerchantRequestsController extends Controller
             'address' => 'required|string'
         ]);
 
-        $merchant_request = MerchantRequest::updateOrCreate(['token' => $request->input('token')], $validatedRequest);
+        if($merchant_request = MerchantRequest::onlyByToken($request->input('token'))->first()){
+            $merchant_request->fill($validatedRequest);
+        } else {
+            $merchant_request = new MerchantRequest();
+            $merchant_request->fill($validatedRequest);
+        }
         $merchant_request->save();
         $merchant_request->checkToCompleted();
 
