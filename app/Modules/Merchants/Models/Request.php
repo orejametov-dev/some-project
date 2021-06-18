@@ -91,9 +91,10 @@ class Request extends Model
             && $this->tin && $this->oked && $this->bank_account && $this->bank_name && $this->address;
 
         $files = $this->files;
-        $file_checker = true;
+        $file_checker = false;
         unset(File::$registration_file_types['store_photo']);
         foreach ($files as $file) {
+            $file_checker = true;
             if (!array_key_exists($file->file_type, File::$registration_file_types)) {
                 $file_checker = false;
             }
