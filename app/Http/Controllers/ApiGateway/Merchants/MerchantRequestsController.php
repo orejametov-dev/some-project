@@ -5,10 +5,14 @@ namespace App\Http\Controllers\ApiGateway\Merchants;
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Resources\ApiPrmGateway\Merchants\MerchantRequestsResource;
+use App\Modules\Merchants\DTO\Merchants\MerchantInfoDTO;
+use App\Modules\Merchants\DTO\Merchants\MerchantsDTO;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Request as MerchantRequest;
+use App\Modules\Merchants\Services\Merchants\MerchantsService;
 use App\Services\Core\ServiceCore;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class MerchantRequestsController extends ApiBaseController
 {
@@ -52,7 +56,7 @@ class MerchantRequestsController extends ApiBaseController
         $merchant_request = MerchantRequest::findOrFail($id);
 
         if ($merchant_request->isStatusNew() || $merchant_request->isInProcess()) {
-           $merchant_request->setEngage($user);
+            $merchant_request->setEngage($user);
             $merchant_request->setStatusInProcess();
             $merchant_request->save();
 
@@ -64,7 +68,7 @@ class MerchantRequestsController extends ApiBaseController
         return response()->json(['message' => 'Не возможно менять статус']);
     }
 
-    public function allow($id)
+    public function allow($id, MerchantsService $merchantsService)
     {
         $merchant_request = MerchantRequest::findOrFail($id);
 
@@ -77,9 +81,20 @@ class MerchantRequestsController extends ApiBaseController
             return response()->json(['message' => 'Указанное имя партнера уже занято'], 400);
         }
 
-        $merchant_request->setStatusAllowed();
 
-        $merchant_request->save();
+        DB::transaction(function () use ($merchantsService, $merchant_request){
+            $merchant = $merchantsService->create(new MerchantsDTO(
+                $merchant_request->name,
+                $merchant_request->legal_name,
+                $merchant_request->information,
+                $merchant_request->engaged_by_id
+            ));
+
+            $merchant_request->files()->update(['merchant_id' => $merchant->id]);
+            $merchantsService->createMerchantInfo((new MerchantInfoDTO())->fromMerchantRequest($merchant_request), $merchant);
+            $merchant_request->setStatusAllowed();
+            $merchant_request->save();
+        });
 
         return $merchant_request;
     }
