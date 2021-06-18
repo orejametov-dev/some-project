@@ -14,8 +14,6 @@ class AddNewColumnsToMerchantRequestsTable extends Migration
     public function up()
     {
         Schema::table('merchant_requests', function (Blueprint $table) {
-//            $table->string('name')->nullable(true)->change();
-
             $table->json('categories');
             $table->integer('stores_count');
             $table->string('address')->nullable();
@@ -31,6 +29,8 @@ class AddNewColumnsToMerchantRequestsTable extends Migration
             $table->string('oked')->nullable();
             $table->string('bank_account')->nullable();
             $table->string('bank_name')->nullable();
+
+            $table->boolean('completed')->default(false);
         });
     }
 
