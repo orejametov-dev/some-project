@@ -31,7 +31,8 @@ class MerchantsController extends ApiBaseController
     {
         $merchants = Merchant::query()->with(['stores', 'tags'])
             ->filterRequest($request)
-            ->orderRequest($request);
+            ->orderRequest($request)
+            ->onlyCompletedRequests($request);
 
         if ($request->query('object') == 'true') {
             return $merchants->first();
