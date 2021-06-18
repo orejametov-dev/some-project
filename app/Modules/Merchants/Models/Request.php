@@ -53,6 +53,7 @@ class Request extends Model
     protected $appends = ['status', 'checkers'];
     protected $casts = ['categories' => 'array'];
     protected $fillable = [
+        'token',
         'name',
         'user_name',
         'user_phone',
@@ -74,9 +75,10 @@ class Request extends Model
         'oked',
         'bank_account',
         'bank_name',
-        'address'
-    ];
+        'address',
 
+        'completed'
+    ];
 
 
     public function getCheckersAttribute()
@@ -87,15 +89,21 @@ class Request extends Model
         $documents = $this->director_name && $this->legal_name && $this->phone && $this->vat_number && $this->mfo
             && $this->tin && $this->oked && $this->bank_account && $this->bank_name && $this->address;
 
-        $files = $this->files()->count() >= 7;
+        $files = $this->files;
+        $file_checker = true;
+        unset(File::$registration_file_types['store_photo']);
+        foreach ($files as $file) {
+            if (!array_key_exists($file->file_type, File::$registration_file_types)) {
+                $file_checker = false;
+            }
+        }
 
         return [
             'main' => $main,
             'documents' => $documents,
-            'files' => $files
+            'files' => $file_checker
         ];
     }
-
 
 
     public function getStatusAttribute()
@@ -136,9 +144,21 @@ class Request extends Model
         return $merchant_request_file;
     }
 
-    public function setEngage($user) {
+    public function setEngage($user)
+    {
         $this->engaged_by_id = $user->id;
         $this->engaged_by_name = $user->name;
         $this->engaged_at = now();
+    }
+
+    public function checkToCompleted()
+    {
+        if( $this->checkers['main'] &&
+            $this->checkers['documents'] &&
+            $this->checkers['files'])
+        {
+            $this->completed = true;
+            $this->save();
+        }
     }
 }
