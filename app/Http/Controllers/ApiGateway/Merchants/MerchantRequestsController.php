@@ -9,6 +9,7 @@ use App\Modules\Merchants\DTO\Merchants\MerchantInfoDTO;
 use App\Modules\Merchants\DTO\Merchants\MerchantsDTO;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Request as MerchantRequest;
+use App\Modules\Merchants\Models\Tag;
 use App\Modules\Merchants\Services\Merchants\MerchantsService;
 use App\Services\Core\ServiceCore;
 use Illuminate\Http\Request;
@@ -94,6 +95,8 @@ class MerchantRequestsController extends ApiBaseController
 
             $merchant_request->files()->update(['merchant_id' => $merchant->id]);
             $merchantsService->createMerchantInfo((new MerchantInfoDTO())->fromMerchantRequest($merchant_request), $merchant);
+            $ids = Tag::whereIn('title' ,$merchant_request->categories)->pluck('id');
+            $merchant->tags()->attach($ids);
             $merchant_request->setStatusAllowed();
             $merchant_request->save();
         });
