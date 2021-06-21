@@ -93,9 +93,8 @@ class MerchantRequestsController extends Controller
 
     public function upload(Request $request)
     {
-
         $this->validate($request, [
-            'token' => 'request|string',
+            'token' => 'required|string',
             'file_type' => [
                 'required',
                 'string',
