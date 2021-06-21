@@ -94,7 +94,7 @@ class Request extends Model
         $file_checker = false;
         unset(File::$registration_file_types['store_photo']);
         foreach (File::$registration_file_types as $key => $file_type) {
-            $file_checker = false;
+            $file_checker = true;
             if (!array_key_exists($key, $exist_file_type)) {
                 $file_checker = false;
             }
