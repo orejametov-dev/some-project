@@ -110,8 +110,8 @@ class File extends Model
         return $this->belongsTo(Request::class);
     }
 
-    public function getLinkAttribute()
+    public function getLinkAttribute(): string
     {
-        return config('local_services.services_storage.domain');
+        return config('local_services.services_storage.domain') . $this->url;
     }
 }
