@@ -111,4 +111,17 @@ class MerchantRequestsController extends Controller
 
         return $merchant_request_file;
     }
+
+    public function deleteFile(Request $request, $file_id)
+    {
+        $this->validate($request,[
+            'token' => 'required|string'
+        ]);
+
+        /** @var Merchant $merchant */
+        $merchant_request = MerchantRequest::query()->where('token', $request->input('token'))->firstOrFail();
+        $merchant_request->deleteFile($file_id);
+
+        return response()->json(['message' => 'Файл успешно удалён.']);
+    }
 }
