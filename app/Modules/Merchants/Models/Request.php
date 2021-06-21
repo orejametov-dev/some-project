@@ -90,15 +90,16 @@ class Request extends Model
         $documents = $this->director_name && $this->legal_name && $this->phone && $this->vat_number && $this->mfo
             && $this->tin && $this->oked && $this->bank_account && $this->bank_name && $this->address;
 
-        $files = $this->files;
+        $exist_file_type = $this->files->pluck('file_type')->toArray();
         $file_checker = false;
         unset(File::$registration_file_types['store_photo']);
-        foreach ($files as $file) {
-            $file_checker = true;
-            if (!array_key_exists($file->file_type, File::$registration_file_types)) {
+        foreach (File::$registration_file_types as $key => $file_type) {
+            $file_checker = false;
+            if (!array_key_exists($key, $exist_file_type)) {
                 $file_checker = false;
             }
         }
+//        dd($file_checker);
 
         return [
             'main' => $main,
