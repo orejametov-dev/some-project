@@ -5,6 +5,7 @@ namespace App\Modules\Merchants\Models;
 
 use App\HttpServices\Storage\StorageMicroService;
 use App\Modules\Merchants\Services\RequestStatus;
+use App\Modules\Merchants\Traits\MerchantFileTrait;
 use App\Modules\Merchants\Traits\MerchantRequestStatusesTrait;
 use App\Traits\SortableByQueryParams;
 use Eloquent;
@@ -154,6 +155,17 @@ class Request extends Model
         $merchant_request_file->request_id = $this->id;
         $merchant_request_file->save();
         return $merchant_request_file;
+    }
+
+    public function deleteFile($file_id)
+    {
+        $file = $this->files()->find($file_id);
+        if (!$file) {
+            return;
+        }
+
+        StorageMicroService::destroy($file->url);
+        $file->delete();
     }
 
     public function setEngage($user)
