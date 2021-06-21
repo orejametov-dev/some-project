@@ -99,7 +99,6 @@ class Request extends Model
                 $file_checker = false;
             }
         }
-//        dd($file_checker);
 
         return [
             'main' => $main,
