@@ -92,13 +92,14 @@ class Request extends Model
             && $this->tin && $this->oked && $this->bank_account && $this->bank_name && $this->address;
 
         $exist_file_type = $this->files->pluck('file_type')->toArray();
-        $file_checker = false;
+        $file_checker = true;
         unset(File::$registration_file_types['store_photo']);
         foreach (File::$registration_file_types as $key => $file_type) {
-            $file_checker = true;
-            if (!array_key_exists($key, $exist_file_type)) {
+            $file_checker = $file_checker && true;
+            if (!in_array($key, $exist_file_type)) {
                 $file_checker = false;
             }
+
         }
 
         return [
