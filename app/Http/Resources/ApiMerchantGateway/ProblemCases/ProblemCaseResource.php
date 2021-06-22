@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\ApiMerchantGateway\ProblemCases;
 
+use App\Http\Resources\ApiMerchantGateway\Stores\StoresResource;
 use App\Modules\Merchants\Models\ProblemCase;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -19,7 +20,7 @@ class ProblemCaseResource extends JsonResource
         return [
             'id' => $this->id,
             'merchant_id' => $this->merchant_id,
-            'store_id' => $this->merchant_id,
+            'store_id' => new StoresResource($this->store),
             'credit_number' => $this->credit_number ?? null,
             'application_id' => $this->application_id ?? null,
             'client_id' => $this->client_id,
