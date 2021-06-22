@@ -20,7 +20,8 @@ class ProblemCaseResource extends JsonResource
         return [
             'id' => $this->id,
             'merchant_id' => $this->merchant_id,
-            'store_id' => new StoresResource($this->store),
+            'store_id' => $this->store_id,
+            'store' => new StoresResource($this->store),
             'credit_number' => $this->credit_number ?? null,
             'application_id' => $this->application_id ?? null,
             'client_id' => $this->client_id,
