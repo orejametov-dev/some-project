@@ -163,4 +163,9 @@ class ProblemCase extends Model implements SimpleStateMachinable
             $query->where('status_id', $request->query('status_id'));
         }
     }
+
+    public function scopeOnlyNew(Builder $query)
+    {
+        $query->where('status_id', self::NEW);
+    }
 }
