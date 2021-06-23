@@ -78,7 +78,8 @@ class Merchant extends Model
         'has_applications',
         'has_orders',
 
-        'paymo_terminal_id'
+        'paymo_terminal_id',
+        'min_application_price'
     ];
     protected $appends = ['logo_path'];
     protected $hidden = ['logo_url'];
