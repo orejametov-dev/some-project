@@ -19,6 +19,7 @@ use Illuminate\Http\Request;
  * @property int $store_id
  * @property int $user_id
  * @property string $user_name
+ * @property string $phone
  * @property int $permission_applications
  * @property int $permission_deliveries
  * @property int $permission_orders
@@ -51,7 +52,9 @@ class MerchantUser extends Model
         'permission_deliveries',
         'permission_applications',
         'permission_upload_goods',
-        'permission_oso'
+        'permission_oso',
+        'user_name',
+        'phone'
     ];
 
     public function store()
@@ -67,7 +70,8 @@ class MerchantUser extends Model
     public function scopeFilterRequest(Builder $query, Request $request)
     {
         if ($q = $request->query('q')) {
-            $query->where('user_name', 'LIKE', '%' . $q . '%');
+            $query->where('user_name', 'LIKE', '%' . $q . '%')
+                ->orWhere('phone', 'LIKE', '%' . $q . '%');
         }
 
         if ($request->query('date')) {

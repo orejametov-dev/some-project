@@ -104,12 +104,12 @@ class ProblemCase extends Model implements SimpleStateMachinable
 
     public function merchant()
     {
-        $this->belongsTo(Merchant::class);
+        return $this->belongsTo(Merchant::class);
     }
 
     public function store()
     {
-        $this->belongsTo(Store::class);
+        return $this->belongsTo(Store::class);
     }
 
     public function tags()
@@ -125,12 +125,12 @@ class ProblemCase extends Model implements SimpleStateMachinable
 
     public function scopeFilterRequests(Builder $query, \Illuminate\Http\Request $request)
     {
-        if($request->query('merchant_id')) {
-            $query->where('merchant_id', $request->query('merchant_id'));
+        if($request->merchant_id) {
+            $query->where('merchant_id', $request->merchant_id);
         }
 
-        if($request->query('store_id')) {
-            $query->where('store_id', $request->query('store_id'));
+        if($request->store_id) {
+            $query->where('store_id', $request->store_id);
         }
 
         if($request->query('engaged_by_id')) {
@@ -162,5 +162,10 @@ class ProblemCase extends Model implements SimpleStateMachinable
         if($request->query('status_id')) {
             $query->where('status_id', $request->query('status_id'));
         }
+    }
+
+    public function scopeOnlyNew(Builder $query)
+    {
+        $query->where('status_id', self::NEW);
     }
 }
