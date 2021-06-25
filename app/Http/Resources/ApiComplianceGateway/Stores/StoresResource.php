@@ -17,12 +17,13 @@ class StoresResource extends JsonResource
     public function toArray($request)
     {
         /** @var ProblemCase|ProblemCaseResource $this */
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'merchant_id' => $this->merchant_id,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at
-        ];
+        return parent::toArray($request);
+//        return [
+//            'id' => $this->id,
+//            'name' => $this->name,
+//            'merchant_id' => $this->merchant_id,
+//            'created_at' => $this->created_at,
+//            'updated_at' => $this->updated_at
+//        ];
     }
 }
