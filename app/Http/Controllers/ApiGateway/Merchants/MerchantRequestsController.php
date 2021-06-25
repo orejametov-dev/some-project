@@ -4,62 +4,42 @@ namespace App\Http\Controllers\ApiGateway\Merchants;
 
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
-use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestStore;
+use App\Http\Resources\ApiPrmGateway\Merchants\MerchantRequestsResource;
+use App\Modules\Merchants\DTO\Merchants\MerchantInfoDTO;
+use App\Modules\Merchants\DTO\Merchants\MerchantsDTO;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Request as MerchantRequest;
-use App\Services\Alifshop\AlifshopService;
+use App\Modules\Merchants\Models\Tag;
+use App\Modules\Merchants\Services\Merchants\MerchantsService;
 use App\Services\Core\ServiceCore;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class MerchantRequestsController extends ApiBaseController
 {
-    /**
-     * @var AlifshopService
-     */
-    private $alifshopService;
-
-    public function __construct(AlifshopService $alifshopService)
-    {
-        parent::__construct();
-        $this->alifshopService = $alifshopService;
-    }
-
     public function index(Request $request)
     {
         $merchantRequests = MerchantRequest::query()
             ->filterRequest($request)
-            ->orderRequest($request);
+            ->orderRequest($request)
+            ->onlyCompletedRequests($request);
 
-        if ($request->query('object') == 'true') {
+
+        if ($request->query('object') == true) {
             return $merchantRequests->first();
         }
-        return $merchantRequests->paginate($request->query('per_page'));
+
+        if ($request->has('paginate') && $request->query('paginate') == false) {
+            return $merchantRequests->get();
+        }
+
+        return MerchantRequestsResource::collection($merchantRequests->paginate($request->query('per_page') ?? 15));
     }
 
     public function show($id)
     {
-        $request = MerchantRequest::query()->findOrFail($id);
-        return $request;
-    }
-
-    public function store(MerchantRequestStore $request)
-    {
-        $merchant_request = new MerchantRequest([
-            'name' => $request->input('merchant_name'),
-            'information' => $request->input('merchant_information'),
-            'legal_name' => $request->input('merchant_legal_name'),
-
-            'user_phone' => $request->input('user_phone'),
-            'user_name' => $request->input('user_name'),
-            'region' => $request->input('region')
-        ]);
-        $merchant_request->setStatusNew();
-        $merchant_request->save();
-
-        return response()->json([
-            'code' => 'merchant_request_created',
-            'message' => 'Запрос на регистрацию отправлен. В ближайшее время с вами свяжется сотрудник Alifshop.'
-        ]);
+        $merchant_request = MerchantRequest::query()->with('files')->findOrFail($id);
+        return $merchant_request;
     }
 
     public function setEngage(Request $request, $id)
@@ -79,9 +59,7 @@ class MerchantRequestsController extends ApiBaseController
         $merchant_request = MerchantRequest::findOrFail($id);
 
         if ($merchant_request->isStatusNew() || $merchant_request->isInProcess()) {
-            $merchant_request->engaged_by_id = $request->input('engaged_by_id');
-            $merchant_request->engaged_by_name = $user->name;
-            $merchant_request->engaged_at = now();
+            $merchant_request->setEngage($user);
             $merchant_request->setStatusInProcess();
             $merchant_request->save();
 
@@ -93,7 +71,7 @@ class MerchantRequestsController extends ApiBaseController
         return response()->json(['message' => 'Не возможно менять статус']);
     }
 
-    public function allow($id)
+    public function allow($id, MerchantsService $merchantsService)
     {
         $merchant_request = MerchantRequest::findOrFail($id);
 
@@ -106,8 +84,22 @@ class MerchantRequestsController extends ApiBaseController
             return response()->json(['message' => 'Указанное имя партнера уже занято'], 400);
         }
 
-        $merchant_request->setStatusAllowed();
-        $merchant_request->save();
+
+        DB::transaction(function () use ($merchantsService, $merchant_request){
+            $merchant = $merchantsService->create(new MerchantsDTO(
+                $merchant_request->name,
+                $merchant_request->legal_name,
+                $merchant_request->information,
+                $merchant_request->engaged_by_id
+            ));
+
+            $merchant_request->files()->update(['merchant_id' => $merchant->id]);
+            $merchantsService->createMerchantInfo((new MerchantInfoDTO())->fromMerchantRequest($merchant_request), $merchant);
+            $ids = Tag::whereIn('title' ,$merchant_request->categories)->pluck('id');
+            $merchant->tags()->attach($ids);
+            $merchant_request->setStatusAllowed();
+            $merchant_request->save();
+        });
 
         return $merchant_request;
     }

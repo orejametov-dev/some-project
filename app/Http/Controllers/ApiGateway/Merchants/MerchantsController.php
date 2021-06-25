@@ -71,6 +71,7 @@ class MerchantsController extends ApiBaseController
             'token' => 'required|max:255|unique:merchants,alifshop_slug,' . $merchant_id,
             'alifshop_slug' => 'required|max:255|unique:merchants,alifshop_slug,' . $merchant_id,
             'information' => 'nullable|string',
+            'min_application_price' => 'required|integer'
         ]);
 
         $merchant = Merchant::query()->findOrFail($merchant_id);
