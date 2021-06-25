@@ -14,7 +14,8 @@ class AlifshopService
             'old_token' => $merchant->old_token ?? $merchant->token,
             'token' => $merchant->token,
             'information' => $merchant->information,
-            'logo_path' => $merchant->logo_path
+            'logo_path' => $merchant->logo_path,
+            'min_application_price' => $merchant->min_application_price
         ];
 
         $client = self::createRequest();
