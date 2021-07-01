@@ -2,9 +2,28 @@
 
 namespace App\Modules\Merchants\Models;
 
+use Carbon\Traits\Date;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
+/**
+ * Class Store
+ *
+ * @package App\Modules\Partners\Models
+ * @property int $id
+ * @property string $title_uz
+ * @property string $title_ru
+ * @property string $body_uz
+ * @property string $body_ru
+ * @property Date $start_schedule
+ * @property Date $end_schedule
+ * @property string $type
+ *
+ */
 class Notification extends Model
 {
     use HasFactory;
