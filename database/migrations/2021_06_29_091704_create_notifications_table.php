@@ -21,8 +21,7 @@ class CreateNotificationsTable extends Migration
             $table->text('body_ru');
             $table->timestamp('start_schedule')->useCurrent();
             $table->timestamp('end_schedule')->default(now()->addDay());
-            $table->boolean('over_by_all_merchants');
-//            $table->boolean()
+            $table->string('type');
             $table->timestamps();
         });
     }

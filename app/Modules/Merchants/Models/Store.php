@@ -83,4 +83,9 @@ class Store extends Model
     {
         return $query->where('is_main', true);
     }
+
+    public function notifications()
+    {
+        return $this->belongsToMany(Notification::class, 'store_notification', 'store_id', 'notification_id');
+    }
 }
