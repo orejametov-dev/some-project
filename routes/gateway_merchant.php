@@ -32,3 +32,9 @@ Route::prefix('merchants/tags')
     ->group(function () {
         Route::get('/', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantTagsController::class, 'index'] )->withoutMiddleware(['gateway-access', 'gateway-auth-user']);
     });
+
+Route::prefix('notifications')
+    ->group(function () {
+        Route::get('/', [\App\Http\Controllers\ApiMerchantGateway\Notifications\NotificationsController::class, 'index'] );
+        Route::get('/counter', [\App\Http\Controllers\ApiMerchantGateway\Notifications\NotificationsController::class, 'getCounter'] );
+    });

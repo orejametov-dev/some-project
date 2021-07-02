@@ -62,6 +62,20 @@ class Notification extends Model
         $this->created_by_name = $user->name;
     }
 
+    public function scopeOnlyByMerchant(Builder $query, $merchant_id)
+    {
+        $query->whereHas('stores', function (Builder $query) use ($merchant_id) {
+            $query->where('stores.merchant_id', $merchant_id);
+        });
+    }
+
+    public function scopeOnlyByStore(Builder $query, $store_id)
+    {
+        $query->whereHas('stores', function (Builder $query) use ($store_id) {
+            $query->where('stores.id', $store_id);
+        });
+    }
+
     public function scopeFilterRequest(Builder $query, Request $request)
     {
         if($request->merchant_id) {

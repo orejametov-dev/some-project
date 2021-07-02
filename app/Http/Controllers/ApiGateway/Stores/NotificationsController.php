@@ -57,7 +57,7 @@ class NotificationsController extends ApiBaseController
         $notification->fill($validatedData);
         $notification->setCreatedBy($this->user);
         $notification->start_schedule = Carbon::createFromFormat('Y-m-d H:i', $request->input('start_schedule') ?? now()->format('Y-m-d H:i'), 'Asia/Tashkent')->setTimezone('UTC');
-        $notification->end_schedule = Carbon::createFromFormat('Y-m-d H:i', $request->input('end_schedule') ?? now()->subDay()->format('Y-m-d H:i'), 'Asia/Tashkent')->setTimezone('UTC');
+        $notification->end_schedule = Carbon::createFromFormat('Y-m-d H:i', $request->input('end_schedule') ?? now()->addDay()->format('Y-m-d H:i'), 'Asia/Tashkent')->setTimezone('UTC');
 
         if ($request->has('all_merchants') && $request->input('all_merchants')) {
             DB::transaction(function () use ($notification) {
