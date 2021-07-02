@@ -118,6 +118,7 @@ Route::middleware(['service', 'gateway-auth-user'])
         Route::prefix('notifications')
             ->group(function () {
                 Route::get('/', [\App\Http\Controllers\ApiGateway\Stores\NotificationsController::class, 'index']);
+                Route::get('/{id}', [\App\Http\Controllers\ApiGateway\Stores\NotificationsController::class, 'show']);
                 Route::post('/', [\App\Http\Controllers\ApiGateway\Stores\NotificationsController::class, 'store']);
             });
 
