@@ -86,7 +86,6 @@ class Store extends Model
 
     public function notifications()
     {
-        return $this->belongsToMany(Notification::class, 'store_notification', 'store_id', 'notification_id')
-            ->withPivot('merchant_id');
+        return $this->belongsToMany(Notification::class, 'store_notification', 'store_id', 'notification_id');
     }
 }

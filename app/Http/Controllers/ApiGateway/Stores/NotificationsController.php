@@ -84,10 +84,10 @@ class NotificationsController extends ApiBaseController
                                 throw new BusinessException('Указан не правильный магазин ' . $merchant->name . ' мерчанта');
                             }
                         }
-                        $notification->stores()->attach($recipient['store_ids'], ['merchant_id' => $merchant->id]);
+                        $notification->stores()->attach($recipient['store_ids']);
                     } else {
                         $stores = $merchant->stores;
-                        $notification->stores()->attach($stores, ['merchant_id' => $merchant->id]);
+                        $notification->stores()->attach($stores);
                     }
                 }
             });

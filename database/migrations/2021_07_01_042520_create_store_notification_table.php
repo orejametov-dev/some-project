@@ -20,9 +20,6 @@ class CreateStoreNotificationTable extends Migration
 
             $table->unsignedBigInteger('notification_id');
             $table->foreign('notification_id')->references('id')->on('notifications');
-
-            $table->unsignedBigInteger('merchant_id');
-            $table->foreign('merchant_id')->references('id')->on('merchants');
         });
     }
 

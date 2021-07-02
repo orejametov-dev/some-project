@@ -53,13 +53,7 @@ class Notification extends Model
 
     public function stores()
     {
-        return $this->belongsToMany(Store::class, 'store_notification', 'notification_id', 'store_id')
-            ->withPivot('merchant_id');
-    }
-
-    public function merchants()
-    {
-        return $this->belongsToMany(Merchant::class, 'store_notification', 'notification_id', 'merchant_id');
+        return $this->belongsToMany(Store::class, 'store_notification', 'notification_id', 'store_id');
     }
 
     public function setCreatedBy($user)
@@ -72,7 +66,7 @@ class Notification extends Model
     {
         if($request->merchant_id) {
             $query->whereHas('stores', function (Builder $query) use ($request) {
-                $query->where('store_notification.merchant_id', $request->merchant_id);
+                $query->where('stores.merchant_id', $request->merchant_id);
             });
         }
 

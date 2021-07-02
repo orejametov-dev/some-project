@@ -46,9 +46,4 @@ trait MerchantRelationshipsTrait
     {
         return $this->hasMany(AdditionalAgreement::class);
     }
-
-    public function notifications()
-    {
-        return $this->belongsToMany(Notification::class, 'store_notification', 'merchant_id', 'notification_id');
-    }
 }
