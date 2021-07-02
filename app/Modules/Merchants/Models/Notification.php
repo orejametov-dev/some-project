@@ -53,6 +53,35 @@ class Notification extends Model
 
     public function stores()
     {
-        return $this->belongsToMany(Store::class, 'store_notification', 'notification_id', 'store_id');
+        return $this->belongsToMany(Store::class, 'store_notification', 'notification_id', 'store_id')
+            ->withPivot('merchant_id');
+    }
+
+    public function merchants()
+    {
+        return $this->belongsToMany(Merchant::class, 'store_notification', 'notification_id', 'merchant_id');
+    }
+
+    public function setCreatedBy($user)
+    {
+        $this->created_by_id = $user->id;
+        $this->created_by_name = $user->name;
+    }
+
+    public function scopeFilterRequest(Builder $query, Request $request)
+    {
+        if($request->merchant_id) {
+            $query->whereHas('stores', function (Builder $query) use ($request) {
+                $query->where('store_notification.merchant_id', $request->merchant_id);
+            });
+        }
+
+        if($request->query('created_by_id')) {
+            $query->where('created_by_id', $request->query('created_by_id'));
+        }
+
+        if($request->query('created_at')) {
+            $query->where('created_at', $request->query('created_at'));
+        }
     }
 }

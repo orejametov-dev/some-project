@@ -17,7 +17,25 @@ class NotificationsController extends ApiBaseController
 {
     public function index(Request $request)
     {
-        return Notification::query()->get();
+        $notifications = Notification::query()
+            ->filterRequest($request)->latest()
+            ->latest();
+
+        if ($request->query('object') == true) {
+            return $notifications->first();
+        }
+
+        if ($request->has('paginate') && $request->query('paginate') == false) {
+            return $notifications->get();
+        }
+
+        return $notifications->paginate($request->query('per_page') ?? 15);
+    }
+
+    public function show($id)
+    {
+        $notification = Notification::query()->with('stores')->findOrFail($id);
+        return $notification;
     }
 
     public function store(Request $request)
@@ -27,19 +45,19 @@ class NotificationsController extends ApiBaseController
             'title_ru' => 'required|string',
             'body_uz' => 'required|string',
             'body_ru' => 'required|string',
-            'start_schedule' => 'required|date_format:Y-m-d H:i',
-            'end_schedule' => 'required|date_format:Y-m-d H:i',
+            'start_schedule' => 'nullable|date_format:Y-m-d H:i',
+            'end_schedule' => 'nullable|date_format:Y-m-d H:i',
             'all_merchants' => 'required_without:recipients|boolean',
             'recipients' => 'required_without:all_merchants|array',
             'recipients.*.merchant_id' => 'required|integer',
             'recipients.*.store_ids' => 'nullable|array'
         ]);
 
-
         $notification = new Notification();
         $notification->fill($validatedData);
-        $notification->start_schedule = Carbon::createFromFormat('Y-m-d H:i', $request->input('start_schedule'), 'Asia/Tashkent')->setTimezone('UTC');
-        $notification->end_schedule = Carbon::createFromFormat('Y-m-d H:i', $request->input('end_schedule'), 'Asia/Tashkent')->setTimezone('UTC');
+        $notification->setCreatedBy($this->user);
+        $notification->start_schedule = Carbon::createFromFormat('Y-m-d H:i', $request->input('start_schedule') ?? now()->format('Y-m-d H:i'), 'Asia/Tashkent')->setTimezone('UTC');
+        $notification->end_schedule = Carbon::createFromFormat('Y-m-d H:i', $request->input('end_schedule') ?? now()->subDay()->format('Y-m-d H:i'), 'Asia/Tashkent')->setTimezone('UTC');
 
         if ($request->has('all_merchants') && $request->input('all_merchants')) {
             DB::transaction(function () use ($notification) {
@@ -66,10 +84,10 @@ class NotificationsController extends ApiBaseController
                                 throw new BusinessException('Указан не правильный магазин ' . $merchant->name . ' мерчанта');
                             }
                         }
-                        $notification->stores()->attach($recipient['store_ids']);
+                        $notification->stores()->attach($recipient['store_ids'], ['merchant_id' => $merchant->id]);
                     } else {
                         $stores = $merchant->stores;
-                        $notification->stores()->attach($stores);
+                        $notification->stores()->attach($stores, ['merchant_id' => $merchant->id]);
                     }
                 }
             });

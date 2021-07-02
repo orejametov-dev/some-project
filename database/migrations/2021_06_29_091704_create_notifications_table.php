@@ -21,7 +21,12 @@ class CreateNotificationsTable extends Migration
             $table->text('body_ru');
             $table->timestamp('start_schedule')->useCurrent();
             $table->timestamp('end_schedule')->default(now()->addDay());
+
+            $table->unsignedBigInteger('created_by_id');
+            $table->string('created_by_name');
+
             $table->string('type');
+
             $table->timestamps();
         });
     }

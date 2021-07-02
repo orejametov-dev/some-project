@@ -7,6 +7,7 @@ use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\File;
 use App\Modules\Merchants\Models\MerchantInfo;
 use App\Modules\Merchants\Models\MerchantUser;
+use App\Modules\Merchants\Models\Notification;
 use App\Modules\Merchants\Models\Store;
 use App\Modules\Merchants\Models\Tag;
 
@@ -44,5 +45,10 @@ trait MerchantRelationshipsTrait
     public function additional_agreements()
     {
         return $this->hasMany(AdditionalAgreement::class);
+    }
+
+    public function notifications()
+    {
+        return $this->belongsToMany(Notification::class, 'store_notification', 'merchant_id', 'notification_id');
     }
 }

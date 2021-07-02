@@ -16,7 +16,13 @@ class CreateStoreNotificationTable extends Migration
         Schema::create('store_notification', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('store_id');
+            $table->foreign('store_id')->references('id')->on('stores');
+
             $table->unsignedBigInteger('notification_id');
+            $table->foreign('notification_id')->references('id')->on('notifications');
+
+            $table->unsignedBigInteger('merchant_id');
+            $table->foreign('merchant_id')->references('id')->on('merchants');
         });
     }
 
