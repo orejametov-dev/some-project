@@ -92,4 +92,9 @@ class Notification extends Model
             $query->where('created_at', $request->query('created_at'));
         }
     }
+
+    public function scopeOnlyMoreThanStartSchedule(Builder $query)
+    {
+        $query->where('start_schedule', '<=', now());
+    }
 }
