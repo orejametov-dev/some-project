@@ -7,6 +7,7 @@ use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Resources\ApiPrmGateway\Merchants\MerchantRequestsResource;
 use App\Modules\Merchants\DTO\Merchants\MerchantInfoDTO;
 use App\Modules\Merchants\DTO\Merchants\MerchantsDTO;
+use App\Modules\Merchants\Models\File;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Request as MerchantRequest;
 use App\Modules\Merchants\Models\Tag;
@@ -14,6 +15,7 @@ use App\Modules\Merchants\Services\Merchants\MerchantsService;
 use App\Services\Core\ServiceCore;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class MerchantRequestsController extends ApiBaseController
 {
@@ -40,6 +42,73 @@ class MerchantRequestsController extends ApiBaseController
     {
         $merchant_request = MerchantRequest::query()->with('files')->findOrFail($id);
         return $merchant_request;
+    }
+
+    public function update($id, Request $request)
+    {
+        $validatedRequest = $this->validate($request, [
+            'user_name' => 'required|string',
+            'user_phone' => 'required|digits:12',
+            'name' => 'required|string',
+            'categories' => 'required|array',
+            'stores_count' => 'required|integer',
+            'merchant_users_count' => 'required|integer',
+            'approximate_sales' => 'required|integer',
+            'information' => 'nullable|string',
+            'region' => 'required|string',
+
+            'director_name' => 'required|max:255',
+            'legal_name' => 'required|string',
+            'phone' => 'required|digits:12',
+            'vat_number' => 'required|digits:12',
+            'mfo' => 'required|digits:5',
+            'tin' => 'required|digits:9',
+            'oked' => 'required|digits:5',
+            'bank_account' => 'required|digits:20',
+            'bank_name' => 'required|max:255',
+            'address' => 'required|string'
+        ]);
+
+        $merchant_request = MerchantRequest::findOrFail($id);
+        $merchant_request->fill($validatedRequest);
+
+        $merchant_request->save();
+        $merchant_request->checkToCompleted();
+
+        return $merchant_request;
+    }
+
+    public function upload($id, Request $request)
+    {
+        $this->validate($request, [
+            'file_type' => [
+                'required',
+                'string',
+                'max:100',
+                Rule::in(array_keys(File::$registration_file_types))
+            ],
+            'file' => 'required|file|mimes:jpeg,bmp,png,svg,jpg,pdf,xlsx,xls',
+        ]);
+
+        /** @var Merchant $merchant */
+        $merchant_request = MerchantRequest::findOrFail($id);
+        $merchant_request_file = $merchant_request->uploadFile($request->file('file'), $request->input('file_type'));
+        $merchant_request->checkToCompleted();
+
+        return $merchant_request_file;
+    }
+
+    public function deleteFile($id, Request $request)
+    {
+        $this->validate($request,[
+            'file_id' => 'required|integer'
+        ]);
+
+        /** @var Merchant $merchant */
+        $merchant_request = MerchantRequest::query()->findOrFail($id);
+        $merchant_request->deleteFile($request->input('file_id'));
+
+        return response()->json(['message' => 'Файл успешно удалён.']);
     }
 
     public function setEngage(Request $request, $id)
@@ -85,7 +154,7 @@ class MerchantRequestsController extends ApiBaseController
         }
 
 
-        DB::transaction(function () use ($merchantsService, $merchant_request){
+        DB::transaction(function () use ($merchantsService, $merchant_request) {
             $merchant = $merchantsService->create(new MerchantsDTO(
                 $merchant_request->name,
                 $merchant_request->legal_name,
@@ -95,7 +164,7 @@ class MerchantRequestsController extends ApiBaseController
 
             $merchant_request->files()->update(['merchant_id' => $merchant->id]);
             $merchantsService->createMerchantInfo((new MerchantInfoDTO())->fromMerchantRequest($merchant_request), $merchant);
-            $ids = Tag::whereIn('title' ,$merchant_request->categories)->pluck('id');
+            $ids = Tag::whereIn('title', $merchant_request->categories)->pluck('id');
             $merchant->tags()->attach($ids);
             $merchant_request->setStatusAllowed();
             $merchant_request->save();
