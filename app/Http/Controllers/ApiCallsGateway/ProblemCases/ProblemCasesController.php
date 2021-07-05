@@ -26,4 +26,9 @@ class ProblemCasesController extends ApiBaseController
         return ProblemCaseResource::collection($problemCases->paginate($request->query('per_page') ?? 15));
     }
 
+    public function getStatusList()
+    {
+        return array_values(ProblemCase::$statuses);
+    }
+
 }
