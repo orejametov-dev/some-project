@@ -78,6 +78,10 @@ class Notification extends Model
 
     public function scopeFilterRequest(Builder $query, Request $request)
     {
+        if($request->query('q')) {
+            $query->where('title_uz', 'LIKE', '%' . $request->query('q') . '%')
+                ->orWhere('title_ru', 'LIKE', '%'. $request->query('q') . '%' );
+        }
         if($request->merchant_id) {
             $query->whereHas('stores', function (Builder $query) use ($request) {
                 $query->where('stores.merchant_id', $request->merchant_id);
@@ -89,7 +93,8 @@ class Notification extends Model
         }
 
         if($request->query('created_at')) {
-            $query->where('created_at', $request->query('created_at'));
+            $date = \Carbon\Carbon::parse($request->query('created_at') ?? today())->format('Y-m-d');
+            $query->whereDate('created_at', $date);
         }
     }
 
