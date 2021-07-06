@@ -93,8 +93,8 @@ class Notification extends Model
         }
 
         if($request->query('created_at')) {
-            $date = \Carbon\Carbon::parse($request->query('created_at') ?? today());
-            $query->where('created_at', $date);
+            $date = \Carbon\Carbon::parse($request->query('created_at') ?? today())->format('Y-m-d');
+            $query->whereDate('created_at', $date);
         }
     }
 
