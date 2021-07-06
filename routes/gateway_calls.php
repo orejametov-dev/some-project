@@ -11,4 +11,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::prefix('merchants/problem-cases')
     ->group(function () {
         Route::get('/', [ProblemCasesController::class, 'index']);
+        Route::get('/statuses', [ProblemCasesController::class, 'getStatusList']);
     });

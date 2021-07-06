@@ -16,14 +16,19 @@ class ProblemCasesController extends ApiBaseController
         $problemCases = ProblemCase::query()->filterRequests($request);
 
         if ($request->query('object') == true) {
-            $problemCases->first();
+            return new ProblemCaseResource($problemCases->first());
         }
 
-        if ($request->query('paginate') == false) {
-            $problemCases->get();
+        if ($request->has('paginate') && $request->query('paginate') == false) {
+            return ProblemCaseResource::collection($problemCases->get());
         }
 
         return ProblemCaseResource::collection($problemCases->paginate($request->query('per_page') ?? 15));
+    }
+
+    public function getStatusList()
+    {
+        return array_values(ProblemCase::$statuses);
     }
 
 }
