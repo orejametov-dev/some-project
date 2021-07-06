@@ -7,6 +7,7 @@ use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\File;
 use App\Modules\Merchants\Models\MerchantInfo;
 use App\Modules\Merchants\Models\MerchantUser;
+use App\Modules\Merchants\Models\Notification;
 use App\Modules\Merchants\Models\Store;
 use App\Modules\Merchants\Models\Tag;
 
