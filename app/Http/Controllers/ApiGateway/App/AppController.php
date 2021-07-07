@@ -29,8 +29,10 @@ class AppController extends ApiBaseController
         $authUser = $this->user;
 
         $file_types = File::$file_types;
+        $registration_file_types = File::$registration_file_types;
 
         $regions = RegionService::getRegions();
+
 
         $me = [
             'id' => $authUser->id,
@@ -48,6 +50,7 @@ class AppController extends ApiBaseController
             'merchant_statuses',
             'problem_case_statuses',
             'file_types',
+            'registration_file_types',
             'regions',
             'problem_case_sources'
         ));
