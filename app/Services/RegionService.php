@@ -7,7 +7,7 @@ class RegionService
     private static $regions = [
         'tashkent_city' => [
             'body_ru' => 'Ташкент',
-            'body_uz' => 'Toshkent '
+            'body_uz' => 'Toshkent'
         ],
         'andijan' => [
             'body_ru' => 'Андижанская область',
