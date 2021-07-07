@@ -8,6 +8,7 @@ use App\Http\Controllers\ApiComplianceGateway\ApiBaseController;
 use App\Http\Resources\ApiComplianceGateway\Merchants\MerchantsResource;
 use App\Modules\Merchants\Models\Merchant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class MerchantsController extends ApiBaseController
 {
@@ -17,6 +18,14 @@ class MerchantsController extends ApiBaseController
             ->filterRequest($request)
             ->orderRequest($request);
 
-        return MerchantsResource::collection($merchants->paginate($request->query('per_page')) ?? 15);
+        if ($request->has('paginate') && $request->query('paginate') == false) {
+            return Cache::remember($request->fullUrl(), 600, function () use ($merchants) {
+                return MerchantsResource::collection($merchants->get());
+            });
+        }
+
+        return Cache::remember($request->fullUrl(), 180, function () use ($merchants, $request) {
+            return MerchantsResource::collection($merchants->paginate($request->query('per_page')) ?? 15);
+        });
     }
 }
