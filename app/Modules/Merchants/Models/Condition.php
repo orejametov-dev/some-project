@@ -107,4 +107,9 @@ class Condition extends Model
     {
         return $this->duration . 'м' . ' / ' . $this->commission . '%';
     }
+
+    public function scopeByMerchant(Builder $query, $merchant_id)
+    {
+        return $query->where('merchant_id', $merchant_id);
+    }
 }

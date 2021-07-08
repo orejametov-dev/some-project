@@ -7,6 +7,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::prefix('application-conditions')
+    ->group(function () {
+        Route::get('/', [App\Http\Controllers\ApiMerchantGateway\Merchants\ApplicationConditionsController::class, 'index']);
+    });
+
 Route::prefix('merchants/problem-cases')
     ->group(function () {
         Route::get('/statuses', [\App\Http\Controllers\ApiMerchantGateway\ProblemCases\ProblemCasesController::class, 'getStatuses']);
@@ -37,4 +42,9 @@ Route::prefix('notifications')
     ->group(function () {
         Route::get('/', [\App\Http\Controllers\ApiMerchantGateway\Notifications\NotificationsController::class, 'index'] );
         Route::get('/counter', [\App\Http\Controllers\ApiMerchantGateway\Notifications\NotificationsController::class, 'getCounter'] );
+    });
+
+Route::prefix('stores')
+    ->group(function () {
+        Route::get('/', [App\Http\Controllers\ApiMerchantGateway\Stores\StoresController::class, 'index']);
     });
