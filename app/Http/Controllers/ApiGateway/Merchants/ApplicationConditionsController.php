@@ -5,13 +5,11 @@ namespace App\Http\Controllers\ApiGateway\Merchants;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Applications\StoreApplicationConditions;
 use App\Http\Requests\ApiPrm\Applications\UpdateApplicationConditions;
-use App\Http\Resources\ApiComplianceGateway\Stores\StoresResource;
 use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\Merchant;
 use App\Services\Alifshop\AlifshopService;
 use App\Services\Core\ServiceCore;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 class ApplicationConditionsController extends ApiBaseController
 {
@@ -25,7 +23,7 @@ class ApplicationConditionsController extends ApiBaseController
             return $conditionQuery->first();
         }
 
-        if($request->has('paginate') and $request->query('paginate') == false) {
+        if ($request->has('paginate') and $request->query('paginate') == false) {
             return $conditionQuery->get();
         }
 
@@ -40,21 +38,15 @@ class ApplicationConditionsController extends ApiBaseController
             ->orderRequest($request);
 
         if ($request->query('object') == true) {
-            return Cache::remember($request->fullUrl(), 5 * 60, function () use ($conditionQuery) {
-                 return $conditionQuery->first();
-            });
+            return $conditionQuery->first();
 
         }
 
         if ($request->has('paginate') && $request->query('paginate') == false) {
-            return Cache::remember($request->fullUrl(), 5 * 60, function () use ($conditionQuery) {
-                return $conditionQuery->get();
-            });
+            return $conditionQuery->get();
         }
 
-        return Cache::remember($request->fullUrl(), 5 * 60, function () use ($conditionQuery, $request) {
-            return $conditionQuery->paginate($request->query('per_page') ?? 15);
-        });
+        return $conditionQuery->paginate($request->query('per_page') ?? 15);
     }
 
     public function store(StoreApplicationConditions $request)
