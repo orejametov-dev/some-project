@@ -17,10 +17,6 @@ class StoresController extends ApiBaseController
     {
         $stores = Store::query()->filterRequest($request);
 
-        if ($request->has('paginate') && ($request->query('paginate') == false)) {
-            return StoresResource::collection($stores->get());
-        }
-
         if ($request->has('paginate') && $request->query('paginate') == false) {
             return Cache::remember($request->fullUrl(), 600, function () use ($stores) {
                 return StoresResource::collection($stores->get());
