@@ -14,43 +14,43 @@ use Illuminate\Support\Facades\DB;
 
 class StoresController extends ApiBaseController
 {
-//    public function index(Request $request)
-//    {
-//        $stores = Store::query()->with(['merchant'])->filterRequest($request);
-//
-//        if ($request->query('object') == 'true') {
-//            return $stores->first();
-//        }
-//
-//        if ($request->has('paginate') && ($request->query('paginate') == 'false'
-//                OR $request->query('paginate') == 0)) {
-//            return $stores->get();
-//        }
-//
-//        return $stores->paginate($request->query('per_page'));
-//    }
-
     public function index(Request $request)
     {
         $stores = Store::query()->with(['merchant'])->filterRequest($request);
 
         if ($request->query('object') == 'true') {
-            return Cache::remember($request->fullUrl(), 5 * 60, function () use ($stores) {
-                return $stores->first();
-            });
+            return $stores->first();
         }
 
         if ($request->has('paginate') && ($request->query('paginate') == 'false'
                 OR $request->query('paginate') == 0)) {
-            return Cache::remember($request->fullUrl(), 5 * 60, function () use ($stores) {
-                return $stores->get();
-            });
+            return $stores->get();
         }
 
-        return Cache::remember($request->fullUrl(), 5 * 60, function () use ($stores, $request) {
-            return $stores->paginate($request->query('per_page') ?? 15);
-        });
+        return $stores->paginate($request->query('per_page'));
     }
+
+//    public function index(Request $request)
+//    {
+//        $stores = Store::query()->with(['merchant'])->filterRequest($request);
+//
+//        if ($request->query('object') == 'true') {
+//            return Cache::remember($request->fullUrl(), 5 * 60, function () use ($stores) {
+//                return $stores->first();
+//            });
+//        }
+//
+//        if ($request->has('paginate') && ($request->query('paginate') == 'false'
+//                OR $request->query('paginate') == 0)) {
+//            return Cache::remember($request->fullUrl(), 5 * 60, function () use ($stores) {
+//                return $stores->get();
+//            });
+//        }
+//
+//        return Cache::remember($request->fullUrl(), 5 * 60, function () use ($stores, $request) {
+//            return $stores->paginate($request->query('per_page') ?? 15);
+//        });
+//    }
 
     public function show($store_id)
     {
