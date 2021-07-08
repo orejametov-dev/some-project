@@ -88,4 +88,9 @@ class Store extends Model
     {
         return $this->belongsToMany(Notification::class, 'store_notification', 'store_id', 'notification_id');
     }
+
+    public function scopeByMerchant(Builder $query, $merchant_id)
+    {
+        $query->where('merchant_id', $merchant_id);
+    }
 }
