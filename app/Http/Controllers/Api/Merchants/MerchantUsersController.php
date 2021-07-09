@@ -46,10 +46,9 @@ class MerchantUsersController extends Controller
 
     public function getByUserId($user_id)
     {
-        $merchant_user = MerchantUser::query()->with(['merchant', 'store']);
-
-        return Cache::remember('merchant_user_id_' . $user_id , 86400, function () use ($merchant_user, $user_id) {
-            return $merchant_user->byUserId($user_id)->first();
+        return Cache::remember('merchant_user_id_' . $user_id , 86400, function () use ($user_id) {
+            $merchant_user = MerchantUser::query()->with(['merchant', 'store'])->byUserId($user_id)->first();
+            return $merchant_user;
         });
     }
 
