@@ -133,6 +133,14 @@ class Request extends Model
         if ($status = $request->query('status_id')) {
             $query->where('status_id', $status);
         }
+
+        if($request->has('completed') && $request->query('completed') == true) {
+            $query->where('completed', true);
+        }
+
+        if($request->has('completed') && $request->query('completed') == false) {
+            $query->where('completed', false);
+        }
     }
 
     public function scopeOnlyByToken(Builder $query, $token)
