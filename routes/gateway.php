@@ -44,7 +44,7 @@ Route::middleware(['service', 'gateway-auth-user'])
                 Route::get('/{id}', [App\Http\Controllers\ApiGateway\Merchants\MerchantRequestsController::class, 'show']);
                 Route::match(['put', 'patch'],'/{id}', [App\Http\Controllers\ApiGateway\Merchants\MerchantRequestsController::class, 'update']);
                 Route::post('/{id}/upload', [App\Http\Controllers\ApiGateway\Merchants\MerchantRequestsController::class, 'upload']);
-                Route::post('/{id}/delete-file', [App\Http\Controllers\ApiGateway\Merchants\MerchantRequestsController::class, 'deleteFile']);
+                Route::delete('/{id}/delete-file', [App\Http\Controllers\ApiGateway\Merchants\MerchantRequestsController::class, 'deleteFile']);
                 Route::post('/{id}/allow', [App\Http\Controllers\ApiGateway\Merchants\MerchantRequestsController::class, 'allow']);
                 Route::post('/{id}/reject', [App\Http\Controllers\ApiGateway\Merchants\MerchantRequestsController::class, 'reject']);
                 Route::post('/', [App\Http\Controllers\ApiGateway\Merchants\MerchantRequestsController::class, 'store']);
