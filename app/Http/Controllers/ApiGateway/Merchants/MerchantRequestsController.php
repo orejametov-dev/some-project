@@ -23,8 +23,7 @@ class MerchantRequestsController extends ApiBaseController
     {
         $merchantRequests = MerchantRequest::query()
             ->filterRequest($request)
-            ->orderRequest($request)
-            ->onlyCompletedRequests($request);
+            ->orderRequest($request);
 
 
         if ($request->query('object') == true) {
