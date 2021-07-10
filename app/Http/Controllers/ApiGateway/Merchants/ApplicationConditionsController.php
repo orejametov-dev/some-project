@@ -10,6 +10,7 @@ use App\Modules\Merchants\Models\Merchant;
 use App\Services\Alifshop\AlifshopService;
 use App\Services\Core\ServiceCore;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class ApplicationConditionsController extends ApiBaseController
 {
@@ -70,6 +71,8 @@ class ApplicationConditionsController extends ApiBaseController
             $merchant
         );
 
+        Cache::forget('detail_cache_of_merchant_conditions_' . $merchant->id);
+
         return $condition;
     }
 
@@ -100,6 +103,8 @@ class ApplicationConditionsController extends ApiBaseController
             $merchant
         );
 
+        Cache::forget('detail_cache_of_merchant_conditions_' . $merchant->id);
+
         return $condition;
     }
 
@@ -127,6 +132,8 @@ class ApplicationConditionsController extends ApiBaseController
             'danger',
             $merchant
         );
+
+        Cache::forget('detail_cache_of_merchant_conditions_' . $merchant->id);
 
         return response()->json(['message' => 'Условие удалено']);
     }
@@ -159,6 +166,8 @@ class ApplicationConditionsController extends ApiBaseController
                 'special_offer' => $item->special_offer
             ];
         });
+
+        Cache::forget('detail_cache_of_merchant_conditions_' . $merchant->id);
 
         $alifshopService = new AlifshopService;
         $alifshopService->storeOrUpdateMerchant($merchant, $conditions);
