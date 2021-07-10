@@ -18,7 +18,7 @@ class StoresResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'merchant' => new MerchantsResource($this->merchant)
+            'merchant' => new MerchantsResource($this->whenLoaded('merchant'))
         ];
     }
 }
