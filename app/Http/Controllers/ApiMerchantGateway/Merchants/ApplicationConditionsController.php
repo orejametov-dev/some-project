@@ -20,18 +20,18 @@ class ApplicationConditionsController extends ApiBaseController
             ->orderRequest($request);
 
         if ($request->query('object') == true) {
-            Cache::remember($request->fullUrl() . '_' . $this->merchant_id , 5 * 60, function () use ($conditionQuery) {
+            Cache::remember($request->fullUrl() . '_' . $this->merchant_id , 2 * 60, function () use ($conditionQuery) {
                 return $conditionQuery->first();
             });
         }
 
         if ($request->has('paginate') && $request->query('paginate') == false) {
-            Cache::remember($request->fullUrl() . '_' . $this->merchant_id, 5 * 60 , function () use ($conditionQuery) {
+            Cache::remember($request->fullUrl() . '_' . $this->merchant_id, 2 * 60 , function () use ($conditionQuery) {
                 return $conditionQuery->get();
             });
         }
 
-        return Cache::remember($request->fullUrl() . '_' . $this->merchant_id, 5 * 60, function () use ($conditionQuery, $request) {
+        return Cache::remember($request->fullUrl() . '_' . $this->merchant_id, 2 * 60, function () use ($conditionQuery, $request) {
             return $conditionQuery->paginate($request->query('per_page') ?? 15);
         });
     }
