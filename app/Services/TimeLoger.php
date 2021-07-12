@@ -4,36 +4,42 @@
 namespace App\Services;
 
 
+use Carbon\Carbon;
 use DB;
 
 class TimeLoger
 {
     public $name;
     public $started_at;
-    public $ended_at;
+    public $finished_at;
     public $diff;
-//    public $timeLoger;
 
     public function __construct($name)
     {
-        DB::connection('');
+        $this->name = $name;
     }
 
-    public static function start()
+    public function start()
     {
-
+        $this->started_at = microtime(true) * 1000;
     }
 
-    public static function end()
+    public function end()
     {
-        // time now (end)
-        // calculate diff
-//        $this->save();
+        $this->finished_at = microtime(true) * 1000;
+        $this->diff = round($this->finished_at - $this->started_at, 3);
+        $this->save();
     }
 
     private function save()
     {
-        // check env config before save.
-        // save to db
+        DB::connection('logs')->table('logs')->insert([
+            'name' => $this->name,
+            'started_at' => $this->started_at,
+            'finished_at' => $this->finished_at,
+            'diff' => $this->diff,
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
     }
 }
