@@ -114,8 +114,6 @@ class MerchantRequestsController extends Controller
 
     public function deleteFile(Request $request, $file_id)
     {
-
-        $timelogger = new TimeLogger('');
         $this->validate($request,[
             'token' => 'required|string'
         ]);
