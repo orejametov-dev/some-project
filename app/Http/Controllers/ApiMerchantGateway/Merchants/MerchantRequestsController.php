@@ -114,6 +114,8 @@ class MerchantRequestsController extends Controller
 
     public function deleteFile(Request $request, $file_id)
     {
+
+        $timelogger = new TimeLogger('');
         $this->validate($request,[
             'token' => 'required|string'
         ]);
@@ -121,6 +123,8 @@ class MerchantRequestsController extends Controller
         /** @var Merchant $merchant */
         $merchant_request = MerchantRequest::query()->where('token', $request->input('token'))->firstOrFail();
         $merchant_request->deleteFile($file_id);
+
+
 
         return response()->json(['message' => 'Файл успешно удалён.']);
     }
