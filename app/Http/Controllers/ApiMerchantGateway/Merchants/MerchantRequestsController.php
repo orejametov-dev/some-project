@@ -122,8 +122,6 @@ class MerchantRequestsController extends Controller
         $merchant_request = MerchantRequest::query()->where('token', $request->input('token'))->firstOrFail();
         $merchant_request->deleteFile($file_id);
 
-
-
         return response()->json(['message' => 'Файл успешно удалён.']);
     }
 }
