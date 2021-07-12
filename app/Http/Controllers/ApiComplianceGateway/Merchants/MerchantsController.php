@@ -16,6 +16,9 @@ class MerchantsController extends ApiBaseController
 {
     public function index(Request $request)
     {
+        Log::channel('urgent')->debug('start_service', [
+            'time' => Carbon::createFromTimestamp(LARAVEL_START)
+        ]);
         Log::channel('urgent')->debug('start_merchant_controller', [
             'time' => Carbon::now()
         ]);
