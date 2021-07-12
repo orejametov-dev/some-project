@@ -36,6 +36,19 @@ class ProblemCasesController extends ApiBaseController
         return new ProblemCaseResource($problemCase);
     }
 
+    public function setCommentFromMerchant($id, Request $request)
+    {
+        $this->validate($request, [
+            'body' => 'string|required'
+        ]);
+
+        $problemCase = ProblemCase::findOrFail($id);
+        $problemCase->comment_from_merchant = $request->input('body');
+        $problemCase->save();
+
+        return new ProblemCaseResource($problemCase);
+    }
+
     public function setStatus($id, Request $request)
     {
         $this->validate($request, [
