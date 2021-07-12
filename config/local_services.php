@@ -25,5 +25,6 @@ return [
     'service_core' => [
         'domain' => env('SERVICE_CORE_URL'),
         'service_token' => env('SERVICE_CORE_TOKEN')
-    ]
+    ],
+    'time_logger' => env('TIME_LOGGER')
 ];
