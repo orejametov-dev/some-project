@@ -19,7 +19,6 @@ class CreateTableLogs extends Migration
             $table->unsignedBigInteger('started_at');
             $table->unsignedBigInteger('finished_at');
             $table->unsignedBigInteger('diff');
-            $table->timestamps();
         });
     }
 

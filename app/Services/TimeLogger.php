@@ -7,7 +7,7 @@ namespace App\Services;
 use Carbon\Carbon;
 use DB;
 
-class TimeLoger
+class TimeLogger
 {
     public $name;
     public $started_at;
@@ -33,13 +33,13 @@ class TimeLoger
 
     private function save()
     {
-        DB::connection('logs')->table('logs')->insert([
-            'name' => $this->name,
-            'started_at' => $this->started_at,
-            'finished_at' => $this->finished_at,
-            'diff' => $this->diff,
-            'created_at' => now(),
-            'updated_at' => now()
-        ]);
+        if(config('local_services.time_logger')){
+            DB::connection('logs')->table('logs')->insert([
+                'name' => $this->name,
+                'started_at' => $this->started_at,
+                'finished_at' => $this->finished_at,
+                'diff' => $this->diff,
+            ]);
+        }
     }
 }
