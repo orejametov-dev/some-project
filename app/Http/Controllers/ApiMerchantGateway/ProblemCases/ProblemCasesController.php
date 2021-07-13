@@ -15,7 +15,9 @@ class ProblemCasesController extends ApiBaseController
 {
     public function index(Request $request)
     {
-        $problemCases = ProblemCase::query()->with('before_tags')->filterRequests($request);
+        $problemCases = ProblemCase::query()->with('before_tags')
+            ->byMerchant($this->merchant_id)
+            ->filterRequests($request);
 
         return ProblemCaseResource::collection($problemCases->paginate($request->query('per_page') ?? 15));
     }
