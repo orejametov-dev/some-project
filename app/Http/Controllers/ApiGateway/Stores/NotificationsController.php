@@ -56,8 +56,8 @@ class NotificationsController extends ApiBaseController
         $notification = new Notification();
         $notification->fill($validatedData);
         $notification->setCreatedBy($this->user);
-        $notification->start_schedule = Carbon::parse($request->input('start_schedule') ?? now())->format('Y-m-d');
-        $notification->end_schedule = Carbon::parse($request->input('start_schedule') ?? now()->addDay())->format('Y-m-d');
+        $notification->start_schedule = Carbon::parse($request->input('start_schedule') ?? now())->format('Y-m-d H:i:s');
+        $notification->end_schedule = Carbon::parse($request->input('start_schedule') ?? now()->addDay())->format('Y-m-d H:i:s');
 
         if ($request->has('all_merchants') && $request->input('all_merchants')) {
             DB::transaction(function () use ($notification) {
