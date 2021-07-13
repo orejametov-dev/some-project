@@ -17,14 +17,6 @@ class ProblemCasesController extends ApiBaseController
     {
         $problemCases = ProblemCase::query()->with('before_tags')->filterRequests($request);
 
-        if ($request->query('object') == true) {
-            $problemCases->first();
-        }
-
-        if ($request->query('paginate') == false) {
-            $problemCases->get();
-        }
-
         return ProblemCaseResource::collection($problemCases->paginate($request->query('per_page') ?? 15));
     }
 
