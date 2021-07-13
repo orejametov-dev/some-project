@@ -26,7 +26,7 @@ class AddConsultantCommentToProblemCasesTable extends Migration
     public function down()
     {
         Schema::table('problem_cases', function (Blueprint $table) {
-            //
+            $table->dropColumn('comment_from_merchant');
         });
     }
 }
