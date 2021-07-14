@@ -29,10 +29,6 @@ class NotificationsController extends ApiBaseController
                 ->where('end_schedule', '>=', now());
         }
 
-        if ($request->has('paginate') && $request->query('paginate') == false) {
-            return NotificationsResource::collection($notifications->get());
-        }
-
         return NotificationsResource::collection($notifications->paginate($request->query('per_page') ?? 15));
     }
 

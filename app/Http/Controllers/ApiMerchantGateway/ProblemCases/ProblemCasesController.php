@@ -20,10 +20,6 @@ class ProblemCasesController extends ApiBaseController
             $problemCases->first();
         }
 
-        if ($request->query('paginate') == false) {
-            $problemCases->get();
-        }
-
         return ProblemCaseResource::collection($problemCases->paginate($request->query('per_page') ?? 15));
     }
 

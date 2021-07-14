@@ -13,6 +13,23 @@ class ApplicationConditionsController extends ApiBaseController
 {
     public function index(Request $request)
     {
+        return Cache::remember($this->merchant_id . 'conditions' . $request->fullUrl(), 2 * 60, function () use ($request) {
+            $conditionQuery = Condition::query()
+                ->active()
+                ->byMerchant($this->merchant_id)
+                ->filterRequest($request)
+                ->orderRequest($request);
+
+            if ($request->query('object') == true) {
+                return $conditionQuery->first();
+            }
+
+            return $conditionQuery->paginate($request->query('per_page') ?? 15);
+        });
+    }
+
+    public function index2(Request $request)
+    {
         $conditionQuery = Condition::query()
             ->active()
             ->byMerchant($this->merchant_id)

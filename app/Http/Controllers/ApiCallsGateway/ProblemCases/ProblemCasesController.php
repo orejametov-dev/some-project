@@ -19,10 +19,6 @@ class ProblemCasesController extends ApiBaseController
             return new ProblemCaseResource($problemCases->first());
         }
 
-        if ($request->has('paginate') && $request->query('paginate') == false) {
-            return ProblemCaseResource::collection($problemCases->get());
-        }
-
         return ProblemCaseResource::collection($problemCases->paginate($request->query('per_page') ?? 15));
     }
 
