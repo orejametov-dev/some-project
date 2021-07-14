@@ -49,7 +49,7 @@ class MerchantsController extends Controller
         } else {
             $merchant = $merchant_query->where('token', $id)->firstOrFail();
         }
-        $merchant->store = Store::where('merchant_id', $merchant->id)->where('is_main', true)->first();
+        $merchant->main_store = Store::where('merchant_id', $merchant->id)->where('is_main', true)->first();
         return new MerchantsResource($merchant);
     }
 
