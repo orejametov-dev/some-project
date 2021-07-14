@@ -71,7 +71,7 @@ class ApplicationConditionsController extends ApiBaseController
             $merchant
         );
 
-        Cache::forget('detail_cache_of_merchant_conditions_' . $merchant->id);
+        Cache::tags($merchant->id)->flush();
 
         return $condition;
     }
@@ -103,7 +103,7 @@ class ApplicationConditionsController extends ApiBaseController
             $merchant
         );
 
-        Cache::forget('detail_cache_of_merchant_conditions_' . $merchant->id);
+        Cache::tags($merchant->id)->flush();
 
         return $condition;
     }
@@ -133,7 +133,7 @@ class ApplicationConditionsController extends ApiBaseController
             $merchant
         );
 
-        Cache::forget('detail_cache_of_merchant_conditions_' . $merchant->id);
+        Cache::tags($merchant->id)->flush();
 
         return response()->json(['message' => 'Условие удалено']);
     }
@@ -167,7 +167,7 @@ class ApplicationConditionsController extends ApiBaseController
             ];
         });
 
-        Cache::forget('detail_cache_of_merchant_conditions_' . $merchant->id);
+        Cache::tags($merchant->id)->flush();
 
         $alifshopService = new AlifshopService;
         $alifshopService->storeOrUpdateMerchant($merchant, $conditions);

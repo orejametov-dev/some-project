@@ -67,6 +67,8 @@ class StoresController extends ApiBaseController
         }
         $store = $merchant->stores()->create(array_merge($request->all(), ['is_main' => true]));
 
+        Cache::tags($merchant->id)->flush();
+
         return $store;
     }
 
@@ -76,6 +78,8 @@ class StoresController extends ApiBaseController
 
         $store->fill($request->all());
         $store->save();
+
+        Cache::tags($store->merchant_id)->flush();
 
         return $store;
     }
@@ -90,6 +94,8 @@ class StoresController extends ApiBaseController
             $store->delete();
         });
 
+        Cache::tags($store->merchant_id)->flush();
+
         return response()->json(['message' => 'Успешно удалено']);
     }
 
@@ -98,6 +104,8 @@ class StoresController extends ApiBaseController
         $store = Store::findOrFail($id);
         $store->is_archived = !$store->is_archived;
         $store->save();
+
+        Cache::tags($store->merchant_id)->flush();
 
         return $store;
     }
