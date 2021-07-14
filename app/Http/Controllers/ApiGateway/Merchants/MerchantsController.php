@@ -59,7 +59,7 @@ class MerchantsController extends ApiBaseController
         $merchant->setStatusActive();
         $merchant->save();
 
-        $this->alifshopService->storeOrUpdateMerchant($merchant);
+        $this->alifshopService->storeOrUpdateMerchant($merchant->fresh());
         return $merchant;
     }
 

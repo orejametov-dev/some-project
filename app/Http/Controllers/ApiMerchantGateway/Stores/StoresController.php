@@ -18,19 +18,19 @@ class StoresController extends ApiBaseController
             ->filterRequest($request);
 
         if ($request->query('object') == 'true') {
-            return Cache::remember($request->fullUrl() . '_' . $this->merchant_id, 2 * 60, function () use ($stores) {
+            return Cache::remember($request->fullUrl() . '_' . $this->merchant_id, 5 * 60, function () use ($stores) {
                 return $stores->first();
             });
         }
 
         if ($request->has('paginate') && ($request->query('paginate') == 'false'
                 OR $request->query('paginate') == 0)) {
-            return Cache::remember($request->fullUrl() . '_' . $this->merchant_id, 2 * 60, function () use ($stores) {
+            return Cache::remember($request->fullUrl() . '_' . $this->merchant_id, 5 * 60, function () use ($stores) {
                 return $stores->get();
             });
         }
 
-        return Cache::remember($request->fullUrl() . '_' . $this->merchant_id, 2 * 60, function () use ($stores, $request) {
+        return Cache::remember($request->fullUrl() . '_' . $this->merchant_id, 5 * 60, function () use ($stores, $request) {
             return $stores->paginate($request->query('per_page') ?? 15);
         });
     }
