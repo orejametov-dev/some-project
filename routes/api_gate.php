@@ -1,11 +1,11 @@
 <?php
 
-use App\Http\Controllers\Api\App\CountersController;
-use App\Http\Controllers\Api\Conditions\ConditionsController;
-use App\Http\Controllers\Api\Merchants\MerchantsController;
-use App\Http\Controllers\Api\Merchants\MerchantUsersController;
-use App\Http\Controllers\Api\Merchants\RequestsController;
-use App\Http\Controllers\Api\Stores\StoresController;
+use App\Http\Controllers\ApiGate\App\CountersController;
+use App\Http\Controllers\ApiGate\Conditions\ConditionsController;
+use App\Http\Controllers\ApiGate\Merchants\MerchantsController;
+use App\Http\Controllers\ApiGate\Merchants\MerchantUsersController;
+use App\Http\Controllers\ApiGate\Merchants\RequestsController;
+use App\Http\Controllers\ApiGate\Stores\StoresController;
 use Illuminate\Support\Facades\Route;
 
 /*

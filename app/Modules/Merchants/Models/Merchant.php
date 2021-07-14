@@ -2,6 +2,7 @@
 
 namespace App\Modules\Merchants\Models;
 
+use App\Modules\Merchants\Services\MerchantStatus;
 use App\Modules\Merchants\Traits\MerchantFileTrait;
 use App\Modules\Merchants\Traits\MerchantRelationshipsTrait;
 use App\Modules\Merchants\Traits\MerchantStatusesTrait;
@@ -176,5 +177,10 @@ class Merchant extends Model
         if($status_id = $request->query('status_id')) {
             $query->where('status_id', $status_id);
         }
+    }
+
+    public function scopeActive(Builder $query)
+    {
+        $query->where('status_id', MerchantStatus::ACTIVE);
     }
 }

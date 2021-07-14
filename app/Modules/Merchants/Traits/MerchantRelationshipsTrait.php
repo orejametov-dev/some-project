@@ -28,6 +28,11 @@ trait MerchantRelationshipsTrait
         return $this->hasMany(Condition::class);
     }
 
+    public function application_active_conditions()
+    {
+        return $this->hasMany(Condition::class)->where('active', true);
+    }
+
     public function tags()
     {
         return $this->belongsToMany(Tag::class, 'merchant_tag', 'merchant_id', 'tag_id');

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Http\Controllers\Api\Merchants;
+namespace App\Http\Controllers\ApiGate\Merchants;
 
 
 use App\Http\Controllers\Controller;

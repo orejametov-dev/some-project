@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Http\Controllers\Api\Conditions;
+namespace App\Http\Controllers\ApiGate\Conditions;
 
 
 use App\Http\Controllers\Controller;
