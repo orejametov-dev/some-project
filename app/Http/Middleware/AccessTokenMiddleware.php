@@ -19,7 +19,7 @@ class AccessTokenMiddleware
         $requestToken = $request->header('Access-Token');
         $token = config('local_services.access_token');
 
-        if ($requestToken) {
+        if (!$requestToken) {
             return response()->json(['message' => 'Access token is required'], 500);
         }
 
