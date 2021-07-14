@@ -22,7 +22,7 @@ class MerchantsResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'token' => $this->token,
-            'stores' => StoresResource::collection($this->whenLoaded('stores')),
+            'store' => new StoresResource($this->store),
             'conditions' => ConditionsResource::collection($this->whenLoaded('application_active_conditions'))
         ];
     }
