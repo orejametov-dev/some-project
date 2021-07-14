@@ -38,6 +38,14 @@ Route::prefix('merchants/tags')
         Route::get('/', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantTagsController::class, 'index'] )->withoutMiddleware(['gateway-access', 'gateway-auth-user']);
     });
 
+Route::prefix('merchants/users')
+    ->group(function () {
+        Route::post('/', [App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantUsersController::class, 'store']);
+        Route::get('/', [App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantUsersController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantUsersController::class, 'show']);
+        Route::match(['put', 'patch'], '/{id}', [App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantUsersController::class, 'update']);
+    });
+
 Route::prefix('notifications')
     ->group(function () {
         Route::get('/', [\App\Http\Controllers\ApiMerchantGateway\Notifications\NotificationsController::class, 'index'] );
