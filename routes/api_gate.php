@@ -22,6 +22,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/conditions', [ConditionsController::class, 'index']);
 Route::get('/conditions/{id}', [ConditionsController::class, 'show']);
 
+Route::get('/merchants/{merchant_id}/conditions/{condition_id}', [ConditionsController::class, 'getConditionByMerchantId']);
+Route::get('/merchants/{merchant_id}/stores/{store_id}', [StoresController::class, 'getStoreByMerchantId']);
+
 
 Route::get('/merchants/users', [MerchantUsersController::class, 'index']);
 Route::get('/merchants/users/{id}', [MerchantUsersController::class, 'show']);
