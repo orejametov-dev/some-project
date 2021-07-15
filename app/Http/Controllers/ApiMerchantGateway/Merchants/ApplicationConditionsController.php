@@ -13,7 +13,7 @@ class ApplicationConditionsController extends ApiBaseController
 {
     public function index(Request $request)
     {
-        return Cache::remember($this->merchant_id . 'conditions' . $request->fullUrl(), 2 * 60, function () use ($request) {
+        return Cache::tags($this->merchant_id)->remember($request->fullUrl(), 2 * 60, function () use ($request) {
             $conditionQuery = Condition::query()
                 ->active()
                 ->byMerchant($this->merchant_id)
