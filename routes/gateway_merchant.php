@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -55,4 +56,10 @@ Route::prefix('notifications')
 Route::prefix('stores')
     ->group(function () {
         Route::get('/', [App\Http\Controllers\ApiMerchantGateway\Stores\StoresController::class, 'index']);
+    });
+
+Route::prefix('merchants')
+    ->group(function () {
+        Route::get('/', [MerchantsController::class, 'index']);
+        Route::get('/get-with-relations', [MerchantsController::class, 'getMerchantDetailsWithRelations']);
     });
