@@ -19,10 +19,6 @@ class StoresController extends ApiBaseController
             return new StoresResource($stores->first());
         }
 
-        if ($request->has('paginate') && $request->query('paginate') == false) {
-            return StoresResource::collection($stores->get());
-        }
-
         return StoresResource::collection($stores->paginate($request->query('per_page') ?? 15));
     }
 }

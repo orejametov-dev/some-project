@@ -19,6 +19,10 @@ class ProblemCasesController extends ApiBaseController
             ->byMerchant($this->merchant_id)
             ->filterRequests($request);
 
+        if ($request->query('object') == true) {
+            $problemCases->first();
+        }
+
         return ProblemCaseResource::collection($problemCases->paginate($request->query('per_page') ?? 15));
     }
 

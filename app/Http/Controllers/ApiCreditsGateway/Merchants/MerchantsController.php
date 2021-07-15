@@ -23,10 +23,6 @@ class MerchantsController extends ApiBaseController
             return new MerchantsResource($query->first());
         }
 
-        if($request->has('paginate') && $request->query('paginate') == 0){
-            return MerchantsResource::collection($query->get() ?? 15);
-        }
-
         return MerchantsResource::collection($query->paginate($request->query('per_page')));
     }
 
@@ -43,10 +39,6 @@ class MerchantsController extends ApiBaseController
 
         if ($request->query('object') == true) {
             return $query->first();
-        }
-
-        if($request->has('paginate') && $request->query('paginate') == 0){
-            return $query->get();
         }
 
         return $query->paginate($request->query('per_page'));
