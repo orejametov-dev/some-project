@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -39,6 +40,14 @@ Route::prefix('merchants/tags')
         Route::get('/', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantTagsController::class, 'index'] )->withoutMiddleware(['gateway-access', 'gateway-auth-user']);
     });
 
+Route::prefix('merchants/users')
+    ->group(function () {
+        Route::post('/', [App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantUsersController::class, 'store']);
+        Route::get('/', [App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantUsersController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantUsersController::class, 'show']);
+        Route::match(['put', 'patch'], '/{id}', [App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantUsersController::class, 'update']);
+    });
+
 Route::prefix('notifications')
     ->group(function () {
         Route::get('/', [\App\Http\Controllers\ApiMerchantGateway\Notifications\NotificationsController::class, 'index'] );
@@ -48,4 +57,10 @@ Route::prefix('notifications')
 Route::prefix('stores')
     ->group(function () {
         Route::get('/', [App\Http\Controllers\ApiMerchantGateway\Stores\StoresController::class, 'index']);
+    });
+
+Route::prefix('merchants')
+    ->group(function () {
+        Route::get('/', [MerchantsController::class, 'index']);
+        Route::get('/get-with-relations', [MerchantsController::class, 'getMerchantDetailsWithRelations']);
     });
