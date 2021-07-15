@@ -7,6 +7,7 @@ namespace App\Http\Controllers\ApiMerchantGateway\Merchants;
 use App\Http\Controllers\ApiMerchantGateway\ApiBaseController;
 use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\Merchant;
+use App\Modules\Merchants\Models\MerchantUser;
 use App\Modules\Merchants\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -41,19 +42,24 @@ class MerchantsController extends ApiBaseController
         });
 
         $merchant_user = $this->user->merchant_user;
-        $store = Cache::remember($this->merchant_id.$merchant_user->id.'detail_cache_of_merchant_stores', 60 * 60, function () use ($merchant_user) {
+//        $store = Cache::remember($this->merchant_id.$merchant_user->id.'detail_cache_of_merchant_stores', 60 * 60, function () use ($merchant_user) {
+//            return Store::query()->findOrFail($merchant_user->store_id);
+//        });
+
+        $store = Cache::tags($this->merchant_id)->remember($merchant_user->id.'detail_cache_of_merchant_stores', 60 * 60, function () use ($merchant_user) {
             return Store::query()->findOrFail($merchant_user->store_id);
         });
 
-//        $store = Cache::tags($this->merchant_id)->remember($merchant_user->id.'detail_cache_of_merchant_stores', 60 * 60, function () use ($merchant_user) {
-//            return Store::query()->findOrFail($merchant_user->store_id);
-//        });
+        $merchant_user = Cache::tags($this->merchant_id)->remember($merchant_user->id . 'detail_cache_of_merchant_user', 60 * 60, function () use ($merchant_user) {
+            return MerchantUser::findOrFail($merchant_user->id);
+        });
 
         return [
             'merchant' => $merchant,
             'conditions' => $conditions,
             'stores' => $stores,
-            'store' => $store
+            'store' => $store,
+            'merchant_user' => $merchant_user
         ];
     }
 }
