@@ -12,7 +12,12 @@ class MerchantTagsController extends ApiBaseController
 {
     public function index(Request $request)
     {
-        return Tag::query()->filterRequests($request)
-            ->paginate($request->query('per_page') ?? 15);
+        $merchant_tags = Tag::query()->filterRequests($request);
+
+        if($request->has('paginate') && $request->query('paginate')) {
+            return $merchant_tags->get();
+        }
+
+        return $merchant_tags->paginate($request->query('per_page') ?? 15);
     }
 }
