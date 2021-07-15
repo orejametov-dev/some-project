@@ -14,7 +14,7 @@ class MerchantTagsController extends ApiBaseController
     {
         $merchant_tags = Tag::query()->filterRequests($request);
 
-        if($request->has('paginate') && $request->query('paginate')) {
+        if($request->has('paginate') && $request->query('paginate') == false) {
             return $merchant_tags->get();
         }
 
