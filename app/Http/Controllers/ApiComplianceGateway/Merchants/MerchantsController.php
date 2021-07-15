@@ -12,14 +12,12 @@ class MerchantsController extends ApiBaseController
 {
     public function index(Request $request)
     {
-        $merchants = Merchant::query()
-            ->filterRequest($request)
-            ->orderRequest($request);
+        return Cache::tags('merchant_index')->remember($request->fullUrl(), 600, function () use ($request) {
+            $merchantsQuery = Merchant::query()
+                ->filterRequest($request)
+                ->orderRequest($request);
 
-        $result = Cache::remember($request->fullUrl(), 180, function () use ($merchants, $request) {
-            return MerchantsResource::collection($merchants->paginate($request->query('per_page')) ?? 15);
+            return MerchantsResource::collection($merchantsQuery->paginate($request->query('per_page')) ?? 15);
         });
-
-        return $result;
     }
 }

@@ -168,4 +168,9 @@ class ProblemCase extends Model implements SimpleStateMachinable
     {
         $query->where('status_id', self::NEW);
     }
+
+    public function scopeByMerchant(Builder $query, $merchant_id)
+    {
+        $query->where('merchant_id', $merchant_id);
+    }
 }

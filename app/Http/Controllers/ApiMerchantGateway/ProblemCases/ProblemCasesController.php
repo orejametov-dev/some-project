@@ -14,14 +14,12 @@ class ProblemCasesController extends ApiBaseController
 {
     public function index(Request $request)
     {
-        $problemCases = ProblemCase::query()->with('before_tags')->filterRequests($request);
+        $problemCases = ProblemCase::query()->with('before_tags')
+            ->byMerchant($this->merchant_id)
+            ->filterRequests($request);
 
         if ($request->query('object') == true) {
             $problemCases->first();
-        }
-
-        if ($request->query('paginate') == false) {
-            $problemCases->get();
         }
 
         return ProblemCaseResource::collection($problemCases->paginate($request->query('per_page') ?? 15));
