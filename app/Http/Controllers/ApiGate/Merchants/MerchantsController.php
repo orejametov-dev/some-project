@@ -1,11 +1,13 @@
 <?php
 
 
-namespace App\Http\Controllers\Api\Merchants;
+namespace App\Http\Controllers\ApiGate\Merchants;
 
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ApiGate\Merchants\MerchantsResource;
 use App\Modules\Merchants\Models\Merchant;
+use App\Modules\Merchants\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -39,19 +41,16 @@ class MerchantsController extends Controller
 
     }
 
-    public function show(Request $request, $id)
+    public function show($id)
     {
-        $this->validate($request, [
-            'relations' => 'nullable|array'
-        ]);
-
-        $merchant = Merchant::query();
-
-        if($request->query('relations')){
-            $merchant->with($request->query('relations'));
+        $merchant_query = Merchant::with(['application_active_conditions']);
+        if (preg_match('/^\d+$/', $id)) {
+            $merchant = $merchant_query->findOrFail($id);
+        } else {
+            $merchant = $merchant_query->where('token', $id)->firstOrFail();
         }
-
-        return $merchant->findOrFail($id);
+        $merchant->main_store = Store::where('merchant_id', $merchant->id)->where('is_main', true)->first();
+        return new MerchantsResource($merchant);
     }
 
     public function verifyToken(Request $request)

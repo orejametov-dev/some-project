@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Http\Controllers\Api\App;
+namespace App\Http\Controllers\ApiGate\App;
 
 
 use App\Http\Controllers\Controller;

@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\AccessTokenMiddleware;
 use App\Http\Middleware\CheckGatewayAuthUser;
 use App\Http\Middleware\DetectTimeLoggerMiddleware;
 use App\Http\Middleware\GatewayAccessMiddleware;
@@ -68,6 +69,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'service' => ServiceMiddleware::class,
         'gateway-access' => GatewayAccessMiddleware::class,
+        'access-token' => AccessTokenMiddleware::class,
         'gateway-auth-user' => CheckGatewayAuthUser::class,
         'time-logger' => DetectTimeLoggerMiddleware::class
     ];
