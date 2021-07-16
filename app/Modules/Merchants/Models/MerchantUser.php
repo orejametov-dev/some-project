@@ -3,6 +3,7 @@
 namespace App\Modules\Merchants\Models;
 
 
+use App\Modules\Merchants\Services\MerchantStatus;
 use App\Traits\SortableByQueryParams;
 use Carbon\Carbon;
 use Eloquent;
@@ -116,6 +117,13 @@ class MerchantUser extends Model
     public function scopeByMerchant(Builder $query, $merchant_id)
     {
         $query->where('merchant_id', $merchant_id);
+    }
+
+    public function scopeByActiveMerchant(Builder $query)
+    {
+        $query->whereHas('merchant', function ($query) {
+            $query->where('status_id', MerchantStatus::ACTIVE);
+        });
     }
 
     public function scopeByStore(Builder $query, $store_id)
