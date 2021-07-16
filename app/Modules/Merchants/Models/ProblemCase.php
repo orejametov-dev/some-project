@@ -173,4 +173,9 @@ class ProblemCase extends Model implements SimpleStateMachinable
     {
         $query->where('merchant_id', $merchant_id);
     }
+
+    public function scopeByStore(Builder $query, $store_id)
+    {
+        $query->where('store_id', $store_id);
+    }
 }

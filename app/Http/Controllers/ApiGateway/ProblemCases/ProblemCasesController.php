@@ -22,7 +22,7 @@ class ProblemCasesController extends Controller
             return $problemCases->first();
         }
 
-        if ($request->has('object') and $request->query('paginate') == false) {
+        if ($request->has('paginate') and $request->query('paginate') == false) {
             return $problemCases->get();
         }
         return $problemCases->paginate($request->query('per_page') ?? 15);

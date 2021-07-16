@@ -8,6 +8,7 @@ use App\Http\Controllers\ApiMerchantGateway\ApiBaseController;
 use App\Http\Resources\ApiMerchantGateway\ProblemCases\ProblemCaseResource;
 use App\Modules\Merchants\Models\ProblemCase;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Cache;
 
 class ProblemCasesController extends ApiBaseController
@@ -34,6 +35,19 @@ class ProblemCasesController extends ApiBaseController
         return new ProblemCaseResource($problemCase);
     }
 
+    public function setCommentFromMerchant($id, Request $request)
+    {
+        $this->validate($request, [
+            'body' => 'string|required'
+        ]);
+
+        $problemCase = ProblemCase::findOrFail($id);
+        $problemCase->comment_from_merchant = $request->input('body');
+        $problemCase->save();
+
+        return new ProblemCaseResource($problemCase);
+    }
+
     public function setStatus($id, Request $request)
     {
         $this->validate($request, [
@@ -45,7 +59,7 @@ class ProblemCasesController extends ApiBaseController
 
         $problemCase->save();
 
-        return $problemCase;
+        return new ProblemCaseResource($problemCase);
     }
 
     public function setEngage($id)

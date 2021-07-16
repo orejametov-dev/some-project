@@ -38,7 +38,8 @@ class ProblemCaseResource extends JsonResource
             'tags' => $this->before_tags,
             'engaged_by_id' => $this->engaged_by_id,
             'engaged_by_name' => $this->engaged_by_name,
-            'deadline' => $this->deadline
+            'deadline' => $this->deadline,
+            'comment_from_merchant' => $this->comment_from_merchant
         ];
     }
 }
