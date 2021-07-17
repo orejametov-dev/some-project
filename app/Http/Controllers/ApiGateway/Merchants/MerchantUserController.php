@@ -79,6 +79,7 @@ class MerchantUserController extends ApiBaseController
         );
 
         Cache::tags('merchants')->forget('merchant_user_id_' . $merchant_user->user_id);
+        Cache::tags($merchant->id)->flush();
 
         return $merchant_user;
     }
@@ -130,6 +131,7 @@ class MerchantUserController extends ApiBaseController
         );
 
         Cache::tags('merchants')->forget('merchant_user_id_' . $merchant_user->user_id);
+        Cache::tags($merchant->id)->flush();
 
         return $merchant_user;
     }
@@ -181,6 +183,8 @@ class MerchantUserController extends ApiBaseController
         $merchant_user->save();
 
         Cache::tags('merchants')->forget('merchant_user_id_' . $merchant_user->user_id);
+        Cache::tags($merchant->id)->flush();
+
 
         return $merchant_user;
     }
@@ -202,6 +206,8 @@ class MerchantUserController extends ApiBaseController
         );
 
         Cache::tags('merchants')->forget('merchant_user_id_' . $merchant_user->user_id);
+        Cache::tags($merchant->id)->flush();
+
 
         return response()->json(['message' => 'Сотрудник удален']);
     }
