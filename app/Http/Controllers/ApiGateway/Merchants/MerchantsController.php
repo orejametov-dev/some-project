@@ -6,6 +6,7 @@ use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Files\StoreFileRequest;
 use App\HttpServices\Telegram\TelegramService;
+use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Services\MerchantStatus;
 use App\Services\Alifshop\AlifshopService;
@@ -41,7 +42,7 @@ class MerchantsController extends ApiBaseController
 
     public function show($id)
     {
-        return Merchant::with(['stores', 'tags'])->findOrFail($id);
+        return Merchant::with(['stores', 'tags', 'activity_reasons'])->findOrFail($id);
     }
 
     public function store(Request $request)
@@ -241,15 +242,24 @@ class MerchantsController extends ApiBaseController
             ])->whereRaw("(IFNULL(sub_query.limit, 0) + IFNULL(sub_query.agreement_sum, 0)) $percentage_of_limit <= sub_query.current_sales")->get();
     }
 
-    public function setStatus($id, Request $request)
+    public function toggle($id, Request $request)
     {
         $this->validate($request, [
-            'status_id' => 'integer|required|in:' . MerchantStatus::ACTIVE . ', ' . MerchantStatus::ARCHIVE
+            'activity_reason_id' => 'integer|required'
         ]);
 
+        $activity_reason = ActivityReason::where('type', 'MERCHANT')
+            ->findOrFail($request->input('activity_reason_id'));
+
         $merchant = Merchant::findOrFail($id);
-        $merchant->setStatus($request->input('status_id'));
+        $merchant->active = !$merchant->active;
         $merchant->save();
+
+        $merchant->activity_reasons()->attach($activity_reason->id, [
+            'active' => $merchant->active,
+            'created_by_id' => $this->user->id,
+            'created_by_name' => $this->user->name
+        ]);
 
         Cache::tags($merchant->id)->flush();
         Cache::tags('merchants')->flush();
