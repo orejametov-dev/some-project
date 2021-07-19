@@ -182,6 +182,6 @@ class Merchant extends Model
 
     public function scopeActive(Builder $query)
     {
-        $query->where('status_id', MerchantStatus::ACTIVE);
+        $query->where('active', true);
     }
 }
