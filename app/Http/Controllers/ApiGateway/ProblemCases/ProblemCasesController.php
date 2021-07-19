@@ -41,7 +41,7 @@ class ProblemCasesController extends Controller
         $problemCase = new ProblemCase();
 
         if ($request->has('credit_number') and $request->input('credit_number')) {
-            $data = ServiceCore::request('GET', 'info-applications/' . $request->input('credit_number'), null);
+            $data = ServiceCore::request('GET', 'applications/' . $request->input('credit_number'), null);
             $problemCase->credit_number = $request->input('credit_number');
         } elseif ($request->has('application_id') and $request->input('application_id')) {
             $data = ServiceCore::request('GET', 'applications/' . $request->input('application_id'), null);
