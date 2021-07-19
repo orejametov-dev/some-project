@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateArchiveReasonsTable extends Migration
+class CreateActivityReasonsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class CreateArchiveReasonsTable extends Migration
      */
     public function up()
     {
-        Schema::create('archive_reasons', function (Blueprint $table) {
+        Schema::create('activity_reasons', function (Blueprint $table) {
             $table->id();
+            $table->string('body');
+            $table->string('type');
+            $table->boolean('active')->default(false);
             $table->timestamps();
         });
     }
@@ -26,6 +29,6 @@ class CreateArchiveReasonsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('archive_reasons');
+        Schema::dropIfExists('activity_reasons');
     }
 }
