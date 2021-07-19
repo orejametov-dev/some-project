@@ -20,6 +20,6 @@ trait StoreRelationshipsTrait
 
     public function activity_reasons()
     {
-        return $this->belongsToMany(ActivityReason::class, 'merchant_activities')->withTimestamps();
+        return $this->belongsToMany(ActivityReason::class, 'store_activities')->withTimestamps();
     }
 }
