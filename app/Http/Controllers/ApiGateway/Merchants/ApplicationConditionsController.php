@@ -81,10 +81,7 @@ class ApplicationConditionsController extends ApiBaseController
         /** @var Condition $condition */
         $condition = Condition::query()->findOrFail($condition_id);
 
-        $applications = ServiceCore::request('GET', 'applications', [
-            'condition_id' => $condition_id,
-            'object' => 'true'
-        ]);
+        $applications = ServiceCore::request('GET', 'applications/count',null);
 
         if ($applications) {
             return response()->json(['message' => 'Условие не может быть изменено'], 400);
@@ -112,10 +109,8 @@ class ApplicationConditionsController extends ApiBaseController
     {
         $condition = Condition::query()->findOrFail($condition_id);
 
-        $applications = ServiceCore::request('GET', 'applications', [
-            'condition_id' => $condition_id,
-            'object' => 'true'
-        ]);
+        $applications = ServiceCore::request('GET', 'applications/count',null);
+
 
         if ($applications) {
             return response()->json(['message' => 'Условие не может быть удалено'], 400);

@@ -116,10 +116,7 @@ class MerchantRequestsController extends ApiBaseController
             'engaged_by_id' => 'required|integer'
         ]);
 
-        $user = ServiceCore::request('GET', 'users', [
-            'user_id' => $request->input('engaged_by_id'),
-            'object' => 'true'
-        ]);
+        $user = ServiceCore::request('GET', 'users/'.$request->input('engaged_by_id'), null);
 
         if (!$user)
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
