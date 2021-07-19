@@ -2,9 +2,11 @@
 
 namespace App\Modules\Merchants\Traits;
 
+use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\AdditionalAgreement;
 use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\File;
+use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\MerchantInfo;
 use App\Modules\Merchants\Models\MerchantUser;
 use App\Modules\Merchants\Models\Notification;
@@ -50,5 +52,10 @@ trait MerchantRelationshipsTrait
     public function additional_agreements()
     {
         return $this->hasMany(AdditionalAgreement::class);
+    }
+
+    public function activity_reasons()
+    {
+        return $this->belongsToMany(ActivityReason::class, 'merchant_activities')->withTimestamps();
     }
 }
