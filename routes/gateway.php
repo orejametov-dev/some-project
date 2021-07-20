@@ -2,18 +2,8 @@
 
 use App\Http\Controllers\ApiGateway\ExtraServices\MerchantsController as ExtraMerchantsController;
 use App\Http\Controllers\ApiGateway\Merchants\MerchantsController;
-use App\Http\Controllers\ApiGateway\Online\MerchantsController as OnlineMerchantsController;
 use Illuminate\Support\Facades\Route;
 
-
-Route::prefix('online')
-    ->group(function () {
-        Route::prefix('merchants')
-            ->group(function () {
-                Route::get('/', [OnlineMerchantsController::class, 'index']);
-                Route::get('tags', [OnlineMerchantsController::class, 'tags']);
-            });
-    });
 
 Route::prefix('extra-services')->group(function () {
     Route::get('merchants', [ExtraMerchantsController::class, 'index']);
