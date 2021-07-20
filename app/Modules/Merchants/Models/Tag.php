@@ -37,7 +37,7 @@ class Tag extends Model
     public function scopeFilterRequests(Builder $query, \Illuminate\Http\Request $request)
     {
         if($request->query('q')) {
-            $query->where('body', 'LIKE', '%' . $request->query('q') . '%');
+            $query->where('title', 'LIKE', '%' . $request->query('q') . '%');
         }
     }
 }
