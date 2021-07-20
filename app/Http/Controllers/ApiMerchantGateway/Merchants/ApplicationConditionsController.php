@@ -27,29 +27,4 @@ class ApplicationConditionsController extends ApiBaseController
             return $conditionQuery->paginate($request->query('per_page') ?? 15);
         });
     }
-
-    public function index2(Request $request)
-    {
-        $conditionQuery = Condition::query()
-            ->active()
-            ->byMerchant($this->merchant_id)
-            ->filterRequest($request)
-            ->orderRequest($request);
-
-        if ($request->query('object') == true) {
-            Cache::remember($request->fullUrl() . '_' . $this->merchant_id , 2 * 60, function () use ($conditionQuery) {
-                return $conditionQuery->first();
-            });
-        }
-
-        if ($request->has('paginate') && $request->query('paginate') == false) {
-            Cache::remember($request->fullUrl() . '_' . $this->merchant_id, 2 * 60 , function () use ($conditionQuery) {
-                return $conditionQuery->get();
-            });
-        }
-
-        return Cache::remember($request->fullUrl() . '_' . $this->merchant_id, 2 * 60, function () use ($conditionQuery, $request) {
-            return $conditionQuery->paginate($request->query('per_page') ?? 15);
-        });
-    }
 }
