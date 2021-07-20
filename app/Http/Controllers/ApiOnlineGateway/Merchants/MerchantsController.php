@@ -1,8 +1,7 @@
 <?php
 
 
-namespace App\Http\Controllers\ApiGateway\Online;
-
+namespace App\Http\Controllers\ApiOnlineGateway\Merchants;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiOnlineGateway\MerchantResource;
