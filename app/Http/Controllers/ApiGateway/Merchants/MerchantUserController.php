@@ -39,10 +39,7 @@ class MerchantUserController extends ApiBaseController
 
     public function store(StoreMerchantUsers $request)
     {
-        $user = ServiceCore::request('GET', 'users', [
-            'id' => $request->input('user_id'),
-            'object' => 'true'
-        ]);
+        $user = ServiceCore::request('GET', 'users/'.$request->input('user_id'), null);
 
         if (!$user)
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
@@ -79,6 +76,7 @@ class MerchantUserController extends ApiBaseController
         );
 
         Cache::tags('merchants')->forget('merchant_user_id_' . $merchant_user->user_id);
+        Cache::tags($merchant->id)->flush();
 
         return $merchant_user;
     }
@@ -130,6 +128,7 @@ class MerchantUserController extends ApiBaseController
         );
 
         Cache::tags('merchants')->forget('merchant_user_id_' . $merchant_user->user_id);
+        Cache::tags($merchant->id)->flush();
 
         return $merchant_user;
     }
@@ -181,6 +180,8 @@ class MerchantUserController extends ApiBaseController
         $merchant_user->save();
 
         Cache::tags('merchants')->forget('merchant_user_id_' . $merchant_user->user_id);
+        Cache::tags($merchant->id)->flush();
+
 
         return $merchant_user;
     }
@@ -202,6 +203,8 @@ class MerchantUserController extends ApiBaseController
         );
 
         Cache::tags('merchants')->forget('merchant_user_id_' . $merchant_user->user_id);
+        Cache::tags($merchant->id)->flush();
+
 
         return response()->json(['message' => 'Сотрудник удален']);
     }

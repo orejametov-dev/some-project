@@ -5,6 +5,9 @@ namespace App\Http\Controllers\ApiMerchantGateway\Merchants;
 
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ApiMerchantsGateway\Merchants\MerchantRequestStoreDocuments;
+use App\Http\Requests\ApiMerchantsGateway\Merchants\MerchantRequestStoreMain;
+use App\Http\Requests\ApiMerchantsGateway\Merchants\MerchantRequestUploadFile;
 use App\Modules\Merchants\Models\File;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Request as MerchantRequest;
@@ -36,20 +39,9 @@ class MerchantRequestsController extends Controller
         return $merchant_request;
     }
 
-    public function storeMain(Request $request)
+    public function storeMain(MerchantRequestStoreMain $request)
     {
-        $validatedRequest = $this->validate($request, [
-            'token' => 'required|string',
-            'user_name' => 'required|string',
-            'user_phone' => 'required|digits:12',
-            'name' => 'required|string',
-            'categories' => 'required|array',
-            'stores_count' => 'required|integer',
-            'merchant_users_count' => 'required|integer',
-            'approximate_sales' => 'required|integer',
-            'information' => 'nullable|string',
-            'region' => 'required|string',
-        ]);
+        $validatedRequest = $request->validated();
         if($merchant_request = MerchantRequest::onlyByToken($request->input('token'))->first()){
             $merchant_request->fill($validatedRequest);
         } else {
@@ -63,21 +55,9 @@ class MerchantRequestsController extends Controller
         return $merchant_request;
     }
 
-    public function storeDocuments(Request $request)
+    public function storeDocuments(MerchantRequestStoreDocuments $request)
     {
-        $validatedRequest = $this->validate($request, [
-            'token' => 'required|string',
-            'director_name' => 'required|max:255',
-            'legal_name' => 'required|string',
-            'phone' => 'required|digits:12',
-            'vat_number' => 'required|digits:12',
-            'mfo' => 'required|digits:5',
-            'tin' => 'required|digits:9',
-            'oked' => 'required|digits:5',
-            'bank_account' => 'required|digits:20',
-            'bank_name' => 'required|max:255',
-            'address' => 'required|string'
-        ]);
+        $validatedRequest = $request->validated();
 
         if($merchant_request = MerchantRequest::onlyByToken($request->input('token'))->first()){
             $merchant_request->fill($validatedRequest);
@@ -91,19 +71,8 @@ class MerchantRequestsController extends Controller
         return $merchant_request;
     }
 
-    public function upload(Request $request)
+    public function upload(MerchantRequestUploadFile $request)
     {
-        $this->validate($request, [
-            'token' => 'required|string',
-            'file_type' => [
-                'required',
-                'string',
-                'max:100',
-                Rule::in(array_keys(File::$registration_file_types))
-            ],
-            'file' => 'required|file|mimes:jpeg,bmp,png,svg,jpg,pdf,xlsx,xls',
-        ]);
-
         /** @var Merchant $merchant */
         $merchant_request = MerchantRequest::query()->where('token', $request->input('token'))->firstOrFail();
         $merchant_request_file = $merchant_request->uploadFile($request->file('file'), $request->input('file_type'));

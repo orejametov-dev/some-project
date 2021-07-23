@@ -169,10 +169,7 @@ class MerchantsController extends ApiBaseController
             'maintainer_id' => 'required|integer'
         ]);
 
-        $user = ServiceCore::request('GET', 'users', [
-            'user_id' => $request->input('maintainer_id'),
-            'object' => 'true'
-        ]);
+        $user = ServiceCore::request('GET', 'users/'.$request->input('maintainer_id'), null);
 
         if (!$user)
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);

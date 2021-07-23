@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\OnlineGateway;
+namespace App\Http\Resources\ApiOnlineGateway;
 
 use App\Modules\Merchants\Models\Merchant;
 use Illuminate\Http\Request;

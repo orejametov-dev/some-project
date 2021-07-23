@@ -96,6 +96,15 @@ class Notification extends Model
             $date = \Carbon\Carbon::parse($request->query('created_at') ?? today())->format('Y-m-d');
             $query->whereDate('created_at', $date);
         }
+
+        if($request->has('published') && $request->query('published') == true) {
+            $query->where('start_schedule', '<=', now())
+                ->where('end_schedule', '>=', now());
+        }
+
+        if($request->has('published') && $request->query('published') == false) {
+            $query->where('end_schedule', '<=', now());
+        }
     }
 
     public function scopeOnlyMoreThanStartSchedule(Builder $query)

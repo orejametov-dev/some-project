@@ -80,6 +80,7 @@ class MerchantUsersController extends ApiBaseController
         );
 
         Cache::tags('merchants')->forget('merchant_user_id_' . $merchant_user->user_id);
+        Cache::tags($merchant->id)->flush();
 
         return $merchant_user;
     }
