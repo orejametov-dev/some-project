@@ -80,7 +80,8 @@ class Merchant extends Model
         'has_orders',
 
         'paymo_terminal_id',
-        'min_application_price'
+        'min_application_price',
+        'active'
     ];
     protected $appends = ['logo_path'];
     protected $hidden = ['logo_url'];
@@ -181,6 +182,6 @@ class Merchant extends Model
 
     public function scopeActive(Builder $query)
     {
-        $query->where('status_id', MerchantStatus::ACTIVE);
+        $query->where('active', true);
     }
 }
