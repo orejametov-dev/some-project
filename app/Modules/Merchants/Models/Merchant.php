@@ -179,8 +179,8 @@ class Merchant extends Model
             $query->where('status_id', $status_id);
         }
 
-        if($request->has('active') && $request->query('active')) {
-            $query->where('active', $request->has('active'));
+        if($request->has('active')) {
+            $query->where('active', $request->query('active'));
         }
     }
 
