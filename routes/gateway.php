@@ -126,12 +126,12 @@ Route::prefix('merchants')
         Route::post('/', [MerchantsController::class, 'store']);
         Route::match(['put', 'patch'], '/{id}', [MerchantsController::class, 'update']);
 
-                Route::post('/{id}/set-main-store', [MerchantsController::class, 'setMainStore']);
-                Route::post('/{id}/update-chat-id', [MerchantsController::class, 'updateChatId']);
-                Route::post('/{id}/upload-logo', [MerchantsController::class, 'uploadLogo']);
-                Route::post('/{id}/remove-logo', [MerchantsController::class, 'removeLogo']);
-                Route::post('/{id}/set-responsible-user', [MerchantsController::class, 'setResponsibleUser']);
-                Route::match(['put', 'patch'],'/{id}/toggle', [MerchantsController::class, 'toggle']);
+        Route::post('/{id}/set-main-store', [MerchantsController::class, 'setMainStore']);
+        Route::post('/{id}/update-chat-id', [MerchantsController::class, 'updateChatId']);
+        Route::post('/{id}/upload-logo', [MerchantsController::class, 'uploadLogo']);
+        Route::post('/{id}/remove-logo', [MerchantsController::class, 'removeLogo']);
+        Route::post('/{id}/set-responsible-user', [MerchantsController::class, 'setResponsibleUser']);
+        Route::match(['put', 'patch'],'/{id}/toggle', [MerchantsController::class, 'toggle']);
 
         Route::match(['put', 'patch'], '/{id}/update-modules', [MerchantsController::class, 'updateModules']);
     });
