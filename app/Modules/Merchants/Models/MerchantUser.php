@@ -126,6 +126,13 @@ class MerchantUser extends Model
         });
     }
 
+    public function scopeByActiveStore(Builder $query)
+    {
+        $query->whereHas('store', function ($query) {
+            $query->where('active', true);
+        });
+    }
+
     public function scopeByStore(Builder $query, $store_id)
     {
         $query->where('store_id', $store_id);
