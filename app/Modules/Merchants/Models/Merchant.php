@@ -178,6 +178,10 @@ class Merchant extends Model
         if($status_id = $request->query('status_id')) {
             $query->where('status_id', $status_id);
         }
+
+        if($request->has('active') && $request->query('active')) {
+            $query->where('active', $request->has('active'));
+        }
     }
 
     public function scopeActive(Builder $query)
