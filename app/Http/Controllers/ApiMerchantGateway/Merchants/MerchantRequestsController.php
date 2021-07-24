@@ -11,6 +11,7 @@ use App\Http\Requests\ApiMerchantsGateway\Merchants\MerchantRequestUploadFile;
 use App\Modules\Merchants\Models\File;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Request as MerchantRequest;
+use App\Services\DistrictService;
 use App\Services\RegionService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -21,10 +22,12 @@ class MerchantRequestsController extends Controller
     {
         $registration_file_types = File::$registration_file_types;
         $regions = RegionService::getRegions();
+        $districts = DistrictService::getDistricts();
 
         return [
             'registration_file_types' => $registration_file_types,
-            'regions' => $regions
+            'regions' => $regions,
+            'districts' => $districts
         ];
     }
 
