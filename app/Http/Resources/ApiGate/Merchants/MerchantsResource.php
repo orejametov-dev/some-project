@@ -24,7 +24,7 @@ class MerchantsResource extends JsonResource
             'token' => $this->token,
             'main_store' => new StoresResource($this->main_store),
             'conditions' => ConditionsResource::collection($this->whenLoaded('application_active_conditions')),
-            'min_application_price'
+            'min_application_price' => $this->min_application_price
         ];
     }
 }
