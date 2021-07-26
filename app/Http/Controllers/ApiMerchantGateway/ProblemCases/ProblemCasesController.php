@@ -29,6 +29,7 @@ class ProblemCasesController extends ApiBaseController
     public function show($id, Request $request)
     {
         $problemCase = ProblemCase::with('before_tags')
+            ->byMerchant($this->merchant_id)
             ->filterRequests($request)
             ->findOrFail($id);
 
@@ -41,7 +42,10 @@ class ProblemCasesController extends ApiBaseController
             'body' => 'string|required'
         ]);
 
-        $problemCase = ProblemCase::findOrFail($id);
+        $problemCase = ProblemCase::query()
+            ->byMerchant($this->merchant_id)
+            ->findOrFail($id);
+
         $problemCase->comment_from_merchant = $request->input('body');
         $problemCase->save();
 
@@ -54,7 +58,10 @@ class ProblemCasesController extends ApiBaseController
             'status_id' => 'required|integer'
         ]);
 
-        $problemCase = ProblemCase::findOrFail($id);
+        $problemCase = ProblemCase::query()
+            ->byMerchant($this->merchant_id)
+            ->findOrFail($id);
+
         $problemCase->setStatus($request->input('status_id'));
 
         $problemCase->save();
@@ -64,7 +71,9 @@ class ProblemCasesController extends ApiBaseController
 
     public function setEngage($id)
     {
-        $problemCase = ProblemCase::findOrFail($id);
+        $problemCase = ProblemCase::query()
+            ->byMerchant($this->merchant_id)
+            ->findOrFail($id);
 
         $problemCase->engaged_by_id = $this->user->id;
         $problemCase->engaged_by_name = $this->user->name;
