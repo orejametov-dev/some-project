@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Cache;
 class MerchantsController extends ApiBaseController
 {
     //роут для фронт мерчанта
-    public function getMerchantDetailsWithRelations2(Request $request)
+    public function getMerchantDetailsWithRelations(Request $request)
     {
         $merchant = Cache::tags($this->merchant_id)->remember('cache_of_merchant', 60 * 60, function () {
             return Merchant::findOrFail($this->merchant_id);
@@ -44,22 +44,22 @@ class MerchantsController extends ApiBaseController
         ];
     }
 
-    public function getMerchantDetailsWithRelations(Request $request)
-    {
-        return Cache::tags($this->merchant_id)->remember($request->fullUrl(), 60 * 60, function () {
-            $merchant = Merchant::findOrFail($this->merchant_id);
-            $conditions = Condition::query()->active()->byMerchant($merchant->id)->get();
-            $stores = Store::query()->byMerchant($merchant->id)->get();
-
-            $merchant_user = MerchantUser::query()->byUserId($this->user->id)->firstOrFail();
-            $store = Store::query()->findOrFail($merchant_user->store_id);
-
-            return [
-                'merchant' => $merchant,
-                'conditions' => $conditions,
-                'stores' => $stores,
-                'store' => $store,
-            ];
-        });
-    }
+//    public function getMerchantDetailsWithRelations(Request $request)
+//    {
+//        return Cache::tags($this->merchant_id)->remember($request->fullUrl(), 60 * 60, function () {
+//            $merchant = Merchant::findOrFail($this->merchant_id);
+//            $conditions = Condition::query()->active()->byMerchant($merchant->id)->get();
+//            $stores = Store::query()->byMerchant($merchant->id)->get();
+//
+//            $merchant_user = MerchantUser::query()->byUserId($this->user->id)->firstOrFail();
+//            $store = Store::query()->findOrFail($merchant_user->store_id);
+//
+//            return [
+//                'merchant' => $merchant,
+//                'conditions' => $conditions,
+//                'stores' => $stores,
+//                'store' => $store,
+//            ];
+//        });
+//    }
 }
