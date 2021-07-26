@@ -5,10 +5,11 @@ namespace App\Http\Controllers\ApiMerchantGateway\Merchants;
 
 
 use App\Http\Controllers\ApiMerchantGateway\ApiBaseController;
+use App\Http\Controllers\Controller;
 use App\Modules\Merchants\Models\Tag;
 use Illuminate\Http\Request;
 
-class MerchantTagsController extends ApiBaseController
+class MerchantTagsController extends Controller
 {
     public function index(Request $request)
     {
