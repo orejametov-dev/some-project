@@ -96,4 +96,13 @@ class MerchantRequestsController extends Controller
 
         return response()->json(['message' => 'Файл успешно удалён.']);
     }
+
+    public function getDistricts(Request $request)
+    {
+        if($request->query('region')) {
+            return DistrictService::getDistrictsByRegion($request->query('region'));
+
+        }
+        return DistrictService::getDistricts();
+    }
 }
