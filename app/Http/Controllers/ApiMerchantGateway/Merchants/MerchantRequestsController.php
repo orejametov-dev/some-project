@@ -22,12 +22,10 @@ class MerchantRequestsController extends Controller
     {
         $registration_file_types = File::$registration_file_types;
         $regions = RegionService::getRegions();
-        $districts = DistrictService::getDistricts();
 
         return [
             'registration_file_types' => $registration_file_types,
             'regions' => $regions,
-            'districts' => $districts
         ];
     }
 
