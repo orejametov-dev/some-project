@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\ApiMerchantGateway;
 
 
+use App\Exceptions\BusinessException;
 use App\Http\Controllers\Controller;
 use App\Modules\Merchants\Models\MerchantUser;
 use App\Services\User;
@@ -26,6 +27,9 @@ class ApiBaseController extends Controller
                     ->byUserId($this->user->id)->first();
                 return $merchant_user;
             });
+            if (!$merchant_user) {
+                throw new BusinessException('Unauthenticated', 401);
+            }
             $this->merchant_id = $merchant_user->merchant_id;
             $this->store_id = $merchant_user->store_id;
             return $next($request);
