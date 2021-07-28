@@ -36,6 +36,7 @@ class StoreStoresRequest extends FormRequest
                 'required',
                 Rule::in(RegionService::getKeys()),
             ],
+            'district' => 'required|string'
         ];
     }
 }
