@@ -129,6 +129,7 @@ class MerchantsController extends ApiBaseController
             'has_manager' => 'nullable|boolean',
             'has_applications' => 'nullable|boolean',
             'has_orders' => 'nullable|boolean',
+            'has_general_goods' => 'nullable|boolean'
         ]);
 
         $merchant = Merchant::query()->findOrFail($id);
@@ -143,22 +144,14 @@ class MerchantsController extends ApiBaseController
         if ($request->has('has_applications') && $request->input('has_applications') == false) {
             $permissions_switch['permission_applications'] = false;
         }
-        if ($request->has('has_orders') && $request->input('has_orders') == false) {
-            $permissions_switch['permission_orders'] = false;
-        }
 
         DB::transaction(function () use ($merchant, $validatedRequest, $permissions_switch) {
             $merchant->update($validatedRequest);
             $merchant->merchant_users()->update($permissions_switch);
         });
 
-        Cache::forget('merchant_module_applications_middleware_' . $merchant->id);
-        Cache::forget('merchant_module_deliveries_middleware_' . $merchant->id);
-        Cache::forget('merchant_module_manager_middleware_' . $merchant->id);
-        Cache::forget('merchant_module_orders_middleware_' . $merchant->id);
         Cache::tags($merchant->id)->flush();
         Cache::tags('merchants')->flush();
-
 
         return $merchant;
     }

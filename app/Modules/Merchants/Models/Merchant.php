@@ -77,7 +77,7 @@ class Merchant extends Model
         'has_deliveries',
         'has_manager',
         'has_applications',
-        'has_orders',
+        'has_general_goods',
 
         'paymo_terminal_id',
         'min_application_price',
