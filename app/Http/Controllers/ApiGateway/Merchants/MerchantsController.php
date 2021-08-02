@@ -8,7 +8,6 @@ use App\Http\Requests\ApiPrm\Files\StoreFileRequest;
 use App\HttpServices\Telegram\TelegramService;
 use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\Merchant;
-use App\Modules\Merchants\Services\MerchantStatus;
 use App\Services\Alifshop\AlifshopService;
 use App\Services\Core\ServiceCore;
 use Illuminate\Http\Request;
@@ -122,54 +121,13 @@ class MerchantsController extends ApiBaseController
         return response()->json(['message' => 'Обновлено']);
     }
 
-    public function updateModules($id, Request $request) //todo make it right
-    {
-        $validatedRequest = $this->validate($request, [
-            'has_deliveries' => 'nullable|boolean',
-            'has_manager' => 'nullable|boolean',
-            'has_applications' => 'nullable|boolean',
-            'has_orders' => 'nullable|boolean',
-        ]);
-
-        $merchant = Merchant::query()->findOrFail($id);
-        $permissions_switch = [];
-
-        if ($request->has('has_deliveries') && $request->input('has_deliveries') == false) {
-            $permissions_switch['permission_deliveries'] = false;
-        }
-        if ($request->has('has_manager') && $request->input('has_manager') == false) {
-            $permissions_switch['permission_manager'] = false;
-        }
-        if ($request->has('has_applications') && $request->input('has_applications') == false) {
-            $permissions_switch['permission_applications'] = false;
-        }
-        if ($request->has('has_orders') && $request->input('has_orders') == false) {
-            $permissions_switch['permission_orders'] = false;
-        }
-
-        DB::transaction(function () use ($merchant, $validatedRequest, $permissions_switch) {
-            $merchant->update($validatedRequest);
-            $merchant->merchant_users()->update($permissions_switch);
-        });
-
-        Cache::forget('merchant_module_applications_middleware_' . $merchant->id);
-        Cache::forget('merchant_module_deliveries_middleware_' . $merchant->id);
-        Cache::forget('merchant_module_manager_middleware_' . $merchant->id);
-        Cache::forget('merchant_module_orders_middleware_' . $merchant->id);
-        Cache::tags($merchant->id)->flush();
-        Cache::tags('merchants')->flush();
-
-
-        return $merchant;
-    }
-
     public function setResponsibleUser($id, Request $request)
     {
         $this->validate($request, [
             'maintainer_id' => 'required|integer'
         ]);
 
-        $user = ServiceCore::request('GET', 'users/'.$request->input('maintainer_id'), null);
+        $user = ServiceCore::request('GET', 'users/' . $request->input('maintainer_id'), null);
 
         if (!$user)
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
