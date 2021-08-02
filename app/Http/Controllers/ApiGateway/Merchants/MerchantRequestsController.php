@@ -55,6 +55,7 @@ class MerchantRequestsController extends ApiBaseController
             'approximate_sales' => 'required|integer',
             'information' => 'nullable|string',
             'region' => 'required|string',
+            'district' => 'required|string',
 
             'director_name' => 'required|max:255',
             'legal_name' => 'required|string',

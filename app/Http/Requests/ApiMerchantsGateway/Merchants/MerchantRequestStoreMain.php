@@ -34,6 +34,7 @@ class MerchantRequestStoreMain extends FormRequest
             'approximate_sales' => 'required|integer',
             'information' => 'nullable|string',
             'region' => 'required|string',
+            'district' => 'required|string'
         ];
     }
 }
