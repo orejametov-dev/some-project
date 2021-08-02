@@ -6,9 +6,9 @@ use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Files\StoreFileRequest;
 use App\HttpServices\Telegram\TelegramService;
+use App\HttpServices\Warehouse\WarehouseService;
 use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\Merchant;
-use App\Modules\Merchants\Services\MerchantStatus;
 use App\Services\Alifshop\AlifshopService;
 use App\Services\Core\ServiceCore;
 use Illuminate\Http\Request;
@@ -129,7 +129,6 @@ class MerchantsController extends ApiBaseController
             'has_manager' => 'nullable|boolean',
             'has_applications' => 'nullable|boolean',
             'has_orders' => 'nullable|boolean',
-            'has_general_goods' => 'nullable|boolean'
         ]);
 
         $merchant = Merchant::query()->findOrFail($id);
@@ -156,13 +155,24 @@ class MerchantsController extends ApiBaseController
         return $merchant;
     }
 
+    public function toggleGeneralGoods($id, Request $request)
+    {
+        $merchant = Merchant::findOrFail($id);
+        $merchant->has_general_goods = !$merchant->has_general_goods;
+
+        WarehouseService::checkDuplicateSKUs($merchant->id);
+
+        $merchant->save();
+        return $merchant;
+    }
+
     public function setResponsibleUser($id, Request $request)
     {
         $this->validate($request, [
             'maintainer_id' => 'required|integer'
         ]);
 
-        $user = ServiceCore::request('GET', 'users/'.$request->input('maintainer_id'), null);
+        $user = ServiceCore::request('GET', 'users/' . $request->input('maintainer_id'), null);
 
         if (!$user)
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);

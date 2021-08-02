@@ -127,6 +127,7 @@ Route::prefix('merchants')
         Route::match(['put', 'patch'], '/{id}', [MerchantsController::class, 'update']);
 
         Route::post('/{id}/set-main-store', [MerchantsController::class, 'setMainStore']);
+        Route::put('/{id}/toggle-general-goods', [MerchantsController::class, 'toggleGeneralGoods']);
         Route::post('/{id}/update-chat-id', [MerchantsController::class, 'updateChatId']);
         Route::post('/{id}/upload-logo', [MerchantsController::class, 'uploadLogo']);
         Route::post('/{id}/remove-logo', [MerchantsController::class, 'removeLogo']);

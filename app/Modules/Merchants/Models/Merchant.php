@@ -29,6 +29,7 @@ use Illuminate\Http\Request;
  * @property int $has_manager
  * @property int $has_applications
  * @property int $has_orders
+ * @property int $has_general_goods
  * @property string|null $logo_url
  * @property string|null $paymo_terminal
  * @property int|null $maintainer_id
