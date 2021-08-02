@@ -24,6 +24,7 @@ class MerchantsSeeder extends Seeder
             'token' => 'token-idea',
             'alifshop_slug' => 'idea',
             'telegram_chat_id' => 1,
+            'maintainer_id' => 1,
             'current_sales' => 1000000,
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
