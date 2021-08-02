@@ -102,6 +102,13 @@ Route::prefix('app')
         Route::get('/', [App\Http\Controllers\ApiGateway\App\AppController::class, 'index']);
     });
 
+Route::prefix('districts')
+    ->group(function () {
+        Route::get('/', [App\Http\Controllers\ApiGateway\App\AppController::class, 'getDistricts']);
+    });
+
+
+
 Route::prefix('application-conditions')
     ->group(function () {
         Route::get('/', [App\Http\Controllers\ApiGateway\Merchants\ApplicationConditionsController::class, 'index']);

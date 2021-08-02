@@ -61,6 +61,7 @@ class Request extends Model
         'user_phone',
         'information',
         'region',
+        'district',
         'stores_count',
         'merchant_users_count',
         'address',
@@ -79,7 +80,7 @@ class Request extends Model
         'bank_name',
         'address',
 
-        'completed'
+        'completed',
     ];
 
 
