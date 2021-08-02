@@ -27,5 +27,9 @@ return [
         'domain' => env('SERVICE_CORE_URL'),
         'service_token' => env('SERVICE_CORE_TOKEN')
     ],
-    'time_logger' => env('TIME_LOGGER')
+    'time_logger' => env('TIME_LOGGER'),
+    'warehouse' => [
+        'domain' => env('SERVICE_WAREHOUSE_DOMAIN'),
+        'access_token' => env('SERVICE_WAREHOUSE_ACCESS_TOKEN')
+    ]
 ];
