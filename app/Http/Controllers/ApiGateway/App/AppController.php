@@ -13,6 +13,7 @@ use App\Modules\Merchants\Models\Request;
 use App\Modules\Merchants\Models\Store;
 use App\Modules\Merchants\Services\MerchantStatus;
 use App\Modules\Merchants\Services\RequestStatus;
+use App\Services\DistrictService;
 use App\Services\RegionService;
 
 class AppController extends ApiBaseController
@@ -59,5 +60,14 @@ class AppController extends ApiBaseController
             'merchant_activity_reasons',
             'store_activity_reasons'
         ));
+    }
+
+    public function getDistricts(\Illuminate\Http\Request $request)
+    {
+        if($request->query('region')) {
+            return DistrictService::getDistrictsByRegion($request->query('region'));
+
+        }
+        return DistrictService::getDistricts();
     }
 }

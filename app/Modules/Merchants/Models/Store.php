@@ -48,7 +48,19 @@ class Store extends Model
     use SortableByQueryParams;
 
     protected $table = 'stores';
-    protected $fillable = ['name', 'is_main', 'phone', 'address', 'region', 'lat', 'long', 'responsible_person', 'responsible_person_phone', 'active'];
+    protected $fillable = [
+        'name',
+        'is_main',
+        'phone',
+        'address',
+        'region',
+        'lat',
+        'long',
+        'responsible_person',
+        'responsible_person_phone',
+        'active',
+        'district'
+    ];
 
     public function scopeFilterRequest(Builder $query, Request $request)
     {
