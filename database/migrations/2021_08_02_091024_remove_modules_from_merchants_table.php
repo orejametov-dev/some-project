@@ -15,9 +15,8 @@ class RemoveModulesFromMerchantsTable extends Migration
     {
         Schema::table('merchants', function (Blueprint $table) {
             $table->dropColumn('has_manager');
-            $table->dropColumn('has_application');
-            $table->dropColumn('has_order');
-            $table->dropColumn('has_delivery');
+            $table->dropColumn('has_applications');
+            $table->dropColumn('has_deliveries');
         });
     }
 
