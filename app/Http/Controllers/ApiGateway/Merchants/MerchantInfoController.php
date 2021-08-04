@@ -5,8 +5,10 @@ namespace App\Http\Controllers\ApiGateway\Merchants;
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiPrm\Merchants\StoreMerchantInfo;
+use App\Modules\Merchants\DTO\Merchants\MerchantInfoDTO;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\MerchantInfo;
+use App\Modules\Merchants\Services\Merchants\MerchantsService;
 use App\Services\WordService;
 use Illuminate\Http\Request;
 
@@ -23,7 +25,7 @@ class MerchantInfoController extends Controller
         return $merchantInfoQuery->paginate($request->query('per_page'));
     }
 
-    public function store(StoreMerchantInfo $request)
+    public function store(StoreMerchantInfo $request, MerchantsService $merchantsService)
     {
         $this->validate($request, [
             'merchant_id' => 'required|integer'
@@ -35,23 +37,7 @@ class MerchantInfoController extends Controller
             throw new BusinessException('Партнер уже имеет основной договор');
         }
 
-        $merchant_info = new MerchantInfo();
-
-        $merchant_info->legal_name = $request->input('legal_name');
-        $merchant_info->director_name = $request->input('director_name');
-        $merchant_info->phone = $request->input('phone');
-        $merchant_info->vat_number = $request->input('vat_number');
-        $merchant_info->mfo = $request->input('mfo');
-        $merchant_info->tin = $request->input('tin');
-        $merchant_info->oked = $request->input('oked');
-        $merchant_info->address = $request->input('address');
-        $merchant_info->bank_account = $request->input('bank_account');
-        $merchant_info->bank_name = $request->input('bank_name');
-        $merchant_info->contract_number = $request->input('contract_number');
-        $merchant_info->contract_date = $request->input('contract_date');
-        $merchant_info->limit = $request->input('limit');
-        $merchant_info->merchant()->associate($merchant);
-        $merchant_info->save();
+        $merchant_info = $merchantsService->createMerchantInfo((new MerchantInfoDTO())->fromHttpRequest($request), $merchant);
 
         return $merchant_info;
     }
