@@ -182,6 +182,12 @@ class Merchant extends Model
         if($request->has('active')) {
             $query->where('active', $request->query('active'));
         }
+
+        if($request->query('tin')) {
+            $query->whereHas('merchant_info', function ($query) use ($request) {
+                $query->where('tin', $request->query('tin'));
+            });
+        }
     }
 
     public function scopeActive(Builder $query)
