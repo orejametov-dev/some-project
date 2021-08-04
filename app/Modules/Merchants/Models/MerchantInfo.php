@@ -70,4 +70,9 @@ class MerchantInfo extends Model
             $query->where('merchant_id', $request->query('merchant_id'));
         }
     }
+
+    public static function getMaxContractNumber()
+    {
+        return MerchantInfo::max('contract_number');
+    }
 }
