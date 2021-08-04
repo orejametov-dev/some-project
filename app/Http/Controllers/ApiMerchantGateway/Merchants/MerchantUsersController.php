@@ -33,4 +33,32 @@ class MerchantUsersController extends ApiBaseController
         return $merchantUser;
     }
 
+    public function update($id, Request $request)
+    {
+        $this->validate($request, [
+            'store_id' => 'required|integer'
+        ]);
+
+        $merchant_user = MerchantUser::query()->findOrFail($id);
+        $merchant = $merchant_user->merchant;
+        $store = $merchant->stores()->where(['id' => $request->input('store_id')])->firstOrFail();
+
+        $merchant_user->store()->associate($store);
+
+        $merchant_user->save();
+
+        ServiceCore::storeHook(
+            'Сотрудник обновлен',
+            'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id,
+            'update',
+            'warning',
+            $merchant
+        );
+
+        Cache::tags('merchants')->forget('merchant_user_id_' . $merchant_user->user_id);
+        Cache::tags($merchant->id)->flush();
+
+        return $merchant_user;
+    }
+
 }
