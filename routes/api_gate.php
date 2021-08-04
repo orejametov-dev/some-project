@@ -16,3 +16,5 @@ Route::get('/merchants/{id}', [MerchantsController::class, 'show']);
 
 //Telegram BOT
 Route::post('/merchants/verify', [MerchantsController::class, 'verifyToken']);
+
+Route::get('credits/merchants/{id}', [MerchantsController::class, 'getMerchantByIdForCredits']);
