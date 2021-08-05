@@ -42,6 +42,7 @@ class MerchantsService
         $merchantInfo->address = $merchantInfoDTO->address;
         $merchantInfo->contract_number = MerchantInfo::getMaxContractNumber() + 1;
         $merchantInfo->contract_date = now();
+        $merchantInfo->limit = MerchantInfo::LIMIT;
         $merchantInfo->save();
 
         return $merchantInfo;

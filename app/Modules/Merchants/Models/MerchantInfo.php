@@ -40,6 +40,8 @@ class MerchantInfo extends Model
 {
     use HasFactory;
 
+    public const LIMIT = 100000000000;
+
     protected $table = 'merchant_infos';
     protected $fillable = [
         'legal_name',

@@ -46,7 +46,7 @@ class MerchantInfoController extends Controller
     {
         $merchant_info = MerchantInfo::query()->findOrFail($id);
 
-        $merchant_info->fill($request->all());
+        $merchant_info->fill($request->validated());
         $merchant_info->save();
 
         return $merchant_info;
