@@ -11,17 +11,17 @@ class WarehouseService
 {
     public static function checkDuplicateSKUs($merchant_id)
     {
-        try {
-            return static::http()->get('/gate/items/check-duplications', [
-                'merchant_id' => $merchant_id
-            ]);
-        } catch (BusinessException $e) {
-            throw new BusinessException($e->getMessage(), 'duplicate_sku');
+        $response = static::http()->get('/gate/items/check-duplications', [
+            'merchant_id' => $merchant_id
+        ]);
+        if($response->clientError()) {
+            throw new BusinessException($response->body(), 'duplicate_body');
         }
     }
 
     protected static function http()
-    {;
+    {
+        ;
         return Http::baseUrl(config('local_services.warehouse.domain') . '/')
             ->withHeaders([
                 'Accept' => 'application/json',
