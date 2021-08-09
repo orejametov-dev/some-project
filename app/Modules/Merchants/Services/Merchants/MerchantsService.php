@@ -20,7 +20,6 @@ class MerchantsService
         $merchant->alifshop_slug = $merchantsDTO->alifshop_slug;
         $merchant->information = $merchantsDTO->information;
         $merchant->maintainer_id = $merchantsDTO->maintainer_id;
-        $merchant->setStatusActive();
         $merchant->save();
 
         return $merchant;
@@ -41,7 +40,11 @@ class MerchantsService
         $merchantInfo->bank_account = $merchantInfoDTO->bank_account;
         $merchantInfo->bank_name = $merchantInfoDTO->bank_name;
         $merchantInfo->address = $merchantInfoDTO->address;
-
+        $merchantInfo->contract_number = MerchantInfo::getMaxContractNumber() + 1;
+        $merchantInfo->contract_date = now();
+        $merchantInfo->limit = MerchantInfo::LIMIT;
         $merchantInfo->save();
+
+        return $merchantInfo;
     }
 }
