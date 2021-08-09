@@ -121,6 +121,11 @@ class Request extends Model
         return $this->hasMany(File::class, 'request_id', 'id');
     }
 
+    public function cancel_reason()
+    {
+        return $this->belongsTo(CancelReason::class);
+    }
+
     public function scopeFilterRequest(Builder $query, \Illuminate\Http\Request $request)
     {
         if ($q = $request->query('q')) {

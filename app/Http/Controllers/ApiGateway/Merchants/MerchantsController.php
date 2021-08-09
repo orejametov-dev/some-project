@@ -6,8 +6,10 @@ use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Files\StoreFileRequest;
 use App\HttpServices\Telegram\TelegramService;
+use App\Modules\Merchants\DTO\Merchants\MerchantsDTO;
 use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\Merchant;
+use App\Modules\Merchants\Services\Merchants\MerchantsService;
 use App\Services\Alifshop\AlifshopService;
 use App\Services\Core\ServiceCore;
 use Illuminate\Http\Request;
@@ -44,23 +46,23 @@ class MerchantsController extends ApiBaseController
         return Merchant::with(['stores', 'tags', 'activity_reasons'])->findOrFail($id);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, MerchantsService $merchantsService)
     {
-        $validated_data = $this->validate($request, [
+        $this->validate($request, [
             'name' => 'required|max:255|unique:merchants',
             'legal_name' => 'nullable|max:255',
-            'token' => 'required|max:255|unique:merchants',
-            'alifshop_slug' => 'required|max:255|unique:merchants',
-            'information' => 'nullable',
         ]);
 
-        $merchant = new Merchant($validated_data);
-        $merchant->maintainer_id = $this->user->id;
-        $merchant->setStatusActive();
-        $merchant->save();
+        $merchant = $merchantsService->create(new MerchantsDTO(
+            $request->input('name'),
+            $request->input('legal_name'),
+            null,
+            $this->user->id
+        ));
 
         Cache::tags($merchant->id)->flush();
         Cache::tags('merchants')->flush();
+
         $this->alifshopService->storeOrUpdateMerchant($merchant->fresh());
         return $merchant;
     }

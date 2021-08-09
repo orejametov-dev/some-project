@@ -34,9 +34,6 @@ class StoreMerchantInfo extends FormRequest
             'address' => 'required',
             'bank_account' => 'required|digits:20',
             'bank_name' => 'required|max:255',
-            'contract_number' => 'required',
-            'contract_date' => 'required|date',
-            'limit' => 'required'
         ];
     }
 }

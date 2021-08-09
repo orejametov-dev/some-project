@@ -14,13 +14,13 @@ class MerchantsDTO
     public string $legal_name;
     public string $token;
     public string $alifshop_slug;
-    public string $information;
+    public ?string $information;
     public int $maintainer_id;
 
     public function __construct(
         string $name,
         string $legal_name,
-        string $information,
+        ?string $information,
         int $maintainer_id
     )
     {

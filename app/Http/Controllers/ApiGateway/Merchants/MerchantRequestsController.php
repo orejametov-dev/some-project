@@ -7,6 +7,7 @@ use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Resources\ApiPrmGateway\Merchants\MerchantRequestsResource;
 use App\Modules\Merchants\DTO\Merchants\MerchantInfoDTO;
 use App\Modules\Merchants\DTO\Merchants\MerchantsDTO;
+use App\Modules\Merchants\Models\CancelReason;
 use App\Modules\Merchants\Models\File;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Request as MerchantRequest;
@@ -173,9 +174,10 @@ class MerchantRequestsController extends ApiBaseController
     public function reject(Request $request, $id)
     {
         $this->validate($request, [
-            'body' => 'required'
+            'cancel_reason_id' => 'required|integer',
         ]);
 
+        $cancelReason = CancelReason::query()->findOrFail($request->input('cancel_reason_id'));
         $merchant_request = MerchantRequest::findOrFail($id);
 
         if (!$merchant_request->isInProcess()) {
@@ -183,6 +185,7 @@ class MerchantRequestsController extends ApiBaseController
         }
 
         $merchant_request->setStatusTrash();
+        $merchant_request->cancel_reason()->associate($cancelReason);
         $merchant_request->save();
 
         return $merchant_request;
