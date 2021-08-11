@@ -114,11 +114,14 @@ class Merchant extends Model
 
         if ($q = $request->query('q')) {
             $query->where('name', 'like', '%' . $q . '%')
-                ->orWhere('legal_name', 'like', '%' . $q . '%')
-                ->orWhereHas('merchant_info', function (Builder $query) use ($q) {
-                    $query->where('tin',  $q)
-                        ->orWhere('contract_number', $q);
-                });
+                ->orWhere('legal_name', 'like', '%' . $q . '%');
+
+                if(is_numeric($q)){
+                    $query->orWhereHas('merchant_info', function (Builder $query) use ($q) {
+                        $query->Where('tin',  $q)
+                            ->orWhere('contract_number', $q);
+                    });
+                }
         }
 
         if ($merchant_id = $request->query('merchant_id')) {
