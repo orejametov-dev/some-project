@@ -35,6 +35,7 @@ class UpdateStoresRequest extends FormRequest
                 'required',
                 Rule::in(RegionService::getKeys()),
             ],
+            'district' => 'nullable|string',
             'lat' => 'nullable|numeric',
             'long' => 'nullable|numeric',
             'responsible_person' => 'required_with:responsible_person_phone|nullable|string',

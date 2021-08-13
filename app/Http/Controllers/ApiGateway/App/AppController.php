@@ -6,6 +6,7 @@ namespace App\Http\Controllers\ApiGateway\App;
 
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Modules\Merchants\Models\ActivityReason;
+use App\Modules\Merchants\Models\CancelReason;
 use App\Modules\Merchants\Models\File;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\ProblemCase;
@@ -13,6 +14,7 @@ use App\Modules\Merchants\Models\Request;
 use App\Modules\Merchants\Models\Store;
 use App\Modules\Merchants\Services\MerchantStatus;
 use App\Modules\Merchants\Services\RequestStatus;
+use App\Services\DistrictService;
 use App\Services\RegionService;
 
 class AppController extends ApiBaseController
@@ -28,6 +30,7 @@ class AppController extends ApiBaseController
         $problem_case_sources = ProblemCase::$sources;
         $merchant_activity_reasons = ActivityReason::query()->where('type', 'MERCHANT')->get();
         $store_activity_reasons = ActivityReason::query()->where('type', 'STORE')->get();
+        $cancel_reasons = CancelReason::query()->get();
 
         $authUser = $this->user;
 
@@ -57,7 +60,17 @@ class AppController extends ApiBaseController
             'regions',
             'problem_case_sources',
             'merchant_activity_reasons',
-            'store_activity_reasons'
+            'store_activity_reasons',
+            'cancel_reasons'
         ));
+    }
+
+    public function getDistricts(\Illuminate\Http\Request $request)
+    {
+        if($request->query('region')) {
+            return DistrictService::getDistrictsByRegion($request->query('region'));
+
+        }
+        return DistrictService::getDistricts();
     }
 }

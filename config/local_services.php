@@ -27,5 +27,10 @@ return [
         'domain' => env('SERVICE_CORE_URL'),
         'service_token' => env('SERVICE_CORE_TOKEN')
     ],
-    'time_logger' => env('TIME_LOGGER')
+    'time_logger' => env('TIME_LOGGER'),
+
+    'service_hook' => [
+        'domain' => env('SERVICE_HOOK_DOMAIN'),
+        'access_token' => env('SERVICE_HOOK_ACCESS_TOKEN')
+    ],
 ];
