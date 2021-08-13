@@ -46,6 +46,7 @@ class MerchantUserController extends ApiBaseController
         if (!$user)
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
 
+
         $merchant_user_exists = MerchantUser::query()
             ->where(['user_id' => $request->input('user_id')])
             ->exists();
@@ -60,7 +61,11 @@ class MerchantUserController extends ApiBaseController
         $store = Store::query()->findOrFail($request->input('store_id'));
 
         $merchant = $store->merchant;
-        $merchant_user = new MerchantUser();
+        if($merchant_user = MerchantUser::withTrashed()->where('user_id', $user->id)->first()) {
+            $merchant_user->restore();
+        } else {
+            $merchant_user = new MerchantUser();
+        }
         $merchant_user->user_id = $request->input('user_id');
         $merchant_user->user_name = $user->name;
         $merchant_user->phone = $user->phone;
@@ -71,12 +76,12 @@ class MerchantUserController extends ApiBaseController
 
         SendHook::dispatch(new HookData(
             service: 'merchants',
-            hookable_type: $merchant->getTable(),
-            hookable_id: $merchant->id,
+            hookable_type: $merchant_user->getTable(),
+            hookable_id: $merchant_user->id,
             created_from_str: 'PRM',
             created_by_id: $this->user->id,
             body: 'Сотрудник создан',
-            keyword:'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id,
+            keyword:'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id . ' store_id: ' . $store->id . ', ' . $store->name,
             action: 'create',
             class: 'info',
             action_at: null,

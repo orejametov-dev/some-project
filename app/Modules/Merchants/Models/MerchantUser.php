@@ -10,6 +10,7 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 
 /**
@@ -45,6 +46,7 @@ class MerchantUser extends Model
 {
     use HasFactory;
     use SortableByQueryParams;
+    use SoftDeletes;
 
     protected $table = 'merchant_users';
     protected $fillable = [
