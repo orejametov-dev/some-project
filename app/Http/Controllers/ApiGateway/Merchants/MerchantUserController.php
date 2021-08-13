@@ -81,7 +81,7 @@ class MerchantUserController extends ApiBaseController
             created_from_str: 'PRM',
             created_by_id: $this->user->id,
             body: 'Сотрудник создан',
-            keyword:'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id . ' store_id: ' . $store->id . ', ' . $store->name,
+            keyword:'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id . ' store_id: ' . $store->id . ' store_name: ' . $store->name,
             action: 'create',
             class: 'info',
             action_at: null,
@@ -99,6 +99,7 @@ class MerchantUserController extends ApiBaseController
 
         /** @var MerchantUser $merchant_user */
         $merchant_user = MerchantUser::query()->findOrFail($id);
+        $old_store = $merchant_user->store;
         $merchant = $merchant_user->merchant;
         $store = $merchant->stores()->where(['id' => $request->input('store_id')])->firstOrFail();
 
@@ -139,7 +140,8 @@ class MerchantUserController extends ApiBaseController
             created_from_str: 'PRM',
             created_by_id: $this->user->id,
             body: 'Сотрудник обновлен',
-            keyword:'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id,
+            keyword:'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id . ' old_store: ('
+            . $old_store->id . ', ' . $old_store->name . ') -> ' . 'store: ('.  $store->id . ', ' . $store->name ,
             action: 'update',
             class: 'warning',
             action_at: null,
