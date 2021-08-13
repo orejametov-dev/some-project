@@ -33,6 +33,8 @@ class RemovePermissionsOfMerchantUsers extends Migration
             $table->boolean('permission_deliveries')->default(false);
             $table->boolean('permission_manager')->default(false);
             $table->boolean('permission_upload_goods')->default(false);
+            $table->boolean('permission_oso')->default(false);
+            $table->boolean('permission_orders')->default(false);
         });
     }
 }
