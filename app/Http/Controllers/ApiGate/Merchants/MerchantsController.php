@@ -19,7 +19,7 @@ class MerchantsController extends Controller
         $merchant = Merchant::with('merchant_info')
             ->orderByDesc('contract_date')
             ->where('tin', $tin)
-            ->first();
+            ->firstOrFail();
 
         return new MerchantDetailForCredits($merchant);
     }
