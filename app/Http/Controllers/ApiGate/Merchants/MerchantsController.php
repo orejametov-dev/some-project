@@ -17,9 +17,9 @@ class MerchantsController extends Controller
     public function getMerchantByTinForCredits($tin)
     {
         $merchant = Merchant::with('merchant_info')
-            ->orderByDesc('contract_date')
-            ->where('tin', $tin)
-            ->firstOrFail();
+            ->whereHas('merchant_info', function ($query) use ($tin) {
+                $query->where('tin', $tin)->orderByDesc('contract_date');
+            })->firstOrFail();
 
         return new MerchantDetailForCredits($merchant);
     }
