@@ -18,6 +18,8 @@ class RemovePermissionsOfMerchantUsers extends Migration
             $table->dropColumn('permission_deliveries');
             $table->dropColumn('permission_manager');
             $table->dropColumn('permission_upload_goods');
+            $table->dropColumn('permission_orders');
+            $table->dropColumn('permission_oso');
         });
     }
 
