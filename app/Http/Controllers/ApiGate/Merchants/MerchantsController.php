@@ -14,9 +14,12 @@ use Illuminate\Support\Facades\Cache;
 
 class MerchantsController extends Controller
 {
-    public function getMerchantByIdForCredits($id)
+    public function getMerchantTinForCredits($tin)
     {
-        $merchant = Merchant::with('merchant_info')->findOrFail($id);
+        $merchant = Merchant::with('merchant_info')
+            ->orderByDesc('contract_date')
+            ->where('tin', $tin)
+            ->first();
 
         return new MerchantDetailForCredits($merchant);
     }
