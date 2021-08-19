@@ -35,40 +35,16 @@ class MerchantUsersController extends ApiBaseController
         return $merchantUser;
     }
 
-    public function update($id, UpdateMerchantUsers $request)
+    public function update($id, Request $request)
     {
+        $this->validate($request, [
+            'store_id' => 'required|integer'
+        ]);
 
-        /** @var MerchantUser $merchant_user */
         $merchant_user = MerchantUser::query()->findOrFail($id);
         $merchant = $merchant_user->merchant;
         $store = $merchant->stores()->where(['id' => $request->input('store_id')])->firstOrFail();
 
-        if ($request->input('permission_applications') == true && !$merchant->has_applications) {
-            return response()->json([
-                'code' => 'module_is_not_switched_on',
-                'message' => 'Невозможно включить разрешение заявок, т.к. соответствующий модуль у партнера отключен.'
-            ], 400);
-        }
-        if ($request->input('permission_deliveries') == true && !$merchant->has_deliveries) {
-            return response()->json([
-                'code' => 'module_is_not_switched_on',
-                'message' => 'Невозможно включить разрешение доставок, т.к. соответствующий модуль у партнера отключен.'
-            ], 400);
-        }
-        if ($request->input('permission_orders') == true && !$merchant->has_orders) {
-            return response()->json([
-                'code' => 'module_is_not_switched_on',
-                'message' => 'Невозможно включить разрешение заказов, т.к. соответствующий модуль у партнера отключен.'
-            ], 400);
-        }
-        if ($request->input('permission_manager') == true && !$merchant->has_manager) {
-            return response()->json([
-                'code' => 'module_is_not_switched_on',
-                'message' => 'Невозможно включить разрешение менеджера, т.к. соответствующий модуль у партнера отключен.'
-            ], 400);
-        }
-
-        $merchant_user->fill($request->validated());
         $merchant_user->store()->associate($store);
 
         $merchant_user->save();
