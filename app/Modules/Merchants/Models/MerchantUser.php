@@ -21,12 +21,6 @@ use Illuminate\Http\Request;
  * @property int $user_id
  * @property string $user_name
  * @property string $phone
- * @property int $permission_applications
- * @property int $permission_deliveries
- * @property int $permission_orders
- * @property int $permission_manager
- * @property int $permission_upload_goods
- * @property int $permission_oso
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read Merchant $merchant
@@ -48,12 +42,6 @@ class MerchantUser extends Model
 
     protected $table = 'merchant_users';
     protected $fillable = [
-        'permission_manager',
-        'permission_orders',
-        'permission_deliveries',
-        'permission_applications',
-        'permission_upload_goods',
-        'permission_oso',
         'user_name',
         'phone'
     ];
@@ -95,22 +83,6 @@ class MerchantUser extends Model
         if ($user_ids = $request->query('user_ids')) {
             $user_ids = explode(';', $user_ids);
             $query->whereIn('user_id', $user_ids);
-        }
-
-        if ($permission_applications = $request->query('permission_applications')) {
-            $query->where('permission_applications', $permission_applications);
-        }
-        if ($permission_orders = $request->query('permission_orders')) {
-            $query->where('permission_orders', $permission_orders);
-        }
-        if ($permission_deliveries = $request->query('permission_deliveries')) {
-            $query->where('permission_deliveries', $permission_deliveries);
-        }
-        if ($permission_applications = $request->query('permission_applications')) {
-            $query->where('permission_applications', $permission_applications);
-        }
-        if ($permission_upload_goods = $request->query('permission_upload_goods')) {
-            $query->where('permission_upload_goods', $permission_upload_goods);
         }
     }
 
