@@ -83,7 +83,8 @@ class ProblemCasesController extends ApiBaseController
     public function getNewProblemCasesCounter(Request $request)
     {
         $counter =  Cache::remember('new-problem-cases-counter_' . $this->merchant_id, 10 * 60, function () use ($request) {
-            return ProblemCase::filterRequests($request)->onlyNew()->count();
+            return ProblemCase::query()->byMerchant($this->merchant_id)
+                ->filterRequests($request)->onlyNew()->count();
         });
 
         return response()->json(['count' => $counter]);
