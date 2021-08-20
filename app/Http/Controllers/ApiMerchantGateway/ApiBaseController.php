@@ -29,7 +29,7 @@ class ApiBaseController extends Controller
                 return $merchant_user;
             });
             if (!$this->merchant_user) {
-                throw new BusinessException('Unauthenticated', 401);
+                return response()->json(['message' => 'Unauthenticated'], 401);
             }
             $this->merchant_id = $this->merchant_user->merchant_id;
             $this->store_id = $this->merchant_user->store_id;
