@@ -4,12 +4,12 @@
 namespace App\Http\Controllers\ApiCallsGateway\ProblemCases;
 
 
-use App\Http\Controllers\ApiMerchantGateway\ApiBaseController;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiCallsGateway\ProblemCases\ProblemCaseResource;
 use App\Modules\Merchants\Models\ProblemCase;
 use Illuminate\Http\Request;
 
-class ProblemCasesController extends ApiBaseController
+class ProblemCasesController extends Controller
 {
     public function index(Request $request)
     {
