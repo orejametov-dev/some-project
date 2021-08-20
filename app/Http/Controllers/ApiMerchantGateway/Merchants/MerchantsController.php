@@ -29,7 +29,7 @@ class MerchantsController extends ApiBaseController
             return Store::query()->byMerchant($merchant->id)->get();
         });
 
-        $merchant_user = $this->user->merchant_user;
+        $merchant_user = $this->merchant_user;
 
         $store = Cache::tags($this->merchant_id)->remember($merchant_user->id.'detail_cache_of_merchant_stores', 60 * 60, function () {
             $merchant_user = MerchantUser::query()->byUserId($this->user->id)->firstOrFail();
