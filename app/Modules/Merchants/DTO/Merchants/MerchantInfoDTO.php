@@ -75,4 +75,20 @@ class MerchantInfoDTO
         return $this;
     }
 
+    public function fromHttpRequest(\Illuminate\Http\Request $request)
+    {
+        $this->director_name = $request->director_name;
+        $this->legal_name = $request->legal_name;
+        $this->phone = $request->phone;
+        $this->vat_number = $request->vat_number;
+        $this->mfo = $request->mfo;
+        $this->tin = $request->tin;
+        $this->oked = $request->oked;
+        $this->bank_account = $request->bank_account;
+        $this->bank_name = $request->bank_name;
+        $this->address = $request->address;
+
+        return $this;
+    }
+
 }

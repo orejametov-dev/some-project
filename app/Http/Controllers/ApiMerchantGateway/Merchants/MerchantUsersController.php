@@ -6,6 +6,8 @@ namespace App\Http\Controllers\ApiMerchantGateway\Merchants;
 
 use App\Http\Controllers\ApiMerchantGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\MerchantUsers\UpdateMerchantUsers;
+use App\HttpServices\Hooks\DTO\HookData;
+use App\Jobs\SendHook;
 use App\Modules\Merchants\Models\MerchantUser;
 use App\Services\Core\ServiceCore;
 use Illuminate\Http\Request;
@@ -33,51 +35,33 @@ class MerchantUsersController extends ApiBaseController
         return $merchantUser;
     }
 
-    public function update($id, UpdateMerchantUsers $request)
+    public function update($id, Request $request)
     {
+        $this->validate($request, [
+            'store_id' => 'required|integer'
+        ]);
 
-        /** @var MerchantUser $merchant_user */
         $merchant_user = MerchantUser::query()->findOrFail($id);
         $merchant = $merchant_user->merchant;
         $store = $merchant->stores()->where(['id' => $request->input('store_id')])->firstOrFail();
 
-        if ($request->input('permission_applications') == true && !$merchant->has_applications) {
-            return response()->json([
-                'code' => 'module_is_not_switched_on',
-                'message' => 'Невозможно включить разрешение заявок, т.к. соответствующий модуль у партнера отключен.'
-            ], 400);
-        }
-        if ($request->input('permission_deliveries') == true && !$merchant->has_deliveries) {
-            return response()->json([
-                'code' => 'module_is_not_switched_on',
-                'message' => 'Невозможно включить разрешение доставок, т.к. соответствующий модуль у партнера отключен.'
-            ], 400);
-        }
-        if ($request->input('permission_orders') == true && !$merchant->has_orders) {
-            return response()->json([
-                'code' => 'module_is_not_switched_on',
-                'message' => 'Невозможно включить разрешение заказов, т.к. соответствующий модуль у партнера отключен.'
-            ], 400);
-        }
-        if ($request->input('permission_manager') == true && !$merchant->has_manager) {
-            return response()->json([
-                'code' => 'module_is_not_switched_on',
-                'message' => 'Невозможно включить разрешение менеджера, т.к. соответствующий модуль у партнера отключен.'
-            ], 400);
-        }
-
-        $merchant_user->fill($request->validated());
         $merchant_user->store()->associate($store);
 
         $merchant_user->save();
 
-        ServiceCore::storeHook(
-            'Сотрудник обновлен',
-            'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id,
-            'update',
-            'warning',
-            $merchant
-        );
+        SendHook::dispatch(new HookData(
+            service: 'merchants',
+            hookable_type: $merchant->getTable(),
+            hookable_id: $merchant->id,
+            created_from_str: 'MERCHANT',
+            created_by_id: $this->user->id,
+            body: 'Сотрудник обновлен',
+            keyword:'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id,
+            action: 'update',
+            class: 'warning',
+            action_at: null,
+            created_by_str: $this->user->name,
+        ));
 
         Cache::tags('merchants')->forget('merchant_user_id_' . $merchant_user->user_id);
         Cache::tags($merchant->id)->flush();
