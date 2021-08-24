@@ -142,8 +142,8 @@ class MerchantUserController extends ApiBaseController
 
         SendHook::dispatch(new HookData(
             service: 'merchants',
-            hookable_type: $merchant->getTable(),
-            hookable_id: $merchant->id,
+            hookable_type: $merchant_user->getTable(),
+            hookable_id: $merchant_user->id,
             created_from_str: 'PRM',
             created_by_id: $this->user->id,
             body: 'Сотрудник обновлен',
