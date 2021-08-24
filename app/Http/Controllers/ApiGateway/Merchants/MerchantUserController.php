@@ -40,7 +40,7 @@ class MerchantUserController extends ApiBaseController
 
     public function store(StoreMerchantUsers $request)
     {
-        $user = ServiceCore::request('GET', 'users/'.$request->input('user_id'), null);
+        $user = ServiceCore::request('GET', 'users/' . $request->input('user_id'), null);
 
         if (!$user)
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
@@ -60,7 +60,7 @@ class MerchantUserController extends ApiBaseController
         $store = Store::query()->findOrFail($request->input('store_id'));
 
         $merchant = $store->merchant;
-        if($merchant_user = MerchantUser::withTrashed()->where('user_id', $user->id)->first()) {
+        if ($merchant_user = MerchantUser::withTrashed()->where('user_id', $user->id)->first()) {
             $merchant_user->restore();
         } else {
             $merchant_user = new MerchantUser();
@@ -80,7 +80,7 @@ class MerchantUserController extends ApiBaseController
             created_from_str: 'PRM',
             created_by_id: $this->user->id,
             body: 'Сотрудник создан',
-            keyword:'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id . ' store_id: ' . $store->id . ' store_name: ' . $store->name,
+            keyword: 'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id . ' store_id: ' . $store->id . ' store_name: ' . $store->name,
             action: 'create',
             class: 'info',
             action_at: null,
@@ -111,7 +111,7 @@ class MerchantUserController extends ApiBaseController
             created_by_id: $this->user->id,
             body: 'Сотрудник удален',
             keyword: 'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id . ' сотрудниу удален из магазина: ('
-            . $store->id . ', ' . $merchant_user->store->name . ') -> ' . 'store: ('.  $store->id . ', ' . $store->name . ')',
+            . $store->id . ', ' . $merchant_user->store->name . ') -> ' . 'store: (' . $store->id . ', ' . $store->name . ')',
             action: 'delete',
             class: 'danger',
             action_at: null,
@@ -147,8 +147,8 @@ class MerchantUserController extends ApiBaseController
             created_from_str: 'PRM',
             created_by_id: $this->user->id,
             body: 'Сотрудник обновлен',
-            keyword:'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id . ' old_store: ('
-            . $old_store->id . ', ' . $old_store->name . ') -> ' . 'store: ('.  $store->id . ', ' . $store->name . ')',
+            keyword: 'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id . ' old_store: ('
+            . $old_store->id . ', ' . $old_store->name . ') -> ' . 'store: (' . $store->id . ', ' . $store->name . ')',
             action: 'update',
             class: 'warning',
             action_at: null,
