@@ -7,7 +7,6 @@ namespace App\Http\Controllers\ApiGateway\Merchants;
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\MerchantUsers\StoreMerchantUsers;
-use App\Http\Requests\ApiPrm\MerchantUsers\UpdateMerchantUsers;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Modules\Merchants\Models\MerchantUser;
@@ -94,122 +93,11 @@ class MerchantUserController extends ApiBaseController
         return $merchant_user;
     }
 
-    public function update($id, UpdateMerchantUsers $request)
-    {
-
-        /** @var MerchantUser $merchant_user */
-        $merchant_user = MerchantUser::query()->findOrFail($id);
-        $old_store = $merchant_user->store;
-        $merchant = $merchant_user->merchant;
-        $store = $merchant->stores()->where(['id' => $request->input('store_id')])->firstOrFail();
-
-        if ($request->input('permission_applications') == true && !$merchant->has_applications) {
-            return response()->json([
-                'code' => 'module_is_not_switched_on',
-                'message' => 'Невозможно включить разрешение заявок, т.к. соответствующий модуль у партнера отключен.'
-            ], 400);
-        }
-        if ($request->input('permission_deliveries') == true && !$merchant->has_deliveries) {
-            return response()->json([
-                'code' => 'module_is_not_switched_on',
-                'message' => 'Невозможно включить разрешение доставок, т.к. соответствующий модуль у партнера отключен.'
-            ], 400);
-        }
-        if ($request->input('permission_orders') == true && !$merchant->has_orders) {
-            return response()->json([
-                'code' => 'module_is_not_switched_on',
-                'message' => 'Невозможно включить разрешение заказов, т.к. соответствующий модуль у партнера отключен.'
-            ], 400);
-        }
-        if ($request->input('permission_manager') == true && !$merchant->has_manager) {
-            return response()->json([
-                'code' => 'module_is_not_switched_on',
-                'message' => 'Невозможно включить разрешение менеджера, т.к. соответствующий модуль у партнера отключен.'
-            ], 400);
-        }
-
-        $merchant_user->fill($request->validated());
-        $merchant_user->store()->associate($store);
-
-        $merchant_user->save();
-
-        SendHook::dispatch(new HookData(
-            service: 'merchants',
-            hookable_type: $merchant->getTable(),
-            hookable_id: $merchant->id,
-            created_from_str: 'PRM',
-            created_by_id: $this->user->id,
-            body: 'Сотрудник обновлен',
-            keyword:'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id . ' old_store: ('
-            . $old_store->id . ', ' . $old_store->name . ') -> ' . 'store: ('.  $store->id . ', ' . $store->name ,
-            action: 'update',
-            class: 'warning',
-            action_at: null,
-            created_by_str: $this->user->name,
-        ));
-
-        Cache::tags('merchants')->forget('merchant_user_id_' . $merchant_user->user_id);
-        Cache::tags($merchant->id)->flush();
-
-        return $merchant_user;
-    }
-
-    public function updatePermissionsForApiMerchants($id, Request $request)
-    {
-        $validatedRequest = $this->validate($request, [
-            'permission_applications' => 'nullable|boolean',
-            'permission_deliveries' => 'nullable|boolean',
-            'permission_orders' => 'nullable|boolean',
-            'store_id' => 'required|integer',
-        ]);
-
-        /** @var MerchantUser $merchant_user */
-        $merchant_user = MerchantUser::query()->findOrFail($id);
-        $merchant = $merchant_user->merchant;
-
-        $store = $merchant->stores()->findOrFail($request->input('store_id'));
-
-        if ($request->input('permission_applications') == true && !$merchant->has_applications) {
-            return response()->json([
-                'code' => 'module_is_not_switched_on',
-                'message' => 'Невозможно включить разрешение заявок, т.к. соответствующий модуль у партнера отключен.'
-            ], 400);
-        }
-        if ($request->input('permission_deliveries') == true && !$merchant->has_deliveries) {
-            return response()->json([
-                'code' => 'module_is_not_switched_on',
-                'message' => 'Невозможно включить разрешение доставок, т.к. соответствующий модуль у партнера отключен.'
-            ], 400);
-        }
-        if ($request->input('permission_orders') == true && !$merchant->has_orders) {
-            return response()->json([
-                'code' => 'module_is_not_switched_on',
-                'message' => 'Невозможно включить разрешение заказов, т.к. соответствующий модуль у партнера отключен.'
-            ], 400);
-        }
-
-        if (!isset($validatedRequest['permission_applications']))
-            $validatedRequest['permission_applications'] = false;
-        if (!isset($validatedRequest['permission_deliveries']))
-            $validatedRequest['permission_deliveries'] = false;
-        if (!isset($validatedRequest['permission_orders']))
-            $validatedRequest['permission_orders'] = false;
-
-        $merchant_user->fill($validatedRequest);
-        $merchant_user->store()->associate($store);
-
-        $merchant_user->save();
-
-        Cache::tags('merchants')->forget('merchant_user_id_' . $merchant_user->user_id);
-        Cache::tags($merchant->id)->flush();
-
-
-        return $merchant_user;
-    }
 
     public function destroy($id)
     {
         $merchant_user = MerchantUser::query()->findOrFail($id);
+        $store = $merchant_user->store;
 
         $merchant_user->delete();
 
@@ -217,12 +105,13 @@ class MerchantUserController extends ApiBaseController
 
         SendHook::dispatch(new HookData(
             service: 'merchants',
-            hookable_type: $merchant->getTable(),
-            hookable_id: $merchant->id,
+            hookable_type: $merchant_user->getTable(),
+            hookable_id: $merchant_user->id,
             created_from_str: 'PRM',
             created_by_id: $this->user->id,
             body: 'Сотрудник удален',
-            keyword:'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id,
+            keyword: 'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id . ' сотрудниу удален из магазина: ('
+            . $store->id . ', ' . $merchant_user->store->name . ') -> ' . 'store: ('.  $store->id . ', ' . $store->name . ')',
             action: 'delete',
             class: 'danger',
             action_at: null,
@@ -235,4 +124,42 @@ class MerchantUserController extends ApiBaseController
 
         return response()->json(['message' => 'Сотрудник удален']);
     }
+
+    public function update($id, Request $request)
+    {
+        $this->validate($request, [
+            'store_id' => 'required|integer'
+        ]);
+
+        $merchant_user = MerchantUser::query()->findOrFail($id);
+        $merchant = $merchant_user->merchant;
+        $old_store = $merchant_user->store;
+        $store = $merchant->stores()->where(['id' => $request->input('store_id')])->firstOrFail();
+
+        $merchant_user->store()->associate($store);
+
+        $merchant_user->save();
+
+        SendHook::dispatch(new HookData(
+            service: 'merchants',
+            hookable_type: $merchant->getTable(),
+            hookable_id: $merchant->id,
+            created_from_str: 'PRM',
+            created_by_id: $this->user->id,
+            body: 'Сотрудник обновлен',
+            keyword:'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id . ' old_store: ('
+            . $old_store->id . ', ' . $old_store->name . ') -> ' . 'store: ('.  $store->id . ', ' . $store->name . ')',
+            action: 'update',
+            class: 'warning',
+            action_at: null,
+            created_by_str: $this->user->name,
+        ));
+
+
+        Cache::tags('merchants')->forget('merchant_user_id_' . $merchant_user->user_id);
+        Cache::tags($merchant->id)->flush();
+
+        return $merchant_user;
+    }
 }
+
