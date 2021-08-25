@@ -57,8 +57,7 @@ class MerchantUsersController extends ApiBaseController
             created_from_str: 'MERCHANT',
             created_by_id: $this->user->id,
             body: 'Сотрудник обновлен',
-            keyword:'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id . ' old_store: ('
-            . $old_store->id . ', ' . $old_store->name . ') -> ' . 'store: ('.  $store->id . ', ' . $store->name . ')',
+            keyword:'old_store: (' . $old_store->id . ', ' . $old_store->name . ') -> ' . 'store: ('.  $store->id . ', ' . $store->name . ')',
             action: 'update',
             class: 'warning',
             action_at: null,

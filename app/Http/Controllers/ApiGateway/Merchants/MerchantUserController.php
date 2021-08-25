@@ -80,7 +80,7 @@ class MerchantUserController extends ApiBaseController
             created_from_str: 'PRM',
             created_by_id: $this->user->id,
             body: 'Сотрудник создан',
-            keyword: 'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id . ' store_id: ' . $store->id . ' store_name: ' . $store->name,
+            keyword: 'Сотрудник добавлен в магазин: (store_id: ' . $store->id . ' store_name: ' . $store->name . ')',
             action: 'create',
             class: 'info',
             action_at: null,
@@ -110,8 +110,8 @@ class MerchantUserController extends ApiBaseController
             created_from_str: 'PRM',
             created_by_id: $this->user->id,
             body: 'Сотрудник удален',
-            keyword: 'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id . ' сотрудниу удален из магазина: ('
-            . $store->id . ', ' . $merchant_user->store->name . ') -> ' . 'store: (' . $store->id . ', ' . $store->name . ')',
+            keyword: 'Сотрудник удален из магазина: ('
+            . $store->id . ', ' . $merchant_user->store->name . ')',
             action: 'delete',
             class: 'danger',
             action_at: null,
@@ -147,8 +147,7 @@ class MerchantUserController extends ApiBaseController
             created_from_str: 'PRM',
             created_by_id: $this->user->id,
             body: 'Сотрудник обновлен',
-            keyword: 'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id . ' old_store: ('
-            . $old_store->id . ', ' . $old_store->name . ') -> ' . 'store: (' . $store->id . ', ' . $store->name . ')',
+            keyword: 'Сотруднику поменяли магазин: old_store: (' . $old_store->id . ', ' . $old_store->name . ') -> ' . 'store: (' . $store->id . ', ' . $store->name . ')',
             action: 'update',
             class: 'warning',
             action_at: null,
