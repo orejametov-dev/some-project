@@ -43,6 +43,7 @@ class MerchantUsersController extends ApiBaseController
 
         $merchant_user = MerchantUser::query()->findOrFail($id);
         $merchant = $merchant_user->merchant;
+        $old_store = $merchant_user->store;
         $store = $merchant->stores()->where(['id' => $request->input('store_id')])->firstOrFail();
 
         $merchant_user->store()->associate($store);
@@ -51,17 +52,18 @@ class MerchantUsersController extends ApiBaseController
 
         SendHook::dispatch(new HookData(
             service: 'merchants',
-            hookable_type: $merchant->getTable(),
-            hookable_id: $merchant->id,
+            hookable_type: $merchant_user->getTable(),
+            hookable_id: $merchant_user->id,
             created_from_str: 'MERCHANT',
             created_by_id: $this->user->id,
             body: 'Сотрудник обновлен',
-            keyword:'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id,
+            keyword:'old_store: (' . $old_store->id . ', ' . $old_store->name . ') -> ' . 'store: ('.  $store->id . ', ' . $store->name . ')',
             action: 'update',
             class: 'warning',
             action_at: null,
             created_by_str: $this->user->name,
         ));
+
 
         Cache::tags('merchants')->forget('merchant_user_id_' . $merchant_user->user_id);
         Cache::tags($merchant->id)->flush();

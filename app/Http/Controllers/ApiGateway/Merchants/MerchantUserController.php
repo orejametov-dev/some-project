@@ -45,6 +45,7 @@ class MerchantUserController extends ApiBaseController
         if (!$user)
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
 
+
         $merchant_user_exists = MerchantUser::query()
             ->where(['user_id' => $request->input('user_id')])
             ->exists();
@@ -59,7 +60,11 @@ class MerchantUserController extends ApiBaseController
         $store = Store::query()->findOrFail($request->input('store_id'));
 
         $merchant = $store->merchant;
-        $merchant_user = new MerchantUser();
+        if ($merchant_user = MerchantUser::withTrashed()->where('user_id', $user->id)->first()) {
+            $merchant_user->restore();
+        } else {
+            $merchant_user = new MerchantUser();
+        }
         $merchant_user->user_id = $request->input('user_id');
         $merchant_user->user_name = $user->name;
         $merchant_user->phone = $user->phone;
@@ -70,12 +75,12 @@ class MerchantUserController extends ApiBaseController
 
         SendHook::dispatch(new HookData(
             service: 'merchants',
-            hookable_type: $merchant->getTable(),
-            hookable_id: $merchant->id,
+            hookable_type: $merchant_user->getTable(),
+            hookable_id: $merchant_user->id,
             created_from_str: 'PRM',
             created_by_id: $this->user->id,
             body: 'Сотрудник создан',
-            keyword: 'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id,
+            keyword: 'Сотрудник добавлен в магазин: (store_id: ' . $store->id . ', store_name: ' . $store->name . ')',
             action: 'create',
             class: 'info',
             action_at: null,
@@ -88,9 +93,11 @@ class MerchantUserController extends ApiBaseController
         return $merchant_user;
     }
 
+
     public function destroy($id)
     {
         $merchant_user = MerchantUser::query()->findOrFail($id);
+        $store = $merchant_user->store;
 
         $merchant_user->delete();
 
@@ -98,12 +105,12 @@ class MerchantUserController extends ApiBaseController
 
         SendHook::dispatch(new HookData(
             service: 'merchants',
-            hookable_type: $merchant->getTable(),
-            hookable_id: $merchant->id,
+            hookable_type: $merchant_user->getTable(),
+            hookable_id: $merchant_user->id,
             created_from_str: 'PRM',
             created_by_id: $this->user->id,
             body: 'Сотрудник удален',
-            keyword: 'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id,
+            keyword: 'Сотрудник удален из магазина: (' . $store->id . ', ' . $merchant_user->store->name . ')',
             action: 'delete',
             class: 'danger',
             action_at: null,
@@ -125,6 +132,7 @@ class MerchantUserController extends ApiBaseController
 
         $merchant_user = MerchantUser::query()->findOrFail($id);
         $merchant = $merchant_user->merchant;
+        $old_store = $merchant_user->store;
         $store = $merchant->stores()->where(['id' => $request->input('store_id')])->firstOrFail();
 
         $merchant_user->store()->associate($store);
@@ -133,17 +141,18 @@ class MerchantUserController extends ApiBaseController
 
         SendHook::dispatch(new HookData(
             service: 'merchants',
-            hookable_type: $merchant->getTable(),
-            hookable_id: $merchant->id,
+            hookable_type: $merchant_user->getTable(),
+            hookable_id: $merchant_user->id,
             created_from_str: 'PRM',
             created_by_id: $this->user->id,
             body: 'Сотрудник обновлен',
-            keyword: 'merchant_user_id: ' . $merchant_user->id . ' user_id: ' . $merchant_user->user_id,
+            keyword: 'Сотруднику поменяли магазин: old_store: (' . $old_store->id . ', ' . $old_store->name . ') -> ' . 'store: (' . $store->id . ', ' . $store->name . ')',
             action: 'update',
             class: 'warning',
             action_at: null,
             created_by_str: $this->user->name,
         ));
+
 
         Cache::tags('merchants')->forget('merchant_user_id_' . $merchant_user->user_id);
         Cache::tags($merchant->id)->flush();
@@ -151,3 +160,4 @@ class MerchantUserController extends ApiBaseController
         return $merchant_user;
     }
 }
+
