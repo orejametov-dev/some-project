@@ -1,10 +1,8 @@
 <?php
 
-use App\Http\Controllers\ApiGate\App\CountersController;
 use App\Http\Controllers\ApiGate\Conditions\ConditionsController;
 use App\Http\Controllers\ApiGate\Merchants\MerchantsController;
 use App\Http\Controllers\ApiGate\Merchants\MerchantUsersController;
-use App\Http\Controllers\ApiGate\Merchants\RequestsController;
 use App\Http\Controllers\ApiGate\Stores\StoresController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,3 +14,5 @@ Route::get('/merchants/{id}', [MerchantsController::class, 'show']);
 
 //Telegram BOT
 Route::post('/merchants/verify', [MerchantsController::class, 'verifyToken']);
+
+Route::get('credits/{tin}/get-merchant-by-tin', [MerchantsController::class, 'getMerchantByTinForCredits']);
