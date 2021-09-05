@@ -28,6 +28,11 @@ class MerchantRequestsSeeder extends Seeder
             'engaged_by_id' => 1,
             'engaged_at' => '2021-05-14 10:00:00',
             'status_updated_at' => null,
+            'categories' => json_encode(array("Бытовая", "Мебель")),
+            'stores_count' => 2,
+            'merchant_users_count' => 2,
+            'approximate_sales' => 2000,
+            'token' => 'some_token',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
@@ -44,6 +49,11 @@ class MerchantRequestsSeeder extends Seeder
             'engaged_by_id' => 2,
             'engaged_at' => '2021-05-14 11:00:01',
             'status_updated_at' => '2021-05-14 11:00:01',
+            'categories' => json_encode(array("Техника", "Мебель")),
+            'stores_count' => 1,
+            'merchant_users_count' => 2,
+            'approximate_sales' => 3000,
+            'token' => 'some_token',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
@@ -60,6 +70,11 @@ class MerchantRequestsSeeder extends Seeder
             'engaged_by_id' => 3,
             'engaged_at' => '2021-05-14 12:00:02',
             'status_updated_at' => '2021-05-14 12:00:02',
+            'categories' => json_encode(array("Бытовая техника")),
+            'stores_count' => 3,
+            'merchant_users_count' => 2,
+            'approximate_sales' => 4000,
+            'token' => 'some_token',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
@@ -76,6 +91,11 @@ class MerchantRequestsSeeder extends Seeder
             'engaged_by_id' => 4,
             'engaged_at' => '2021-05-14 13:00:03',
             'status_updated_at' => '2021-05-14 13:00:03',
+            'categories' => json_encode(array("Техника")),
+            'stores_count' => 2,
+            'merchant_users_count' => 3,
+            'approximate_sales' => 5000,
+            'token' => 'some_token',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
