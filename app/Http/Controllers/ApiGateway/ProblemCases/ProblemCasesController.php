@@ -9,6 +9,7 @@ use App\Modules\Merchants\Models\ProblemCase;
 use App\Modules\Merchants\Models\ProblemCaseTag;
 use App\Services\Core\ServiceCore;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ProblemCasesController extends Controller
 {
@@ -47,7 +48,7 @@ class ProblemCasesController extends Controller
             $data = ServiceCore::request('GET', 'applications/' . $request->input('application_id'), null);
             $problemCase->application_id = $request->input('application_id');
         }
-
+        Log::info(json_encode($data));
         $problemCase->merchant_id = $data->merchant_id;
         $problemCase->store_id = $data->store_id;
         $problemCase->client_id = $data->client->id;
