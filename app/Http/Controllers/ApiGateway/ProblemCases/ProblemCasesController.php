@@ -48,7 +48,7 @@ class ProblemCasesController extends Controller
             $data = ServiceCore::request('GET', 'applications/' . $request->input('application_id'), null);
             $problemCase->application_id = $request->input('application_id');
         }
-        Log::info('tut response ot kora : ' . json_encode($data));
+
         $problemCase->merchant_id = $data->merchant_id;
         $problemCase->store_id = $data->store_id;
         $problemCase->client_id = $data->client->id;
