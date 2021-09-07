@@ -159,8 +159,8 @@ class SetResponsiblePerson extends Command
 
             $store = Store::query()->find($data['id']);
             if(!$store) continue;
-            if(is_null($data['name']) and is_null($data['phone'])) continue;
-            $store->responsible_person = $data['name'];
+            if(is_null($data['imya']) and is_null($data['phone'])) continue;
+            $store->responsible_person = $data['imya'];
             $store->responsible_person_phone = $res;
             $store->save();
         }
