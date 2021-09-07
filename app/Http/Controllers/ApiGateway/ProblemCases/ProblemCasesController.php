@@ -9,6 +9,7 @@ use App\Modules\Merchants\Models\ProblemCase;
 use App\Modules\Merchants\Models\ProblemCaseTag;
 use App\Services\Core\ServiceCore;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ProblemCasesController extends Controller
 {

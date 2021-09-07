@@ -16,6 +16,7 @@ class MerchantsController extends ApiBaseController
     public function index(Request $request)
     {
         $query = Merchant::query()
+            ->with('merchant_info')
             ->filterRequest($request)
             ->latest();
 

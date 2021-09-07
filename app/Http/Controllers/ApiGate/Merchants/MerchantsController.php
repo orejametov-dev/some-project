@@ -5,6 +5,7 @@ namespace App\Http\Controllers\ApiGate\Merchants;
 
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ApiGate\Merchants\MerchantDetailForCredits;
 use App\Http\Resources\ApiGate\Merchants\MerchantsResource;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Store;
@@ -13,32 +14,14 @@ use Illuminate\Support\Facades\Cache;
 
 class MerchantsController extends Controller
 {
-    public function index(Request $request)
+    public function getMerchantByTinForCredits($tin)
     {
-        $this->validate($request, [
-            'relations' => 'nullable|array'
-        ]);
+        $merchant = Merchant::with('merchant_info')
+            ->whereHas('merchant_info', function ($query) use ($tin) {
+                $query->where('tin', $tin)->orderByDesc('contract_date');
+            })->firstOrFail();
 
-        $merchants = Merchant::query()->filterRequest($request);
-
-        if($request->query('relations')){
-            $merchants->with($request->query('relations'));
-        }
-
-        if ($request->query('object') == 'true') {
-            return $merchants->first();
-        }
-
-        if ($request->has('paginate') && $request->query('paginate') == false) {
-            return Cache::remember($request->fullUrl(), 600, function () use ($merchants) {
-                return $merchants->get();
-            });
-        }
-
-        return Cache::remember($request->fullUrl(), 180, function () use ($merchants, $request) {
-            return $merchants->paginate($request->query('per_page'));
-        });
-
+        return new MerchantDetailForCredits($merchant);
     }
 
     public function show($id)
