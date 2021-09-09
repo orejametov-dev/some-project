@@ -37,6 +37,5 @@ class SendHook implements ShouldQueue
     public function handle(HooksMicroService $hooksMicroService)
     {
         $hooksMicroService->store($this->hookData);
-        Log::info('time:' . now());
     }
 }
