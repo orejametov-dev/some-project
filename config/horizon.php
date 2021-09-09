@@ -167,7 +167,7 @@ return [
     'defaults' => [
         'supervisor-1' => [
             'connection' => 'redis',
-            'queue' => ['service-hook'],
+            'queue' => ['service-hook', 'service-auth'],
             'balance' => 'auto',
             'maxProcesses' => 1,
             'memory' => 128,
