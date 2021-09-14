@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\ApiMerchantGateway\Merchants;
 
 
+use App\Exceptions\BusinessException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiMerchantsGateway\Merchants\MerchantRequestStoreDocuments;
 use App\Http\Requests\ApiMerchantsGateway\Merchants\MerchantRequestStoreMain;
@@ -11,6 +12,7 @@ use App\Http\Requests\ApiMerchantsGateway\Merchants\MerchantRequestUploadFile;
 use App\Modules\Merchants\Models\File;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Request as MerchantRequest;
+use App\Modules\Merchants\Services\RequestStatus;
 use App\Services\DistrictService;
 use App\Services\RegionService;
 use Illuminate\Http\Request;
@@ -42,6 +44,13 @@ class MerchantRequestsController extends Controller
 
     public function storeMain(MerchantRequestStoreMain $request)
     {
+//        user_phone
+        $merchant_request = MerchantRequest::where('user_phone', $request->user_phone)->first();
+
+        if($merchant_request) {
+            throw new BusinessException('Запрос с таким номером телефона уже существует, статус запроса '
+                . RequestStatus::getOneById((int) $merchant_request->status_id)->name);
+        }
         $validatedRequest = $request->validated();
         if($merchant_request = MerchantRequest::onlyByToken($request->input('token'))->first()){
             $merchant_request->fill($validatedRequest);
