@@ -17,7 +17,6 @@ class RemoveModulesFromMerchantsTable extends Migration
             $table->dropColumn('has_manager');
             $table->dropColumn('has_applications');
             $table->dropColumn('has_deliveries');
-            $table->dropColumn('has_orders');
         });
     }
 
