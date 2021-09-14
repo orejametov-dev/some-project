@@ -2,8 +2,7 @@
 
 namespace App\Http\Resources\ApiOnlineGateway;
 
-use App\Modules\Merchants\Models\Merchant;
-use App\Modules\Merchants\Models\Store;
+use App\Modules\Merchants\Models\Condition;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -17,11 +16,11 @@ class ConditionsResource extends JsonResource
      */
     public function toArray($request)
     {
-        /** @var Store|StoresResource $this */
+        /** @var Condition|ConditionsResource $this */
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'address' => $this->address,
+            'duration' => $this->duration,
+            'commission' => $this->commission
         ];
     }
 }
