@@ -15,15 +15,26 @@ class MerchantsController extends Controller
     public function index(Request $request)
     {
         $query = Merchant::query()
+            ->active()
             ->filterRequest($request);
 
         return MerchantResource::collection($query->paginate($request->query('per_page')));
+    }
+
+    public function show($id, Request $request)
+    {
+        $merchant = Merchant::query()
+            ->active()
+            ->filterRequest($request)
+            ->findOrFail($id);
+
+        return new MerchantResource($merchant);
     }
 
     public function tags(Request $request)
     {
         $query = Tag::query();
 
-        return MerchantTagResource::collection($query->paginate($request->query('per_page')));
+        return MerchantTagResource::collection($query->paginate($request->query('per_page') ?? 15));
     }
 }
