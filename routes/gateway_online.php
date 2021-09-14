@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApiOnlineGateway\Conditions\ConditionsController;
 use App\Http\Controllers\ApiOnlineGateway\Merchants\MerchantsController as OnlineMerchantsController;
 use App\Http\Controllers\ApiOnlineGateway\Stores\StoresController;
 use Illuminate\Support\Facades\Route;
@@ -33,7 +34,7 @@ Route::prefix('public')
 
         Route::prefix('conditions')
             ->group(function () {
-                Route::get('/', [StoresController::class, 'index'])
+                Route::get('/', [ConditionsController::class, 'index'])
                     ->withoutMiddleware(['gateway-auth-user']);
             });
     });
