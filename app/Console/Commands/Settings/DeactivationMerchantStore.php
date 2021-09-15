@@ -6,7 +6,7 @@ use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Store;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use App\HttpServices\Core\CoreService2;
+use App\HttpServices\Core\CoreService;
 
 class DeactivationMerchantStore extends Command
 {
@@ -39,7 +39,7 @@ class DeactivationMerchantStore extends Command
      *
      * @return int
      */
-    public function handle(CoreService2 $coreService)
+    public function handle(CoreService $coreService)
     {
         $from_date = Carbon::now()->subWeeks(2)->format('Y-m-d');;
         $to_date = Carbon::now()->format('Y-m-d');

@@ -4,7 +4,7 @@ namespace App\HttpServices\Core;
 
 use Illuminate\Support\Facades\Http;
 
-class CoreService2
+class CoreService
 {
     public function getMerchantApplicationsAndClientsCountByRange($merchant_id, $from_date, $to_date)
     {
