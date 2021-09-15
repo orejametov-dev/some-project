@@ -15,6 +15,7 @@ class MerchantsController extends Controller
     public function index(Request $request)
     {
         $query = Merchant::query()
+            ->with('tags')
             ->active()
             ->filterRequest($request);
 
@@ -24,6 +25,7 @@ class MerchantsController extends Controller
     public function show($id, Request $request)
     {
         $merchant = Merchant::query()
+            ->with('tags')
             ->active()
             ->filterRequest($request)
             ->findOrFail($id);
