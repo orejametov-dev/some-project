@@ -46,7 +46,7 @@ class DeactivationMerchantStore extends Command
         $to_date = Carbon::now()->format('Y-m-d');
 
         Merchant::where('active' , true)
-            ->chunkById(20, function ($merchants) use ($coreService, $from_date, $to_date) {
+            ->chunkById(100, function ($merchants) use ($coreService, $from_date, $to_date) {
                 foreach ($merchants as $merchant)
                 {
                     $result = $coreService->getMerchantApplicationsAndClientsCountByRange($merchant->id,$from_date, $to_date);
@@ -67,7 +67,7 @@ class DeactivationMerchantStore extends Command
         Store::whereHas('merchant', function($query) {
             $query->where('active', true);
         })->where('active' , true)
-            ->chunkById(20, function ($stores) use ($coreService, $from_date, $to_date) {
+            ->chunkById(100, function ($stores) use ($coreService, $from_date, $to_date) {
                 foreach ($stores as $store) {
                     $result = $coreService->getStoreApplicationsAndClientsCountByRange($store->id, $from_date, $to_date);
                     $resultData = $result['data'];
