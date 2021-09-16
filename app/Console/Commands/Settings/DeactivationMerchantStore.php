@@ -75,3 +75,17 @@ class DeactivationMerchantStore extends Command
             });
     }
 }
+
+
+//1.Туториал по many-to-many relation(store, index, remove)
+
+//2.Создать миграцию
+
+//a. php artisan make:migration make_nullable_some_columns_on_merchant_activities_table --table=merchant_activities
+//columns:created_by_id, created_by_name
+//b. php artisan make:migration make_nullable_some_columns_on_store_activities_table --table=store_activities
+
+//3.Добавить причину для деактивации, взять примерез из текущих контроллеров
+
+//ApiGateway//Merchants//MerchantsController@toggle
+//ApiGateway//Stores//StoresController@toggle
