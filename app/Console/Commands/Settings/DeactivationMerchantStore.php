@@ -8,6 +8,7 @@ use App\Modules\Merchants\Models\Store;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use App\HttpServices\Core\CoreService;
+use Illuminate\Support\Facades\Cache;
 
 class DeactivationMerchantStore extends Command
 {
@@ -59,6 +60,9 @@ class DeactivationMerchantStore extends Command
                         $merchant->activity_reasons()->attach(ActivityReason::MERCHANT_AUTO_DEACTIVATION_REASON_ID, [
                             'active' => $merchant->active,
                         ]);
+
+                        Cache::tags($merchant->id)->flush();
+                        Cache::tags('merchants')->flush();
                     }
                 }
             });
@@ -79,6 +83,10 @@ class DeactivationMerchantStore extends Command
                         $store->activity_reasons()->attach(ActivityReason::STORE_AUTO_DEACTIVATION_REASON_ID, [
                             'active' => $store->active,
                         ]);
+
+                        $merchant = $store->merchant;
+                        Cache::tags($merchant->id)->flush();
+                        Cache::tags('merchants')->flush();
                     }
                 }
             });
