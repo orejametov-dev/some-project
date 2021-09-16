@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\Settings;
 
+use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Store;
 use Carbon\Carbon;
@@ -54,6 +55,10 @@ class DeactivationMerchantStore extends Command
                     {
                         $merchant->active = false;
                         $merchant->save();
+
+                        $merchant->activity_reasons()->attach(ActivityReason::MERCHANT_AUTO_DEACTIVATION_REASON_ID, [
+                            'active' => $merchant->active,
+                        ]);
                     }
                 }
             });
@@ -66,26 +71,16 @@ class DeactivationMerchantStore extends Command
                 foreach ($stores as $store) {
                     $result = $coreService->getStoreApplicationsAndClientsCountByRange($store->id, $from_date, $to_date);
                     $resultData = $result['data'];
-                    if ($resultData['applications_count'] == 0 && $resultData['clients_count'] == 0) {
+                    if ($resultData['applications_count'] == 0 && $resultData['clients_count'] == 0)
+                    {
                         $store->active = false;
                         $store->save();
 
+                        $store->activity_reasons()->attach(ActivityReason::STORE_AUTO_DEACTIVATION_REASON_ID, [
+                            'active' => $store->active,
+                        ]);
                     }
                 }
             });
     }
 }
-
-
-//1.Туториал по many-to-many relation(store, index, remove)
-
-//2.Создать миграцию
-
-//a. php artisan make:migration make_nullable_some_columns_on_merchant_activities_table --table=merchant_activities
-//columns:created_by_id, created_by_name
-//b. php artisan make:migration make_nullable_some_columns_on_store_activities_table --table=store_activities
-
-//3.Добавить причину для деактивации, взять примерез из текущих контроллеров
-
-//ApiGateway//Merchants//MerchantsController@toggle
-//ApiGateway//Stores//StoresController@toggle
