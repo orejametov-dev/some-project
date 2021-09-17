@@ -137,11 +137,12 @@ class ProblemCasesController extends Controller
         return $problemCase;
     }
 
-    //написать роут для получение список проблем кейсов конкретного сотрудника
-    //getProblemCasesOfMerchantUser($user_id, Request $request) {
-    //   //created_by_id
-    //$problemCases->paginate($request->query('per_page') ?? 15);
-    //}
-    //api_gateway.php //problem-cases, //   GET problem-cases/{user_id}/consultant
+    public function getProblemCasesOfMerchantUser($user_id,Request $request)
+    {
+        $problemCases = ProblemCase::where('created_by_id', $user_id)
+            ->orderByDesc('created_at');
+
+        return $problemCases->paginate($request->query('per_page') ?? 15);
+    }
 
 }
