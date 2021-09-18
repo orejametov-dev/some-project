@@ -139,7 +139,9 @@ class ProblemCasesController extends Controller
 
     public function getProblemCasesOfMerchantUser($user_id,Request $request)
     {
-        $problemCases = ProblemCase::where('created_by_id', $user_id)
+        $problemCases = ProblemCase::query()->with('tags', function($query) {
+            $query->where('type_id', 2);
+        })->where('created_by_id', $user_id)
             ->orderByDesc('id');
 
         return $problemCases->paginate($request->query('per_page') ?? 15);
