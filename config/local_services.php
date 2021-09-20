@@ -33,4 +33,8 @@ return [
         'domain' => env('SERVICE_HOOK_DOMAIN'),
         'access_token' => env('SERVICE_HOOK_ACCESS_TOKEN')
     ],
+    'service_auth' => [
+        'domain' => env('SERVICE_AUTH_DOMAIN'),
+        'access_token' => env('SERVICE_AUTH_ACCESS_TOKEN')
+    ]
 ];

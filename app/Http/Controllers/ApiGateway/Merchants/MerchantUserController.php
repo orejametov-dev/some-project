@@ -7,8 +7,10 @@ namespace App\Http\Controllers\ApiGateway\Merchants;
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\MerchantUsers\StoreMerchantUsers;
+use App\HttpServices\Auth\AuthMicroService;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
+use App\Jobs\ToggleMerchantRoleOfUser;
 use App\Modules\Merchants\Models\MerchantUser;
 use App\Modules\Merchants\Models\Store;
 use App\Services\Core\ServiceCore;
@@ -87,6 +89,8 @@ class MerchantUserController extends ApiBaseController
             created_by_str: $this->user->name,
         ));
 
+        ToggleMerchantRoleOfUser::dispatch($merchant_user->user_id, AuthMicroService::ACTIVATE_MERCHANT_ROLE);
+
         Cache::tags('merchants')->forget('merchant_user_id_' . $merchant_user->user_id);
         Cache::tags($merchant->id)->flush();
 
@@ -120,6 +124,7 @@ class MerchantUserController extends ApiBaseController
         Cache::tags('merchants')->forget('merchant_user_id_' . $merchant_user->user_id);
         Cache::tags($merchant->id)->flush();
 
+        ToggleMerchantRoleOfUser::dispatch($merchant_user->user_id, AuthMicroService::DEACTIVATE_MERCHANT_ROLE);
 
         return response()->json(['message' => 'Сотрудник удален']);
     }
