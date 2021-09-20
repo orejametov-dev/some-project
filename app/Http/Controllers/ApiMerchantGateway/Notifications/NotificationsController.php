@@ -34,7 +34,7 @@ class NotificationsController extends ApiBaseController
 
     public function getCounter()
     {
-        $notifications = Cache::remember('fresh_notifications_by_store_' . $this->store_id, 5 * 60, function () {
+        $notifications = Cache::tags('notifications')->remember('fresh_notifications_by_store_' . $this->store_id, 5 * 60, function () {
             return Notification::query()
                 ->onlyByStore($this->store_id)
                 ->where('start_schedule', '<=', now())

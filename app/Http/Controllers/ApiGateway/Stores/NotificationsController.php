@@ -12,6 +12,7 @@ use App\Modules\Merchants\Models\Store;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class NotificationsController extends ApiBaseController
 {
@@ -115,6 +116,8 @@ class NotificationsController extends ApiBaseController
 
         $notification->save();
 
+        Cache::tags('notifications')->flush();
+
         return $notification;
     }
 
@@ -123,6 +126,7 @@ class NotificationsController extends ApiBaseController
         $notification = Notification::query()->findOrFail($id);
         $notification->stores()->detach();
         $notification->delete();
+        Cache::tags('notifications')->flush();
 
         return response()->json(['message' => 'Уведомление удалено успешно']);
     }
