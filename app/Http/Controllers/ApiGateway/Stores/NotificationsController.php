@@ -94,7 +94,7 @@ class NotificationsController extends ApiBaseController
             });
         }
 
-
+        Cache::tags('notification')->flush();
         return $notification;
     }
 
