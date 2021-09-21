@@ -61,7 +61,7 @@ class MerchantsController extends ApiBaseController
         ));
 
         Cache::tags($merchant->id)->flush();
-        Cache::tags('merchants')->flush();
+        Cache::tags('azo_merchants')->flush();
 
         $this->alifshopService->storeOrUpdateMerchant($merchant->fresh());
         return $merchant;
@@ -84,7 +84,7 @@ class MerchantsController extends ApiBaseController
         $merchant->old_token = $oldToken;
 
         Cache::tags($merchant->id)->flush();
-        Cache::tags('merchants')->flush();
+        Cache::tags('azo_merchants')->flush();
         $this->alifshopService->storeOrUpdateMerchant($merchant);
 
         return $merchant;
@@ -219,7 +219,7 @@ class MerchantsController extends ApiBaseController
         ]);
 
         Cache::tags($merchant->id)->flush();
-        Cache::tags('merchants')->flush();
+        Cache::tags('azo_merchants')->flush();
         return $merchant;
     }
 
