@@ -26,23 +26,23 @@ use Illuminate\Http\Request;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read Merchant $merchant
  * @property-read Store $store
- * @method static Builder|MerchantUser byMerchant($merchant_id)
- * @method static Builder|MerchantUser byStore($store_id)
- * @method static Builder|MerchantUser byUserId($user_id)
- * @method static Builder|MerchantUser filterRequest(Request $request)
- * @method static Builder|MerchantUser newModelQuery()
- * @method static Builder|MerchantUser newQuery()
- * @method static Builder|MerchantUser orderRequest(Request $request, string $default_order_str = 'id:desc')
- * @method static Builder|MerchantUser query()
+ * @method static Builder|AzoMerchantAccess byMerchant($merchant_id)
+ * @method static Builder|AzoMerchantAccess byStore($store_id)
+ * @method static Builder|AzoMerchantAccess byUserId($user_id)
+ * @method static Builder|AzoMerchantAccess filterRequest(Request $request)
+ * @method static Builder|AzoMerchantAccess newModelQuery()
+ * @method static Builder|AzoMerchantAccess newQuery()
+ * @method static Builder|AzoMerchantAccess orderRequest(Request $request, string $default_order_str = 'id:desc')
+ * @method static Builder|AzoMerchantAccess query()
  * @mixin Eloquent
  */
-class MerchantUser extends Model
+class AzoMerchantAccess extends Model
 {
     use HasFactory;
     use SortableByQueryParams;
     use SoftDeletes;
 
-    protected $table = 'merchant_users';
+    protected $table = 'azo_merchant_access';
     protected $fillable = [
         'user_name',
         'phone'
