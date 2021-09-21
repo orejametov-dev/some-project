@@ -8,7 +8,7 @@ use App\Http\Controllers\ApiMerchantGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\MerchantUsers\UpdateMerchantUsers;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
-use App\Modules\Merchants\Models\MerchantUser;
+use App\Modules\Merchants\Models\AzoMerchantAccess;
 use App\Services\Core\ServiceCore;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -17,7 +17,7 @@ class MerchantUsersController extends ApiBaseController
 {
     public function index(Request $request)
     {
-        $merchantUsersQuery = MerchantUser::query()
+        $merchantUsersQuery = AzoMerchantAccess::query()
             ->with(['merchant', 'store'])
             ->byMerchant($this->merchant_id)
             ->filterRequest($request)
@@ -28,7 +28,7 @@ class MerchantUsersController extends ApiBaseController
 
     public function show($id)
     {
-        $merchantUser = MerchantUser::query()
+        $merchantUser = AzoMerchantAccess::query()
             ->byMerchant($this->merchant_id)
             ->findOrFail($id);
 
@@ -41,19 +41,19 @@ class MerchantUsersController extends ApiBaseController
             'store_id' => 'required|integer'
         ]);
 
-        $merchant_user = MerchantUser::query()->findOrFail($id);
-        $merchant = $merchant_user->merchant;
-        $old_store = $merchant_user->store;
+        $azo_merchant_access = AzoMerchantAccess::query()->findOrFail($id);
+        $merchant = $azo_merchant_access->merchant;
+        $old_store = $azo_merchant_access->store;
         $store = $merchant->stores()->where(['id' => $request->input('store_id')])->firstOrFail();
 
-        $merchant_user->store()->associate($store);
+        $azo_merchant_access->store()->associate($store);
 
-        $merchant_user->save();
+        $azo_merchant_access->save();
 
         SendHook::dispatch(new HookData(
             service: 'merchants',
-            hookable_type: $merchant_user->getTable(),
-            hookable_id: $merchant_user->id,
+            hookable_type: $azo_merchant_access->getTable(),
+            hookable_id: $azo_merchant_access->id,
             created_from_str: 'MERCHANT',
             created_by_id: $this->user->id,
             body: 'Сотрудник обновлен',
@@ -65,10 +65,10 @@ class MerchantUsersController extends ApiBaseController
         ));
 
 
-        Cache::tags('merchants')->forget('merchant_user_id_' . $merchant_user->user_id);
+        Cache::tags('azo_merchants')->forget('azo_merchant_user_id_' . $azo_merchant_access->user_id);
         Cache::tags($merchant->id)->flush();
 
-        return $merchant_user;
+        return $azo_merchant_access;
     }
 
 }

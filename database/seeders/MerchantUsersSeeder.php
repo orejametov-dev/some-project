@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Modules\Merchants\Models\MerchantUser;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -78,8 +77,8 @@ class MerchantUsersSeeder extends Seeder
             ],
         ];
 
-        DB::table('merchant_users')->insert($merchant_1_users);
-        DB::table('merchant_users')->insert($merchant_2_users);
-        DB::table('merchant_users')->insert($merchant_3_users);
+        DB::table('azo_merchant_accesses')->insert($merchant_1_users);
+        DB::table('azo_merchant_accesses')->insert($merchant_2_users);
+        DB::table('azo_merchant_accesses')->insert($merchant_3_users);
     }
 }
