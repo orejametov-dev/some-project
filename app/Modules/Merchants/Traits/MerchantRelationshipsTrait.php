@@ -8,7 +8,7 @@ use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\File;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\MerchantInfo;
-use App\Modules\Merchants\Models\MerchantUser;
+use App\Modules\Merchants\Models\AzoMerchantAccess;
 use App\Modules\Merchants\Models\Notification;
 use App\Modules\Merchants\Models\Store;
 use App\Modules\Merchants\Models\Tag;
@@ -20,9 +20,9 @@ trait MerchantRelationshipsTrait
         return $this->hasMany(Store::class);
     }
 
-    public function merchant_users()
+    public function azo_merchant_accesses()
     {
-        return $this->hasMany(MerchantUser::class);
+        return $this->hasMany(AzoMerchantAccess::class);
     }
 
     public function application_conditions()
