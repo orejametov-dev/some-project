@@ -60,7 +60,7 @@ Route::prefix('merchants/problem-cases')
         Route::match(['put', 'patch'], '/{id}', [\App\Http\Controllers\ApiGateway\ProblemCases\ProblemCasesController::class, 'update']);
         Route::match(['put', 'patch'], '/{id}/attach-tags', [\App\Http\Controllers\ApiGateway\ProblemCases\ProblemCasesController::class, 'attachTags']);
         Route::match(['put', 'patch'], '/{id}/set-status', [\App\Http\Controllers\ApiGateway\ProblemCases\ProblemCasesController::class, 'setStatus']);
-
+        Route::get('/{user_id}/consultant', [\App\Http\Controllers\ApiGateway\ProblemCases\ProblemCasesController::class, 'getProblemCasesOfMerchantUser']);
     });
 
 Route::prefix('merchants/additional-agreements')
