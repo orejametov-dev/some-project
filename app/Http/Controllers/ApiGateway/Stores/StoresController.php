@@ -57,7 +57,7 @@ class StoresController extends ApiBaseController
         $store = $merchant->stores()->create(array_merge($request->all(), ['is_main' => true]));
 
         Cache::tags($merchant->id)->flush();
-        Cache::tags('merchants')->flush();
+        Cache::tags('azo_merchants')->flush();
 
         return $store;
     }
@@ -70,7 +70,7 @@ class StoresController extends ApiBaseController
         $store->save();
 
         Cache::tags($store->merchant_id)->flush();
-        Cache::tags('merchants')->flush();
+        Cache::tags('azo_merchants')->flush();
 
         return $store;
     }
@@ -86,7 +86,7 @@ class StoresController extends ApiBaseController
         });
 
         Cache::tags($store->merchant_id)->flush();
-        Cache::tags('merchants')->flush();
+        Cache::tags('azo_merchants')->flush();
         return response()->json(['message' => 'Успешно удалено']);
     }
 
@@ -110,7 +110,7 @@ class StoresController extends ApiBaseController
         ]);
 
         Cache::tags($store->merchant_id)->flush();
-        Cache::tags('merchants')->flush();
+        Cache::tags('azo_merchants')->flush();
 
         return $store;
     }
