@@ -40,7 +40,7 @@ use function Clue\StreamFilter\fun;
  * @property-read int|null $files_count
  * @property-read mixed $logo_path
  * @property-read MerchantInfo|null $merchant_info
- * @property-read Collection|MerchantUser[] $merchant_users
+ * @property-read Collection|AzoMerchantAccess[] $azo_merchant_accesses
  * @property-read int|null $merchant_users_count
  * @property-read Collection|Store[] $stores
  * @property-read int|null $stores_count
