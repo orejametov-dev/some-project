@@ -24,6 +24,16 @@ class CoreService
         ])->json();
     }
 
+    public static function getApplicationDataByContractNumber($credit_number)
+    {
+        return static::http()->get( "applications/$credit_number")->throw()->json();
+    }
+
+    public static function  getApplicationDataByApplicationId($application_id)
+    {
+        return static::http()->get("applications/$application_id")->throw()->json();
+    }
+
     protected static function http()
     {
         return Http::baseUrl(config('local_services.service_core.domain') . '/')
