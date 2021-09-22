@@ -5,6 +5,9 @@ namespace App\Http\Controllers\ApiGateway\Merchants;
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Resources\ApiPrmGateway\Merchants\MerchantRequestsResource;
+use App\Modules\Companies\DTO\CompanyDTO;
+use App\Modules\Companies\Models\Company;
+use App\Modules\Companies\Services\CompanyService;
 use App\Modules\Merchants\DTO\Merchants\MerchantInfoDTO;
 use App\Modules\Merchants\DTO\Merchants\MerchantsDTO;
 use App\Modules\Merchants\Models\CancelReason;
@@ -13,6 +16,7 @@ use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Request as MerchantRequest;
 use App\Modules\Merchants\Models\Tag;
 use App\Modules\Merchants\Services\Merchants\MerchantsService;
+use App\Services\Alifshop\AlifshopService;
 use App\Services\Core\ServiceCore;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -138,12 +142,17 @@ class MerchantRequestsController extends ApiBaseController
         return response()->json(['message' => 'Не возможно менять статус']);
     }
 
-    public function allow($id, MerchantsService $merchantsService)
+    public function allow($id, MerchantsService $merchantsService, CompanyService $companyService, AlifshopService $alifshopService)
     {
         $merchant_request = MerchantRequest::findOrFail($id);
 
         if (!$merchant_request->isInProcess()) {
             return response()->json(['message' => 'Статус заявки должен быть "На переговорах"'], 400);
+        }
+
+        $company_name_exists = Company::query()->where('name', $merchant_request->name)->exists();
+        if ($company_name_exists) {
+            return response()->json(['message' => 'Указанное имя компании уже занято'], 400);
         }
 
         $merchant_name_exists = Merchant::query()->where('name', $merchant_request->name)->exists();
@@ -152,12 +161,18 @@ class MerchantRequestsController extends ApiBaseController
         }
 
 
-        DB::transaction(function () use ($merchantsService, $merchant_request) {
+        $merchant = DB::transaction(function () use ($merchantsService, $merchant_request, $companyService) {
+            $company = $companyService->create(new CompanyDTO(
+                name: $merchant_request->name,
+                legal_name: $merchant_request->legal_name
+            ));
+
             $merchant = $merchantsService->create(new MerchantsDTO(
-                $merchant_request->name,
-                $merchant_request->legal_name,
-                $merchant_request->information,
-                $merchant_request->engaged_by_id
+                name: $merchant_request->name,
+                legal_name: $merchant_request->legal_name,
+                information: $merchant_request->information,
+                maintainer_id: $merchant_request->engaged_by_id,
+                company_id: $company->id
             ));
 
             $merchant_request->files()->update(['merchant_id' => $merchant->id]);
@@ -166,7 +181,11 @@ class MerchantRequestsController extends ApiBaseController
             $merchant->tags()->attach($ids);
             $merchant_request->setStatusAllowed();
             $merchant_request->save();
+
+            return $merchant;
         });
+
+        $alifshopService->storeOrUpdateMerchant($merchant->fresh());
 
         return $merchant_request;
     }
