@@ -2,14 +2,13 @@
 
 namespace App\Modules\Merchants\Traits;
 
+use App\Modules\Companies\Models\Company;
 use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\AdditionalAgreement;
+use App\Modules\Merchants\Models\AzoMerchantAccess;
 use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\File;
-use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\MerchantInfo;
-use App\Modules\Merchants\Models\AzoMerchantAccess;
-use App\Modules\Merchants\Models\Notification;
 use App\Modules\Merchants\Models\Store;
 use App\Modules\Merchants\Models\Tag;
 
@@ -39,6 +38,7 @@ trait MerchantRelationshipsTrait
     {
         return $this->belongsToMany(Tag::class, 'merchant_tag', 'merchant_id', 'tag_id');
     }
+
     public function files()
     {
         return $this->hasMany(File::class, 'merchant_id', 'id');
@@ -57,5 +57,10 @@ trait MerchantRelationshipsTrait
     public function activity_reasons()
     {
         return $this->belongsToMany(ActivityReason::class, 'merchant_activities')->withTimestamps();
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
     }
 }
