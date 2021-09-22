@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\OneOff\Companies;
 
-use App\Modules\Companies\Model\Company;
+use App\Modules\Companies\Models\Company;
 use App\Modules\Merchants\Models\Merchant;
 use Illuminate\Console\Command;
 

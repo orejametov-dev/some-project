@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands\OneOff\Companies;
 
-use App\Modules\Companies\Model\Company;
-use App\Modules\Companies\Model\CompanyUser;
+use App\Modules\Companies\Models\Company;
+use App\Modules\Companies\Models\CompanyUser;
 use Illuminate\Console\Command;
 
 class MigrateMerchantUsersToCompanyUsers extends Command
