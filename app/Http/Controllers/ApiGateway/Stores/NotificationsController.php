@@ -12,6 +12,7 @@ use App\Modules\Merchants\Models\Store;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class NotificationsController extends ApiBaseController
 {
@@ -93,7 +94,40 @@ class NotificationsController extends ApiBaseController
             });
         }
 
+        Cache::tags('notifications')->flush();
+        return $notification;
+    }
+
+    public function update($id, Request $request)
+    {
+        $validatedData = $this->validate($request, [
+            'title_uz' => 'required|string',
+            'title_ru' => 'required|string',
+            'body_uz' => 'required|string',
+            'body_ru' => 'required|string',
+            'start_schedule' => 'nullable|date_format:Y-m-d H:i',
+            'end_schedule' => 'nullable|date_format:Y-m-d H:i',
+        ]);
+
+        $notification = Notification::query()->findOrFail($id);
+        $notification->fill($validatedData);
+        $notification->start_schedule = Carbon::parse($request->input('start_schedule') ?? now())->format('Y-m-d H:i:s');
+        $notification->end_schedule = Carbon::parse($request->input('end_schedule') ?? now()->addDay())->format('Y-m-d H:i:s');
+
+        $notification->save();
+
+        Cache::tags('notifications')->flush();
 
         return $notification;
+    }
+
+    public function remove($id)
+    {
+        $notification = Notification::query()->findOrFail($id);
+        $notification->stores()->detach();
+        $notification->delete();
+        Cache::tags('notifications')->flush();
+
+        return response()->json(['message' => 'Уведомление удалено успешно']);
     }
 }
