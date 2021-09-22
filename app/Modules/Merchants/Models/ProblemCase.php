@@ -95,7 +95,9 @@ class ProblemCase extends Model implements SimpleStateMachinable
         'credit_number',
         'application_id',
         'client_id',
-        'application_items'
+        'application_items',
+        'application_created_at',
+        'credit_contract_date'
     ];
 
     protected $casts = [
