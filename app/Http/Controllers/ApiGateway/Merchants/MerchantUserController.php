@@ -11,6 +11,7 @@ use App\HttpServices\Auth\AuthMicroService;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Jobs\ToggleMerchantRoleOfUser;
+use App\Modules\Companies\Models\CompanyUser;
 use App\Modules\Merchants\Models\AzoMerchantAccess;
 use App\Modules\Merchants\Models\Store;
 use App\Services\Core\ServiceCore;
@@ -46,6 +47,12 @@ class MerchantUserController extends ApiBaseController
         if (!$user)
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
 
+        $store = Store::query()->findOrFail($request->input('store_id'));
+
+        $company_user = CompanyUser::query()->where('user_id', $user->id)->firstOrNew();
+        $company_user->user_id = $user->id;
+        $company_user->company_id = $store->merchant->company->id;
+        $company_user->save();
 
         $azo_merchant_access_exists = AzoMerchantAccess::query()
             ->where(['user_id' => $request->input('user_id')])
@@ -57,8 +64,6 @@ class MerchantUserController extends ApiBaseController
                 'message' => 'Пользователь является сотрудником другого мерчанта.'
             ], 400);
         }
-
-        $store = Store::query()->findOrFail($request->input('store_id'));
 
         $merchant = $store->merchant;
         if ($azo_merchant_access = AzoMerchantAccess::withTrashed()->where('user_id', $user->id)->first()) {
