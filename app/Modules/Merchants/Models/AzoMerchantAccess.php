@@ -3,7 +3,7 @@
 namespace App\Modules\Merchants\Models;
 
 
-use App\Modules\Merchants\Services\MerchantStatus;
+use App\Modules\Companies\Models\CompanyUser;
 use App\Traits\SortableByQueryParams;
 use Carbon\Carbon;
 use Eloquent;
@@ -56,6 +56,11 @@ class AzoMerchantAccess extends Model
     public function merchant()
     {
         return $this->belongsTo(Merchant::class);
+    }
+
+    public function company_user()
+    {
+        return $this->belongsTo(CompanyUser::class);
     }
 
     public function scopeFilterRequest(Builder $query, Request $request)
