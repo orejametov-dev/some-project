@@ -41,7 +41,7 @@ class MigrateMerchantUsersToCompanyUsers extends Command
     {
         Company::query()->chunkById(100, function ($companies) {
             foreach ($companies as $company) {
-                $azo_merchant_accesses = $company->merchant->azo_merchant_access()->get();
+                $azo_merchant_accesses = $company->merchant->azo_merchant_accesses()->get();
                 foreach ($azo_merchant_accesses as $azo_merchant_access) {
                     $company_user = new CompanyUser();
                     $company_user->user_id = $azo_merchant_access->user_id;
