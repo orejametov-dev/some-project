@@ -79,8 +79,8 @@ class ProblemCasesController extends ApiBaseController
             hookable_id: $problemCase->id,
             created_from_str: 'PRM',
             created_by_id: $this->user->id,
-            body: 'Создан проблемный кейс',
-            keyword: ProblemCase::$statuses[$problemCase->setStatus()],
+            body: 'Создан проблемный кейс co статусом',
+            keyword: ProblemCase::$statuses[$problemCase->status_id]['name'],
             action: 'create',
             class: 'info',
             action_at: null,
@@ -112,6 +112,20 @@ class ProblemCasesController extends ApiBaseController
         $problemCase->deadline = $request->input('deadline');
 
         $problemCase->save();
+
+        SendHook::dispatch(new HookData(
+            service: 'merchants',
+            hookable_type: $problemCase->getTable(),
+            hookable_id: $problemCase->id,
+            created_from_str: 'PRM',
+            created_by_id: $this->user->id,
+            body: 'Обновлен проблемный кейс со статусом',
+            keyword: ProblemCase::$statuses[$problemCase->status_id]['name'],
+            action: 'update',
+            class: 'info',
+            action_at: null,
+            created_by_str: $this->user->name,
+        ));
 
         return $problemCase;
     }
@@ -149,6 +163,20 @@ class ProblemCasesController extends ApiBaseController
         $problemCase = ProblemCase::findOrFail($id);
         $problemCase->setStatus($request->input('status_id'));
         $problemCase->save();
+
+        SendHook::dispatch(new HookData(
+            service: 'merchants',
+            hookable_type: $problemCase->getTable(),
+            hookable_id: $problemCase->id,
+            created_from_str: 'PRM',
+            created_by_id: $this->user->id,
+            body: 'Обновлен на статус',
+            keyword: ProblemCase::$statuses[$problemCase->status_id]['name'],
+            action: 'update',
+            class: 'info',
+            action_at: null,
+            created_by_str: $this->user->name,
+        ));
 
         return $problemCase;
     }
