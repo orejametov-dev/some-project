@@ -27,7 +27,8 @@ class AddNewApplicationCreatedAtAndCreditContractDateColumnsToProblemCasesTable 
     public function down()
     {
         Schema::table('problem_cases', function (Blueprint $table) {
-            //
+            $table->dropColumn('application_created_at');
+            $table->dropColumn('credit_contract_date');
         });
     }
 }
