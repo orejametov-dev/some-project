@@ -24,9 +24,9 @@ class CoreService
         ])->json();
     }
 
-    public static function getApplicationDataByContractNumber($credit_number)
+    public static function getApplicationDataByContractNumber($contract_number)
     {
-        return static::http()->get( "applications/$credit_number")->throw()->json();
+        return static::http()->get( "applications/$contract_number")->throw()->json();
     }
 
     public static function  getApplicationDataByApplicationId($application_id)
