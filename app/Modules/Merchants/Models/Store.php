@@ -89,6 +89,10 @@ class Store extends Model
         if ($searchIndex) {
             $query->where('name', 'like', '%' . $searchIndex . '%');
         }
+
+        if($request->query('region')) {
+            $query->where('region', $request->query('region'));
+        }
     }
 
     public function scopeMain($query)
@@ -104,5 +108,10 @@ class Store extends Model
     public function scopeByMerchant(Builder $query, $merchant_id)
     {
         $query->where('merchant_id', $merchant_id);
+    }
+
+    public function scopeActive(Builder $query)
+    {
+        $query->where('active', true);
     }
 }
