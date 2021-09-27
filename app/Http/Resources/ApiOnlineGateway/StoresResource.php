@@ -3,10 +3,11 @@
 namespace App\Http\Resources\ApiOnlineGateway;
 
 use App\Modules\Merchants\Models\Merchant;
+use App\Modules\Merchants\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class MerchantResource extends JsonResource
+class StoresResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,13 +17,11 @@ class MerchantResource extends JsonResource
      */
     public function toArray($request)
     {
-        /** @var Merchant|MerchantResource $this */
+        /** @var Store|StoresResource $this */
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'tags' => $this->whenLoaded('tags'),
-            'information' => $this->information,
-            'logo_path' => $this->logo_path
+            'address' => $this->address,
         ];
     }
 }
