@@ -28,7 +28,8 @@ class StoreApplicationConditions extends FormRequest
             'duration' => 'required|numeric|between:0,15',
             'commission' => 'required|integer|between:0,100',
             'special_offer' => 'nullable|string',
-            'discount'  => 'required|integer|between:0,100'
+            'discount'  => 'required|integer|between:0,100',
+            'post_merchant' => 'required|boolean'
         ];
     }
 }
