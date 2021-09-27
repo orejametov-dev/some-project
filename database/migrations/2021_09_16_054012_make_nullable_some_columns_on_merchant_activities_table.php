@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class RemoveModulesFromMerchantsTable extends Migration
+class MakeNullableSomeColumnsOnMerchantActivitiesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,9 @@ class RemoveModulesFromMerchantsTable extends Migration
      */
     public function up()
     {
-        Schema::table('merchants', function (Blueprint $table) {
-            $table->dropColumn('has_manager');
-            $table->dropColumn('has_applications');
-            $table->dropColumn('has_deliveries');
+        Schema::table('merchant_activities', function (Blueprint $table) {
+            $table->unsignedBigInteger('created_by_id')->nullable()->change();
+            $table->string('created_by_name')->nullable()->change();
         });
     }
 
@@ -27,7 +26,7 @@ class RemoveModulesFromMerchantsTable extends Migration
      */
     public function down()
     {
-        Schema::table('merchants', function (Blueprint $table) {
+        Schema::table('merchant_activities', function (Blueprint $table) {
             //
         });
     }
