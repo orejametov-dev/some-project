@@ -7,6 +7,7 @@ use App\Modules\Core\Models\WebService;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
+use Illuminate\Support\Facades\Log;
 use Psr\Http\Message\ResponseInterface;
 
 class ServiceCore
@@ -39,6 +40,7 @@ class ServiceCore
                 ],
                 $key => $params
             ]);
+            Log::info($response->getBody()->getContents());
             if (!$should_return_response) {
                 return self::parseResponse($response);
             } else {
