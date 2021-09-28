@@ -33,6 +33,7 @@ class ServiceCore
         $client = self::createRequest();
         $key = $method == 'GET' ? 'query' : 'json';
         try {
+            Log::info(json_encode($client));
             $response = $client->request($method, $route, [
                 'headers' => [
                     'Service-Token' => $token,
@@ -40,7 +41,6 @@ class ServiceCore
                 ],
                 $key => $params
             ]);
-            Log::info($response->getBody()->getContents());
             if (!$should_return_response) {
                 return self::parseResponse($response);
             } else {
