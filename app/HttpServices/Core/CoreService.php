@@ -29,7 +29,7 @@ class CoreService
         return Http::baseUrl(config('local_services.service_core.domain') . '/')
             ->withHeaders([
                 'Accept' => 'application/json',
-                'Access-Token' => config('local_service.service_core.service_token'),
+                'Access-Token' => config('local_services.service_core.service_token'),
                 'Content-Type' => 'application/json'
             ]);
     }
