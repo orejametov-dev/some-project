@@ -35,6 +35,7 @@ class ServiceCore
             $response = $client->request($method, $route, [
                 'headers' => [
                     'Service-Token' => $token,
+                    'Access-Token' => config('local_service.service_core.service_token'),
                 ],
                 $key => $params
             ]);

@@ -8,7 +8,7 @@ class CoreService
 {
     public function getMerchantApplicationsAndClientsCountByRange($merchant_id, $from_date, $to_date)
     {
-        return static::http()->get('merchant-activity' , [
+        return static::http()->get('merchant-activity', [
             'from_date' => $from_date,
             'to_date' => $to_date,
             'merchant_id' => $merchant_id,
@@ -17,7 +17,7 @@ class CoreService
 
     public function getStoreApplicationsAndClientsCountByRange($store_id, $from_date, $to_date)
     {
-        return static::http()->get('merchant-activity' , [
+        return static::http()->get('merchant-activity', [
             'from_date' => $from_date,
             'to_date' => $to_date,
             'store_id' => $store_id,
