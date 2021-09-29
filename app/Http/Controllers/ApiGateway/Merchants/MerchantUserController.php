@@ -8,7 +8,6 @@ use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\MerchantUsers\StoreMerchantUsers;
 use App\HttpServices\Auth\AuthMicroService;
-use App\HttpServices\Core\CoreService;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Jobs\ToggleMerchantRoleOfUser;
@@ -42,7 +41,7 @@ class MerchantUserController extends ApiBaseController
 
     public function store(StoreMerchantUsers $request)
     {
-        $user = CoreService::getStoreUserId($request->input('user_id'));
+        $user = AuthMicroService::getUserById($request->input('user_id'));
 
         if (!$user)
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
