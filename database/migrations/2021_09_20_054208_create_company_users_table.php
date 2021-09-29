@@ -20,6 +20,9 @@ class CreateCompanyUsersTable extends Migration
             $table->unsignedBigInteger('company_id');
             $table->foreign('company_id')->references('id')->on('companies');
 
+            $table->string('phone');
+            $table->string('full_name');
+
             $table->boolean('owner')->default(false);
             $table->timestamps();
         });
