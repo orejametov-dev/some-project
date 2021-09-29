@@ -7,6 +7,7 @@ use App\Modules\Core\Models\WebService;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
+use Illuminate\Support\Facades\Log;
 use Psr\Http\Message\ResponseInterface;
 
 class ServiceCore
@@ -35,6 +36,7 @@ class ServiceCore
             $response = $client->request($method, $route, [
                 'headers' => [
                     'Service-Token' => $token,
+                    'Access-Token' => config('local_services.service_core.service_token'),
                 ],
                 $key => $params
             ]);
