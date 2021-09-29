@@ -5,7 +5,7 @@ namespace App\Http\Controllers\ApiGateway\Merchants;
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Files\StoreFileRequest;
-use App\HttpServices\Core\CoreService;
+use App\HttpServices\Auth\AuthMicroService;
 use App\HttpServices\Telegram\TelegramService;
 use App\Modules\Merchants\DTO\Merchants\MerchantsDTO;
 use App\Modules\Merchants\Models\ActivityReason;
@@ -129,7 +129,7 @@ class MerchantsController extends ApiBaseController
             'maintainer_id' => 'required|integer'
         ]);
 
-        $user = CoreService::getMaintainerId($request->input('maintainer_id'));
+        $user = AuthMicroService::getUserById($request->input('maintainer_id'));
 
         if (!$user)
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
