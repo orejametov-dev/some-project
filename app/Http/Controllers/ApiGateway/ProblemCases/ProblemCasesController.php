@@ -113,20 +113,6 @@ class ProblemCasesController extends ApiBaseController
 
         $problemCase->save();
 
-        SendHook::dispatch(new HookData(
-            service: 'merchants',
-            hookable_type: $problemCase->getTable(),
-            hookable_id: $problemCase->id,
-            created_from_str: 'PRM',
-            created_by_id: $this->user->id,
-            body: 'Обновлен проблемный кейс',
-            keyword: ProblemCase::$statuses[$problemCase->status_id]['name'],
-            action: 'update',
-            class: 'info',
-            action_at: null,
-            created_by_str: $this->user->name,
-        ));
-
         return $problemCase;
     }
 
