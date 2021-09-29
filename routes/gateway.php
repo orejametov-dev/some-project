@@ -5,6 +5,10 @@ use App\Http\Controllers\ApiGateway\Merchants\MerchantsController;
 use Illuminate\Support\Facades\Route;
 
 
+//Companies
+
+
+//Azo-Merchants
 Route::prefix('extra-services')->group(function () {
     Route::get('merchants', [ExtraMerchantsController::class, 'index']);
     Route::get('merchants/{merchant_id}/store', [ExtraMerchantsController::class, 'merchantStoreInfo']);
@@ -26,12 +30,12 @@ Route::prefix('merchants/requests')
 
 Route::prefix('merchants/users')
     ->group(function () {
-        Route::post('/', [App\Http\Controllers\ApiGateway\Merchants\MerchantUserController::class, 'store']);
-        Route::get('/', [App\Http\Controllers\ApiGateway\Merchants\MerchantUserController::class, 'index']);
-        Route::delete('/{id}', [App\Http\Controllers\ApiGateway\Merchants\MerchantUserController::class, 'destroy']);
-        Route::get('/{id}', [App\Http\Controllers\ApiGateway\Merchants\MerchantUserController::class, 'show']);
-        Route::match(['put', 'patch'], '/{id}', [App\Http\Controllers\ApiGateway\Merchants\MerchantUserController::class, 'update']);
-        Route::post('/{id}/update-permissions-api-merchants', [App\Http\Controllers\ApiGateway\Merchants\MerchantUserController::class, 'updatePermissionsForApiMerchants']);
+        Route::post('/', [App\Http\Controllers\ApiGateway\Merchants\AzoMerchantAccessesController::class, 'store']);
+        Route::get('/', [App\Http\Controllers\ApiGateway\Merchants\AzoMerchantAccessesController::class, 'index']);
+        Route::delete('/{id}', [App\Http\Controllers\ApiGateway\Merchants\AzoMerchantAccessesController::class, 'destroy']);
+        Route::get('/{id}', [App\Http\Controllers\ApiGateway\Merchants\AzoMerchantAccessesController::class, 'show']);
+        Route::match(['put', 'patch'], '/{id}', [App\Http\Controllers\ApiGateway\Merchants\AzoMerchantAccessesController::class, 'update']);
+        Route::post('/{id}/update-permissions-api-merchants', [App\Http\Controllers\ApiGateway\Merchants\AzoMerchantAccessesController::class, 'updatePermissionsForApiMerchants']);
     });
 
 Route::prefix('merchants/files')

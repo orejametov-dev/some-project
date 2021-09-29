@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 use App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantsController;
 use Illuminate\Http\Request;
@@ -43,10 +43,10 @@ Route::prefix('merchants/tags')
 
 Route::prefix('merchants/users')
     ->group(function () {
-        Route::post('/', [App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantUsersController::class, 'store']);
-        Route::get('/', [App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantUsersController::class, 'index']);
-        Route::get('/{id}', [App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantUsersController::class, 'show']);
-        Route::match(['put', 'patch'], '/{id}', [App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantUsersController::class, 'update']);
+        Route::post('/', [App\Http\Controllers\ApiMerchantGateway\Merchants\AzoMerchantAccesses::class, 'store']);
+        Route::get('/', [App\Http\Controllers\ApiMerchantGateway\Merchants\AzoMerchantAccesses::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\ApiMerchantGateway\Merchants\AzoMerchantAccesses::class, 'show']);
+        Route::match(['put', 'patch'], '/{id}', [App\Http\Controllers\ApiMerchantGateway\Merchants\AzoMerchantAccesses::class, 'update']);
     });
 
 Route::prefix('notifications')
