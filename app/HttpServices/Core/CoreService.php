@@ -39,27 +39,14 @@ class CoreService
         return static::http()->get('merchant-sales')->throw()->json();
     }
 
-    public static function getUserEngagedById($engaged_by_id)
-    {
-        return static::http()->get( "users/$engaged_by_id")->throw()->json();
-    }
-
-    public static function getStoreUserId($user_id)
-    {
-        return static::http()->get( "users/$user_id")->throw()->json();
-    }
-
-    public static function getMaintainerId($maintainer_id)
-    {
-        return static::http()->get( "users/$maintainer_id")->throw()->json();
-    }
-
     public static function getApplicationConditionId($condition_id)
     {
-        return static::http()->get("applications/$condition_id")->throw()->json();
+        return static::http()->get("applications/count", [
+            'condition_id' => $condition_id
+        ])
+            ->throw()
+            ->json();
     }
-
-
 
     protected static function http()
     {
