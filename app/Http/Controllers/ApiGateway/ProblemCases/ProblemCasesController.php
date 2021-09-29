@@ -7,9 +7,10 @@ namespace App\Http\Controllers\ApiGateway\ProblemCases;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
+use App\HttpServices\Core\CoreService;
 use App\Modules\Merchants\Models\ProblemCase;
 use App\Modules\Merchants\Models\ProblemCaseTag;
-use App\Services\Core\ServiceCore;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -44,26 +45,29 @@ class ProblemCasesController extends ApiBaseController
         $problemCase = new ProblemCase();
 
         if ($request->has('credit_number') and $request->input('credit_number')) {
-            $data = ServiceCore::request('GET', 'applications/' . $request->input('credit_number'), null);
+            $data = CoreService::getApplicationDataByContractNumber($request->input('credit_number'));
             $problemCase->credit_number = $request->input('credit_number');
+            $problemCase->credit_contract_date = $data['contract_date'];
         } elseif ($request->has('application_id') and $request->input('application_id')) {
-            $data = ServiceCore::request('GET', 'applications/' . $request->input('application_id'), null);
+            $data = CoreService::getApplicationDataByApplicationId($request->input('application_id'));
             $problemCase->application_id = $request->input('application_id');
+            $problemCase->application_created_at = Carbon::parse($data['created_at'])->format('Y-m-d');
+
         }
 
-        $problemCase->merchant_id = $data->merchant_id;
-        $problemCase->store_id = $data->store_id;
-        $problemCase->client_id = $data->client->id;
+        $problemCase->merchant_id = $data['merchant_id'];
+        $problemCase->store_id = $data['store_id'];
+        $problemCase->client_id = $data['client']['id'];
 
-        $problemCase->search_index = $data->client->name
-            . ' ' . $data->client->surname
-            . ' ' . $data->client->patronymic
-            . ' ' . $data->client->phone;
+        $problemCase->search_index = $data['client']['name']
+            . ' ' . $data['client']['surname']
+            . ' ' . $data['client']['patronymic']
+            . ' ' . $data['client']['phone'];
 
-        $problemCase->application_items = $data->application_items;
+        $problemCase->application_items = $data['application_items'];
 
-        $problemCase->created_by_id = $data->merchant_engaged_by->id;
-        $problemCase->created_by_name = $data->merchant_engaged_by->name;
+        $problemCase->created_by_id = $data['merchant_engaged_by']['id'];
+        $problemCase->created_by_name = $data['merchant_engaged_by']['name'];
         $problemCase->created_from_name = $request->input('created_from_name');
 
         $problemCase->assigned_to_id = $request->input('assigned_to_id');

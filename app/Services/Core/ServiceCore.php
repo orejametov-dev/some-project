@@ -65,4 +65,5 @@ class ServiceCore
     {
         return json_decode($response->getBody()->getContents());
     }
+
 }
