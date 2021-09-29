@@ -5,7 +5,7 @@ namespace App\Http\Controllers\ApiGateway\Merchants;
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Resources\ApiPrmGateway\Merchants\MerchantRequestsResource;
-use App\HttpServices\Core\CoreService;
+use App\HttpServices\Auth\AuthMicroService;
 use App\Modules\Merchants\DTO\Merchants\MerchantInfoDTO;
 use App\Modules\Merchants\DTO\Merchants\MerchantsDTO;
 use App\Modules\Merchants\Models\CancelReason;
@@ -118,7 +118,7 @@ class MerchantRequestsController extends ApiBaseController
             'engaged_by_id' => 'required|integer'
         ]);
 
-        $user = CoreService::getUserEngagedById($request->input('engaged_by_id'));
+        $user = AuthMicroService::getUserById($request->input('engaged_by_id'));
 
         if (!$user)
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
