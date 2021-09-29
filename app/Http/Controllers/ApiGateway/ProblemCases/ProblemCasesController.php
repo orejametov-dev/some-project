@@ -119,7 +119,7 @@ class ProblemCasesController extends ApiBaseController
             hookable_id: $problemCase->id,
             created_from_str: 'PRM',
             created_by_id: $this->user->id,
-            body: 'Обновлен проблемный кейс со статусом',
+            body: 'Обновлен проблемный кейс',
             keyword: ProblemCase::$statuses[$problemCase->status_id]['name'],
             action: 'update',
             class: 'info',
