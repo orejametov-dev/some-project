@@ -126,7 +126,6 @@ class ApplicationConditionsController extends ApiBaseController
 
         $applications = CoreService::getApplicationConditionId($condition_id);
 
-
         if ($applications) {
             return response()->json(['message' => 'Условие не может быть удалено'], 400);
         }
