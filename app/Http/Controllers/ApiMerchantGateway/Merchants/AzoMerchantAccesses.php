@@ -13,7 +13,7 @@ use App\Services\Core\ServiceCore;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
-class MerchantUsersController extends ApiBaseController
+class AzoMerchantAccesses extends ApiBaseController
 {
     public function index(Request $request)
     {

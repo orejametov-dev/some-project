@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Modules\Merchants\Models\AzoMerchantAccess;
 use Illuminate\Support\Facades\Cache;
 
-class MerchantUsersController extends Controller
+class AzoMerchantAccesses extends Controller
 {
     public function getByUserId($user_id)
     {
