@@ -45,6 +45,8 @@ class MigrateMerchantUsersToCompanyUsers extends Command
                 foreach ($azo_merchant_accesses as $azo_merchant_access) {
                     $company_user = new CompanyUser();
                     $company_user->user_id = $azo_merchant_access->user_id;
+                    $company_user->phone = $azo_merchant_access->phone;
+                    $company_user->full_name = $azo_merchant_access->user_name;
                     $company_user->company_id = $company->id;
                     $company_user->save();
 
