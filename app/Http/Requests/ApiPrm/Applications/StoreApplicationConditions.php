@@ -25,7 +25,7 @@ class StoreApplicationConditions extends FormRequest
     {
         return [
             'merchant_id' => 'required',
-            'duration' => 'required|numeric|between:0,15',
+            'duration' => 'required|numeric|between:0,16',
             'commission' => 'required|integer|between:0,100',
             'special_offer' => 'nullable|string',
             'discount'  => 'required|integer|between:0,100'

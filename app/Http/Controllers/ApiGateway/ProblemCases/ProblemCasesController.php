@@ -4,7 +4,9 @@
 namespace App\Http\Controllers\ApiGateway\ProblemCases;
 
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiGateway\ApiBaseController;
+use App\HttpServices\Hooks\DTO\HookData;
+use App\Jobs\SendHook;
 use App\HttpServices\Core\CoreService;
 use App\Modules\Merchants\Models\ProblemCase;
 use App\Modules\Merchants\Models\ProblemCaseTag;
@@ -12,7 +14,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-class ProblemCasesController extends Controller
+class ProblemCasesController extends ApiBaseController
 {
     public function index(Request $request)
     {
@@ -74,6 +76,20 @@ class ProblemCasesController extends Controller
 
         $problemCase->setStatusNew();
         $problemCase->save();
+
+        SendHook::dispatch(new HookData(
+            service: 'merchants',
+            hookable_type: $problemCase->getTable(),
+            hookable_id: $problemCase->id,
+            created_from_str: 'PRM',
+            created_by_id: $this->user->id,
+            body: 'Создан проблемный кейс co статусом',
+            keyword: ProblemCase::$statuses[$problemCase->status_id]['name'],
+            action: 'create',
+            class: 'info',
+            action_at: null,
+            created_by_str: $this->user->name,
+        ));
 
 
         return $problemCase;
@@ -137,6 +153,20 @@ class ProblemCasesController extends Controller
         $problemCase = ProblemCase::findOrFail($id);
         $problemCase->setStatus($request->input('status_id'));
         $problemCase->save();
+
+        SendHook::dispatch(new HookData(
+            service: 'merchants',
+            hookable_type: $problemCase->getTable(),
+            hookable_id: $problemCase->id,
+            created_from_str: 'PRM',
+            created_by_id: $this->user->id,
+            body: 'Обновлен на статус',
+            keyword: ProblemCase::$statuses[$problemCase->status_id]['name'],
+            action: 'update',
+            class: 'info',
+            action_at: null,
+            created_by_str: $this->user->name,
+        ));
 
         return $problemCase;
     }
