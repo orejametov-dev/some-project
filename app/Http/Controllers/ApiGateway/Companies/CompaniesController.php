@@ -17,7 +17,7 @@ class CompaniesController extends ApiBaseController
         $companies = Company::query()
             ->filterRequest($request);
 
-        return $companies;
+        return $companies->paginate($request->query('per_page') ?? 15);
     }
 
     public function store(Request $request, CompanyService $companyService)

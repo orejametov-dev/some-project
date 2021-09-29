@@ -1,12 +1,21 @@
 <?php
 
+use App\Http\Controllers\ApiGateway\Companies\CompaniesController;
+use App\Http\Controllers\ApiGateway\Companies\CompanyUsersController;
 use App\Http\Controllers\ApiGateway\ExtraServices\MerchantsController as ExtraMerchantsController;
 use App\Http\Controllers\ApiGateway\Merchants\MerchantsController;
 use Illuminate\Support\Facades\Route;
 
 
 //Companies
+Route::prefix('companies')->group(function () {
+    Route::get('/', [CompaniesController::class, 'index']);
+    Route::post('/', [CompaniesController::class, 'store']);
+});
 
+Route::prefix('companies/users')->group(function () {
+    Route::get('/', [CompanyUsersController::class, 'index']);
+});
 
 //Azo-Merchants
 Route::prefix('extra-services')->group(function () {
