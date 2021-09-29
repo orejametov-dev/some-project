@@ -29,6 +29,11 @@ class CoreService
         return static::http()->get('merchant-sales')->throw()->json();
     }
 
+    public static function getUserById($user_id)
+    {
+
+    }
+
     public static function getUserEngagedById($engaged_by_id)
     {
         return static::http()->get( "users/$engaged_by_id")->throw()->json();
@@ -46,7 +51,11 @@ class CoreService
 
     public static function getApplicationConditionId($condition_id)
     {
-        return static::http()->get("applications/$condition_id")->throw()->json();
+        return static::http()->get("applications/count" , [
+            'condition_id' => $condition_id
+        ])
+            ->throw()
+            ->json();
     }
 
 
