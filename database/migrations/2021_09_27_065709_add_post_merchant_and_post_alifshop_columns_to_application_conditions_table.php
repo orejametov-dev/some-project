@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddPostMerchantAndAlifshopMerchantColumnsToApplicationConditionsTable extends Migration
+class AddPostMerchantAndPostAlifshopColumnsToApplicationConditionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,7 +15,7 @@ class AddPostMerchantAndAlifshopMerchantColumnsToApplicationConditionsTable exte
     {
         Schema::table('application_conditions', function (Blueprint $table) {
             $table->boolean('post_merchant')->default(false);
-            $table->boolean('alifshop_merchant')->default(false);
+            $table->boolean('post_alifshop')->default(false);
         });
     }
 
@@ -28,7 +28,7 @@ class AddPostMerchantAndAlifshopMerchantColumnsToApplicationConditionsTable exte
     {
         Schema::table('application_conditions', function (Blueprint $table) {
             $table->dropColumn('post_merchant');
-            $table->dropColumn('alifshop_merchant');
+            $table->dropColumn('post_alifshop');
         });
     }
 }
