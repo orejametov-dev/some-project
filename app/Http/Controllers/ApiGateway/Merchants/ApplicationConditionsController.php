@@ -61,7 +61,7 @@ class ApplicationConditionsController extends ApiBaseController
         if (!$store) {
             return response()->json(['message' => 'Пожалуйста, укажите сначала основной магазин'], 400);
         }
-        $condition = new Condition($request->all());
+        $condition = new Condition($request->validated());
         $condition->merchant()->associate($merchant);
         $condition->store()->associate($store);
         $condition->save();
