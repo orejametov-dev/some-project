@@ -202,5 +202,15 @@ class ApplicationConditionsController extends ApiBaseController
             'post_alifshop' => 'required|boolean',
             'post_merchant' => 'required|boolean'
         ]);
+
+        /** @var Condition $condition */
+        $condition = Condition::query()->findOrFail($id);
+
+        $condition->post_merchant = $request->input('post_merchant');
+        $condition->post_alifshop = $request->input('post_alifshop');
+
+        $condition->save();
+
+        return $condition;
     }
 }
