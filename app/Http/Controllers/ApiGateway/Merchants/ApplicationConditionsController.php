@@ -195,4 +195,12 @@ class ApplicationConditionsController extends ApiBaseController
         $alifshopService->storeOrUpdateMerchant($merchant, $conditions);
         return $condition;
     }
+
+    public function togglePosts($id, Request $request)
+    {
+        $this->validate($request,[
+            'post_alifshop' => 'required|boolean',
+            'post_merchant' => 'required|boolean'
+        ]);
+    }
 }

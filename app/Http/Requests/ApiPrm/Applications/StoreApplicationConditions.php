@@ -30,7 +30,7 @@ class StoreApplicationConditions extends FormRequest
             'special_offer' => 'nullable|string',
             'discount'  => 'required|integer|between:0,100',
             'post_merchant' => 'required|boolean',
-            'alifshop_merchant' => 'required|boolean',
+            'post_alifshop' => 'required|boolean',
         ];
     }
 }
