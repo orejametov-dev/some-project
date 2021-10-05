@@ -3,6 +3,7 @@
 use App\Http\Controllers\ApiGateway\Companies\CompaniesController;
 use App\Http\Controllers\ApiGateway\Companies\CompanyUsersController;
 use App\Http\Controllers\ApiGateway\ExtraServices\MerchantsController as ExtraMerchantsController;
+use App\Http\Controllers\ApiGateway\ApiAlifshopMerchants\AlifshopMerchants\AlifshopMerchantsController;
 use App\Http\Controllers\ApiGateway\Merchants\MerchantsController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,6 +17,24 @@ Route::prefix('companies')->group(function () {
 Route::prefix('companies/users')->group(function () {
     Route::get('/', [CompanyUsersController::class, 'index']);
 });
+
+//AlifshopMerchants
+Route::prefix('alifshop-merchant')
+    ->group(function () {
+        Route::get('/' , [AlifshopMerchantsController::class, 'index']);
+        Route::get('/{id}' , [AlifshopMerchantsController::class, 'show']);
+        Route::post('/' , [AlifshopMerchantsController::class, 'store']);
+        Route::match(['put' , 'patch'], '/{id}' , [AlifshopMerchantsController::class, 'update']);
+        Route::post('/set-maintainer' , [AlifshopMerchantsController::class, 'setMaintainer']);
+    });
+
+Route::prefix('alifshop-merchant/user')
+    ->group(function () {
+        Route::get('/' , [AlifshopMerchantsController::class, 'index']);
+        Route::get('/{id}' , [AlifshopMerchantsController::class, 'show']);
+        Route::post('/' , [AlifshopMerchantsController::class, 'store']);
+        Route::match(['put' , 'patch'], '/{id}' , [AlifshopMerchantsController::class, 'update']);
+    });
 
 //Azo-Merchants
 Route::prefix('extra-services')->group(function () {
@@ -156,3 +175,4 @@ Route::prefix('merchants')
 
         Route::match(['put', 'patch'], '/{id}/update-modules', [MerchantsController::class, 'updateModules']);
     });
+
