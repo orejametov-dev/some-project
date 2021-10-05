@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Http\Controllers\ApiGateway\ExtraServices;
+namespace App\Http\Controllers\ApiGateway\AzoMerchants\ExtraServices;
 
 
 use App\Http\Controllers\Controller;

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Http\Controllers\ApiGateway\ProblemCases;
+namespace App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases;
 
 
 use App\Http\Controllers\ApiGateway\ApiBaseController;

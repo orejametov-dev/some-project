@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\ApiGateway\Merchants;
+namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Merchants\Models\Tag;

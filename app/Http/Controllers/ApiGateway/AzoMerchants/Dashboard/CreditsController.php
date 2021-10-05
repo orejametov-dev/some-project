@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Http\Controllers\ApiGateway\Dashboard;
+namespace App\Http\Controllers\ApiGateway\AzoMerchants\Dashboard;
 
 
 use App\Http\Controllers\Controller;

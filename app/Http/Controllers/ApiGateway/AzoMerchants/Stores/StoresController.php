@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\ApiGateway\Stores;
+namespace App\Http\Controllers\ApiGateway\AzoMerchants\Stores;
 
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Controllers\Controller;
