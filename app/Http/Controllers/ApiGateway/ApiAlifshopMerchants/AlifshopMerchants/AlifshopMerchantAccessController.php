@@ -27,4 +27,8 @@ class AlifshopMerchantAccessController extends Controller
 
     }
 
+    public function setMaintainer()
+    {
+
+    }
 }
