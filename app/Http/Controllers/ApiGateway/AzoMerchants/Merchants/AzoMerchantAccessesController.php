@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Http\Controllers\ApiGateway\Merchants;
+namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
 
 use App\Exceptions\BusinessException;
