@@ -7,6 +7,7 @@ use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Files\StoreFileRequest;
 use App\HttpServices\Telegram\TelegramService;
 use App\Modules\Companies\DTO\CompanyDTO;
+use App\Modules\Companies\Models\Company;
 use App\Modules\Companies\Services\CompanyService;
 use App\Modules\Merchants\DTO\Merchants\MerchantsDTO;
 use App\Modules\Merchants\Models\ActivityReason;
@@ -51,18 +52,15 @@ class MerchantsController extends ApiBaseController
     public function store(Request $request, MerchantsService $merchantsService, CompanyService $companyService)
     {
         $this->validate($request, [
-            'name' => 'required|max:255|unique:merchants',
-            'legal_name' => 'nullable|max:255',
+            'company_id' => 'required|integer'
         ]);
 
-        $company = $companyService->create(new CompanyDTO(
-           name: $request->input('name'),
-           legal_name: $request->input('legal_name')
-        ));
+        $company = Company::query()->findOrFail($request->input('company_id'));
 
         $merchant = $merchantsService->create(new MerchantsDTO(
-            name: $request->input('name'),
-            legal_name: $request->input('legal_name'),
+            id: $company->id,
+            name: $company->name,
+            legal_name: $company->legal_name,
             information: null,
             maintainer_id: $this->user->id,
             company_id: $company->id

@@ -47,6 +47,7 @@ class MigrateMerchantsToCompanies extends Command
                     'name' => $merchant->name,
                     'legal_name' => $merchant->legal_name
                 ]);
+                $company->id = $merchant->id;
 
                 $company->save();
 

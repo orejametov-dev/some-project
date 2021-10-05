@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 
 class MerchantsDTO
 {
+    public int $id;
     public string $name;
     public string $legal_name;
     public string $token;
@@ -19,6 +20,7 @@ class MerchantsDTO
     public int $company_id;
 
     public function __construct(
+        int $id,
         string $name,
         string $legal_name,
         ?string $information,
@@ -26,6 +28,7 @@ class MerchantsDTO
         int $company_id
     )
     {
+        $this->id = $id;
         $this->name = $name;
         $this->legal_name = $legal_name;
         $this->token = Str::uuid();

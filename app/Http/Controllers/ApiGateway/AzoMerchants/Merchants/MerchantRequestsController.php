@@ -168,6 +168,7 @@ class MerchantRequestsController extends ApiBaseController
             ));
 
             $merchant = $merchantsService->create(new MerchantsDTO(
+                id: $company->id,
                 name: $merchant_request->name,
                 legal_name: $merchant_request->legal_name,
                 information: $merchant_request->information,
