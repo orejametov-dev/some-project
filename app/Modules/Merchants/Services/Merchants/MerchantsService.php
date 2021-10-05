@@ -14,6 +14,7 @@ class MerchantsService
     public function create(MerchantsDTO $merchantsDTO)
     {
         $merchant = new Merchant();
+        $merchant->id = $merchantsDTO->id;
         $merchant->name = $merchantsDTO->name;
         $merchant->legal_name = $merchantsDTO->legal_name;
         $merchant->token = $merchantsDTO->token;
