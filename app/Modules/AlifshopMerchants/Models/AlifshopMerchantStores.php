@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\AlifshopMerchants;
+namespace App\Modules\AlifshopMerchants\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AlifshopMerchantAccess extends Model
+class AlifshopMerchantStores extends Model
 {
     use HasFactory;
 }
