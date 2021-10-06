@@ -181,7 +181,7 @@ class ApplicationConditionsController extends ApiBaseController
                 $q->active();
             }]);
 
-            $conditions = $merchant->application_conditions->map(function ($item) {
+            $conditions = $merchant->application_conditions->where('post_alifshop', true)->map(function ($item) {
                 return [
                     'commission' => $item->commission,
                     'duration' => $item->duration,
@@ -221,7 +221,7 @@ class ApplicationConditionsController extends ApiBaseController
                 $q->active();
             }]);
 
-            $conditions = $merchant->application_conditions->map(function ($item) {
+            $conditions = $merchant->application_conditions->where('post_alifshop', true)->map(function ($item) {
                 return [
                     'commission' => $item->commission,
                     'duration' => $item->duration,
