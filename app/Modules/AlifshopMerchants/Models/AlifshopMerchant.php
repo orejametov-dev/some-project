@@ -2,6 +2,7 @@
 
 namespace App\Modules\AlifshopMerchants\Models;
 
+use App\Modules\Companies\Models\Company;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,6 +10,15 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 /**
+ * @property int $id
+ * @property string $name
+ * @property string|null $legal_name
+ * @property string|null $token
+ * @property string $alifshop_slug
+ * @property string|null $information
+ * @property int|null $maintainer_id
+ * @property int$company_id
+ * @property-read Company $company
  * @method static Builder|AlifshopMerchant filterRequest(Request $request)
  * @method static Builder|AlifshopMerchant orderRequest(Request $request, string $default_order_str = 'id:desc')
  * @method static Builder|AlifshopMerchant query()
