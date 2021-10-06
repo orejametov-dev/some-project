@@ -2,6 +2,7 @@
 
 namespace App\Modules\AlifshopMerchants\Models;
 
+use App\Modules\AlifshopMerchant\Traits\AlifshopMerchantRelationshipsTrait;
 use App\Modules\Companies\Models\Company;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,7 +18,7 @@ use Illuminate\Http\Request;
  * @property string $alifshop_slug
  * @property string|null $information
  * @property int|null $maintainer_id
- * @property int$company_id
+ * @property int $company_id
  * @property-read Company $company
  * @method static Builder|AlifshopMerchant filterRequest(Request $request)
  * @method static Builder|AlifshopMerchant orderRequest(Request $request, string $default_order_str = 'id:desc')
@@ -26,8 +27,17 @@ use Illuminate\Http\Request;
 class AlifshopMerchant extends Model
 {
     use HasFactory;
+    use AlifshopMerchantRelationshipsTrait;
 
     protected $fillable = [
+        'name',
+        'legal_name',
+        'token',
+        'alifshop_slug',
+        'information',
+        'logo_url',
+        'paymo_terminal_id',
+        'min_application_price',
         'active'
     ];
 
