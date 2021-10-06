@@ -2,7 +2,6 @@
 
 namespace App\Modules\AlifshopMerchants\Models;
 
-use App\Modules\Companies\Models\Company;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,6 +14,7 @@ use Illuminate\Http\Request;
  * @property int $user_id
  * @property string $user_name
  * @property string $phone
+ * @method static Builder|AlifshopMerchantAccess byUserId($user_id)
  * @property-read AlifshopMerchant $alifshopMerchant
  * @property-read AlifshopMerchantStores $alifshopMerchantStores
  * @method static Builder|AlifshopMerchantAccess filterRequest(Request $request)
@@ -68,5 +68,24 @@ class AlifshopMerchantAccess extends Model
             $user_ids = explode(';', $user_ids);
             $query->whereIn('user_id', $user_ids);
         }
+    }
+
+    public function scopeByActiveMerchant(Builder $query)
+    {
+        $query->whereHas('merchant', function ($query) {
+            $query->where('active', true);
+        });
+    }
+
+    public function scopeByActiveStore(Builder $query)
+    {
+        $query->whereHas('store', function ($query) {
+            $query->where('active', true);
+        });
+    }
+
+    public function scopeByUserId(Builder $query, $user_id)
+    {
+        $query->where('user_id', $user_id);
     }
 }
