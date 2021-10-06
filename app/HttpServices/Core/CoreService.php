@@ -34,6 +34,11 @@ class CoreService
         return static::http()->get("applications/$application_id")->throw()->json();
     }
 
+    public static function getUserById($user_id)
+    {
+        return static::http()->get("user/$user_id")->throw()->json();
+    }
+
     protected static function http()
     {
         return Http::baseUrl(config('local_services.service_core.domain') . '/')
