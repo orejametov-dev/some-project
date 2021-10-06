@@ -2,11 +2,17 @@
 
 namespace App\Modules\AlifshopMerchants\DTO;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-
 class AlifshopMerchantDTO
 {
-//    public int company_id;
-//    public int mait
+    public int $maintainer_id;
+    public int $company_id;
+
+    public function __construct(
+        int $maintainer_id,
+        int $company_id
+    )
+    {
+        $this->maintainer_id = $maintainer_id;
+        $this->company_id = $company_id;
+    }
 }
