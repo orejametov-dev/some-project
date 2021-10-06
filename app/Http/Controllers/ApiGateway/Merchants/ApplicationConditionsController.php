@@ -176,23 +176,26 @@ class ApplicationConditionsController extends ApiBaseController
             created_by_str: $this->user->name,
         ));
 
-        $merchant->load(['application_conditions' => function ($q) {
-            $q->active();
-        }]);
+        if($condition->post_alifshop) {
+            $merchant->load(['application_conditions' => function ($q) {
+                $q->active();
+            }]);
 
-        $conditions = $merchant->application_conditions->map(function ($item) {
-            return [
-                'commission' => $item->commission,
-                'duration' => $item->duration,
-                'is_active' => $item->active,
-                'special_offer' => $item->special_offer
-            ];
-        });
+            $conditions = $merchant->application_conditions->map(function ($item) {
+                return [
+                    'commission' => $item->commission,
+                    'duration' => $item->duration,
+                    'is_active' => $item->active,
+                    'special_offer' => $item->special_offer
+                ];
+            });
+
+            $alifshopService = new AlifshopService;
+            $alifshopService->storeOrUpdateMerchant($merchant, $conditions);
+        }
 
         Cache::tags($merchant->id)->flush();
 
-        $alifshopService = new AlifshopService;
-        $alifshopService->storeOrUpdateMerchant($merchant, $conditions);
         return $condition;
     }
 
@@ -210,6 +213,26 @@ class ApplicationConditionsController extends ApiBaseController
         $condition->post_alifshop = $request->input('post_alifshop');
 
         $condition->save();
+
+        $merchant = $condition->merchant;
+
+        if($condition->active and $condition->post_alifshop) {
+            $merchant->load(['application_conditions' => function ($q) {
+                $q->active();
+            }]);
+
+            $conditions = $merchant->application_conditions->map(function ($item) {
+                return [
+                    'commission' => $item->commission,
+                    'duration' => $item->duration,
+                    'is_active' => $item->active,
+                    'special_offer' => $item->special_offer
+                ];
+            });
+
+            $alifshopService = new AlifshopService;
+            $alifshopService->storeOrUpdateMerchant($merchant, $conditions);
+        }
 
         return $condition;
     }
