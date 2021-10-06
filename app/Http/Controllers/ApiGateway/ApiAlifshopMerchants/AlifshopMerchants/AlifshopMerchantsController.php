@@ -5,21 +5,22 @@ namespace App\Http\Controllers\ApiGateway\ApiAlifshopMerchants\AlifshopMerchants
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\HttpServices\Core\CoreService;
+use App\Modules\AlifshopMerchants\DTO\AlifshopMerchantDTO;
 use App\Modules\AlifshopMerchants\Models\AlifshopMerchant;
-use App\Modules\Companies\DTO\CompanyDTO;
-use App\Modules\Companies\Services\CompanyService;
+use App\Modules\AlifshopMerchants\Services\AlifshopMerchantService;
+use App\Modules\Companies\Models\Company;
+use  Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 
 class AlifshopMerchantsController extends ApiBaseController
 {
-
     public function index(Request $request)
     {
-        $merchants = AlifshopMerchant::query()
-            ->filterRequest($request)
-            ->orderRequest($request);
+        $alifshop_merchants = AlifshopMerchant::query()
+            ->filterRequest($request);
+            //->orderRequest($request);
 
-        return $merchants->paginate($request->query('per_page'));
+        return $alifshop_merchants->paginate($request->query('per_page') ?? 15);
     }
 
     public function show($id)
@@ -27,21 +28,21 @@ class AlifshopMerchantsController extends ApiBaseController
         return AlifshopMerchant::query()->findOrFail($id);
     }
 
-    public function store(Request $request, CompanyService $companyService)
+    public function store(Request $request, AlifshopMerchantService $alifshopMerchantService)
     {
         $this->validate($request, [
-            'name' => 'required|max:255',
-            'legal_name' => 'required|max:255',
+            'company_id' => 'required|integer'
         ]);
 
-        $company = $companyService->create(new CompanyDTO(
-            name: $request->input('name'),
-            legal_name: $request->input('legal_name')
+        $company = Company::query()->findOrFail($request->input('company_id'));
+
+        $alifshop_merchant = $alifshopMerchantService->create(new AlifshopMerchantDTO(
+            maintainer_id: $this->user->id,
+            company_id: $company->id
         ));
 
-        $alifshop_merchant = 'hello';
-
-
+        Cache::tags($alifshop_merchant->id)->flush();
+        Cache::tags('alifshop_merchants')->flush();
 
         return $alifshop_merchant;
     }
@@ -52,6 +53,10 @@ class AlifshopMerchantsController extends ApiBaseController
             'active' => 'required|boolean'
         ]);
         $alifshop_merchant = AlifshopMerchant::query()->findOrFail($alifshop_merchant_id);
+        $alifshop_merchant->update($request->all());
+
+        Cache::tags($alifshop_merchant->id)->flush();
+        Cache::tags('alifshop_merchants')->flush();
 
         return $alifshop_merchant;
     }
