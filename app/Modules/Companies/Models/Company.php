@@ -2,6 +2,7 @@
 
 namespace App\Modules\Companies\Models;
 
+use App\Modules\AlifshopMerchants\Models\AlifshopMerchant;
 use App\Modules\Merchants\Models\Merchant;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -30,6 +31,10 @@ class Company extends Model
     public function merchant()
     {
         return $this->hasOne(Merchant::class);
+    }
+    public function alifshop_merchant()
+    {
+        return $this->hasOne(AlifshopMerchant::class);
     }
 
     public function scopeFilterRequest(Builder $query, Request $request)
