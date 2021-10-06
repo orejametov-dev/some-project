@@ -233,6 +233,7 @@ class ApplicationConditionsController extends ApiBaseController
             $alifshopService = new AlifshopService;
             $alifshopService->storeOrUpdateMerchant($merchant, $conditions);
         }
+        Cache::tags($merchant->id)->flush();
 
         return $condition;
     }
