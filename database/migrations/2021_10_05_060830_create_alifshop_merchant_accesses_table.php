@@ -18,7 +18,13 @@ class CreateAlifshopMerchantAccessesTable extends Migration
             $table->foreignId('company_user_id')->constrained('company_users');
             $table->foreignId('alifshop_merchant_id')->constrained('alifshop_merchants');
             $table->foreignId('alifshop_merchant_store_id')->constrained('alifshop_merchant_stores');
+
+            $table->unsignedBigInteger('user_id')->unique();
+            $table->string('user_name');
+            $table->string('phone')->nullable();
+
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
