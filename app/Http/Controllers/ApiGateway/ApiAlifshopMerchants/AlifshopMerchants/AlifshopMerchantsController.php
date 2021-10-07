@@ -30,8 +30,8 @@ class AlifshopMerchantsController extends ApiBaseController
     public function index(Request $request)
     {
         $alifshop_merchants = AlifshopMerchant::query()
-            ->filterRequest($request);
-            //->orderRequest($request);
+            ->filterRequest($request)
+            ->orderRequest($request);
 
         return $alifshop_merchants->paginate($request->query('per_page') ?? 15);
     }
@@ -109,12 +109,12 @@ class AlifshopMerchantsController extends ApiBaseController
 
     //Артем
     //Добавить лого
-    public function uploadLogo($merchant_id, AlifshopMerchantStoreFileRequest $request)
+    public function uploadLogo($alifshop_merchant_id, AlifshopMerchantStoreFileRequest $request)
     {
-        $alifshop_merchant = AlifshopMerchant::query()->findOrFail($merchant_id);
+        $alifshop_merchant = AlifshopMerchant::query()->findOrFail($alifshop_merchant_id);
         $alifshop_merchant->uploadLogo($request->file('file'));
 
-        $this->alifshopService->storeOrUpdateMerchant($alifshop_merchant);
+        //$this->alifshopService->storeOrUpdateMerchant($alifshop_merchant);
         return $alifshop_merchant;
     }
 
