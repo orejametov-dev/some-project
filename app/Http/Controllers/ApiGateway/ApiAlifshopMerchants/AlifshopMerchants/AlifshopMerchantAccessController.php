@@ -20,8 +20,8 @@ class AlifshopMerchantAccessController extends ApiBaseController
     {
         $alifshop_merchant_accesses = AlifshopMerchantAccess::query()
             ->with('company_user:id,user_id,phone,full_name')
-            ->filterRequest($request);
-            //->orderRequest($request);
+            ->filterRequest($request)
+            ->orderRequest($request);
 
         return $alifshop_merchant_accesses->paginate($request->query('per_page') ?? 15);
     }
@@ -34,7 +34,6 @@ class AlifshopMerchantAccessController extends ApiBaseController
     public function store(StoreAlifshopMerchantUsers $request)
     {
         $user = CoreService::getUserById($request->input('user_id')); // нужно поменять на Auth сервер
-
         if (!$user)
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
 
