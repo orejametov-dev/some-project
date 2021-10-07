@@ -12,9 +12,6 @@ use Illuminate\Http\Request;
 
 /**
  * @property int $store_id
- * @property int $user_id
- * @property string $user_name
- * @property string $phone
  * @method static Builder|AlifshopMerchantAccess byUserId($user_id)
  * @property-read AlifshopMerchant $alifshopMerchant
  * @property-read AlifshopMerchantStores $alifshopMerchantStores
@@ -26,10 +23,7 @@ class AlifshopMerchantAccess extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    protected $fillable = [
-        'user_name',
-        'phone'
-    ];
+    protected $fillable = [];
 
     public function alifshop_merchant()
     {
@@ -49,8 +43,10 @@ class AlifshopMerchantAccess extends Model
     public function scopeFilterRequest(Builder $query, Request $request)
     {
         if ($q = $request->query('q')) {
-            $query->where('user_name', 'LIKE', '%' . $q . '%')
-                ->orWhere('phone', 'LIKE', '%' . $q . '%');
+            $query->whereHas('company_users' , function ($query) use ($q) {
+                $query->where('user_name', 'LIKE', '%' . $q . '%')
+                    ->orWhere('phone', 'LIKE', '%' . $q . '%');
+            });
         }
 
         if ($request->query('date')) {
@@ -58,40 +54,46 @@ class AlifshopMerchantAccess extends Model
             $query->whereDate('created_at', $date);
         }
 
-        if ($merchant = $request->query('merchant_id')) {
-            $query->where('alifshop_merchant_id', $merchant);
+        if ($alifshop_merchant = $request->query('merchant_id')) {
+            $query->where('alifshop_merchant_id', $alifshop_merchant);
         }
 
-        if ($store = $request->query('store_id')) {
-            $query->where('alifshop_store_id', $store);
+        if ($alifshop_merchant_store = $request->query('store_id')) {
+            $query->where('alifshop_merchant_store_id', $alifshop_merchant_store);
         }
 
         if ($user = $request->query('user_id')) {
-            $query->where('user_id', $user);
+            $query->whereHas( 'company_users' , function ($query) use ($user) {
+                $query->where('user_id', $user);
+        });
         }
 
         if ($user_ids = $request->query('user_ids')) {
             $user_ids = explode(';', $user_ids);
-            $query->whereIn('user_id', $user_ids);
+            $query->whereHas( 'company_user' , function ($query)  use ($user_ids){
+                $query->whereIn('user_id', $user_ids);
+            });
         }
     }
 
     public function scopeByActiveMerchant(Builder $query)
     {
-        $query->whereHas('merchant', function ($query) {
+        $query->whereHas('alifshop_merchant', function ($query) {
             $query->where('active', true);
         });
     }
 
     public function scopeByActiveStore(Builder $query)
     {
-        $query->whereHas('store', function ($query) {
+        $query->whereHas('alifshop_merchant_store', function ($query) {
             $query->where('active', true);
         });
     }
 
     public function scopeByUserId(Builder $query, $user_id)
     {
-        $query->where('user_id', $user_id);
+        $query->whereHas('company_user' , function ($query) use ($user_id) {
+                $query->where('user_id', $user_id);
+        });
     }
 }
