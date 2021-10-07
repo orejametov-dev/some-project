@@ -4,13 +4,14 @@ namespace App\Http\Controllers\ApiGateway\ApiAlifshopMerchants\AlifshopMerchants
 
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
+use App\Http\Requests\ApiPrm\AlifshopMerchant\AlifshopMerchantStoreFileRequest;
 use App\HttpServices\Core\CoreService;
 use App\Modules\AlifshopMerchants\DTO\AlifshopMerchantDTO;
 use App\Modules\AlifshopMerchants\Models\AlifshopMerchant;
 use App\Modules\AlifshopMerchants\Services\AlifshopMerchantService;
 use App\Modules\Companies\Models\Company;
-use App\Modules\Merchants\Models\Merchant;
 use App\Services\Alifshop\AlifshopService;
+use App\Services\Core\ServiceCore;
 use  Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 
@@ -29,8 +30,8 @@ class AlifshopMerchantsController extends ApiBaseController
     public function index(Request $request)
     {
         $alifshop_merchants = AlifshopMerchant::query()
-            ->filterRequest($request)
-            ->orderRequest($request);
+            ->filterRequest($request);
+            //->orderRequest($request);
 
         return $alifshop_merchants->paginate($request->query('per_page') ?? 15);
     }
@@ -73,7 +74,6 @@ class AlifshopMerchantsController extends ApiBaseController
             'token' => 'required|max:255|unique:alifshop_merchants,alifshop_slug,' . $alifshop_merchant_id,
             'alifshop_slug' => 'required|max:255|unique:alifshop_merchants,alifshop_slug,' . $alifshop_merchant_id,
             'information' => 'nullable|string',
-            'min_application_price' => 'required|integer'
         ]);
 
         $alifshop_merchant = AlifshopMerchant::query()->findOrFail($alifshop_merchant_id);
@@ -95,7 +95,7 @@ class AlifshopMerchantsController extends ApiBaseController
             'maintainer_id' => 'required|integer'
         ]);
 
-        $user = CoreService::getUserById($request->input('maintainer_id')); //изменить на Auth
+        $user = ServiceCore::request('GET', 'users/' . $request->input('maintainer_id'), null); //изменить на Auth
 
         if (!$user)
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
@@ -109,6 +109,23 @@ class AlifshopMerchantsController extends ApiBaseController
 
     //Артем
     //Добавить лого
+    public function uploadLogo($merchant_id, AlifshopMerchantStoreFileRequest $request)
+    {
+        $alifshop_merchant = AlifshopMerchant::query()->findOrFail($merchant_id);
+        $alifshop_merchant->uploadLogo($request->file('file'));
+
+        $this->alifshopService->storeOrUpdateMerchant($alifshop_merchant);
+        return $alifshop_merchant;
+    }
+
+    public function removeLogo($alifshop_merchant_id)
+    {
+        $alifshop_merchant = AlifshopMerchant::query()->findOrFail($alifshop_merchant_id);
+        $alifshop_merchant->deleteLogo();
+
+        $this->alifshopService->storeOrUpdateMerchant($alifshop_merchant);
+        return response()->json(['message' => 'Логотип удалён']);
+    }
 
     //ойбек
     public function toggle($id, Request $request)
@@ -132,11 +149,11 @@ class AlifshopMerchantsController extends ApiBaseController
             'merchant_id' => 'required|integer',
             'tags' => 'required|array'
         ]);
-        $merchant = Merchant::query()->findOrFail($request->input('merchant_id'));
+        $alifshop_merchant = AlifshopMerchant::query()->findOrFail($request->input('merchant_id'));
         $tags = $request->input('tags');
 
-        $merchant->tags()->sync($tags);
+        $alifshop_merchant->tags()->sync($tags);
 
-        return $merchant;
+        return $alifshop_merchant;
     }
 }
