@@ -9,6 +9,7 @@ use App\Modules\AlifshopMerchants\DTO\AlifshopMerchantDTO;
 use App\Modules\AlifshopMerchants\Models\AlifshopMerchant;
 use App\Modules\AlifshopMerchants\Services\AlifshopMerchantService;
 use App\Modules\Companies\Models\Company;
+use App\Modules\Merchants\Models\Merchant;
 use App\Services\Alifshop\AlifshopService;
 use  Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
@@ -106,6 +107,10 @@ class AlifshopMerchantsController extends ApiBaseController
         return $alifshop_merchant;
     }
 
+    //Артем
+    //Добавить лого
+
+    //ойбек
     public function toggle($id, Request $request)
     {
         $this->validate($request, [
@@ -119,5 +124,19 @@ class AlifshopMerchantsController extends ApiBaseController
         Cache::tags($alifshop_merchant->id)->flush();
         Cache::tags('alifshop_merchants')->flush();
         return $alifshop_merchant;
+    }
+
+    public function setTags(Request $request)
+    {
+        $this->validate($request, [
+            'merchant_id' => 'required|integer',
+            'tags' => 'required|array'
+        ]);
+        $merchant = Merchant::query()->findOrFail($request->input('merchant_id'));
+        $tags = $request->input('tags');
+
+        $merchant->tags()->sync($tags);
+
+        return $merchant;
     }
 }
