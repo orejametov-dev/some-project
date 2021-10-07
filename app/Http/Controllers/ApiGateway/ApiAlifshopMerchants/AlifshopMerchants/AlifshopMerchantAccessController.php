@@ -21,6 +21,7 @@ class AlifshopMerchantAccessController extends ApiBaseController
     public function index(Request $request)
     {
         $alifshop_merchant_accesses = AlifshopMerchantAccess::query()
+            ->with('company_user:id,user_id,phone,full_name')
             ->filterRequest($request)
             ->orderRequest($request);
 

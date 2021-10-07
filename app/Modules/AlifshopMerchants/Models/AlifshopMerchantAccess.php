@@ -2,6 +2,7 @@
 
 namespace App\Modules\AlifshopMerchants\Models;
 
+use App\Modules\Companies\Models\CompanyUser;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -40,6 +41,11 @@ class AlifshopMerchantAccess extends Model
         return $this->belongsTo(AlifshopMerchantStores::class);
     }
 
+    public function company_user()
+    {
+        return $this->belongsTo(CompanyUser::class);
+    }
+
     public function scopeFilterRequest(Builder $query, Request $request)
     {
         if ($q = $request->query('q')) {
@@ -53,11 +59,11 @@ class AlifshopMerchantAccess extends Model
         }
 
         if ($merchant = $request->query('merchant_id')) {
-            $query->where('merchant_id', $merchant);
+            $query->where('alifshop_merchant_id', $merchant);
         }
 
         if ($store = $request->query('store_id')) {
-            $query->where('store_id', $store);
+            $query->where('alifshop_store_id', $store);
         }
 
         if ($user = $request->query('user_id')) {
