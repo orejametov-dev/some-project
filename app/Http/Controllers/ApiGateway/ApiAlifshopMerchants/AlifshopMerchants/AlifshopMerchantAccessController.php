@@ -5,11 +5,9 @@ namespace App\Http\Controllers\ApiGateway\ApiAlifshopMerchants\AlifshopMerchants
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\AlifshopMerchant\StoreAlifshopMerchantUsers;
-use App\HttpServices\Auth\AuthMicroService;
 use App\HttpServices\Core\CoreService;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
-use App\Jobs\ToggleMerchantRoleOfUser;
 use App\Modules\AlifshopMerchants\Models\AlifshopMerchantAccess;
 use App\Modules\AlifshopMerchants\Models\AlifshopMerchantStores;
 use App\Modules\Companies\Models\CompanyUser;
@@ -22,8 +20,8 @@ class AlifshopMerchantAccessController extends ApiBaseController
     {
         $alifshop_merchant_accesses = AlifshopMerchantAccess::query()
             ->with('company_user:id,user_id,phone,full_name')
-            ->filterRequest($request)
-            ->orderRequest($request);
+            ->filterRequest($request);
+            //->orderRequest($request);
 
         return $alifshop_merchant_accesses->paginate($request->query('per_page') ?? 15);
     }
@@ -48,8 +46,10 @@ class AlifshopMerchantAccessController extends ApiBaseController
         $company_user->save();
 
         $alifshop_merchant_access_exists = AlifshopMerchantAccess::query()
-            ->where(['user_id' => $request->input('user_id')])
-            ->exists();
+            ->whereHas('company_users' , function ($query) use ($request) {
+                $query->where(['user_id' => $request->input('user_id')])
+                    ->exists();
+            });
 
         if ($alifshop_merchant_access_exists) {
             return response()->json([
@@ -59,14 +59,15 @@ class AlifshopMerchantAccessController extends ApiBaseController
         }
 
         $alifshop_merchant = $alifshop_merchant_store->alifshopMerchant;
-        if ($alifshop_merchant_access = AlifshopMerchantAccess::withTrashed()->where('user_id', $user->id)->first()) {
-            $alifshop_merchant_access->restore();
+        if ($alifshop_merchant_access = AlifshopMerchantAccess::withTrashed()
+            ->whereHas('company_users' , function ($query) use ($user) {
+                $query->where('user_id', $user->id)->first(); //нужно уточнить
+            })) {
+                $alifshop_merchant_access->restore();
         } else {
             $alifshop_merchant_access = new AlifshopMerchantAccess();
         }
-        $alifshop_merchant_access->user_id = $request->input('user_id');
-        $alifshop_merchant_access->user_name = $user->name;
-        $alifshop_merchant_access->phone = $user->phone;
+
         $alifshop_merchant_access->alifshop_merchant()->associate($alifshop_merchant);
         $alifshop_merchant_access->alifshop_merchant_store()->associate($alifshop_merchant_store->id);
 
@@ -86,9 +87,6 @@ class AlifshopMerchantAccessController extends ApiBaseController
             created_by_str: $this->user->name,
         ));
 
-        ToggleMerchantRoleOfUser::dispatch($alifshop_merchant_access->user_id, AuthMicroService::ACTIVATE_MERCHANT_ROLE);
-
-        Cache::tags('alifshop_merchants')->forget('alifshop_merchant_user_id_' . $alifshop_merchant_access->user_id);
         Cache::tags($alifshop_merchant->id)->flush();
 
         return $alifshop_merchant_access;
@@ -123,8 +121,6 @@ class AlifshopMerchantAccessController extends ApiBaseController
             created_by_str: $this->user->name,
         ));
 
-
-        Cache::tags('alifshop_merchants')->forget('alifshop_merchant_user_id_' . $alifshop_merchant_access->user_id);
         Cache::tags($alifshop_merchant->id)->flush();
 
         return $alifshop_merchant_access;
