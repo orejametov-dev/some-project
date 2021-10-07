@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\SortableByQueryParams;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 
@@ -23,6 +24,8 @@ class AlifshopMerchantAccess extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use SortableByQueryParams;
+
     protected $fillable = [];
 
     public function alifshop_merchant()
