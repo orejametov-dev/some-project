@@ -2,7 +2,7 @@
 
 namespace App\Modules\AlifshopMerchants\Models;
 
-use App\Modules\AlifshopMerchant\Traits\AlifshopMerchantRelationshipsTrait;
+use App\Modules\AlifshopMerchants\Traits\AlifshopMerchantRelationshipsTrait;
 use App\Modules\Companies\Models\Company;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -36,9 +36,17 @@ class AlifshopMerchant extends Model
         'alifshop_slug',
         'information',
         'logo_url',
-        'paymo_terminal_id',
-        'min_application_price',
         'active'
+    ];
+
+    protected $hidden = ['logo_url'];
+
+    public static $attributeLabels = [
+        'name' => 'Название партнёра',
+        'legal_name' => 'Юридическое имя',
+        'token' => 'Токен алифшопа',
+        'alifshop_slug' => 'Алифшоп слаг',
+        'information' => 'Информация',
     ];
 
     public function scopeFilterRequest(Builder $query, Request $request)
