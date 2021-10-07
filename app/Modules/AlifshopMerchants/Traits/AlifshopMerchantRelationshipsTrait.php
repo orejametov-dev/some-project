@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\AlifshopMerchant\Traits;
+namespace App\Modules\AlifshopMerchants\Traits;
 
 
 use App\Modules\AlifshopMerchants\Models\AlifshopMerchantStores;
