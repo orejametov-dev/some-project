@@ -38,12 +38,8 @@ class ChangePostMerchantToTrue extends Command
      */
     public function handle()
     {
-        $conditions = Condition::where('active', true)->get();
+        Condition::where('active', true)
+            ->update(['post_merchant' => true]);
 
-        foreach ($conditions as $condition)
-        {
-            $condition->post_merchant = true;
-            $condition->save();
-        }
     }
 }
