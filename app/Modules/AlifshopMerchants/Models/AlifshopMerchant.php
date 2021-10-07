@@ -2,10 +2,12 @@
 
 namespace App\Modules\AlifshopMerchants\Models;
 
+use App\Modules\AlifshopMerchants\Traits\AlifshopMerchantFileTrait;
 use App\Modules\AlifshopMerchants\Traits\AlifshopMerchantRelationshipsTrait;
 use App\Modules\Companies\Models\Company;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\SortableByQueryParams;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -27,7 +29,7 @@ use Illuminate\Http\Request;
 class AlifshopMerchant extends Model
 {
     use HasFactory;
-    use AlifshopMerchantRelationshipsTrait;
+    use AlifshopMerchantRelationshipsTrait, AlifshopMerchantFileTrait , SortableByQueryParams;
 
     protected $fillable = [
         'name',
@@ -39,6 +41,7 @@ class AlifshopMerchant extends Model
         'active'
     ];
 
+    protected $appends = ['logo_path'];
     protected $hidden = ['logo_url'];
 
     public static $attributeLabels = [
@@ -48,6 +51,14 @@ class AlifshopMerchant extends Model
         'alifshop_slug' => 'Алифшоп слаг',
         'information' => 'Информация',
     ];
+
+    public function getLogoPathAttribute()
+    {
+        if (!$this->logo_url) {
+            return null;
+        }
+        return config('local_services.services_storage.domain') . $this->logo_url;
+    }
 
     public function scopeFilterRequest(Builder $query, Request $request)
     {
