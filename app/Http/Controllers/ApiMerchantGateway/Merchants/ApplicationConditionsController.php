@@ -16,6 +16,7 @@ class ApplicationConditionsController extends ApiBaseController
         return Cache::tags($this->merchant_id)->remember($request->fullUrl(), 2 * 60, function () use ($request) {
             $conditionQuery = Condition::query()
                 ->active()
+                ->where('post_merchant', true)
                 ->byMerchant($this->merchant_id)
                 ->filterRequest($request)
                 ->orderRequest($request);
