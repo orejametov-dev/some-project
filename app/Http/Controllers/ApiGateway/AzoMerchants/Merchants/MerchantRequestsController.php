@@ -8,6 +8,7 @@ use App\Http\Resources\ApiPrmGateway\Merchants\MerchantRequestsResource;
 use App\Modules\Companies\DTO\CompanyDTO;
 use App\Modules\Companies\Models\Company;
 use App\Modules\Companies\Services\CompanyService;
+use App\HttpServices\Auth\AuthMicroService;
 use App\Modules\Merchants\DTO\Merchants\MerchantInfoDTO;
 use App\Modules\Merchants\DTO\Merchants\MerchantsDTO;
 use App\Modules\Merchants\Models\CancelReason;
@@ -122,7 +123,7 @@ class MerchantRequestsController extends ApiBaseController
             'engaged_by_id' => 'required|integer'
         ]);
 
-        $user = ServiceCore::request('GET', 'users/'.$request->input('engaged_by_id'), null);
+        $user = AuthMicroService::getUserById($request->input('engaged_by_id'));
 
         if (!$user)
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
@@ -134,7 +135,7 @@ class MerchantRequestsController extends ApiBaseController
             $merchant_request->setStatusInProcess();
             $merchant_request->save();
 
-            $merchant_request->engaged_by = $user;
+            $merchant_request->engaged_by = $user['data'];
 
             return $merchant_request;
         }

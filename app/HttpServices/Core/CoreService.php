@@ -34,6 +34,20 @@ class CoreService
         return static::http()->get("applications/$application_id")->throw()->json();
     }
 
+    public static function getAmountOfMerchantSales()
+    {
+        return static::http()->get('merchant-sales')->throw()->json();
+    }
+
+    public static function getApplicationConditionId($condition_id)
+    {
+        return static::http()->get("applications/count", [
+            'condition_id' => $condition_id
+        ])
+            ->throw()
+            ->json();
+    }
+
     protected static function http()
     {
         return Http::baseUrl(config('local_services.service_core.domain') . '/')
