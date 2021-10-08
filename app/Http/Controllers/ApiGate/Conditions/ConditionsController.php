@@ -13,7 +13,9 @@ class ConditionsController extends Controller
 {
     public function getConditionByMerchantId($merchant_id, $condition_id)
     {
-        $condition = Condition::active()->byMerchant($merchant_id)->findOrFail($condition_id);
+        $condition = Condition::active()
+            ->where('post_merchant', true)
+            ->byMerchant($merchant_id)->findOrFail($condition_id);
 
         return new ConditionsResource($condition);
     }

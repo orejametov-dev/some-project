@@ -49,7 +49,9 @@ class Condition extends Model
         'commission',
         'active',
         'discount',
-        'special_offer' // should be unique by partner
+        'special_offer',// should be unique by partner
+        'post_merchant',
+        'post_alifshop'
     ];
     protected $appends = ['title'];
 
