@@ -39,4 +39,17 @@ class AuthMicroService
 
         return $response->json();
     }
+
+    public static function getUserById($user_id)
+    {
+        return static::http()->get( "users/$user_id")->throw()->json();
+    }
+
+    protected static function http()
+    {
+        return Http::baseUrl(config('local_services.service_auth.domain') . '/api/gate/')
+            ->withHeaders([
+                'X-Access-Token' => config('local_services.service_auth.access_token')
+            ]);
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Files\StoreFileRequest;
+use App\HttpServices\Auth\AuthMicroService;
 use App\HttpServices\Telegram\TelegramService;
 use App\Modules\Companies\DTO\CompanyDTO;
 use App\Modules\Companies\Models\Company;
@@ -14,7 +15,6 @@ use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Services\Merchants\MerchantsService;
 use App\Services\Alifshop\AlifshopService;
-use App\Services\Core\ServiceCore;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -135,7 +135,7 @@ class MerchantsController extends ApiBaseController
             'maintainer_id' => 'required|integer'
         ]);
 
-        $user = ServiceCore::request('GET', 'users/' . $request->input('maintainer_id'), null);
+        $user = AuthMicroService::getUserById($request->input('maintainer_id'));
 
         if (!$user)
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
