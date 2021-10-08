@@ -46,7 +46,7 @@ class AlifshopMerchantAccess extends Model
     public function scopeFilterRequest(Builder $query, Request $request)
     {
         if ($q = $request->query('q')) {
-            $query->whereHas('company_users' , function ($query) use ($q) {
+            $query->whereHas('company_user' , function ($query) use ($q) {
                 $query->where('user_name', 'LIKE', '%' . $q . '%')
                     ->orWhere('phone', 'LIKE', '%' . $q . '%');
             });
