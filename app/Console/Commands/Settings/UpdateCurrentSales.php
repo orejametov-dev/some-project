@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands\Settings;
 
+use App\HttpServices\Core\CoreService;
 use App\Modules\Merchants\Models\Merchant;
-use App\Services\Core\ServiceCore;
 use Illuminate\Console\Command;
 
 class UpdateCurrentSales extends Command
@@ -41,11 +41,11 @@ class UpdateCurrentSales extends Command
     {
         $percentage_of_limit = Merchant::$percentage_of_limit;
 
-        $amount_of_merchants = ServiceCore::request('GET', 'merchant-sales', []);
+        $amount_of_merchants = CoreService::getAmountOfMerchantSales();
 
         foreach ($amount_of_merchants as $amount_of_merchant) {
-            $merchant = Merchant::findOrFail($amount_of_merchant->merchant_id);
-            $merchant->current_sales = $amount_of_merchant->discounted_amount;
+            $merchant = Merchant::findOrFail($amount_of_merchant['merchant_id']);
+            $merchant->current_sales = $amount_of_merchant['discounted_amount'];
             if ($merchant_info = $merchant->merchant_info) {
                 $total_limit = $merchant_info->limit;
                 $rest_limit = $merchant_info->limit - $merchant->current_sales;

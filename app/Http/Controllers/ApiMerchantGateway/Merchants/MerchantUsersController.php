@@ -9,7 +9,6 @@ use App\Http\Requests\ApiPrm\MerchantUsers\UpdateMerchantUsers;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Modules\Merchants\Models\MerchantUser;
-use App\Services\Core\ServiceCore;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 

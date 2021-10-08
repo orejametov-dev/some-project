@@ -5,12 +5,12 @@ namespace App\Http\Controllers\ApiGateway\Merchants;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Applications\StoreApplicationConditions;
 use App\Http\Requests\ApiPrm\Applications\UpdateApplicationConditions;
+use App\HttpServices\Core\CoreService;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\Merchant;
 use App\Services\Alifshop\AlifshopService;
-use App\Services\Core\ServiceCore;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -89,7 +89,7 @@ class ApplicationConditionsController extends ApiBaseController
         /** @var Condition $condition */
         $condition = Condition::query()->findOrFail($condition_id);
 
-        $applications = ServiceCore::request('GET', 'applications/count', null);
+        $applications = CoreService::getApplicationConditionId($condition_id);
 
         if ($applications) {
             return response()->json(['message' => 'Условие не может быть изменено'], 400);
@@ -123,8 +123,7 @@ class ApplicationConditionsController extends ApiBaseController
     {
         $condition = Condition::query()->findOrFail($condition_id);
 
-        $applications = ServiceCore::request('GET', 'applications/count', null);
-
+        $applications = CoreService::getApplicationConditionId($condition_id);
 
         if ($applications) {
             return response()->json(['message' => 'Условие не может быть удалено'], 400);
