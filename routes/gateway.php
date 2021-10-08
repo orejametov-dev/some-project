@@ -32,7 +32,7 @@ Route::prefix('alifshop-merchants')
         Route::match(['put', 'patch'], '/{id}/toggle', [AlifshopMerchantsController::class, 'toggle']);
     });
 
-Route::prefix('alifshop-merchants/users')
+Route::prefix('alifshop-merchant/users')
     ->group(function () {
         Route::get('/' , [AlifshopMerchantAccessController::class, 'index']);
         Route::get('/{id}' , [AlifshopMerchantAccessController::class, 'show']);
