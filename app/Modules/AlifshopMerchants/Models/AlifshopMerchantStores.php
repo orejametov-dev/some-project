@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property $id
- * @property AlifshopMerchant $alifshopMerchant
+ * @property AlifshopMerchant $alifshop_merchant
  */
 class AlifshopMerchantStores extends Model
 {
