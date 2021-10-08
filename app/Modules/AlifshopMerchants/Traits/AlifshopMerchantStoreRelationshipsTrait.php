@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\AlifshopMerchant\Traits;
+namespace App\Modules\AlifshopMerchants\Traits;
 
 use App\Modules\AlifshopMerchants\Models\AlifshopMerchant;
 
 trait AlifshopMerchantStoreRelationshipsTrait
 {
-    public function alifshopMerchant(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function alifshop_merchant()
     {
         return $this->belongsTo(AlifshopMerchant::class);
     }
