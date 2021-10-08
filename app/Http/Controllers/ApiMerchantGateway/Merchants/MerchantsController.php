@@ -22,7 +22,11 @@ class MerchantsController extends ApiBaseController
         });
 
         $conditions = Cache::tags($this->merchant_id)->remember('cache_of_merchant_conditions', 60 * 60, function () use ($merchant) {
-            return Condition::query()->active()->byMerchant($merchant->id)->get();
+            return Condition::query()
+                ->active()
+                ->byMerchant($merchant->id)
+                ->where('post_merchant', true)
+                ->get();
         });
 
         $stores = Cache::tags($this->merchant_id)->remember('cache_of_merchant_stores', 60 * 60, function () use ($merchant) {
