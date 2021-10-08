@@ -44,11 +44,9 @@ class AlifshopMerchantAccessController extends ApiBaseController
         $company_user->company_id = $alifshop_merchant_store->alifshopMerchant->company->id;
         $company_user->save();
 
-        $alifshop_merchant_access_exists = AlifshopMerchantAccess::query()
-            ->whereHas('company_users' , function ($query) use ($request) {
-                $query->where(['user_id' => $request->input('user_id')])
+        $alifshop_merchant_access_exists = CompanyUser::query()
+                ->where(['user_id' => $request->input('user_id')])
                     ->exists();
-            });
 
         if ($alifshop_merchant_access_exists) {
             return response()->json([
@@ -58,12 +56,9 @@ class AlifshopMerchantAccessController extends ApiBaseController
         }
 
         $alifshop_merchant = $alifshop_merchant_store->alifshopMerchant;
-        if ($alifshop_merchant_access = AlifshopMerchantAccess::withTrashed()
-            ->whereHas('company_users' , function ($query) use ($user) {
-                $query->where('user_id', $user->id)->first(); //нужно уточнить
-            })) {
+        if ($alifshop_merchant_access = AlifshopMerchantAccess::withTrashed()->where('company_user_id', $user->id)->first()) {
                 $alifshop_merchant_access->restore();
-        } else {
+            } else {
             $alifshop_merchant_access = new AlifshopMerchantAccess();
         }
 
