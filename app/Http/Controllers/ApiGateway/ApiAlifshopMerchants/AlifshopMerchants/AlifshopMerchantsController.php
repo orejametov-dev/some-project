@@ -68,7 +68,7 @@ class AlifshopMerchantsController extends ApiBaseController
 
     public function update(Request $request, $alifshop_merchant_id)
     {
-        $this->validate($request, [
+        $validatedData = $this->validate($request, [
             'name' => 'required|max:255|unique:alifshop_merchants,name,' . $alifshop_merchant_id,
             'legal_name' => 'nullable|max:255',
             'token' => 'required|max:255|unique:alifshop_merchants,alifshop_slug,' . $alifshop_merchant_id,
@@ -78,7 +78,7 @@ class AlifshopMerchantsController extends ApiBaseController
 
         $alifshop_merchant = AlifshopMerchant::query()->findOrFail($alifshop_merchant_id);
         $oldToken = $alifshop_merchant_id->token;
-        $alifshop_merchant_id->update($request->all());
+        $alifshop_merchant_id->update($validatedData);
         $alifshop_merchant_id->old_token = $oldToken;
 
         Cache::tags($alifshop_merchant_id->id)->flush();

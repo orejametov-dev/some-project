@@ -34,6 +34,7 @@ class AlifshopMerchantAccessController extends ApiBaseController
     public function store(StoreAlifshopMerchantUsers $request)
     {
         $user = CoreService::getUserById($request->input('user_id')); // нужно поменять на Auth сервер
+
         if (!$user)
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
 
