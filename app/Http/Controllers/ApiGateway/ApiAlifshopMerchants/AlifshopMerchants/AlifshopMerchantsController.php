@@ -5,6 +5,7 @@ namespace App\Http\Controllers\ApiGateway\ApiAlifshopMerchants\AlifshopMerchants
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\AlifshopMerchant\AlifshopMerchantStoreFileRequest;
+use App\HttpServices\Auth\AuthMicroService;
 use App\HttpServices\Core\CoreService;
 use App\Modules\AlifshopMerchants\DTO\AlifshopMerchantDTO;
 use App\Modules\AlifshopMerchants\Models\AlifshopMerchant;
@@ -77,14 +78,14 @@ class AlifshopMerchantsController extends ApiBaseController
         ]);
 
         $alifshop_merchant = AlifshopMerchant::query()->findOrFail($alifshop_merchant_id);
-        $oldToken = $alifshop_merchant_id->token;
-        $alifshop_merchant_id->update($validatedData);
-        $alifshop_merchant_id->old_token = $oldToken;
+        $oldToken = $alifshop_merchant->token;
+        $alifshop_merchant->update($validatedData);
+        $alifshop_merchant->old_token = $oldToken;
 
-        Cache::tags($alifshop_merchant_id->id)->flush();
+        Cache::tags($alifshop_merchant->id)->flush();
         Cache::tags('alifshop_merchants')->flush();
 
-        $this->alifshopService->storeOrUpdateMerchant($alifshop_merchant_id);
+        $this->alifshopService->storeOrUpdateMerchant($alifshop_merchant);
 
         return $alifshop_merchant;
     }
@@ -95,7 +96,7 @@ class AlifshopMerchantsController extends ApiBaseController
             'maintainer_id' => 'required|integer'
         ]);
 
-        $user = ServiceCore::request('GET', 'users/' . $request->input('maintainer_id'), null); //изменить на Auth
+        $user = AuthMicroService::getUserById($request->input('maintainer_id'));
 
         if (!$user)
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
@@ -114,7 +115,7 @@ class AlifshopMerchantsController extends ApiBaseController
         $alifshop_merchant = AlifshopMerchant::query()->findOrFail($alifshop_merchant_id);
         $alifshop_merchant->uploadLogo($request->file('file'));
 
-        //$this->alifshopService->storeOrUpdateMerchant($alifshop_merchant);
+        $this->alifshopService->storeOrUpdateMerchant($alifshop_merchant);
         return $alifshop_merchant;
     }
 
