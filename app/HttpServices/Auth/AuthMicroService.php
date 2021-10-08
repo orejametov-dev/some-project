@@ -49,9 +49,7 @@ class AuthMicroService
     {
         return Http::baseUrl(config('local_services.service_auth.domain') . '/api/gate/')
             ->withHeaders([
-                'Accept' => 'application/json',
-                'Access-Token' => config('local_services.service_auth.access_token'),
-                'Content-Type' => 'application/json'
+                'X-Access-Token' => config('local_services.service_auth.access_token')
             ]);
     }
 }
