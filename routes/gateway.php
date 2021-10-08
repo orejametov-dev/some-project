@@ -20,6 +20,14 @@ Route::prefix('companies/users')->group(function () {
 });
 
 //AlifshopMerchants
+Route::prefix('alifshop-merchants/users')
+    ->group(function () {
+        Route::get('/' , [AlifshopMerchantAccessController::class, 'index']);
+        Route::get('/{id}' , [AlifshopMerchantAccessController::class, 'show']);
+        Route::post('/' , [AlifshopMerchantAccessController::class, 'store']);
+        Route::match(['put' , 'patch'], '/{id}' , [AlifshopMerchantAccessController::class, 'update']);
+    });
+
 Route::prefix('alifshop-merchants')
     ->group(function () {
         Route::get('/' , [AlifshopMerchantsController::class, 'index']);
@@ -30,14 +38,6 @@ Route::prefix('alifshop-merchants')
         Route::post('/{id}/upload-logo', [AlifshopMerchantsController::class, 'uploadLogo']);
         Route::post('/{id}/remove-logo', [AlifshopMerchantsController::class, 'removeLogo']);
         Route::match(['put', 'patch'], '/{id}/toggle', [AlifshopMerchantsController::class, 'toggle']);
-    });
-
-Route::prefix('alifshop-merchant/users')
-    ->group(function () {
-        Route::get('/' , [AlifshopMerchantAccessController::class, 'index']);
-        Route::get('/{id}' , [AlifshopMerchantAccessController::class, 'show']);
-        Route::post('/' , [AlifshopMerchantAccessController::class, 'store']);
-        Route::match(['put' , 'patch'], '/{id}' , [AlifshopMerchantAccessController::class, 'update']);
     });
 
 //Azo-Merchants
