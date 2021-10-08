@@ -34,11 +34,6 @@ trait MerchantRelationshipsTrait
         return $this->hasMany(Condition::class)->where('active', true);
     }
 
-//    public function tags()
-//    {
-//        return $this->belongsToMany(Tag::class, 'merchant_tag', 'merchant_id', 'tag_id');
-//    }
-
     public function tags()
     {
         return $this->morphToMany(Tag::class, 'merchant', 'merchant_tag', 'merchant_id', 'tag_id');
@@ -61,7 +56,7 @@ trait MerchantRelationshipsTrait
 
     public function activity_reasons()
     {
-        return $this->belongsToMany(ActivityReason::class, 'merchant_activities')->withTimestamps();
+        return $this->morphToMany(ActivityReason::class, 'merchant', 'merchant_activities', 'merchant_id', 'activity_reason_id')->withTimestamps();
     }
 
     public function company()

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 //Companies
 Route::prefix('companies')->group(function () {
     Route::get('/', [CompaniesController::class, 'index']);
+    Route::get('/{id}', [CompaniesController::class, 'show']);
     Route::post('/', [CompaniesController::class, 'store']);
     Route::post('/special-store', [CompaniesController::class, 'storeSpecial']);
 });
@@ -31,9 +32,10 @@ Route::prefix('alifshop-merchants')
         Route::post('/{id}/upload-logo', [AlifshopMerchantsController::class, 'uploadLogo']);
         Route::post('/{id}/remove-logo', [AlifshopMerchantsController::class, 'removeLogo']);
         Route::match(['put', 'patch'], '/{id}/toggle', [AlifshopMerchantsController::class, 'toggle']);
+        Route::post('/{id}/set-tags', [AlifshopMerchantsController::class, 'setTags']);
     });
 
-Route::prefix('alifshop-merchant/users')
+Route::prefix('alifshop-merchants/users')
     ->group(function () {
         Route::get('/' , [AlifshopMerchantAccessController::class, 'index']);
         Route::get('/{id}' , [AlifshopMerchantAccessController::class, 'show']);
@@ -178,6 +180,7 @@ Route::prefix('merchants')
         Route::post('/{id}/remove-logo', [MerchantsController::class, 'removeLogo']);
         Route::post('/{id}/set-responsible-user', [MerchantsController::class, 'setResponsibleUser']);
         Route::match(['put', 'patch'], '/{id}/toggle', [MerchantsController::class, 'toggle']);
+        Route::post('/{id}/set-tags', [MerchantsController::class, 'setTags']);
 
         Route::match(['put', 'patch'], '/{id}/update-modules', [MerchantsController::class, 'updateModules']);
     });

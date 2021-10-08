@@ -7,12 +7,13 @@ use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Files\StoreFileRequest;
 use App\HttpServices\Auth\AuthMicroService;
 use App\HttpServices\Telegram\TelegramService;
-use App\Modules\Companies\DTO\CompanyDTO;
 use App\Modules\Companies\Models\Company;
+use App\Modules\Companies\Models\Module;
 use App\Modules\Companies\Services\CompanyService;
 use App\Modules\Merchants\DTO\Merchants\MerchantsDTO;
 use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\Merchant;
+use App\Modules\Merchants\Models\Tag;
 use App\Modules\Merchants\Services\Merchants\MerchantsService;
 use App\Services\Alifshop\AlifshopService;
 use Illuminate\Http\Request;
@@ -57,6 +58,10 @@ class MerchantsController extends ApiBaseController
 
         $company = Company::query()->findOrFail($request->input('company_id'));
 
+        if(Merchant::query()->where('company_id', $company->id)->exists()){
+            return response()->json(['message' => 'Указаная компания уже имеет алифшоп модуль'], 400);
+        }
+
         $merchant = $merchantsService->create(new MerchantsDTO(
             id: $company->id,
             name: $company->name,
@@ -65,6 +70,8 @@ class MerchantsController extends ApiBaseController
             maintainer_id: $this->user->id,
             company_id: $company->id
         ));
+
+        $company->modules()->attach([Module::AZO_MERCHANT]);
 
         Cache::tags($merchant->id)->flush();
         Cache::tags('azo_merchants')->flush();
@@ -164,14 +171,21 @@ class MerchantsController extends ApiBaseController
         return $merchant;
     }
 
-    public function setTags(Request $request)
+    public function setTags($id, Request $request)
     {
         $this->validate($request, [
-            'merchant_id' => 'required|integer',
             'tags' => 'required|array'
         ]);
-        $merchant = Merchant::query()->findOrFail($request->input('merchant_id'));
+        $merchant = Merchant::query()->findOrFail($id);
         $tags = $request->input('tags');
+
+        $tags = Tag::whereIn('id', $tags)->get();
+
+        foreach ($request->input('tags') as $tag) {
+            if(!$tags->contains('id', $tag)){
+                return response()->json(['message' => 'Указан не правильный тег'], 400);
+            }
+        }
 
         $merchant->tags()->sync($tags);
 

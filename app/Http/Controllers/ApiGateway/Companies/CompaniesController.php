@@ -9,8 +9,10 @@ use App\Modules\AlifshopMerchants\DTO\AlifshopMerchantDTO;
 use App\Modules\AlifshopMerchants\Services\AlifshopMerchantService;
 use App\Modules\Companies\DTO\CompanyDTO;
 use App\Modules\Companies\Models\Company;
+use App\Modules\Companies\Models\Module;
 use App\Modules\Companies\Services\CompanyService;
 use App\Modules\Merchants\DTO\Merchants\MerchantsDTO;
+use App\Modules\Merchants\Models\Tag;
 use App\Modules\Merchants\Services\Merchants\MerchantsService;
 use Illuminate\Http\Request;
 
@@ -22,6 +24,11 @@ class CompaniesController extends ApiBaseController
             ->filterRequest($request);
 
         return $companies->paginate($request->query('per_page') ?? 15);
+    }
+
+    public function show($id)
+    {
+        return Company::query()->with('modules')->findOrFail($id);
     }
 
     public function store(Request $request, CompanyService $companyService)
@@ -53,6 +60,14 @@ class CompaniesController extends ApiBaseController
             'tags' => 'required|array'
         ]);
 
+        $tags = Tag::whereIn('id', $request->input('tags'))->get();
+
+        foreach ($request->input('tags') as $tag) {
+            if(!$tags->contains('id', $tag)){
+                return response()->json(['message' => 'Указан не правильный тег'], 400);
+            }
+        }
+
         $company_name_exists = Company::query()->where('name', $request->input('name'))->exists();
         if ($company_name_exists) {
             return response()->json(['message' => 'Указанное имя компании уже занято'], 400);
@@ -73,7 +88,7 @@ class CompaniesController extends ApiBaseController
                 maintainer_id: $this->user->id,
                 company_id: $company->id
             ));
-
+            $company->modules()->attach([Module::AZO_MERCHANT]);
             $merchant->tags()->attach($request->input('tags'));
         }
 
@@ -86,7 +101,7 @@ class CompaniesController extends ApiBaseController
                 maintainer_id: $this->user->id,
                 company_id: $company->id
             ));
-
+            $company->modules()->attach([Module::ALIFSHOP_MERCHANT]);
             $alifshop_merchant->tags()->attach($request->input('tags'));
         }
 

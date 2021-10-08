@@ -37,6 +37,11 @@ class Company extends Model
         return $this->hasOne(AlifshopMerchant::class);
     }
 
+    public function modules()
+    {
+        return $this->belongsToMany(Module::class, 'company_modules');
+    }
+
     public function scopeFilterRequest(Builder $query, Request $request)
     {
         if ($q = $request->query('q')) {
@@ -48,6 +53,12 @@ class Company extends Model
         if ($request->query('date')) {
             $date = Carbon::parse($request->query('date'));
             $query->whereDate('created_at', $date);
+        }
+
+        if($request->query('module_id')) {
+            $query->whereHas('modules', function ($query)  use ($request){
+                $query->where('company_modules.module_id',$request->query('module_id'));
+            });
         }
     }
 }

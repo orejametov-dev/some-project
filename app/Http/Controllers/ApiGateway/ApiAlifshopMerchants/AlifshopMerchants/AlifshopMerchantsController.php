@@ -10,6 +10,11 @@ use App\Modules\AlifshopMerchants\DTO\AlifshopMerchantDTO;
 use App\Modules\AlifshopMerchants\Models\AlifshopMerchant;
 use App\Modules\AlifshopMerchants\Services\AlifshopMerchantService;
 use App\Modules\Companies\Models\Company;
+use App\Modules\Companies\Models\Module;
+use App\Modules\Merchants\Models\ActivityReason;
+use App\Modules\Merchants\Models\AzoMerchantAccess;
+use App\Modules\Merchants\Models\Merchant;
+use App\Modules\Merchants\Models\Tag;
 use App\Services\Alifshop\AlifshopService;
 use App\Services\Core\ServiceCore;
 use  Illuminate\Support\Facades\Cache;
@@ -49,6 +54,10 @@ class AlifshopMerchantsController extends ApiBaseController
 
         $company = Company::query()->findOrFail($request->input('company_id'));
 
+        if(AlifshopMerchant::query()->where('company_id', $company->id)->exists()){
+            return response()->json(['message' => 'Указаная компания уже имеет алифшоп модуль'], 400);
+        }
+
         $alifshop_merchant = $alifshopMerchantService->create(new AlifshopMerchantDTO(
             id: $company->id,
             name: $company->name,
@@ -57,6 +66,8 @@ class AlifshopMerchantsController extends ApiBaseController
             maintainer_id: $this->user->id,
             company_id: $company->id
         ));
+
+        $company->modules()->attach([Module::ALIFSHOP_MERCHANT]);
 
         Cache::tags($alifshop_merchant->id)->flush();
         Cache::tags('alifshop_merchants')->flush();
@@ -127,29 +138,45 @@ class AlifshopMerchantsController extends ApiBaseController
         return response()->json(['message' => 'Логотип удалён']);
     }
 
-    //ойбек
     public function toggle($id, Request $request)
     {
         $this->validate($request, [
-            'active' => 'required|integer'
+            'activity_reason_id' => 'integer|required'
         ]);
+
+        $activity_reason = ActivityReason::where('type', 'MERCHANT')
+            ->findOrFail($request->input('activity_reason_id'));
 
         $alifshop_merchant = AlifshopMerchant::findOrFail($id);
         $alifshop_merchant->active = !$alifshop_merchant->active;
         $alifshop_merchant->save();
+
+        $alifshop_merchant->activity_reasons()->attach($activity_reason->id, [
+            'active' => $alifshop_merchant->active,
+            'created_by_id' => $this->user->id,
+            'created_by_name' => $this->user->name
+        ]);
 
         Cache::tags($alifshop_merchant->id)->flush();
         Cache::tags('alifshop_merchants')->flush();
         return $alifshop_merchant;
     }
 
-    public function setTags(Request $request)
+    public function setTags($id, Request $request)
     {
         $this->validate($request, [
-            'merchant_id' => 'required|integer',
             'tags' => 'required|array'
         ]);
-        $alifshop_merchant = AlifshopMerchant::query()->findOrFail($request->input('merchant_id'));
+
+        $tags = Tag::whereIn('id', $request->input('tags'))->get();
+
+        foreach ($request->input('tags') as $tag) {
+            if(!$tags->contains('id', $tag)){
+                return response()->json(['message' => 'Указан не правильный тег'], 400);
+            }
+        }
+
+        $alifshop_merchant = AlifshopMerchant::query()->findOrFail($id);
         $tags = $request->input('tags');
 
         $alifshop_merchant->tags()->sync($tags);

@@ -13,7 +13,7 @@ class MigrateMerchantsToCompanies extends Command
      *
      * @var string
      */
-    protected $signature = 'migrate:merchant_to_companies {from} {to}';
+    protected $signature = 'migrate:merchant_to_companies';
 
     /**
      * The console command description.
@@ -39,9 +39,7 @@ class MigrateMerchantsToCompanies extends Command
      */
     public function handle()
     {
-        Merchant::query()
-            ->whereBetween('id', [$this->argument('from'), $this->argument('to')])
-            ->chunkById(50, function ($merchants){
+        Merchant::query()->chunkById(50, function ($merchants){
             foreach ($merchants as $merchant) {
                 $company = new Company([
                     'name' => $merchant->name,
