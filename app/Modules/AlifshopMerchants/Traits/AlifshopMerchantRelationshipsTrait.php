@@ -5,6 +5,7 @@ namespace App\Modules\AlifshopMerchants\Traits;
 
 use App\Modules\AlifshopMerchants\Models\AlifshopMerchantStores;
 use App\Modules\Companies\Models\Company;
+use App\Modules\Merchants\Models\Tag;
 
 trait AlifshopMerchantRelationshipsTrait
 {
@@ -23,5 +24,10 @@ trait AlifshopMerchantRelationshipsTrait
     public function company()
     {
         return $this->belongsTo(Company::class);
+    }
+
+    public function tags()
+    {
+        return $this->morphToMany(Tag::class, 'merchant', 'merchant_tag', 'merchant_id', 'tag_id');
     }
 }

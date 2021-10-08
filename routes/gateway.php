@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('companies')->group(function () {
     Route::get('/', [CompaniesController::class, 'index']);
     Route::post('/', [CompaniesController::class, 'store']);
+    Route::post('/special-store', [CompaniesController::class, 'storeSpecial']);
 });
 
 Route::prefix('companies/users')->group(function () {

@@ -2,6 +2,7 @@
 
 namespace App\Modules\Merchants\Models;
 
+use App\Modules\AlifshopMerchants\Models\AlifshopMerchant;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -31,7 +32,12 @@ class Tag extends Model
 
     public function merchants()
     {
-        return $this->belongsToMany(Merchant::class, 'merchant_tag', 'tag_id', 'merchant_id')->withTimestamps();
+        return $this->morphedByMany(Merchant::class, 'merchant', 'merchant_tag', 'tag_id', 'merchant_id')->withTimestamps();
+    }
+
+    public function alifshop_merchants()
+    {
+        return $this->morphedByMany(AlifshopMerchant::class, 'merchant', 'merchant_tag', 'tag_id', 'merchant_id')->withTimestamps();
     }
 
     public function scopeFilterRequests(Builder $query, \Illuminate\Http\Request $request)
