@@ -2,6 +2,7 @@
 
 namespace App\Modules\Companies\Models;
 
+use App\Modules\AlifshopMerchants\Models\AlifshopMerchantAccess;
 use App\Modules\Merchants\Models\AzoMerchantAccess;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -30,6 +31,11 @@ class CompanyUser extends Model
     public function azo_merchant_access()
     {
         return $this->hasOne(AzoMerchantAccess::class);
+    }
+
+    public function alifshop_merchant_access()
+    {
+        return $this->hasOne(AlifshopMerchantAccess::class);
     }
 
     public function scopeFilterRequest(Builder $query, Request $request)
