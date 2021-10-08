@@ -61,14 +61,14 @@ class MerchantUserController extends ApiBaseController
         $store = Store::query()->findOrFail($request->input('store_id'));
 
         $merchant = $store->merchant;
-        if ($merchant_user = MerchantUser::withTrashed()->where('user_id', $user->id)->first()) {
+        if ($merchant_user = MerchantUser::withTrashed()->where('user_id', $user['data']['id'])->first()) {
             $merchant_user->restore();
         } else {
             $merchant_user = new MerchantUser();
         }
         $merchant_user->user_id = $request->input('user_id');
-        $merchant_user->user_name = $user->name;
-        $merchant_user->phone = $user->phone;
+        $merchant_user->user_name = $user['data']['name'];
+        $merchant_user->phone = $user['data']['phone'];
         $merchant_user->merchant()->associate($merchant);
         $merchant_user->store()->associate($store->id);
 

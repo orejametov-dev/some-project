@@ -130,7 +130,7 @@ class MerchantRequestsController extends ApiBaseController
             $merchant_request->setStatusInProcess();
             $merchant_request->save();
 
-            $merchant_request->engaged_by = $user;
+            $merchant_request->engaged_by = $user['data'];
 
             return $merchant_request;
         }
