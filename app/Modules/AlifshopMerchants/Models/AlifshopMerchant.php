@@ -5,6 +5,7 @@ namespace App\Modules\AlifshopMerchants\Models;
 use App\Modules\AlifshopMerchants\Traits\AlifshopMerchantFileTrait;
 use App\Modules\AlifshopMerchants\Traits\AlifshopMerchantRelationshipsTrait;
 use App\Modules\Companies\Models\Company;
+use App\Modules\Merchants\Traits\MerchantFileTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Traits\SortableByQueryParams;
@@ -29,7 +30,7 @@ use Illuminate\Http\Request;
 class AlifshopMerchant extends Model
 {
     use HasFactory;
-    use AlifshopMerchantRelationshipsTrait, AlifshopMerchantFileTrait , SortableByQueryParams;
+    use AlifshopMerchantRelationshipsTrait, MerchantFileTrait, SortableByQueryParams;
 
     protected $fillable = [
         'name',
