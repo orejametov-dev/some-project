@@ -5,7 +5,7 @@ namespace App\Http\Controllers\ApiGateway\ApiAlifshopMerchants\AlifshopMerchants
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\AlifshopMerchant\StoreAlifshopMerchantUsers;
-use App\HttpServices\Core\CoreService;
+use App\HttpServices\Auth\AuthMicroService;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Modules\AlifshopMerchants\Models\AlifshopMerchantAccess;
@@ -33,20 +33,22 @@ class AlifshopMerchantAccessController extends ApiBaseController
 
     public function store(StoreAlifshopMerchantUsers $request)
     {
-        $user = CoreService::getUserById($request->input('user_id')); // нужно поменять на Auth сервер
+        $user = AuthMicroService::getUserById($request->input('user_id'));
 
         if (!$user)
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
 
         $alifshop_merchant_store = AlifshopMerchantStores::query()->findOrFail($request->input('store_id'));
 
-        $company_user = CompanyUser::query()->where('user_id', $user->id)->firstOrNew();
-        $company_user->user_id = $user->id;
-        $company_user->company_id = $alifshop_merchant_store->alifshopMerchant->company->id;
+        $company_user = CompanyUser::query()->where('user_id', $user['data']['id'])->firstOrNew();
+        $company_user->user_id = $user['data']['id'];
+        $company_user->company_id = $alifshop_merchant_store->alifshop_merchant->company_id;
+        $company_user->phone = $user['data']['phone'];
+        $company_user->full_name = $user['data']['name'];
         $company_user->save();
 
-        $alifshop_merchant_access_exists = CompanyUser::query()
-                ->where(['user_id' => $request->input('user_id')])
+        $alifshop_merchant_access_exists = AlifshopMerchantAccess::query()
+                ->where('company_user_id' , $company_user->id)
                     ->exists();
 
         if ($alifshop_merchant_access_exists) {
@@ -56,13 +58,16 @@ class AlifshopMerchantAccessController extends ApiBaseController
             ], 400);
         }
 
-        $alifshop_merchant = $alifshop_merchant_store->alifshopMerchant;
-        if ($alifshop_merchant_access = AlifshopMerchantAccess::withTrashed()->where('company_user_id', $user->id)->first()) {
-                $alifshop_merchant_access->restore();
-            } else {
+        $alifshop_merchant = $alifshop_merchant_store->alifshop_merchant;
+        if ($alifshop_merchant_access = AlifshopMerchantAccess::withTrashed()
+            ->where('company_user_id', $company_user->id)->first())
+        {
+            $alifshop_merchant_access->restore();
+        } else {
             $alifshop_merchant_access = new AlifshopMerchantAccess();
         }
 
+        $alifshop_merchant_access->company_user()->associate($company_user->id);
         $alifshop_merchant_access->alifshop_merchant()->associate($alifshop_merchant);
         $alifshop_merchant_access->alifshop_merchant_store()->associate($alifshop_merchant_store->id);
 
@@ -94,9 +99,9 @@ class AlifshopMerchantAccessController extends ApiBaseController
         ]);
 
         $alifshop_merchant_access = AlifshopMerchantAccess::query()->findOrFail($id);
-        $alifshop_merchant = $alifshop_merchant_access->alifshopMerchant;
-        $old_store = $alifshop_merchant_access->alifshopMerchantStores;
-        $alifshop_merchant_store = $alifshop_merchant->alifshop_merchant_stores()->where(['id' => $request->input('store_id')])->firstOrFail(); //нужно уточнить
+        $alifshop_merchant = $alifshop_merchant_access->alifshop_merchant;
+        $old_store = $alifshop_merchant_access->alifshop_merchant_store;
+        $alifshop_merchant_store = $alifshop_merchant->alifshop_merchant_stores()->where(['id' => $request->input('store_id')])->firstOrFail();
 
         $alifshop_merchant_access->alifshop_merchant_store()->associate($alifshop_merchant_store);
 
@@ -109,7 +114,8 @@ class AlifshopMerchantAccessController extends ApiBaseController
             created_from_str: 'PRM',
             created_by_id: $this->user->id,
             body: 'Сотрудник обновлен',
-            keyword: 'Сотруднику поменяли магазин: old_store: (' . $old_store->id . ', ' . $old_store->name . ') -> ' . 'store: (' . $alifshop_merchant_store->id . ', ' . $alifshop_merchant_store->name . ')',
+            keyword: 'Сотруднику поменяли магазин: old_store: (' . $old_store->id . ', ' . $old_store->name .
+            ') -> ' . 'store: (' . $alifshop_merchant_store->id . ', ' . $alifshop_merchant_store->name . ')',
             action: 'update',
             class: 'warning',
             action_at: null,

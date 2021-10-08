@@ -12,10 +12,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 
 /**
+ * @property int $id
  * @property int $store_id
  * @method static Builder|AlifshopMerchantAccess byUserId($user_id)
- * @property-read AlifshopMerchant $alifshopMerchant
- * @property-read AlifshopMerchantStores $alifshopMerchantStores
+ * @property-read AlifshopMerchant $alifshop_merchant
+ * @property-read AlifshopMerchantStores $alifshop_merchant_store
  * @method static Builder|AlifshopMerchantAccess filterRequest(Request $request)
  * @method static Builder|AlifshopMerchantAccess orderRequest(Request $request, string $default_order_str = 'id:desc')
  * @method static Builder|AlifshopMerchantAccess query()
