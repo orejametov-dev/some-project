@@ -5,10 +5,8 @@ namespace App\Http\Controllers\ApiGateway\Merchants;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Applications\StoreApplicationConditions;
 use App\Http\Requests\ApiPrm\Applications\UpdateApplicationConditions;
-use App\HttpServices\Core\CoreService;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
-use App\Modules\Core\Models\WebService;
 use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\Merchant;
 use App\Services\Alifshop\AlifshopService;
@@ -61,7 +59,7 @@ class ApplicationConditionsController extends ApiBaseController
         if (!$store) {
             return response()->json(['message' => 'Пожалуйста, укажите сначала основной магазин'], 400);
         }
-        $condition = new Condition($request->all());
+        $condition = new Condition($request->validated());
         $condition->merchant()->associate($merchant);
         $condition->store()->associate($store);
         $condition->save();
@@ -175,11 +173,12 @@ class ApplicationConditionsController extends ApiBaseController
             created_by_str: $this->user->name,
         ));
 
+
         $merchant->load(['application_conditions' => function ($q) {
             $q->active();
         }]);
 
-        $conditions = $merchant->application_conditions->map(function ($item) {
+        $conditions = $merchant->application_conditions->where('post_alifshop', true)->map(function ($item) {
             return [
                 'commission' => $item->commission,
                 'duration' => $item->duration,
@@ -188,10 +187,49 @@ class ApplicationConditionsController extends ApiBaseController
             ];
         });
 
+        $alifshopService = new AlifshopService;
+        $alifshopService->storeOrUpdateMerchant($merchant, $conditions);
+
         Cache::tags($merchant->id)->flush();
+
+        return $condition;
+    }
+
+    public function togglePosts($id, Request $request)
+    {
+        $this->validate($request, [
+            'post_alifshop' => 'required|boolean',
+            'post_merchant' => 'required|boolean'
+        ]);
+
+        /** @var Condition $condition */
+        $condition = Condition::query()->findOrFail($id);
+
+        $condition->post_merchant = $request->input('post_merchant');
+        $condition->post_alifshop = $request->input('post_alifshop');
+
+        $condition->save();
+
+        $merchant = $condition->merchant;
+
+        $merchant->load(['application_conditions' => function ($q) {
+            $q->active();
+        }]);
+
+        $conditions = $merchant->application_conditions->where('post_alifshop', true)->map(function ($item) {
+            return [
+                'commission' => $item->commission,
+                'duration' => $item->duration,
+                'is_active' => $item->active,
+                'special_offer' => $item->special_offer
+            ];
+        });
 
         $alifshopService = new AlifshopService;
         $alifshopService->storeOrUpdateMerchant($merchant, $conditions);
+
+        Cache::tags($merchant->id)->flush();
+
         return $condition;
     }
 }

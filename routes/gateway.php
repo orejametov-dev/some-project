@@ -118,6 +118,7 @@ Route::prefix('application-conditions')
         Route::match(['put', 'patch'], '/{id}', [App\Http\Controllers\ApiGateway\Merchants\ApplicationConditionsController::class, 'update']);
         Route::post('/{id}/toggle', [App\Http\Controllers\ApiGateway\Merchants\ApplicationConditionsController::class, 'toggle']);
         Route::delete('/{id}', [App\Http\Controllers\ApiGateway\Merchants\ApplicationConditionsController::class, 'delete']);
+        Route::post('/{id}/toggle-posts' , [App\Http\Controllers\ApiGateway\Merchants\ApplicationConditionsController::class , 'togglePosts']);
     });
 
 Route::prefix('dashboard')
