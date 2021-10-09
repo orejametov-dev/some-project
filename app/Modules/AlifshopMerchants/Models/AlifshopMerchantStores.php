@@ -3,16 +3,80 @@
 namespace App\Modules\AlifshopMerchants\Models;
 
 use App\Modules\AlifshopMerchants\Traits\AlifshopMerchantStoreRelationshipsTrait;
-use App\Modules\Companies\Models\Company;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use App\Traits\SortableByQueryParams;
 
 /**
  * @property $id
+ * @property $name
+ * @property $is_main
+ * @property $phone
+ * @property $address
+ * @property $region
+ * @property $lat
+ * @property $long
+ * @property bool $actives
+ * @property $alifshop_merchant_id
  * @property AlifshopMerchant $alifshop_merchant
+ * @method static Builder|AlifshopMerchantStores main()
+ * @method static Builder|AlifshopMerchantStores filterRequest(Request $request)
+ * @method static Builder|AlifshopMerchantStores query()
  */
 class AlifshopMerchantStores extends Model
 {
     use HasFactory;
-    use AlifshopMerchantStoreRelationshipsTrait;
+    use AlifshopMerchantStoreRelationshipsTrait, SortableByQueryParams;
+
+    protected $fillable = [
+        'name',
+        'is_main',
+        'phone',
+        'address',
+        'region',
+        'lat',
+        'long',
+        'active',
+        'alifshop_merchant_id'
+    ];
+
+    public function scopeMain($query)
+    {
+        return $query->where('is_main', true);
+    }
+
+    public function scopeFilterRequest(Builder $query, Request $request)
+    {
+        $searchIndex = $request->q;
+        if ($alifshop_merchant_id = $request->query('merchant_id')) {
+            $query->where('alifshop_merchant_id', $alifshop_merchant_id);
+        }
+
+        if ($alifshop_merchant_store_id = $request->query('store_id')) {
+            $query->where('id', $alifshop_merchant_store_id);
+        }
+
+        if ($alifshop_merchant_store_id = $request->query('id')) {
+            $query->where('id', $alifshop_merchant_store_id);
+        }
+
+        if ($alifshop_merchant_store_ids = $request->query('store_ids')) {
+            $store_ids = explode(';', $alifshop_merchant_store_ids);
+            $query->whereIn('id', $alifshop_merchant_store_ids);
+        }
+
+        if ($is_main = $request->query('is_main')) {
+            $query->where('is_main', $is_main);
+        }
+
+        if ($searchIndex) {
+            $query->where('name', 'like', '%' . $searchIndex . '%');
+        }
+
+        if($request->query('region')) {
+            $query->where('region', $request->query('region'));
+        }
+    }
 }
