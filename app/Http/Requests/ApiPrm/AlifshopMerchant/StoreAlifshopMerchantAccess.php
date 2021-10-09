@@ -4,7 +4,7 @@ namespace App\Http\Requests\ApiPrm\AlifshopMerchant;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreAlifshopMerchantUsers extends FormRequest
+class StoreAlifshopMerchantAccess extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
