@@ -4,7 +4,7 @@ namespace App\Http\Controllers\ApiGateway\ApiAlifshopMerchants\AlifshopMerchants
 
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
-use App\Http\Requests\ApiPrm\AlifshopMerchant\StoreAlifshopMerchantUsers;
+use App\Http\Requests\ApiPrm\AlifshopMerchant\StoreAlifshopMerchantAccess;
 use App\HttpServices\Auth\AuthMicroService;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
@@ -31,7 +31,7 @@ class AlifshopMerchantAccessController extends ApiBaseController
         return AlifshopMerchantAccess::query()->findOrFail($id);
     }
 
-    public function store(StoreAlifshopMerchantUsers $request)
+    public function store(StoreAlifshopMerchantAccess $request)
     {
         $user = AuthMicroService::getUserById($request->input('user_id'));
 
