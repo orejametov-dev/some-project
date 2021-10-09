@@ -19,6 +19,12 @@ class CreateAlifshopMerchantStoresTable extends Migration
             $table->string('name');
             $table->string('address')->nullable();
             $table->text('information')->nullable();
+
+            $table->double('lat')->nullable();
+            $table->double('long')->nullable();
+
+            $table->string('region')->nullable();
+
             $table->boolean('is_main')->default(false);
             $table->boolean('active')->default(false);
             $table->timestamps();
