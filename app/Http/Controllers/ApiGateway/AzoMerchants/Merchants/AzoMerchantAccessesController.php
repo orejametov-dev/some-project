@@ -14,7 +14,6 @@ use App\Jobs\ToggleMerchantRoleOfUser;
 use App\Modules\Companies\Models\CompanyUser;
 use App\Modules\Merchants\Models\AzoMerchantAccess;
 use App\Modules\Merchants\Models\Store;
-use App\Services\Core\ServiceCore;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -42,7 +41,7 @@ class AzoMerchantAccessesController extends ApiBaseController
 
     public function store(StoreMerchantUsers $request)
     {
-        $user = ServiceCore::request('GET', 'users/' . $request->input('user_id'), null);
+        $user = AuthMicroService::getUserById($request->input('user_id'));
 
         if (!$user)
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
@@ -66,14 +65,14 @@ class AzoMerchantAccessesController extends ApiBaseController
         }
 
         $merchant = $store->merchant;
-        if ($azo_merchant_access = AzoMerchantAccess::withTrashed()->where('user_id', $user->id)->first()) {
+        if ($azo_merchant_access = AzoMerchantAccess::withTrashed()->where('user_id', $user['data']['id'])->first()) {
             $azo_merchant_access->restore();
         } else {
             $azo_merchant_access = new AzoMerchantAccess();
         }
         $azo_merchant_access->user_id = $request->input('user_id');
-        $azo_merchant_access->user_name = $user->name;
-        $azo_merchant_access->phone = $user->phone;
+        $azo_merchant_access->user_name = $user['data']['name'];
+        $azo_merchant_access->phone = $user['data']['phone'];
         $azo_merchant_access->merchant()->associate($merchant);
         $azo_merchant_access->store()->associate($store->id);
 

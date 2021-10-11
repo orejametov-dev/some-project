@@ -13,7 +13,7 @@ class ChangeMerchantUsersTableName extends Migration
      */
     public function up()
     {
-        Schema::rename('merchant_users', 'azo_merchant_access');
+        Schema::rename('merchant_users', 'azo_merchant_accesses');
     }
 
     /**

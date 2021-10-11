@@ -185,8 +185,8 @@ class Request extends Model
 
     public function setEngage($user)
     {
-        $this->engaged_by_id = $user->id;
-        $this->engaged_by_name = $user->name;
+        $this->engaged_by_id = $user['data']['id'];
+        $this->engaged_by_name = $user['data']['name'];
         $this->engaged_at = now();
     }
 
