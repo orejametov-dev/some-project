@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\ApiGateway\ApiAlifshopMerchants\AlifshopStores;
 
 use App\Http\Controllers\ApiGateway\ApiBaseController;
-use App\Http\Requests\ApiPrm\AlifshopMerchant\AlifshopMerchantStoreStoresRequest;
+use App\Http\Requests\ApiPrm\AlifshopMerchant\AlifshopMerchantCreateStoresRequest;
 use App\Http\Requests\ApiPrm\AlifshopMerchant\AlishopMerchantUpdateStoreRequest;
 use App\Modules\AlifshopMerchants\Models\AlifshopMerchant;
 use App\Modules\AlifshopMerchants\Models\AlifshopMerchantStore;
@@ -31,7 +31,7 @@ class AlifshopMerchantStoresController extends ApiBaseController
         return $alifshop_merchant_store;
     }
 
-    public function store(AlifshopMerchantStoreStoresRequest $request)
+    public function store(AlifshopMerchantCreateStoresRequest $request)
     {
         $alifshop_merchant = AlifshopMerchant::findOrFail($request->input('alifshop_merchant_id'));
 

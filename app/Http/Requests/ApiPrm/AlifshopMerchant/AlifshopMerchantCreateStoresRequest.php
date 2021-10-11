@@ -6,7 +6,7 @@ use App\Services\RegionService;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class AlifshopMerchantStoreStoresRequest extends FormRequest
+class AlifshopMerchantCreateStoresRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
