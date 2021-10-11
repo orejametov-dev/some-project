@@ -5,6 +5,7 @@ namespace App\Modules\Merchants\Traits;
 use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\Merchant;
+use App\Modules\Merchants\Models\Tag;
 
 trait StoreRelationshipsTrait
 {
@@ -20,6 +21,6 @@ trait StoreRelationshipsTrait
 
     public function activity_reasons()
     {
-        return $this->belongsToMany(ActivityReason::class, 'store_activities')->withTimestamps();
+        return $this->morphToMany(ActivityReason::class, 'store', 'store_activities')->withTimestamps();
     }
 }
