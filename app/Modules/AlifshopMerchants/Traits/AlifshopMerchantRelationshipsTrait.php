@@ -3,7 +3,7 @@
 namespace App\Modules\AlifshopMerchants\Traits;
 
 
-use App\Modules\AlifshopMerchants\Models\AlifshopMerchantStores;
+use App\Modules\AlifshopMerchants\Models\AlifshopMerchantStore;
 use App\Modules\Companies\Models\Company;
 use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\Tag;
@@ -16,7 +16,7 @@ trait AlifshopMerchantRelationshipsTrait
      */
     public function alifshop_merchant_stores()
     {
-        return $this->hasMany(AlifshopMerchantStores::class);
+        return $this->hasMany(AlifshopMerchantStore::class);
     }
 
     /**

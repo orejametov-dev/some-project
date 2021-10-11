@@ -9,7 +9,7 @@ use App\HttpServices\Auth\AuthMicroService;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Modules\AlifshopMerchants\Models\AlifshopMerchantAccess;
-use App\Modules\AlifshopMerchants\Models\AlifshopMerchantStores;
+use App\Modules\AlifshopMerchants\Models\AlifshopMerchantStore;
 use App\Modules\Companies\Models\CompanyUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -38,7 +38,7 @@ class AlifshopMerchantAccessController extends ApiBaseController
         if (!$user)
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
 
-        $alifshop_merchant_store = AlifshopMerchantStores::query()->findOrFail($request->input('store_id'));
+        $alifshop_merchant_store = AlifshopMerchantStore::query()->findOrFail($request->input('store_id'));
 
         $company_user = CompanyUser::query()->where('user_id', $user['data']['id'])->firstOrNew();
         $company_user->user_id = $user['data']['id'];

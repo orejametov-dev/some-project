@@ -21,15 +21,16 @@ use App\Traits\SortableByQueryParams;
  * @property bool $actives
  * @property $alifshop_merchant_id
  * @property AlifshopMerchant $alifshop_merchant
- * @method static Builder|AlifshopMerchantStores main()
- * @method static Builder|AlifshopMerchantStores filterRequest(Request $request)
- * @method static Builder|AlifshopMerchantStores query()
+ * @method static Builder|AlifshopMerchantStore main()
+ * @method static Builder|AlifshopMerchantStore filterRequest(Request $request)
+ * @method static Builder|AlifshopMerchantStore query()
  */
-class AlifshopMerchantStores extends Model
+class AlifshopMerchantStore extends Model
 {
     use HasFactory;
     use AlifshopMerchantStoreRelationshipsTrait, SortableByQueryParams;
 
+    protected $table = 'alifshop_merchant_stores';
     protected $fillable = [
         'name',
         'is_main',
@@ -38,7 +39,8 @@ class AlifshopMerchantStores extends Model
         'region',
         'lat',
         'long',
-        'active'
+        'active',
+
     ];
 
     public function scopeMain($query)
