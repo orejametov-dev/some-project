@@ -27,7 +27,6 @@ class AlishopMerchantUpdateStoreRequest extends FormRequest
     {
         return [
             'name' => 'required|max:255',
-            'phone' => 'nullable|digits:12',
             'address' => 'nullable|string',
             'region' => [
                 'required',

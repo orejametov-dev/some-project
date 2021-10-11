@@ -27,7 +27,7 @@ class AlifshopMerchantStoreStoresRequest extends FormRequest
     {
         return [
             'name' => 'required|max:255',
-            'merchant_id' => 'required|numeric',
+            'alifshop_merchant_id' => 'required|numeric',
             'region' => [
                 'required',
                 Rule::in(RegionService::getKeys()),

@@ -38,8 +38,7 @@ class AlifshopMerchantStores extends Model
         'region',
         'lat',
         'long',
-        'active',
-        'alifshop_merchant_id'
+        'active'
     ];
 
     public function scopeMain($query)
@@ -54,17 +53,18 @@ class AlifshopMerchantStores extends Model
             $query->where('alifshop_merchant_id', $alifshop_merchant_id);
         }
 
-        if ($alifshop_merchant_store_id = $request->query('store_id')) {
-            $query->where('id', $alifshop_merchant_store_id);
-        }
-
-        if ($alifshop_merchant_store_id = $request->query('id')) {
-            $query->where('id', $alifshop_merchant_store_id);
+        if ($alifshop_merchant_id = $request->query('alifshop_merchant_id')) {
+            $query->where('alifshop_merchant_id', $alifshop_merchant_id);
         }
 
         if ($alifshop_merchant_store_ids = $request->query('store_ids')) {
             $store_ids = explode(';', $alifshop_merchant_store_ids);
-            $query->whereIn('id', $alifshop_merchant_store_ids);
+            $query->whereIn('id', $store_ids);
+        }
+
+        if ($alifshop_merchant_store_ids = $request->query('alifshop_store_ids')) {
+            $store_ids = explode(';', $alifshop_merchant_store_ids);
+            $query->whereIn('id', $store_ids);
         }
 
         if ($is_main = $request->query('is_main')) {
