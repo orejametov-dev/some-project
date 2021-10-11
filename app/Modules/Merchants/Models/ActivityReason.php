@@ -17,6 +17,11 @@ class ActivityReason extends Model
         return $this->belongsToMany(Store::class, 'store_activities');
     }
 
+    public function alifshop_merchant_stores()
+    {
+        return $this->belongsToMany(AlifshopMerchant::class, 'store_activities');
+    }
+
     public function merchants()
     {
         return $this->morphedByMany(Merchant::class, 'merchant','merchant_activities', 'activity_reason_id', 'merchant_id');
