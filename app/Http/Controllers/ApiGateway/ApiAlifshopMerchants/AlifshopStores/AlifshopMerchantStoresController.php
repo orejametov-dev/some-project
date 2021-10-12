@@ -8,6 +8,7 @@ use App\Http\Requests\ApiPrm\AlifshopMerchant\AlishopMerchantUpdateStoreRequest;
 use App\Modules\AlifshopMerchants\Models\AlifshopMerchant;
 use App\Modules\AlifshopMerchants\Models\AlifshopMerchantStore;
 use App\Modules\Merchants\Models\ActivityReason;
+use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -23,7 +24,7 @@ class AlifshopMerchantStoresController extends ApiBaseController
         return $alifshop_merchant_stores->paginate($request->query('per_page') ?? 15);
     }
 
-    public  function show($store_id)
+    public function show($store_id)
     {
         $alifshop_merchant_store = AlifshopMerchantStore::query()
             ->with(['alifshop_merchant'])
@@ -43,6 +44,21 @@ class AlifshopMerchantStoresController extends ApiBaseController
         }
 
         $alifshop_merchant_store->save();
+
+        //кастыль
+        if (!Store::query()->where('merchant_id', $alifshop_merchant->company->id)->exists()) { //не правильно
+
+            $merchant = Merchant::query()->where('company_id', $alifshop_merchant->company->id)->first();
+            $store = new Store($request->validated());
+            $store->merchant_id = $merchant->id;
+            if ($alifshop_merchant_store->is_main)
+            {
+                $store->is_main = true;
+            }
+            $store->active = false;
+
+            $store->save();
+        }
 
         Cache::tags($alifshop_merchant->id)->flush();
         Cache::tags('alifshop_merchants')->flush();
@@ -76,7 +92,7 @@ class AlifshopMerchantStoresController extends ApiBaseController
         $alifshop_merchant_store->active = !$alifshop_merchant_store->active;
         $alifshop_merchant_store->save();
 
-          $alifshop_merchant_store->activity_reasons()->attach($active_reason, [
+        $alifshop_merchant_store->activity_reasons()->attach($active_reason, [
             'active' => $alifshop_merchant_store->active,
             'created_by_id' => $this->user->id,
             'created_by_name' => $this->user->name,
