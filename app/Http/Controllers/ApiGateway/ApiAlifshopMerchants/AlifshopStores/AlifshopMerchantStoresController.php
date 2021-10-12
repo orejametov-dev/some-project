@@ -48,14 +48,16 @@ class AlifshopMerchantStoresController extends ApiBaseController
         //кастыль
         if (!Store::query()->where('merchant_id', $alifshop_merchant->company->id)->exists()) { //не правильно
 
-            $merchant = Merchant::query()->where('company_id', $alifshop_merchant->company->id)->first();
+            $merchant = Merchant::query()
+                ->where('company_id', $alifshop_merchant->company->id)
+                ->firstOrFail();
+
             $store = new Store($request->validated());
             $store->merchant_id = $merchant->id;
-            if ($alifshop_merchant_store->is_main)
-            {
+            $store->active = false;
+            if ($alifshop_merchant_store->is_main) {
                 $store->is_main = true;
             }
-            $store->active = false;
 
             $store->save();
         }
