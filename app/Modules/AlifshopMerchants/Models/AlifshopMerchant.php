@@ -6,6 +6,7 @@ use App\Modules\AlifshopMerchants\Traits\AlifshopMerchantFileTrait;
 use App\Modules\AlifshopMerchants\Traits\AlifshopMerchantRelationshipsTrait;
 use App\Modules\Companies\Models\Company;
 use App\Modules\Merchants\Traits\MerchantFileTrait;
+use App\Modules\Merchants\Traits\MerchantStatusesTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Traits\SortableByQueryParams;
@@ -31,6 +32,7 @@ class AlifshopMerchant extends Model
 {
     use HasFactory;
     use AlifshopMerchantRelationshipsTrait, MerchantFileTrait, SortableByQueryParams;
+    use MerchantStatusesTrait;
 
     protected $fillable = [
         'name',
@@ -80,5 +82,10 @@ class AlifshopMerchant extends Model
             $query->where('active', $request->query('active'));
         }
 
+    }
+
+    public function scopeActive(Builder $query)
+    {
+        $query->where('active', true);
     }
 }
