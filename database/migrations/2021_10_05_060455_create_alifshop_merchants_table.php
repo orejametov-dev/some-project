@@ -21,7 +21,7 @@ class CreateAlifshopMerchantsTable extends Migration
             $table->string('information')->nullable();
             $table->string('token')->nullable();
             $table->string('alifshop_slug');
-            $table->boolean('active')->default(false);
+            $table->boolean('active')->default(true);
             $table->unsignedBigInteger('maintainer_id')->nullable();
             $table->string('logo_url')->nullable();
             $table->timestamps();
