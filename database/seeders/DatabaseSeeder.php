@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Modules\AlifshopMerchants\Models\AlifshopMerchantStore;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -26,6 +27,9 @@ class DatabaseSeeder extends Seeder
            ApplicationConditionsSeeder::class,
            MerchantTags::class,
            MerchantTag::class,
+           AlifshopMerchantSeeder::class,
+           AlifshopMerchantStoreSeeder::class,
+           AlifshopMerchantAccessSeeder::class
        ]);
     }
 }

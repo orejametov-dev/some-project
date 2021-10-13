@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
  * @property int $store_id
  * @method static Builder|AlifshopMerchantAccess byUserId($user_id)
  * @property-read AlifshopMerchant $alifshop_merchant
- * @property-read AlifshopMerchantStores $alifshop_merchant_store
+ * @property-read AlifshopMerchantStore $alifshop_merchant_store
  * @method static Builder|AlifshopMerchantAccess filterRequest(Request $request)
  * @method static Builder|AlifshopMerchantAccess orderRequest(Request $request, string $default_order_str = 'id:desc')
  * @method static Builder|AlifshopMerchantAccess query()
@@ -36,7 +36,7 @@ class AlifshopMerchantAccess extends Model
 
     public function alifshop_merchant_store()
     {
-        return $this->belongsTo(AlifshopMerchantStores::class);
+        return $this->belongsTo(AlifshopMerchantStore::class);
     }
 
     public function company_user()
@@ -62,7 +62,15 @@ class AlifshopMerchantAccess extends Model
             $query->where('alifshop_merchant_id', $alifshop_merchant);
         }
 
+        if ($alifshop_merchant = $request->query('alifshop_merchant_id')) {
+            $query->where('alifshop_merchant_id', $alifshop_merchant);
+        }
+
         if ($alifshop_merchant_store = $request->query('store_id')) {
+            $query->where('alifshop_merchant_store_id', $alifshop_merchant_store);
+        }
+
+        if ($alifshop_merchant_store = $request->query('alifshop_merchant_store_id')) {
             $query->where('alifshop_merchant_store_id', $alifshop_merchant_store);
         }
 

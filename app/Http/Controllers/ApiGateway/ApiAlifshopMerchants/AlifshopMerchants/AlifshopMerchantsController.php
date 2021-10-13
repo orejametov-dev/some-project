@@ -6,20 +6,17 @@ use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\AlifshopMerchant\AlifshopMerchantStoreFileRequest;
 use App\HttpServices\Auth\AuthMicroService;
-use App\HttpServices\Core\CoreService;
 use App\Modules\AlifshopMerchants\DTO\AlifshopMerchantDTO;
 use App\Modules\AlifshopMerchants\Models\AlifshopMerchant;
-use App\Modules\AlifshopMerchants\Models\AlifshopMerchantStores;
 use App\Modules\AlifshopMerchants\Services\AlifshopMerchantService;
 use App\Modules\Companies\Models\Company;
 use App\Modules\Companies\Models\Module;
+use App\Modules\Merchants\DTO\Merchants\MerchantsDTO;
 use App\Modules\Merchants\Models\ActivityReason;
-use App\Modules\Merchants\Models\AzoMerchantAccess;
 use App\Modules\Merchants\Models\Merchant;
-use App\Modules\Merchants\Models\Store;
 use App\Modules\Merchants\Models\Tag;
+use App\Modules\Merchants\Services\Merchants\MerchantsService;
 use App\Services\Alifshop\AlifshopService;
-use App\Services\Core\ServiceCore;
 use  Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 
@@ -49,7 +46,7 @@ class AlifshopMerchantsController extends ApiBaseController
         return AlifshopMerchant::query()->findOrFail($id);
     }
 
-    public function store(Request $request, AlifshopMerchantService $alifshopMerchantService)
+    public function store(Request $request, AlifshopMerchantService $alifshopMerchantService , MerchantsService $merchantsService)
     {
         $this->validate($request, [
             'company_id' => 'required|integer'
@@ -71,6 +68,24 @@ class AlifshopMerchantsController extends ApiBaseController
         ));
 
         $company->modules()->attach([Module::ALIFSHOP_MERCHANT]);
+
+        // кастыль , пришлось его добавить так , как на данный момент он был нужен. Прошу понять и простить.
+        if (!Merchant::query()->where('company_id' , $company->id)->exists())
+        {
+            $azo_merchant = $merchantsService->create(new MerchantsDTO(
+                id: $company->id,
+                name: $company->name,
+                legal_name: $company->legal_name,
+                information: null,
+                maintainer_id: $this->user->id,
+                company_id: $company->id
+            ));
+
+            $azo_merchant->active = false;
+            $azo_merchant->save();
+
+            $company->modules()->attach([Module::AZO_MERCHANT]);
+        }
 
         Cache::tags($alifshop_merchant->id)->flush();
         Cache::tags('alifshop_merchants')->flush();
