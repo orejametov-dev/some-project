@@ -11,6 +11,7 @@ use App\Jobs\SendHook;
 use App\Modules\AlifshopMerchants\Models\AlifshopMerchantAccess;
 use App\Modules\AlifshopMerchants\Models\AlifshopMerchantStore;
 use App\Modules\Companies\Models\CompanyUser;
+use App\Modules\Merchants\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -38,18 +39,17 @@ class AlifshopMerchantAccessController extends ApiBaseController
         if (!$user)
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
 
-        $alifshop_merchant_store = AlifshopMerchantStore::query()->findOrFail($request->input('store_id'));
-
+        $alifshop_merchant_store = Store::query()->findOrFail($request->input('store_id'));
         $company_user = CompanyUser::query()->where('user_id', $user['data']['id'])->firstOrNew();
         $company_user->user_id = $user['data']['id'];
-        $company_user->company_id = $alifshop_merchant_store->alifshop_merchant->company_id;
+        $company_user->company_id = $alifshop_merchant_store->alifshop_merchant->company->id;
         $company_user->phone = $user['data']['phone'];
         $company_user->full_name = $user['data']['name'];
         $company_user->save();
 
         $alifshop_merchant_access_exists = AlifshopMerchantAccess::query()
-                ->where('company_user_id' , $company_user->id)
-                    ->exists();
+            ->where('company_user_id', $company_user->id)
+            ->exists();
 
         if ($alifshop_merchant_access_exists) {
             return response()->json([
@@ -60,8 +60,7 @@ class AlifshopMerchantAccessController extends ApiBaseController
 
         $alifshop_merchant = $alifshop_merchant_store->alifshop_merchant;
         if ($alifshop_merchant_access = AlifshopMerchantAccess::withTrashed()
-            ->where('company_user_id', $company_user->id)->first())
-        {
+            ->where('company_user_id', $company_user->id)->first()) {
             $alifshop_merchant_access->restore();
         } else {
             $alifshop_merchant_access = new AlifshopMerchantAccess();
@@ -69,7 +68,7 @@ class AlifshopMerchantAccessController extends ApiBaseController
 
         $alifshop_merchant_access->company_user()->associate($company_user->id);
         $alifshop_merchant_access->alifshop_merchant()->associate($alifshop_merchant);
-        $alifshop_merchant_access->alifshop_merchant_store()->associate($alifshop_merchant_store->id);
+        $alifshop_merchant_access->store()->associate($alifshop_merchant_store->id);
 
         $alifshop_merchant_access->save();
 
@@ -100,10 +99,10 @@ class AlifshopMerchantAccessController extends ApiBaseController
 
         $alifshop_merchant_access = AlifshopMerchantAccess::query()->findOrFail($id);
         $alifshop_merchant = $alifshop_merchant_access->alifshop_merchant;
-        $old_store = $alifshop_merchant_access->alifshop_merchant_store;
-        $alifshop_merchant_store = $alifshop_merchant->alifshop_merchant_stores()->where(['id' => $request->input('store_id')])->firstOrFail();
+        $old_store = $alifshop_merchant_access->store;
+        $alifshop_merchant_store = $alifshop_merchant->stores()->findOrFail($request->input('store_id'));
 
-        $alifshop_merchant_access->alifshop_merchant_store()->associate($alifshop_merchant_store);
+        $alifshop_merchant_access->store()->associate($alifshop_merchant_store);
 
         $alifshop_merchant_access->save();
 

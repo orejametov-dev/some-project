@@ -23,7 +23,7 @@ Route::prefix('companies/users')->group(function () {
 });
 
 //AlifshopMerchants
-Route::prefix('alifshop-merchant/stores')
+Route::prefix('alifshop-merchants/stores')
     ->group(function () {
         Route::get('/' , [AlifshopMerchantStoresController::class , 'index']);
         Route::get('/{id}' , [AlifshopMerchantStoresController::class , 'show']);

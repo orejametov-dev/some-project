@@ -69,24 +69,6 @@ class AlifshopMerchantsController extends ApiBaseController
 
         $company->modules()->attach([Module::ALIFSHOP_MERCHANT]);
 
-        // кастыль , пришлось его добавить так , как на данный момент он был нужен. Прошу понять и простить.
-        if (!Merchant::query()->where('company_id' , $company->id)->exists())
-        {
-            $azo_merchant = $merchantsService->create(new MerchantsDTO(
-                id: $company->id,
-                name: $company->name,
-                legal_name: $company->legal_name,
-                information: null,
-                maintainer_id: $this->user->id,
-                company_id: $company->id
-            ));
-
-            $azo_merchant->active = false;
-            $azo_merchant->save();
-
-            $company->modules()->attach([Module::AZO_MERCHANT]);
-        }
-
         Cache::tags($alifshop_merchant->id)->flush();
         Cache::tags('alifshop_merchants')->flush();
 
