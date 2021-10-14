@@ -14,7 +14,7 @@ class RemoveForeingMerchantIdFromStoreTable extends Migration
     public function up()
     {
         Schema::table('stores', function (Blueprint $table) {
-            $table->dropForeign('stores_merchant_id_foreign');
+            $table->dropForeign(['merchant_id']);
         });
     }
 
