@@ -3,9 +3,9 @@
 namespace App\Modules\AlifshopMerchants\Traits;
 
 
-use App\Modules\AlifshopMerchants\Models\AlifshopMerchantStore;
 use App\Modules\Companies\Models\Company;
 use App\Modules\Merchants\Models\ActivityReason;
+use App\Modules\Merchants\Models\Store;
 use App\Modules\Merchants\Models\Tag;
 
 trait AlifshopMerchantRelationshipsTrait
@@ -14,9 +14,9 @@ trait AlifshopMerchantRelationshipsTrait
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      *
      */
-    public function alifshop_merchant_stores()
+    public function stores()
     {
-        return $this->hasMany(AlifshopMerchantStore::class);
+        return $this->hasMany(Store::class);
     }
 
     /**
