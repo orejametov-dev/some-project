@@ -68,11 +68,11 @@ class AlifshopMerchantAccess extends Model
         }
 
         if ($alifshop_merchant_store = $request->query('store_id')) {
-            $query->where('alifshop_merchant_store_id', $alifshop_merchant_store);
+            $query->where('store_id', $alifshop_merchant_store);
         }
 
         if ($alifshop_merchant_store = $request->query('alifshop_merchant_store_id')) {
-            $query->where('alifshop_merchant_store_id', $alifshop_merchant_store);
+            $query->where('store_id', $alifshop_merchant_store);
         }
 
         if ($user = $request->query('user_id')) {
@@ -98,7 +98,7 @@ class AlifshopMerchantAccess extends Model
 
     public function scopeByActiveStore(Builder $query)
     {
-        $query->whereHas('alifshop_merchant_store', function ($query) {
+        $query->whereHas('store', function ($query) {
             $query->where('active', true);
         });
     }
