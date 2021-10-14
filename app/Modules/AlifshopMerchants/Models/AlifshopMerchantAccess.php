@@ -3,6 +3,7 @@
 namespace App\Modules\AlifshopMerchants\Models;
 
 use App\Modules\Companies\Models\CompanyUser;
+use App\Modules\Merchants\Models\Store;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,7 +17,7 @@ use Illuminate\Http\Request;
  * @property int $store_id
  * @method static Builder|AlifshopMerchantAccess byUserId($user_id)
  * @property-read AlifshopMerchant $alifshop_merchant
- * @property-read AlifshopMerchantStore $alifshop_merchant_store
+ * @property-read Store $store
  * @method static Builder|AlifshopMerchantAccess filterRequest(Request $request)
  * @method static Builder|AlifshopMerchantAccess orderRequest(Request $request, string $default_order_str = 'id:desc')
  * @method static Builder|AlifshopMerchantAccess query()
@@ -34,9 +35,9 @@ class AlifshopMerchantAccess extends Model
         return $this->belongsTo(AlifshopMerchant::class);
     }
 
-    public function alifshop_merchant_store()
+    public function store()
     {
-        return $this->belongsTo(AlifshopMerchantStore::class);
+        return $this->belongsTo(Store::class);
     }
 
     public function company_user()
