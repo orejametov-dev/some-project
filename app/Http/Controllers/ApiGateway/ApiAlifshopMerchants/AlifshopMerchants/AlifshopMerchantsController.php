@@ -11,14 +11,13 @@ use App\Modules\AlifshopMerchants\Models\AlifshopMerchant;
 use App\Modules\AlifshopMerchants\Services\AlifshopMerchantService;
 use App\Modules\Companies\Models\Company;
 use App\Modules\Companies\Models\Module;
-use App\Modules\Merchants\DTO\Merchants\MerchantsDTO;
 use App\Modules\Merchants\Models\ActivityReason;
-use App\Modules\Merchants\Models\Merchant;
+use App\Modules\Merchants\Models\Store;
 use App\Modules\Merchants\Models\Tag;
 use App\Modules\Merchants\Services\Merchants\MerchantsService;
 use App\Services\Alifshop\AlifshopService;
-use  Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class AlifshopMerchantsController extends ApiBaseController
 {
@@ -32,6 +31,7 @@ class AlifshopMerchantsController extends ApiBaseController
         parent::__construct();
         $this->alifshopService = $alifshopService;
     }
+
     public function index(Request $request)
     {
         $alifshop_merchants = AlifshopMerchant::query()
@@ -46,7 +46,7 @@ class AlifshopMerchantsController extends ApiBaseController
         return AlifshopMerchant::query()->findOrFail($id);
     }
 
-    public function store(Request $request, AlifshopMerchantService $alifshopMerchantService , MerchantsService $merchantsService)
+    public function store(Request $request, AlifshopMerchantService $alifshopMerchantService)
     {
         $this->validate($request, [
             'company_id' => 'required|integer'
@@ -54,7 +54,7 @@ class AlifshopMerchantsController extends ApiBaseController
 
         $company = Company::query()->findOrFail($request->input('company_id'));
 
-        if(AlifshopMerchant::query()->where('company_id', $company->id)->exists()){
+        if (AlifshopMerchant::query()->where('company_id', $company->id)->exists()) {
             return response()->json(['message' => 'Указаная компания уже имеет алифшоп модуль'], 400);
         }
 
@@ -68,6 +68,10 @@ class AlifshopMerchantsController extends ApiBaseController
         ));
 
         $company->modules()->attach([Module::ALIFSHOP_MERCHANT]);
+
+        Store::query()
+            ->where('merchant_id', $alifshop_merchant->id)
+            ->update(['is_alifshop' => true]);
 
         Cache::tags($alifshop_merchant->id)->flush();
         Cache::tags('alifshop_merchants')->flush();
@@ -100,7 +104,7 @@ class AlifshopMerchantsController extends ApiBaseController
         return $alifshop_merchant;
     }
 
-    public function setMaintainer($id , Request $request)
+    public function setMaintainer($id, Request $request)
     {
         $this->validate($request, [
             'maintainer_id' => 'required|integer'
@@ -171,7 +175,7 @@ class AlifshopMerchantsController extends ApiBaseController
         $tags = Tag::whereIn('id', $request->input('tags'))->get();
 
         foreach ($request->input('tags') as $tag) {
-            if(!$tags->contains('id', $tag)){
+            if (!$tags->contains('id', $tag)) {
                 return response()->json(['message' => 'Указан не правильный тег'], 400);
             }
         }
