@@ -3,6 +3,7 @@
 namespace App\Modules\Merchants\Models;
 
 
+use App\Modules\AlifshopMerchants\Models\AlifshopMerchant;
 use App\Modules\Merchants\Traits\StoreRelationshipsTrait;
 use App\Traits\SortableByQueryParams;
 use Eloquent;
@@ -28,13 +29,17 @@ use Illuminate\Support\Carbon;
  * @property $responsible_person
  * @property $responsible_person_phone
  * @property $merchant_id
+ * @property $is_alifshop
+ * @property $is_azo
  * @property Merchant $merchant
+ * @property AlifshopMerchant $alifshop_merchant
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Collection|Condition[] $application_conditions
  * @property-read int|null $application_conditions_count
  * @method static Builder|Store filterRequest(Request $request)
  * @method static Builder|Store main()
+ * @method static Builder|Store alifshop()
  * @method static Builder|Store newModelQuery()
  * @method static Builder|Store newQuery()
  * @method static Builder|Store orderRequest(Request $request, string $default_order_str = 'id:desc')
@@ -113,5 +118,10 @@ class Store extends Model
     public function scopeActive(Builder $query)
     {
         $query->where('active', true);
+    }
+
+    public function scopeAlifshop($query)
+    {
+        return $query->where('is_alifshop', true);
     }
 }
