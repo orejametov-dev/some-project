@@ -100,10 +100,7 @@ class AlifshopMerchantAccessController extends ApiBaseController
         $alifshop_merchant_access = AlifshopMerchantAccess::query()->findOrFail($id);
         $alifshop_merchant = $alifshop_merchant_access->alifshop_merchant;
         $old_store = $alifshop_merchant_access->store;
-        $alifshop_merchant_store = Store::query()
-            ->where(['id' => $request->input('store_id')])
-            ->where('merchant_id', $alifshop_merchant->id)
-            ->firstOrFail();
+        $alifshop_merchant_store = $alifshop_merchant->stores()->findOrFail($request->input('store_id'));
 
         $alifshop_merchant_access->store()->associate($alifshop_merchant_store);
 
