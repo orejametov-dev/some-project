@@ -16,7 +16,7 @@ trait AlifshopMerchantRelationshipsTrait
      */
     public function stores()
     {
-        return $this->hasMany(Store::class);
+        return $this->hasMany(Store::class, 'merchant_id')->where('is_alifshop' , true);
     }
 
     /**
