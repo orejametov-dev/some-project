@@ -30,14 +30,18 @@ class MerchantsController extends ApiBaseController
         });
 
         $stores = Cache::tags($this->merchant_id)->remember('cache_of_merchant_stores', 60 * 60, function () use ($merchant) {
-            return Store::query()->byMerchant($merchant->id)->get();
+            return Store::query()
+                ->azo()
+                ->byMerchant($merchant->id)->get();
         });
 
         $azo_merchant_access = $this->azo_merchant_access;
 
         $store = Cache::tags($this->merchant_id)->remember($azo_merchant_access->id.'detail_cache_of_merchant_stores', 60 * 60, function () {
             $azo_merchant_access = AzoMerchantAccess::query()->byUserId($this->user->id)->firstOrFail();
-            return Store::query()->findOrFail($azo_merchant_access->store_id);
+            return Store::query()
+                ->azo()
+                ->findOrFail($azo_merchant_access->store_id);
         });
 
         return [

@@ -120,8 +120,13 @@ class Store extends Model
         $query->where('active', true);
     }
 
-    public function scopeAlifshop($query)
+    public function scopeAlifshop(Builder $query)
     {
-        return $query->where('is_alifshop', true);
+        $query->where('is_alifshop', true);
+    }
+
+    public function scopeAzo(Builder $query)
+    {
+        $query->where('is_azo', true);
     }
 }

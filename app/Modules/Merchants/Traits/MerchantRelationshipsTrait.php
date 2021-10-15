@@ -16,7 +16,7 @@ trait MerchantRelationshipsTrait
 {
     public function stores()
     {
-        return $this->hasMany(Store::class);
+        return $this->hasMany(Store::class)->where('is_azo', true);
     }
 
     public function azo_merchant_accesses()

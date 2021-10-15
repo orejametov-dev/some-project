@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Stores;
 
 use App\Http\Controllers\ApiGateway\ApiBaseController;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiPrm\Stores\StoreStoresRequest;
 use App\Http\Requests\ApiPrm\Stores\UpdateStoresRequest;
 use App\Modules\Merchants\Models\ActivityReason;
@@ -17,14 +16,16 @@ class StoresController extends ApiBaseController
 {
     public function index(Request $request)
     {
-        $stores = Store::query()->with(['merchant'])->filterRequest($request);
+        $stores = Store::query()->with(['merchant'])
+            ->azo()
+            ->filterRequest($request);
 
         if ($request->query('object') == 'true') {
             return $stores->first();
         }
 
         if ($request->has('paginate') && ($request->query('paginate') == 'false'
-                OR $request->query('paginate') == 0)) {
+                or $request->query('paginate') == 0)) {
             return $stores->get();
         }
 
@@ -34,6 +35,7 @@ class StoresController extends ApiBaseController
     public function show($store_id)
     {
         $store = Store::with(['merchant', 'activity_reasons'])
+            ->azo()
             ->findOrFail($store_id);
         return $store;
     }
@@ -42,29 +44,59 @@ class StoresController extends ApiBaseController
     {
         $merchant = Merchant::findOrFail($request->merchant_id);
 
-        if ($merchant->stores()->count()) {
-            $store = new Store($request->validated());
-            if (!$request->input('responsible_person')) {
-                $main_store = $merchant->stores()->main()->first();
-                $store->responsible_person = $main_store->responsible_person;
-                $store->responsible_person_phone = $main_store->responsible_person_phone;
-            }
-            $store->merchant_id = $merchant->id;
-            $store->save();
+        $store_exists = Store::query()
+            ->where('name', $request->input('name'))
+            ->where('merchant_id', '!=', $merchant->id)
+            ->exists();
 
-            return $store;
+        if ($store_exists) {
+            return response()->json(['message' => 'Указанное имя уже занято другим магазином'], 400);
         }
-        $store = $merchant->stores()->create(array_merge($request->all(), ['is_main' => true]));
+
+        $store_exists = $merchant->stores()
+            ->where('name', $request->input('name'))
+            ->exists();
+
+        if ($store_exists) {
+            return response()->json(['message' => 'Магазин уже является партнером алифшоп'], 400);
+        }
+
+        $merchant_store = Store::query()
+            ->where('name', $request->input('name'))
+            ->where('active', true)
+            ->where('is_azo', false)
+            ->where('merchant_id', $merchant->id)
+            ->firstOrNew();
+
+
+        $merchant_store->name = optional($merchant_store)->name ?? $request->input('name');
+        $merchant_store->region = optional($merchant_store)->region ?? $request->input('region');
+        $merchant_store->merchant_id = $merchant->id;
+        $merchant_store->is_azo = true;
+
+        if (!Store::where('merchant_id', $merchant->id)->count()) {
+            $merchant_store->is_main = true;
+        }
+
+        if (!$request->input('responsible_person')) {
+            $main_store = Store::query()->where('merchant_id', $merchant->id)->main()->first();
+            $merchant_store->responsible_person = $main_store->responsible_person;
+            $merchant_store->responsible_person_phone = $main_store->responsible_person_phone;
+        }
+
+        $merchant_store->save();
 
         Cache::tags($merchant->id)->flush();
         Cache::tags('azo_merchants')->flush();
 
-        return $store;
+        return $merchant_store;
     }
 
     public function update(UpdateStoresRequest $request, $store_id)
     {
-        $store = Store::query()->findOrFail($store_id);
+        $store = Store::query()
+            ->azo()
+            ->findOrFail($store_id);
 
         $store->fill($request->all());
         $store->save();
