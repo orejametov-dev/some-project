@@ -21,6 +21,7 @@ class MerchantsService
         $merchant->alifshop_slug = $merchantsDTO->alifshop_slug;
         $merchant->information = $merchantsDTO->information;
         $merchant->maintainer_id = $merchantsDTO->maintainer_id;
+        $merchant->company_id = $merchantsDTO->company_id;
         $merchant->save();
 
         return $merchant;
