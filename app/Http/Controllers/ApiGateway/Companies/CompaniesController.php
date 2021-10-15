@@ -21,6 +21,7 @@ class CompaniesController extends ApiBaseController
     public function index(Request $request)
     {
         $companies = Company::query()
+            ->with(['modules'])
             ->filterRequest($request);
 
         return $companies->paginate($request->query('per_page') ?? 15);
