@@ -56,7 +56,7 @@ class CompaniesController extends ApiBaseController
         $this->validate($request, [
             'name' => 'required|string',
             'legal_name' => 'required|string',
-            'merchant_type' => 'required|string|in:azo_merchant,alifshop_merchant',
+            'merchant_type' => 'required|array',
             'tags' => 'required|array'
         ]);
 
@@ -79,30 +79,34 @@ class CompaniesController extends ApiBaseController
         ));
 
 
-        if($request->input('merchant_type') == 'azo_merchant'){
-            $merchant = $merchantsService->create(new MerchantsDTO(
-                id: $company->id,
-                name: $company->name,
-                legal_name: $company->legal_name,
-                information: null,
-                maintainer_id: $this->user->id,
-                company_id: $company->id
-            ));
-            $company->modules()->attach([Module::AZO_MERCHANT]);
-            $merchant->tags()->attach($request->input('tags'));
+        if(in_array( 'azo_merchant', $request->input('merchant_type'))){
+            \DB::transaction(function () use ($company, $merchantsService, $request){
+                $merchant = $merchantsService->create(new MerchantsDTO(
+                    id: $company->id,
+                    name: $company->name,
+                    legal_name: $company->legal_name,
+                    information: null,
+                    maintainer_id: $this->user->id,
+                    company_id: $company->id
+                ));
+                $company->modules()->attach([Module::AZO_MERCHANT]);
+                $merchant->tags()->attach($request->input('tags'));
+            });
         }
 
-        if($request->input('merchant_type') == 'alifshop_merchant'){
-            $alifshop_merchant = $alifshopMerchantService->create(new AlifshopMerchantDTO(
-                id: $company->id,
-                name: $company->name,
-                legal_name: $company->legal_name,
-                information: null,
-                maintainer_id: $this->user->id,
-                company_id: $company->id
-            ));
-            $company->modules()->attach([Module::ALIFSHOP_MERCHANT]);
-            $alifshop_merchant->tags()->attach($request->input('tags'));
+        if(in_array( 'alifshop_merchant', $request->input('merchant_type'))){
+            \DB::transaction(function () use ($company, $alifshopMerchantService, $request) {
+                $alifshop_merchant = $alifshopMerchantService->create(new AlifshopMerchantDTO(
+                    id: $company->id,
+                    name: $company->name,
+                    legal_name: $company->legal_name,
+                    information: null,
+                    maintainer_id: $this->user->id,
+                    company_id: $company->id
+                ));
+                $company->modules()->attach([Module::ALIFSHOP_MERCHANT]);
+                $alifshop_merchant->tags()->attach($request->input('tags'));
+            });
         }
 
         return $company;
