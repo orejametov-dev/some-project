@@ -50,7 +50,7 @@ class MigrateMerchantUsersToCompanyUsers extends Command
                     $company_user->company_id = $company->id;
                     $company_user->save();
 
-                    $azo_merchant_access->company_user_id = $company->id;
+                    $azo_merchant_access->company_user_id = $company_user->id;
                     $azo_merchant_access->save();
                 }
             }

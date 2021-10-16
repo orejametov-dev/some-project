@@ -28,7 +28,8 @@ class MerchantsSeeder extends Seeder
             'maintainer_id' => 1,
             'current_sales' => 1000000,
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'company_id' => 1
         ];
 
         $merchant_2 = [
@@ -43,7 +44,8 @@ class MerchantsSeeder extends Seeder
             'maintainer_id' => 2,
             'current_sales' => 2000000,
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'company_id' => 2
         ];
 
         $merchant_3 = [
@@ -58,7 +60,8 @@ class MerchantsSeeder extends Seeder
             'maintainer_id' => 3,
             'current_sales' => 3000000,
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'company_id' => 3
         ];
 
         $merchant_4 = [
@@ -73,7 +76,8 @@ class MerchantsSeeder extends Seeder
             'maintainer_id' => 4,
             'current_sales' => 3000000,
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'company_id' => 4
         ];
 
         $merchant_5 = [
@@ -88,7 +92,8 @@ class MerchantsSeeder extends Seeder
             'maintainer_id' => 5,
             'current_sales' => 50000000,
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'company_id' => 5
         ];
 
         $merchant_6 = [
@@ -103,7 +108,8 @@ class MerchantsSeeder extends Seeder
             'maintainer_id' => 6,
             'current_sales' => 20000000,
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'company_id' => 6
         ];
 
         $merchant_7 = [
@@ -118,7 +124,8 @@ class MerchantsSeeder extends Seeder
             'maintainer_id' => 7,
             'current_sales' => 30000000,
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'company_id' => 7
         ];
 
         $merchant_8 = [
@@ -133,7 +140,8 @@ class MerchantsSeeder extends Seeder
             'maintainer_id' => 8,
             'current_sales' => 100000000,
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'company_id' => 8
         ];
 
         $merchant_9 = [
@@ -148,7 +156,8 @@ class MerchantsSeeder extends Seeder
             'maintainer_id' => 9,
             'current_sales' => 500000000,
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'company_id' => 9
         ];
 
         $merchant_10 = [
@@ -163,7 +172,8 @@ class MerchantsSeeder extends Seeder
             'maintainer_id' => 10,
             'current_sales' => 30000000,
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'company_id' => 10
         ];
 
         DB::table('merchants')->insert([
