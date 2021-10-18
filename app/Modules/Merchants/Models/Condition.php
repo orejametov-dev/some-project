@@ -108,6 +108,9 @@ class Condition extends Model
         if($request->has('post_alifshop') && $request->query('post_alifshop') == true) {
             $query->where('post_alifshop', true);
         }
+        if($request->has('post_alifshop') && $request->query('post_alifshop') == true) {
+            $query->where('post_alifshop', true);
+        }
         return $query;
     }
 
