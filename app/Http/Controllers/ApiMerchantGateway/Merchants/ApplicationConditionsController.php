@@ -30,7 +30,7 @@ class ApplicationConditionsController extends ApiBaseController
                     ->orderRequest($request);
             }
 
-            return $conditionQuery->paginate($request->query('per_page') ?? 15);
+            return $conditionQuery->get();
         });
     }
 }
