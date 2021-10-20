@@ -20,7 +20,11 @@ class AlifshopMerchantAccessController extends ApiBaseController
     public function index(Request $request)
     {
         $alifshop_merchant_accesses = AlifshopMerchantAccess::query()
-            ->with('company_user:id,user_id,phone,full_name')
+            ->with(
+                'company_user:id,user_id,phone,full_name',
+                'alifshop_merchant',
+                'store'
+            )
             ->filterRequest($request)
             ->orderRequest($request);
 
@@ -30,7 +34,11 @@ class AlifshopMerchantAccessController extends ApiBaseController
     public function show($id)
     {
         return AlifshopMerchantAccess::query()
-            ->with('company_user:id,user_id,phone,full_name')
+            ->with(
+                'company_user:id,user_id,phone,full_name',
+                'alifshop_merchant',
+                'store'
+            )
             ->findOrFail($id);
     }
 
