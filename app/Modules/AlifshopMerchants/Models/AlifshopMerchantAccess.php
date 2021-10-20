@@ -49,7 +49,7 @@ class AlifshopMerchantAccess extends Model
     {
         if ($q = $request->query('q')) {
             $query->whereHas('company_user' , function ($query) use ($q) {
-                $query->where('user_name', 'LIKE', '%' . $q . '%')
+                $query->where('full_name', 'LIKE', '%' . $q . '%')
                     ->orWhere('phone', 'LIKE', '%' . $q . '%');
             });
         }
@@ -76,7 +76,7 @@ class AlifshopMerchantAccess extends Model
         }
 
         if ($user = $request->query('user_id')) {
-            $query->whereHas( 'company_users' , function ($query) use ($user) {
+            $query->whereHas( 'company_user' , function ($query) use ($user) {
                 $query->where('user_id', $user);
         });
         }
