@@ -46,7 +46,7 @@ class AzoMerchantAccessesController extends ApiBaseController
         if (!$user)
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
 
-        $store = Store::query()->findOrFail($request->input('store_id'));
+        $store = Store::query()->azo()->findOrFail($request->input('store_id'));
 
         $company_user = CompanyUser::query()->where('user_id', $user['data']['id'])->firstOrNew();
         $company_user->user_id = $user['data']['id'];
@@ -55,7 +55,7 @@ class AzoMerchantAccessesController extends ApiBaseController
         $company_user->company_id = $store->merchant->company->id;
         $company_user->save();
         $azo_merchant_access_exists = AzoMerchantAccess::query()
-            ->where('user_id', $request->input('user_id'))
+            ->where('company_user_id', $company_user->id)
             ->exists();
 
         if ($azo_merchant_access_exists) {
@@ -77,6 +77,7 @@ class AzoMerchantAccessesController extends ApiBaseController
         $azo_merchant_access->phone = $user['data']['phone'];
         $azo_merchant_access->merchant()->associate($merchant);
         $azo_merchant_access->store()->associate($store->id);
+        $azo_merchant_access->company_user()->associate($company_user->id);
 
         $azo_merchant_access->save();
 
