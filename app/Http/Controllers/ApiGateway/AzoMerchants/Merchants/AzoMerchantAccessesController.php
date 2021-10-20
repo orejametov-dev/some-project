@@ -55,7 +55,7 @@ class AzoMerchantAccessesController extends ApiBaseController
         $company_user->company_id = $store->merchant->company->id;
         $company_user->save();
         $azo_merchant_access_exists = AzoMerchantAccess::query()
-            ->where('user_id', $request->input('user_id'))
+            ->where('company_user_id', $company_user->id)
             ->exists();
 
         if ($azo_merchant_access_exists) {
