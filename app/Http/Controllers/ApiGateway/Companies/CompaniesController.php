@@ -21,7 +21,9 @@ class CompaniesController extends ApiBaseController
     public function index(Request $request)
     {
         $companies = Company::query()
-            ->filterRequest($request);
+            ->with(['modules'])
+            ->filterRequest($request)
+            ->orderByDesc('id');
 
         return $companies->paginate($request->query('per_page') ?? 15);
     }
@@ -73,14 +75,13 @@ class CompaniesController extends ApiBaseController
             return response()->json(['message' => 'Указанное имя компании уже занято'], 400);
         }
 
-        $company = $companyService->create(new CompanyDTO(
-            name: $request->input('name'),
-            legal_name: $request->input('legal_name')
-        ));
+         $company = \DB::transaction(function () use ($companyService, $merchantsService, $alifshopMerchantService, $request) {
+            $company = $companyService->create(new CompanyDTO(
+                name: $request->input('name'),
+                legal_name: $request->input('legal_name')
+            ));
 
-
-        if(in_array( 'azo_merchant', $request->input('merchant_type'))){
-            \DB::transaction(function () use ($company, $merchantsService, $request){
+            if(in_array( 'azo_merchant', $request->input('merchant_type'))){
                 $merchant = $merchantsService->create(new MerchantsDTO(
                     id: $company->id,
                     name: $company->name,
@@ -91,11 +92,9 @@ class CompaniesController extends ApiBaseController
                 ));
                 $company->modules()->attach([Module::AZO_MERCHANT]);
                 $merchant->tags()->attach($request->input('tags'));
-            });
-        }
+            }
 
-        if(in_array( 'alifshop_merchant', $request->input('merchant_type'))){
-            \DB::transaction(function () use ($company, $alifshopMerchantService, $request) {
+            if(in_array( 'alifshop_merchant', $request->input('merchant_type'))){
                 $alifshop_merchant = $alifshopMerchantService->create(new AlifshopMerchantDTO(
                     id: $company->id,
                     name: $company->name,
@@ -106,8 +105,12 @@ class CompaniesController extends ApiBaseController
                 ));
                 $company->modules()->attach([Module::ALIFSHOP_MERCHANT]);
                 $alifshop_merchant->tags()->attach($request->input('tags'));
-            });
-        }
+            }
+
+            return $company;
+
+        });
+
 
         return $company;
     }
