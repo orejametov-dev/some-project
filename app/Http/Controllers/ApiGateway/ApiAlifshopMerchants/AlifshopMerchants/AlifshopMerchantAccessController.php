@@ -28,7 +28,9 @@ class AlifshopMerchantAccessController extends ApiBaseController
 
     public function show($id)
     {
-        return AlifshopMerchantAccess::query()->findOrFail($id);
+        return AlifshopMerchantAccess::query()
+            ->with('company_user:id,user_id,phone,full_name')
+            ->findOrFail($id);
     }
 
     public function store(StoreAlifshopMerchantAccess $request)
