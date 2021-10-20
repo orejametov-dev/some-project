@@ -42,7 +42,7 @@ class AzoMerchantAccess extends Model
     use SortableByQueryParams;
     use SoftDeletes;
 
-    protected $table = 'azo_merchant_access';
+    protected $table = 'azo_merchant_accesses';
     protected $fillable = [
         'user_name',
         'phone'

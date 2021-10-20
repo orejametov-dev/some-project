@@ -48,13 +48,14 @@ class AzoMerchantAccessesController extends ApiBaseController
 
         $store = Store::query()->azo()->findOrFail($request->input('store_id'));
 
-        $company_user = CompanyUser::query()->where('user_id', $user->id)->firstOrNew();
-        $company_user->user_id = $user->id;
+        $company_user = CompanyUser::query()->where('user_id', $user['data']['id'])->firstOrNew();
+        $company_user->user_id = $user['data']['id'];
+        $company_user->phone = $user['data']['id'];
+        $company_user->full_name = $user['data']['name'];
         $company_user->company_id = $store->merchant->company->id;
         $company_user->save();
-
         $azo_merchant_access_exists = AzoMerchantAccess::query()
-            ->where(['user_id' => $request->input('user_id')])
+            ->where('user_id', $request->input('user_id'))
             ->exists();
 
         if ($azo_merchant_access_exists) {
@@ -70,6 +71,7 @@ class AzoMerchantAccessesController extends ApiBaseController
         } else {
             $azo_merchant_access = new AzoMerchantAccess();
         }
+
         $azo_merchant_access->user_id = $request->input('user_id');
         $azo_merchant_access->user_name = $user['data']['name'];
         $azo_merchant_access->phone = $user['data']['phone'];
