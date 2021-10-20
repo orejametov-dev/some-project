@@ -8,6 +8,7 @@ use App\Http\Requests\ApiPrm\AlifshopMerchant\StoreAlifshopMerchantAccess;
 use App\HttpServices\Auth\AuthMicroService;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
+use App\Jobs\ToggleMerchantRoleOfUser;
 use App\Modules\AlifshopMerchants\Models\AlifshopMerchantAccess;
 use App\Modules\Companies\Models\CompanyUser;
 use App\Modules\Merchants\Models\Store;
@@ -130,4 +131,34 @@ class AlifshopMerchantAccessController extends ApiBaseController
         return $alifshop_merchant_access;
     }
 
+    public function destroy($id)
+    {
+        $alifshop_merchant_access = AlifshopMerchantAccess::query()->findOrFail($id);
+        $store = $alifshop_merchant_access->store;
+
+        $alifshop_merchant_access->delete();
+
+        $alifshop_merchant = $alifshop_merchant_access->alifshop_merchant;
+
+        SendHook::dispatch(new HookData(
+            service: 'merchants',
+            hookable_type: $alifshop_merchant_access->getTable(),
+            hookable_id: $alifshop_merchant_access->id,
+            created_from_str: 'PRM',
+            created_by_id: $this->user->id,
+            body: 'Сотрудник удален',
+            keyword: 'Сотрудник удален из магазина: (' . $store->id . ', ' . $alifshop_merchant_access->store->name . ')',
+            action: 'delete',
+            class: 'danger',
+            action_at: null,
+            created_by_str: $this->user->name,
+        ));
+
+        Cache::tags('alifshop_merchants')->forget('alifshop_merchant_user_id_' . $alifshop_merchant_access->company_user_id);
+        Cache::tags($alifshop_merchant->id)->flush();
+
+        ToggleMerchantRoleOfUser::dispatch($alifshop_merchant_access->company_user_id, AuthMicroService::DEACTIVATE_MERCHANT_ROLE);
+
+        return response()->json(['message' => 'Сотрудник удален']);
+    }
 }

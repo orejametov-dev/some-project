@@ -38,6 +38,7 @@ Route::prefix('alifshop-merchants/users')
         Route::get('/{id}' , [AlifshopMerchantAccessController::class, 'show']);
         Route::post('/' , [AlifshopMerchantAccessController::class, 'store']);
         Route::match(['put' , 'patch'], '/{id}' , [AlifshopMerchantAccessController::class, 'update']);
+        Route::delete('/{id}', [AlifshopMerchantAccessController::class, 'destroy']);
     });
 
 Route::prefix('alifshop-merchants')
