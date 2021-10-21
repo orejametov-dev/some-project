@@ -232,6 +232,9 @@ class MerchantsController extends ApiBaseController
         WarehouseService::checkDuplicateSKUs($merchant->id);
 
         $merchant->save();
+
+        Cache::tags($merchant->id)->flush();
+        Cache::tags('merchants')->flush();
         return $merchant;
     }
 
