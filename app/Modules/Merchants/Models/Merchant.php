@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use function Clue\StreamFilter\fun;
 
 /**
  * App\Modules\Merchants\Models\Merchant
@@ -25,10 +26,6 @@ use Illuminate\Http\Request;
  * @property string|null $token
  * @property string $alifshop_slug
  * @property string|null $telegram_chat_id
- * @property int $has_deliveries
- * @property int $has_manager
- * @property int $has_applications
- * @property int $has_orders
  * @property int $has_general_goods
  * @property string|null $logo_url
  * @property string|null $paymo_terminal
@@ -73,13 +70,8 @@ class Merchant extends Model
         'alifshop_slug',
         'information',
         'logo_url',
-
         'telegram_chat_id',
-        'has_deliveries',
-        'has_manager',
-        'has_applications',
         'has_general_goods',
-
         'paymo_terminal_id',
         'min_application_price',
         'active'
@@ -115,6 +107,13 @@ class Merchant extends Model
         if ($q = $request->query('q')) {
             $query->where('name', 'like', '%' . $q . '%')
                 ->orWhere('legal_name', 'like', '%' . $q . '%');
+
+                if(is_numeric($q)){
+                    $query->orWhereHas('merchant_info', function (Builder $query) use ($q) {
+                        $query->Where('tin',  $q)
+                            ->orWhere('contract_number', $q);
+                    });
+                }
         }
 
         if ($merchant_id = $request->query('merchant_id')) {
@@ -135,18 +134,6 @@ class Merchant extends Model
 
         if ($telegram_chat_id = $request->query('telegram_chat_id')) {
             $query->where('telegram_chat_id', $telegram_chat_id);
-        }
-
-        if ($has_manager = $request->query('has_manager')) {
-            $query->where('has_deliveries', $has_manager);
-        }
-
-        if ($has_applications = $request->query('has_applications')) {
-            $query->where('has_deliveries', $has_applications);
-        }
-
-        if ($has_orders = $request->query('has_orders')) {
-            $query->where('has_orders', $has_orders);
         }
 
         if ($request->query('date')) {
@@ -182,6 +169,12 @@ class Merchant extends Model
 
         if($request->has('active')) {
             $query->where('active', $request->query('active'));
+        }
+
+        if($request->query('tin')) {
+            $query->whereHas('merchant_info', function ($query) use ($request) {
+                $query->where('tin', $request->query('tin'));
+            });
         }
     }
 

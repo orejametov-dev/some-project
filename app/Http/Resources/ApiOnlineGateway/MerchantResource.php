@@ -20,6 +20,7 @@ class MerchantResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'tags' => $this->whenLoaded('tags'),
             'information' => $this->information,
             'logo_path' => $this->logo_path
         ];

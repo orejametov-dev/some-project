@@ -60,7 +60,7 @@ Route::prefix('merchants/problem-cases')
         Route::match(['put', 'patch'], '/{id}', [\App\Http\Controllers\ApiGateway\ProblemCases\ProblemCasesController::class, 'update']);
         Route::match(['put', 'patch'], '/{id}/attach-tags', [\App\Http\Controllers\ApiGateway\ProblemCases\ProblemCasesController::class, 'attachTags']);
         Route::match(['put', 'patch'], '/{id}/set-status', [\App\Http\Controllers\ApiGateway\ProblemCases\ProblemCasesController::class, 'setStatus']);
-
+        Route::get('/{user_id}/consultant', [\App\Http\Controllers\ApiGateway\ProblemCases\ProblemCasesController::class, 'getProblemCasesOfMerchantUser']);
     });
 
 Route::prefix('merchants/additional-agreements')
@@ -81,26 +81,34 @@ Route::prefix('merchants/tags')
         Route::delete('/{id}', [App\Http\Controllers\ApiGateway\Merchants\MerchantTagController::class, 'removeTag']);
     });
 
-        Route::prefix('stores')
-            ->group(function () {
-                Route::get('/', [App\Http\Controllers\ApiGateway\Stores\StoresController::class, 'index']);
-                Route::get('/{id}', [App\Http\Controllers\ApiGateway\Stores\StoresController::class, 'show']);
-                Route::post('/', [App\Http\Controllers\ApiGateway\Stores\StoresController::class, 'store']);
-                Route::match(['put', 'patch'],'/{id}/toggle', [App\Http\Controllers\ApiGateway\Stores\StoresController::class, 'toggle']);
-                Route::match(['put', 'patch'], '/{id}', [App\Http\Controllers\ApiGateway\Stores\StoresController::class, 'update']);
-            });
+Route::prefix('stores')
+    ->group(function () {
+        Route::get('/', [App\Http\Controllers\ApiGateway\Stores\StoresController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\ApiGateway\Stores\StoresController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\ApiGateway\Stores\StoresController::class, 'store']);
+        Route::match(['put', 'patch'], '/{id}/toggle', [App\Http\Controllers\ApiGateway\Stores\StoresController::class, 'toggle']);
+        Route::match(['put', 'patch'], '/{id}', [App\Http\Controllers\ApiGateway\Stores\StoresController::class, 'update']);
+    });
 
 Route::prefix('notifications')
     ->group(function () {
         Route::get('/', [\App\Http\Controllers\ApiGateway\Stores\NotificationsController::class, 'index']);
         Route::get('/{id}', [\App\Http\Controllers\ApiGateway\Stores\NotificationsController::class, 'show']);
         Route::post('/', [\App\Http\Controllers\ApiGateway\Stores\NotificationsController::class, 'store']);
+        Route::match(['put', 'patch'], '/{id}', [\App\Http\Controllers\ApiGateway\Stores\NotificationsController::class, 'update']);
+        Route::delete( '/{id}', [\App\Http\Controllers\ApiGateway\Stores\NotificationsController::class, 'remove']);
     });
 
 Route::prefix('app')
     ->group(function () {
         Route::get('/', [App\Http\Controllers\ApiGateway\App\AppController::class, 'index']);
     });
+
+Route::prefix('districts')
+    ->group(function () {
+        Route::get('/', [App\Http\Controllers\ApiGateway\App\AppController::class, 'getDistricts']);
+    });
+
 
 Route::prefix('application-conditions')
     ->group(function () {
@@ -110,6 +118,7 @@ Route::prefix('application-conditions')
         Route::match(['put', 'patch'], '/{id}', [App\Http\Controllers\ApiGateway\Merchants\ApplicationConditionsController::class, 'update']);
         Route::post('/{id}/toggle', [App\Http\Controllers\ApiGateway\Merchants\ApplicationConditionsController::class, 'toggle']);
         Route::delete('/{id}', [App\Http\Controllers\ApiGateway\Merchants\ApplicationConditionsController::class, 'delete']);
+        Route::post('/{id}/toggle-posts' , [App\Http\Controllers\ApiGateway\Merchants\ApplicationConditionsController::class , 'togglePosts']);
     });
 
 Route::prefix('dashboard')
@@ -132,7 +141,7 @@ Route::prefix('merchants')
         Route::post('/{id}/upload-logo', [MerchantsController::class, 'uploadLogo']);
         Route::post('/{id}/remove-logo', [MerchantsController::class, 'removeLogo']);
         Route::post('/{id}/set-responsible-user', [MerchantsController::class, 'setResponsibleUser']);
-        Route::match(['put', 'patch'],'/{id}/toggle', [MerchantsController::class, 'toggle']);
+        Route::match(['put', 'patch'], '/{id}/toggle', [MerchantsController::class, 'toggle']);
 
         Route::match(['put', 'patch'], '/{id}/update-modules', [MerchantsController::class, 'updateModules']);
     });

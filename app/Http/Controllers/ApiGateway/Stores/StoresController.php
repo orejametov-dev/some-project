@@ -43,11 +43,21 @@ class StoresController extends ApiBaseController
         $merchant = Merchant::findOrFail($request->merchant_id);
 
         if ($merchant->stores()->count()) {
-            return $store = $merchant->stores()->create($request->all());
+            $store = new Store($request->validated());
+            if (!$request->input('responsible_person')) {
+                $main_store = $merchant->stores()->main()->first();
+                $store->responsible_person = $main_store->responsible_person;
+                $store->responsible_person_phone = $main_store->responsible_person_phone;
+            }
+            $store->merchant_id = $merchant->id;
+            $store->save();
+
+            return $store;
         }
         $store = $merchant->stores()->create(array_merge($request->all(), ['is_main' => true]));
 
         Cache::tags($merchant->id)->flush();
+        Cache::tags('merchants')->flush();
 
         return $store;
     }
@@ -60,6 +70,7 @@ class StoresController extends ApiBaseController
         $store->save();
 
         Cache::tags($store->merchant_id)->flush();
+        Cache::tags('merchants')->flush();
 
         return $store;
     }
@@ -75,7 +86,7 @@ class StoresController extends ApiBaseController
         });
 
         Cache::tags($store->merchant_id)->flush();
-
+        Cache::tags('merchants')->flush();
         return response()->json(['message' => 'Успешно удалено']);
     }
 
@@ -99,6 +110,7 @@ class StoresController extends ApiBaseController
         ]);
 
         Cache::tags($store->merchant_id)->flush();
+        Cache::tags('merchants')->flush();
 
         return $store;
     }

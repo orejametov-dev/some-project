@@ -6,6 +6,8 @@ namespace App\Http\Controllers\ApiMerchantGateway\ProblemCases;
 
 use App\Http\Controllers\ApiMerchantGateway\ApiBaseController;
 use App\Http\Resources\ApiMerchantGateway\ProblemCases\ProblemCaseResource;
+use App\HttpServices\Hooks\DTO\HookData;
+use App\Jobs\SendHook;
 use App\Modules\Merchants\Models\ProblemCase;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -59,6 +61,21 @@ class ProblemCasesController extends ApiBaseController
 
         $problemCase->save();
 
+        SendHook::dispatch(new HookData(
+            service: 'merchants',
+            hookable_type: $problemCase->getTable(),
+            hookable_id: $problemCase->id,
+            created_from_str: 'MERCHANT',
+            created_by_id: $this->user->id,
+            body: 'Обновлен на статус',
+            keyword: ProblemCase::$statuses[$problemCase->status_id]['name'],
+            action: 'create',
+            class: 'info',
+            action_at: null,
+            created_by_str: $this->user->name,
+        ));
+
+
         return new ProblemCaseResource($problemCase);
     }
 
@@ -82,8 +99,9 @@ class ProblemCasesController extends ApiBaseController
 
     public function getNewProblemCasesCounter(Request $request)
     {
-        $counter =  Cache::remember('new-problem-cases-counter_' . $request->merchant_id, 10 * 60, function () use ($request) {
-            return ProblemCase::filterRequests($request)->onlyNew()->count();
+        $counter =  Cache::remember('new-problem-cases-counter_' . $this->merchant_id, 10 * 60, function () use ($request) {
+            return ProblemCase::query()->byMerchant($this->merchant_id)
+                ->filterRequests($request)->onlyNew()->count();
         });
 
         return response()->json(['count' => $counter]);

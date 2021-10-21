@@ -17,7 +17,8 @@ class MerchantsResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'legal_name' => $this->legal_name
+            'legal_name' => $this->legal_name,
+            'tin' => optional($this->whenLoaded('merchant_info'))->tin
         ];
     }
 }

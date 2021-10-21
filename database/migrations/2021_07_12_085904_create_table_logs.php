@@ -13,13 +13,15 @@ class CreateTableLogs extends Migration
      */
     public function up()
     {
-        Schema::connection('logs')->create('logs', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->unsignedBigInteger('started_at');
-            $table->unsignedBigInteger('finished_at');
-            $table->unsignedBigInteger('diff');
-        });
+        if(config('app.env') == 'production') {
+            Schema::connection('logs')->create('logs', function (Blueprint $table) {
+                $table->id();
+                $table->string('name');
+                $table->unsignedBigInteger('started_at');
+                $table->unsignedBigInteger('finished_at');
+                $table->unsignedBigInteger('diff');
+            });
+        }
     }
 
     /**

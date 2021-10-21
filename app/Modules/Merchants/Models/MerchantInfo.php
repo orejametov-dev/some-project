@@ -40,6 +40,8 @@ class MerchantInfo extends Model
 {
     use HasFactory;
 
+    public const LIMIT = 100000000000;
+
     protected $table = 'merchant_infos';
     protected $fillable = [
         'legal_name',
@@ -69,5 +71,10 @@ class MerchantInfo extends Model
         if ($request->query('merchant_id')) {
             $query->where('merchant_id', $request->query('merchant_id'));
         }
+    }
+
+    public static function getMaxContractNumber()
+    {
+        return MerchantInfo::max('contract_number');
     }
 }

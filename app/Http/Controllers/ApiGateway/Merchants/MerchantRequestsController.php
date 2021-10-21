@@ -5,14 +5,15 @@ namespace App\Http\Controllers\ApiGateway\Merchants;
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Resources\ApiPrmGateway\Merchants\MerchantRequestsResource;
+use App\HttpServices\Auth\AuthMicroService;
 use App\Modules\Merchants\DTO\Merchants\MerchantInfoDTO;
 use App\Modules\Merchants\DTO\Merchants\MerchantsDTO;
+use App\Modules\Merchants\Models\CancelReason;
 use App\Modules\Merchants\Models\File;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Request as MerchantRequest;
 use App\Modules\Merchants\Models\Tag;
 use App\Modules\Merchants\Services\Merchants\MerchantsService;
-use App\Services\Core\ServiceCore;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -55,6 +56,7 @@ class MerchantRequestsController extends ApiBaseController
             'approximate_sales' => 'required|integer',
             'information' => 'nullable|string',
             'region' => 'required|string',
+            'district' => 'required|string',
 
             'director_name' => 'required|max:255',
             'legal_name' => 'required|string',
@@ -116,7 +118,7 @@ class MerchantRequestsController extends ApiBaseController
             'engaged_by_id' => 'required|integer'
         ]);
 
-        $user = ServiceCore::request('GET', 'users/'.$request->input('engaged_by_id'), null);
+        $user = AuthMicroService::getUserById($request->input('engaged_by_id'));
 
         if (!$user)
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
@@ -128,7 +130,7 @@ class MerchantRequestsController extends ApiBaseController
             $merchant_request->setStatusInProcess();
             $merchant_request->save();
 
-            $merchant_request->engaged_by = $user;
+            $merchant_request->engaged_by = $user['data'];
 
             return $merchant_request;
         }
@@ -172,9 +174,10 @@ class MerchantRequestsController extends ApiBaseController
     public function reject(Request $request, $id)
     {
         $this->validate($request, [
-            'body' => 'required'
+            'cancel_reason_id' => 'required|integer',
         ]);
 
+        $cancelReason = CancelReason::query()->findOrFail($request->input('cancel_reason_id'));
         $merchant_request = MerchantRequest::findOrFail($id);
 
         if (!$merchant_request->isInProcess()) {
@@ -182,6 +185,7 @@ class MerchantRequestsController extends ApiBaseController
         }
 
         $merchant_request->setStatusTrash();
+        $merchant_request->cancel_reason()->associate($cancelReason);
         $merchant_request->save();
 
         return $merchant_request;

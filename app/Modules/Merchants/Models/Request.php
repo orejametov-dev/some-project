@@ -61,6 +61,7 @@ class Request extends Model
         'user_phone',
         'information',
         'region',
+        'district',
         'stores_count',
         'merchant_users_count',
         'address',
@@ -79,7 +80,7 @@ class Request extends Model
         'bank_name',
         'address',
 
-        'completed'
+        'completed',
     ];
 
 
@@ -118,6 +119,11 @@ class Request extends Model
     public function files()
     {
         return $this->hasMany(File::class, 'request_id', 'id');
+    }
+
+    public function cancel_reason()
+    {
+        return $this->belongsTo(CancelReason::class);
     }
 
     public function scopeFilterRequest(Builder $query, \Illuminate\Http\Request $request)
@@ -179,8 +185,8 @@ class Request extends Model
 
     public function setEngage($user)
     {
-        $this->engaged_by_id = $user->id;
-        $this->engaged_by_name = $user->name;
+        $this->engaged_by_id = $user['data']['id'];
+        $this->engaged_by_name = $user['data']['name'];
         $this->engaged_at = now();
     }
 

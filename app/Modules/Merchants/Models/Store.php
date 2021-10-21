@@ -48,7 +48,19 @@ class Store extends Model
     use SortableByQueryParams;
 
     protected $table = 'stores';
-    protected $fillable = ['name', 'is_main', 'phone', 'address', 'region', 'lat', 'long', 'responsible_person', 'responsible_person_phone', 'active'];
+    protected $fillable = [
+        'name',
+        'is_main',
+        'phone',
+        'address',
+        'region',
+        'lat',
+        'long',
+        'responsible_person',
+        'responsible_person_phone',
+        'active',
+        'district'
+    ];
 
     public function scopeFilterRequest(Builder $query, Request $request)
     {
@@ -77,6 +89,10 @@ class Store extends Model
         if ($searchIndex) {
             $query->where('name', 'like', '%' . $searchIndex . '%');
         }
+
+        if($request->query('region')) {
+            $query->where('region', $request->query('region'));
+        }
     }
 
     public function scopeMain($query)
@@ -92,5 +108,10 @@ class Store extends Model
     public function scopeByMerchant(Builder $query, $merchant_id)
     {
         $query->where('merchant_id', $merchant_id);
+    }
+
+    public function scopeActive(Builder $query)
+    {
+        $query->where('active', true);
     }
 }

@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
            MerchantUsersSeeder::class,
            MerchantInfosSeeder::class,
            MerchantAdditionalAgreementsSeeder::class,
-           MerchantRequestsSeeder::class,
+//           MerchantRequestsSeeder::class,
            ApplicationConditionsSeeder::class,
            MerchantTags::class,
            MerchantTag::class,
