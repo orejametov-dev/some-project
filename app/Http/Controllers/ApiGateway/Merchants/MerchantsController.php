@@ -7,6 +7,7 @@ use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Files\StoreFileRequest;
 use App\HttpServices\Auth\AuthMicroService;
 use App\HttpServices\Telegram\TelegramService;
+use App\HttpServices\Warehouse\WarehouseService;
 use App\Modules\Merchants\DTO\Merchants\MerchantsDTO;
 use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\Merchant;
@@ -217,6 +218,20 @@ class MerchantsController extends ApiBaseController
             'created_by_id' => $this->user->id,
             'created_by_name' => $this->user->name
         ]);
+
+        Cache::tags($merchant->id)->flush();
+        Cache::tags('merchants')->flush();
+        return $merchant;
+    }
+
+    public function toggleGeneralGoods($id, Request $request)
+    {
+        $merchant = Merchant::findOrFail($id);
+        $merchant->has_general_goods = !$merchant->has_general_goods;
+
+        WarehouseService::checkDuplicateSKUs($merchant->id);
+
+        $merchant->save();
 
         Cache::tags($merchant->id)->flush();
         Cache::tags('merchants')->flush();
