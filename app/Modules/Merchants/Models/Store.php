@@ -74,6 +74,10 @@ class Store extends Model
             $query->where('merchant_id', $merchant_id);
         }
 
+        if ($alifshop_merchant_id = $request->query('alifshop_merchant_id')) {
+            $query->where('merchant_id', $alifshop_merchant_id);
+        }
+
         if ($store_id = $request->query('store_id')) {
             $query->where('id', $store_id);
         }
