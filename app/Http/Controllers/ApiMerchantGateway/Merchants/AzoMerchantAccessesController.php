@@ -87,25 +87,6 @@ class AzoMerchantAccessesController extends ApiBaseController
             throw new BusinessException('Пользователь уже является мерчантом', 'merchant_exists', 400);
         }
 
-        $phone_exists = AzoMerchantAccess::query()
-            ->where('user_id', $user['data']['id'])
-            ->exists();
-
-        if ($phone_exists) {
-            throw new BusinessException('Пользователь уже существует', 'user_exists', 400);
-        }
-
-        $company_user = CompanyUser::query()->where('user_id', $user['data']['id'])->first();
-
-        if (isset($company_user)) {
-            $azo_merchant_access_exists = AzoMerchantAccess::query()
-                ->where('company_user_id', $company_user->id)
-                ->exists();
-            if ($azo_merchant_access_exists) {
-                throw new BusinessException('Пользователь уже существует', 'user_exists', 400);;
-            }
-        }
-
         $store = Store::query()->findOrFail($request->input('store_id'));
 
         $company_user = CompanyUser::query()->where('user_id', $user['data']['id'])->firstOrNew();
@@ -114,6 +95,14 @@ class AzoMerchantAccessesController extends ApiBaseController
         $company_user->full_name = $user['data']['name'];
         $company_user->company_id = $store->merchant->company->id;
         $company_user->save();
+
+        $azo_merchant_access_exists = AzoMerchantAccess::query()
+            ->where('company_user_id', $company_user->id)
+            ->exists();
+
+        if ($azo_merchant_access_exists) {
+            throw new BusinessException('Пользователь уже существует', 'user_exists', 400);;
+        }
 
         $merchant = $store->merchant;
 
