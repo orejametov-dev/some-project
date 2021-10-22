@@ -43,7 +43,9 @@ class AlifshopMerchantsController extends ApiBaseController
 
     public function show($id)
     {
-        return AlifshopMerchant::query()->findOrFail($id);
+        return AlifshopMerchant::query()
+            ->with(['tags'])
+            ->findOrFail($id);
     }
 
     public function store(Request $request, AlifshopMerchantService $alifshopMerchantService)
