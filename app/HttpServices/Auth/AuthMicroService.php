@@ -9,6 +9,7 @@ class AuthMicroService
 {
     const ACTIVATE_MERCHANT_ROLE = "ACTIVATE";
     const DEACTIVATE_MERCHANT_ROLE = "DEACTIVATE";
+    const AZO_MERCHANT_ROLE = 'Merchant';
 
     public function store($user_id)
     {

@@ -83,11 +83,7 @@ class AzoMerchantAccessesController extends ApiBaseController
 
         $user = AuthMicroService::getUserById($request->input('user_id'));
 
-        $user_roles = $user['data']['roles'];
-        $user_roles_column = array_column($user_roles, 'name');
-        $search_roles = array_search('Merchant', $user_roles_column);
-
-        if ($search_roles) {
+        if (array_search(AuthMicroService::AZO_MERCHANT_ROLE, array_column($user['data']['roles'], 'name'))) {
             throw new BusinessException('Пользователь уже является мерчантом', 'merchant_exists', 400);
         }
 
