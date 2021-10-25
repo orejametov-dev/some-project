@@ -39,17 +39,13 @@ class AlifshopMerchantStoresController extends ApiBaseController
 
         $alifshop_store_exists = Store::query()
             ->where('name', $request->input('name'))
-            ->where('merchant_id', '!=', $alifshop_merchant->id)
             ->exists();
 
         if ($alifshop_store_exists) {
             return response()->json(['message' => 'Указанное имя уже занято другим магазином'], 400);
         }
 
-        $alifshop_merchant_store = new Store();
-
-        $alifshop_merchant_store->name = $request->input('name');
-        $alifshop_merchant_store->region = $request->input('region');
+        $alifshop_merchant_store = new Store($request->validated());
         $alifshop_merchant_store->merchant_id = $alifshop_merchant->id;
         $alifshop_merchant_store->is_alifshop = true;
         if (!Store::query()->where('merchant_id', $alifshop_merchant->id)->count()) {
