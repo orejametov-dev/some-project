@@ -106,7 +106,7 @@ class AzoMerchantAccessesController extends ApiBaseController
 
         $merchant = $store->merchant;
 
-        if ($azo_merchant_access = AzoMerchantAccess::withTrashed()->where('user_id', $user['data']['id'])->first()) {
+        if ($azo_merchant_access = AzoMerchantAccess::withTrashed()->where('company_user_id', $company_user->id)->first()) {
             $azo_merchant_access->restore();
         } else {
             $azo_merchant_access = new AzoMerchantAccess();
@@ -141,7 +141,36 @@ class AzoMerchantAccessesController extends ApiBaseController
         Cache::tags($merchant->id)->flush();
 
         return $azo_merchant_access;
+    }
 
+    public function destroy($id)
+    {
+        $azo_merchant_access = AzoMerchantAccess::query()->findOrFail($id);
+        $store = $azo_merchant_access->store;
 
+        $azo_merchant_access->delete();
+
+        $merchant = $azo_merchant_access->merchant;
+
+        SendHook::dispatch(new HookData(
+            service: 'merchants',
+            hookable_type: $azo_merchant_access->getTable(),
+            hookable_id: $azo_merchant_access->id,
+            created_from_str: 'PRM',
+            created_by_id: $this->user->id,
+            body: 'Сотрудник удален',
+            keyword: 'Сотрудник удален из магазина: (' . $store->id . ', ' . $azo_merchant_access->store->name . ')',
+            action: 'delete',
+            class: 'danger',
+            action_at: null,
+            created_by_str: $this->user->name,
+        ));
+
+        Cache::tags('azo_merchants')->forget('azo_merchant_user_id_' . $azo_merchant_access->user_id);
+        Cache::tags($merchant->id)->flush();
+
+        ToggleMerchantRoleOfUser::dispatch($azo_merchant_access->user_id, AuthMicroService::DEACTIVATE_MERCHANT_ROLE);
+
+        return response()->json(['message' => 'Сотрудник удален']);
     }
 }
