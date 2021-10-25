@@ -240,6 +240,12 @@ class MerchantsController extends ApiBaseController
             'created_by_name' => $this->user->name
         ]);
 
+        if($merchant->active){
+            $merchant->company->modules()->attach(Module::AZO_MERCHANT);
+        } else {
+            $merchant->company->modules()->detach(Module::AZO_MERCHANT);
+        }
+
         Cache::tags($merchant->id)->flush();
         Cache::tags('azo_merchants')->flush();
         Cache::tags('company')->flush();
