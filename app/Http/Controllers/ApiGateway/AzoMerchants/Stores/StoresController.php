@@ -52,9 +52,7 @@ class StoresController extends ApiBaseController
             return response()->json(['message' => 'Указанное имя уже занято другим магазином'], 400);
         }
 
-        $merchant_store = new Store();
-        $merchant_store->name = $request->input('name');
-        $merchant_store->region = $request->input('region');
+        $merchant_store = new Store($request->validated());
         $merchant_store->merchant_id = $merchant->id;
         $merchant_store->is_azo = true;
 
