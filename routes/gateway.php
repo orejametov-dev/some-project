@@ -31,6 +31,7 @@ Route::prefix('alifshop-merchants/stores')
         Route::post('/', [AlifshopMerchantStoresController::class, 'store']);
         Route::match(['put', 'patch'], '/{id}', [AlifshopMerchantStoresController::class, 'update']);
         Route::match(['put', 'patch'], '/{id}/toggle', [AlifshopMerchantStoresController::class, 'toggle']);
+        Route::match(['put', 'patch'],'/{id}/attach-alifshop' , [AlifshopMerchantStoresController::class, 'attachAlifshop']);
     });
 
 Route::prefix('alifshop-merchants/users')
