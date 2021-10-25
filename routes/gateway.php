@@ -139,6 +139,7 @@ Route::prefix('stores')
         Route::post('/', [App\Http\Controllers\ApiGateway\AzoMerchants\Stores\StoresController::class, 'store']);
         Route::match(['put', 'patch'], '/{id}/toggle', [App\Http\Controllers\ApiGateway\AzoMerchants\Stores\StoresController::class, 'toggle']);
         Route::match(['put', 'patch'], '/{id}', [App\Http\Controllers\ApiGateway\AzoMerchants\Stores\StoresController::class, 'update']);
+        Route::match(['put', 'patch'], '/{id}/attach-azo', [App\Http\Controllers\ApiGateway\AzoMerchants\Stores\StoresController::class, 'attachAzo']);
     });
 
 Route::prefix('notifications')
