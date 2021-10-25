@@ -84,20 +84,14 @@ class StoresController extends ApiBaseController
 
         $merchant = Merchant::findOrFail($request->input('merchant_id'));
 
-        $store = Store::query()
-            ->byMerchant($merchant->id)
-            ->azo()
-            ->find($id);
+        $store = $merchant->stores()->find($id); // тут $merchant->store() возвращает все мерчанты с типом azo
 
         if($store) {
             return response()->json(['Магазин уже сужествует как Аъзо'], 400);
         }
 
-        $store = $merchant->stores()
-            ->where('is_azo', false)
-            ->findOrFail($id);
-
-        $store->azo = true;
+        $store = Store::query()->byMerchant($merchant->id)->findOrFail($id);
+        $store->is_azo = true;
         $store->save();
 
         return $store;
