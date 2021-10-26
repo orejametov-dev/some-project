@@ -7,6 +7,7 @@ use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Files\StoreFileRequest;
 use App\HttpServices\Auth\AuthMicroService;
 use App\HttpServices\Telegram\TelegramService;
+use App\HttpServices\Warehouse\WarehouseService;
 use App\Modules\Companies\Models\Company;
 use App\Modules\Companies\Models\Module;
 use App\Modules\Companies\Services\CompanyService;
@@ -241,6 +242,20 @@ class MerchantsController extends ApiBaseController
         ]);
 
         $merchant->company->modules()->updateExistingPivot(Module::AZO_MERCHANT, ['active' => $merchant->active]);
+
+        Cache::tags($merchant->id)->flush();
+        Cache::tags('merchants')->flush();
+        return $merchant;
+    }
+
+    public function toggleGeneralGoods($id, Request $request)
+    {
+        $merchant = Merchant::findOrFail($id);
+        $merchant->has_general_goods = !$merchant->has_general_goods;
+
+        WarehouseService::checkDuplicateSKUs($merchant->id);
+
+        $merchant->save();
 
         Cache::tags($merchant->id)->flush();
         Cache::tags('azo_merchants')->flush();
