@@ -22,16 +22,6 @@ class CreateCompanyModulesTable extends Migration
 
             $table->unique(['company_id', 'module_id']);
         });
-
-        $merchants = DB::table('merchants')->get(['id', 'company_id', 'active']);
-
-        foreach ($merchants as $merchant) {
-            DB::table('company_modules')->insert([
-                'company_id' => $merchant->company_id,
-                'module_id' => \App\Modules\Companies\Models\Module::AZO_MERCHANT,
-                'active' => $merchant->active
-            ]);
-        }
     }
 
     /**
