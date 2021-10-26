@@ -165,11 +165,7 @@ class AlifshopMerchantsController extends ApiBaseController
             'created_by_name' => $this->user->name
         ]);
 
-        if($alifshop_merchant->active){
-            $alifshop_merchant->company->modules()->attach(Module::AZO_MERCHANT);
-        } else {
-            $alifshop_merchant->company->modules()->detach(Module::AZO_MERCHANT);
-        }
+        $alifshop_merchant->company->modules()->updateExistingPivot(Module::ALIFSHOP_MERCHANT, ['active' => $alifshop_merchant->active]);
 
         Cache::tags($alifshop_merchant->id)->flush();
         Cache::tags('alifshop_merchants')->flush();
