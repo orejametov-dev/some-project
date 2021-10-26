@@ -59,7 +59,7 @@ class MerchantsController extends ApiBaseController
         $company = Company::query()->findOrFail($request->input('company_id'));
 
         if(Merchant::query()->where('company_id', $company->id)->exists()){
-            return response()->json(['message' => 'Указаная компания уже имеет алифшоп модуль'], 400);
+            return response()->json(['message' => 'Указаная компания уже имеет аъзо модуль'], 400);
         }
 
         $merchant = $merchantsService->create(new MerchantsDTO(
