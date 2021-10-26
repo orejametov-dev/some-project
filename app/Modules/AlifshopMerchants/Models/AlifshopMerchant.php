@@ -82,6 +82,28 @@ class AlifshopMerchant extends Model
             $query->where('maintainer_id', $maintainer_id);
         }
 
+        if ($tags_string = $request->query('tags')) {
+            $tags = explode(';', $tags_string);
+
+            $query->whereHas('tags', function ($query) use ($tags) {
+                $query->whereIn('id', $tags);
+            });
+        }
+
+        if ($region = $request->query('region')) {
+            $query->whereHas('stores', function ($query) use ($region) {
+                $query->where('region', $region);
+            });
+        }
+
+        if ($token = $request->query('token')) {
+            $query->where('token', $token);
+        }
+
+        if($status_id = $request->query('status_id')) {
+            $query->where('status_id', $status_id);
+        }
+
         if ($request->has('active')) {
             $query->where('active', $request->query('active'));
         }
