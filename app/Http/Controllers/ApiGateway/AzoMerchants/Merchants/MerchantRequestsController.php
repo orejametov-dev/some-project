@@ -7,6 +7,7 @@ use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Resources\ApiPrmGateway\Merchants\MerchantRequestsResource;
 use App\Modules\Companies\DTO\CompanyDTO;
 use App\Modules\Companies\Models\Company;
+use App\Modules\Companies\Models\Module;
 use App\Modules\Companies\Services\CompanyService;
 use App\HttpServices\Auth\AuthMicroService;
 use App\Modules\Merchants\DTO\Merchants\MerchantInfoDTO;
@@ -167,6 +168,8 @@ class MerchantRequestsController extends ApiBaseController
                 name: $merchant_request->name,
                 legal_name: $merchant_request->legal_name
             ));
+
+            $company->modules()->attach(Module::AZO_MERCHANT);
 
             $merchant = $merchantsService->create(new MerchantsDTO(
                 id: $company->id,
