@@ -64,6 +64,11 @@ class AlifshopMerchant extends Model
 
     public function scopeFilterRequest(Builder $query, Request $request)
     {
+        if ($alifshop_merchant_ids = $request->query('merchant_ids')) {
+            $alifshop_merchant_ids = explode(';', $alifshop_merchant_ids);
+            $query->whereIn('id', $alifshop_merchant_ids);
+        }
+
         if ($q = $request->query('q')) {
             $query->where('name', 'like', '%' . $q . '%')
                 ->orWhere('legal_name', 'like', '%' . $q . '%');
