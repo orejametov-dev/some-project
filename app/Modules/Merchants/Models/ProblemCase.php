@@ -5,6 +5,7 @@ namespace App\Modules\Merchants\Models;
 use App\Modules\Merchants\Traits\ProblemCaseStatuses;
 use App\Services\SimpleStateMachine\SimpleStateMachinable;
 use App\Services\SimpleStateMachine\SimpleStateMachineTrait;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -145,6 +146,15 @@ class ProblemCase extends Model implements SimpleStateMachinable
 
         if($request->query('client_id')) {
             $query->where('client_id', $request->query('client_id'));
+        }
+
+        if($request->query('assigned_to_id')) {
+            $query->where('assigned_to_id', $request->query('client_id'));
+        }
+
+        if ($request->query('date')) {
+            $date = Carbon::parse($request->query('date'));
+            $query->whereDate('created_at', $date);
         }
 
         if($request->query('q')) {
