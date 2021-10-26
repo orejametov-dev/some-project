@@ -35,6 +35,7 @@ class AlifshopMerchantsController extends ApiBaseController
     public function index(Request $request)
     {
         $alifshop_merchants = AlifshopMerchant::query()
+            ->with(['tags'])
             ->filterRequest($request)
             ->orderRequest($request);
 
