@@ -2,6 +2,7 @@
 
 namespace App\Modules\Merchants\Models;
 
+use App\Modules\Companies\Models\Company;
 use App\Modules\Merchants\Services\MerchantStatus;
 use App\Modules\Merchants\Traits\MerchantFileTrait;
 use App\Modules\Merchants\Traits\MerchantRelationshipsTrait;
@@ -41,9 +42,10 @@ use function Clue\StreamFilter\fun;
  * @property-read int|null $files_count
  * @property-read mixed $logo_path
  * @property-read MerchantInfo|null $merchant_info
- * @property-read Collection|MerchantUser[] $merchant_users
+ * @property-read Collection|AzoMerchantAccess[] $azo_merchant_accesses
  * @property-read int|null $merchant_users_count
  * @property-read Collection|Store[] $stores
+ * @property-read Company $company
  * @property-read int|null $stores_count
  * @property-read Collection|Tag[] $tags
  * @property-read int|null $tags_count
