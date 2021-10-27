@@ -37,12 +37,14 @@ class CompaniesController extends ApiBaseController
     {
         $this->validate($request, [
             'name' => 'required|string',
-            'legal_name' => 'required|string'
+            'legal_name' => 'required|string',
+            'legal_name_key' => 'required|string'
         ]);
 
         $company = $companyService->create(new CompanyDTO(
             name: $request->input('name'),
-            legal_name: $request->input('legal_name')
+            legal_name: $request->input('legal_name'),
+            legal_name_key: $request->input('legal_name_key')
         ));
 
         return $company;
@@ -58,6 +60,7 @@ class CompaniesController extends ApiBaseController
         $this->validate($request, [
             'name' => 'required|string',
             'legal_name' => 'required|string',
+            'legal_name_key' => 'required|string',
             'merchant_type' => 'required|array',
             'tags' => 'required|array'
         ]);
@@ -78,7 +81,8 @@ class CompaniesController extends ApiBaseController
          $company = \DB::transaction(function () use ($companyService, $merchantsService, $alifshopMerchantService, $request) {
             $company = $companyService->create(new CompanyDTO(
                 name: $request->input('name'),
-                legal_name: $request->input('legal_name')
+                legal_name: $request->input('legal_name'),
+                legal_name_key: $request->input('legal_name_key')
             ));
 
             if(in_array( 'azo_merchant', $request->input('merchant_type'))){

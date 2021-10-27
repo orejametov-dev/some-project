@@ -14,6 +14,7 @@ class CompanyService
         $company = new Company();
         $company->name = $companyDTO->name;
         $company->legal_name = $companyDTO->legal_name;
+        $company->legal_name_key = $companyDTO->legal_name_key;
         $company->save();
 
         return $company;
