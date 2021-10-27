@@ -12,9 +12,13 @@ class AlifshopMerchantAccesses extends Controller
     {
         return Cache::tags('alifshop_merchants')->remember('alifshop_merchant_user_id_' . $user_id, 86400, function () use ($user_id) {
             $alifshop_merchant_access = AlifshopMerchantAccess::query()
+                ->whereHas('company_user' , function ($query) use ($user_id) {
+                    $query->where('id' , $user_id);
+                })
                 ->byActiveMerchant()
                 ->byActiveStore()
-                ->byUserId($user_id)->first();
+                ->first();
+
             return $alifshop_merchant_access;
         });
     }
