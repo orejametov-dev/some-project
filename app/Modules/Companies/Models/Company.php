@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
  * @property int $id
  * @property string $name
  * @property string|null $legal_name
+ * @property string|null $legal_name_key
  * @method static Builder|Merchant filterRequest(Request $request)
 
  */
@@ -21,7 +22,7 @@ class Company extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'legal_name'];
+    protected $fillable = ['name', 'legal_name', 'legal_name_key'];
 
     public function company_users()
     {
