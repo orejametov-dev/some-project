@@ -53,6 +53,16 @@ class AlifshopMerchantAccessController extends ApiBaseController
             ->alifshop()
             ->findOrFail($request->input('store_id'));
 
+        $company_user = CompanyUser::query()->where('user_id', $user['data']['id'])->first();
+
+
+        if($company_user) {
+            if ($company_user->company->merchant->id != $alifshop_merchant_store->merchant_id) {
+                throw new BusinessException('Сотрудника нельзя прикрепить к этому мерчанту', 400);
+            }
+        }
+
+
         $company_user = CompanyUser::query()->where('user_id', $user['data']['id'])->firstOrNew();
         $company_user->user_id = $user['data']['id'];
         $company_user->company_id = $alifshop_merchant_store->alifshop_merchant->company->id;
