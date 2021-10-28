@@ -32,7 +32,6 @@ use Illuminate\Support\Carbon;
  * @property $is_alifshop
  * @property $is_azo
  * @property Merchant $merchant
- * @property AlifshopMerchant $alifshop_merchant
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Collection|Condition[] $application_conditions

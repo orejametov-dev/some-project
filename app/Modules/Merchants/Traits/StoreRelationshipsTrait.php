@@ -15,11 +15,6 @@ trait StoreRelationshipsTrait
         return $this->belongsTo(Merchant::class);
     }
 
-    public function alifshop_merchant()
-    {
-        return $this->belongsTo(AlifshopMerchant::class, 'merchant_id');
-    }
-
     public function application_conditions()
     {
         return $this->hasMany(Condition::class);

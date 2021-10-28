@@ -51,8 +51,7 @@ class CompaniesController extends ApiBaseController
     public function storeSpecial(
         Request $request,
         CompanyService $companyService,
-        MerchantsService $merchantsService,
-        AlifshopMerchantService $alifshopMerchantService
+        MerchantsService $merchantsService
     )
     {
         $this->validate($request, [
@@ -92,19 +91,6 @@ class CompaniesController extends ApiBaseController
                 ));
                 $company->modules()->attach([Module::AZO_MERCHANT]);
                 $merchant->tags()->attach($request->input('tags'));
-            }
-
-            if(in_array( 'alifshop_merchant', $request->input('merchant_type'))){
-                $alifshop_merchant = $alifshopMerchantService->create(new AlifshopMerchantDTO(
-                    id: $company->id,
-                    name: $company->name,
-                    legal_name: $company->legal_name,
-                    information: null,
-                    maintainer_id: $this->user->id,
-                    company_id: $company->id
-                ));
-                $company->modules()->attach([Module::ALIFSHOP_MERCHANT]);
-                $alifshop_merchant->tags()->attach($request->input('tags'));
             }
 
             return $company;
