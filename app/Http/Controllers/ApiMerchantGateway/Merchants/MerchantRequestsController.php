@@ -25,12 +25,12 @@ class MerchantRequestsController extends Controller
     {
         $registration_file_types = File::$registration_file_types;
         $regions = RegionService::getRegions();
-        $legal_name_prefix = LegalNameService::getNamePrefixes();
+        $legal_name_prefixes = LegalNameService::getNamePrefixes();
 
         return [
             'registration_file_types' => $registration_file_types,
             'regions' => $regions,
-            'legal_name_prefix' => $legal_name_prefix
+            'legal_name_prefixes' => $legal_name_prefixes
         ];
     }
 

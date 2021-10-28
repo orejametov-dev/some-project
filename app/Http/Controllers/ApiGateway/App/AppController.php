@@ -34,7 +34,7 @@ class AppController extends ApiBaseController
         $store_activity_reasons = ActivityReason::query()->where('type', 'STORE')->get();
         $cancel_reasons = CancelReason::query()->get();
         $modules = Module::query()->get();
-        $legal_name_prefix = LegalNameService::getNamePrefixes();
+        $legal_name_prefixes = LegalNameService::getNamePrefixes();
 
         $authUser = $this->user;
 
@@ -67,7 +67,7 @@ class AppController extends ApiBaseController
             'store_activity_reasons',
             'cancel_reasons',
             'modules',
-            'legal_name_prefix'
+            'legal_name_prefixes'
         ));
     }
 

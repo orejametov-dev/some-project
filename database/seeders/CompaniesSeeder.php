@@ -20,7 +20,7 @@ class CompaniesSeeder extends Seeder
             'id' => 1,
             'name' => 'Idea Store',
             'legal_name' => '"Idea"',
-            'legal_name_key' => 'LLC',
+            'legal_name_prefix' => 'LLC',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
@@ -29,7 +29,7 @@ class CompaniesSeeder extends Seeder
             'id' => 2,
             'name' => 'Arena Markaz',
             'legal_name' => '«RETAIL OPERATION GROUP»',
-            'legal_name_key' => 'LLC',
+            'legal_name_prefix' => 'LLC',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
@@ -38,7 +38,7 @@ class CompaniesSeeder extends Seeder
             'id' => 3,
             'name' => 'Mobilezone',
             'legal_name' => '"Mobilezone Store"',
-            'legal_name_key' => 'LLC',
+            'legal_name_prefix' => 'LLC',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
@@ -47,7 +47,7 @@ class CompaniesSeeder extends Seeder
             'id' => 4,
             'name' => 'GSHOP',
             'legal_name' => '"GSHOP"',
-            'legal_name_key' => 'LLC',
+            'legal_name_prefix' => 'LLC',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
@@ -56,7 +56,7 @@ class CompaniesSeeder extends Seeder
             'id' => 5,
             'name' => 'DEADSHOT',
             'legal_name' => '"DEADSHOT"',
-            'legal_name_key' => 'LLC',
+            'legal_name_prefix' => 'LLC',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
@@ -65,7 +65,7 @@ class CompaniesSeeder extends Seeder
             'id' => 6,
             'name' => 'Mega-shop',
             'legal_name' => '"League group"',
-            'legal_name_key' => 'LLC',
+            'legal_name_prefix' => 'LLC',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
@@ -74,7 +74,7 @@ class CompaniesSeeder extends Seeder
             'id' => 7,
             'name' => 'Rolton',
             'legal_name' => '"ROLTON"',
-            'legal_name_key' => 'LLC',
+            'legal_name_prefix' => 'LLC',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
@@ -83,7 +83,7 @@ class CompaniesSeeder extends Seeder
             'id' => 8,
             'name' => 'Korzinka.uz',
             'legal_name' => '"REDTAG GROUP"',
-            'legal_name_key' => 'LLC',
+            'legal_name_prefix' => 'LLC',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
@@ -92,7 +92,7 @@ class CompaniesSeeder extends Seeder
             'id' => 9,
             'name' => 'Huawei Store',
             'legal_name' => '"HUAWEI"',
-            'legal_name_key' => 'LLC',
+            'legal_name_prefix' => 'LLC',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
@@ -101,7 +101,7 @@ class CompaniesSeeder extends Seeder
             'id' => 10,
             'name' => 'Oppo',
             'legal_name' => '"REDMI GROUP"',
-            'legal_name_key' => 'LLC',
+            'legal_name_prefix' => 'LLC',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];

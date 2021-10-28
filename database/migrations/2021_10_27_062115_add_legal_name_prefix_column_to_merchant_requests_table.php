@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddLegalNameKeyColumnToMerchantRequestsTable extends Migration
+class AddLegalNamePrefixColumnToMerchantRequestsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddLegalNameKeyColumnToMerchantRequestsTable extends Migration
     public function up()
     {
         Schema::table('merchant_requests', function (Blueprint $table) {
-            $table->string('legal_name_key');
+            $table->string('legal_name_prefix');
         });
     }
 
@@ -26,7 +26,7 @@ class AddLegalNameKeyColumnToMerchantRequestsTable extends Migration
     public function down()
     {
         Schema::table('merchant_requests', function (Blueprint $table) {
-            $table->dropColumn('legal_name_key');
+            $table->dropColumn('legal_name_prefix');
         });
     }
 }

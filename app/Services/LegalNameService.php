@@ -32,7 +32,7 @@ class LegalNameService
             ],
             'body_ru' => [
                 'value' => 'ИП',
-                'description' => 'Иностранная Компания'
+                'description' => 'Иностранное Преприятие'
             ]
         ],
         'UE' => [
