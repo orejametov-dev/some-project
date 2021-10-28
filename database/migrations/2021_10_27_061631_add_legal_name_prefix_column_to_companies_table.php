@@ -14,7 +14,7 @@ class AddLegalNamePrefixColumnToCompaniesTable extends Migration
     public function up()
     {
         Schema::table('companies', function (Blueprint $table) {
-            $table->string('legal_name_prefix');
+            $table->string('legal_name_prefix')->nullable();
         });
     }
 

@@ -14,7 +14,7 @@ class AddLegalNamePrefixColumnToMerchantRequestsTable extends Migration
     public function up()
     {
         Schema::table('merchant_requests', function (Blueprint $table) {
-            $table->string('legal_name_prefix');
+            $table->string('legal_name_prefix')->nullable();
         });
     }
 
