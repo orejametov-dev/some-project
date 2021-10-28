@@ -25,7 +25,7 @@ class LegalNameService
                 'description' => 'Индивидуальный Предприниматель'
             ]
         ],
-        'FC' => [
+        'FE' => [
             'body_uz' => [
                 'value' => 'XK',
                 'description' => 'Xorijiy Korxona'
