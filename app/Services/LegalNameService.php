@@ -25,7 +25,7 @@ class LegalNameService
                 'description' => 'Индивидуальный Предприниматель'
             ]
         ],
-        'FE' => [
+        'FC' => [
             'body_uz' => [
                 'value' => 'XK',
                 'description' => 'Xorijiy Korxona'
@@ -45,7 +45,7 @@ class LegalNameService
                 'description' => 'Унитарная Предприятия'
             ]
         ],
-        'SUE' => [
+        'GUE' => [
             'body_uz' => [
                 'value' => 'DUK',
                 'description' => 'Davlat Unitar Korxonasi'
@@ -55,7 +55,7 @@ class LegalNameService
                 'description' => 'Государственное Унитарное Предприятие'
             ]
         ],
-        'PE' => [
+        'SP' => [
             'body_uz' => [
                 'value' => 'XK',
                 'description' => 'Xususiy Korxona'
