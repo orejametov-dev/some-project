@@ -33,10 +33,6 @@ class CompanyUser extends Model
         return $this->hasOne(AzoMerchantAccess::class);
     }
 
-    public function alifshop_merchant_access()
-    {
-        return $this->hasOne(AlifshopMerchantAccess::class);
-    }
 
     public function scopeFilterRequest(Builder $query, Request $request)
     {
