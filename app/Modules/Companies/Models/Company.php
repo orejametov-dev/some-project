@@ -32,10 +32,6 @@ class Company extends Model
     {
         return $this->hasOne(Merchant::class);
     }
-    public function alifshop_merchant()
-    {
-        return $this->hasOne(AlifshopMerchant::class);
-    }
 
     public function modules()
     {

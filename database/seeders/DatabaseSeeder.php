@@ -27,9 +27,6 @@ class DatabaseSeeder extends Seeder
            ApplicationConditionsSeeder::class,
            MerchantTags::class,
            MerchantTag::class,
-           AlifshopMerchantSeeder::class,
-//           AlifshopMerchantStoreSeeder::class,
-           AlifshopMerchantAccessSeeder::class
        ]);
     }
 }

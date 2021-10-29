@@ -74,7 +74,7 @@ class CompaniesController extends ApiBaseController
             return response()->json(['message' => 'Указанное имя компании уже занято'], 400);
         }
 
-         $company = \DB::transaction(function () use ($companyService, $merchantsService, $alifshopMerchantService, $request) {
+         $company = \DB::transaction(function () use ($companyService, $merchantsService, $request) {
             $company = $companyService->create(new CompanyDTO(
                 name: $request->input('name'),
                 legal_name: $request->input('legal_name')
