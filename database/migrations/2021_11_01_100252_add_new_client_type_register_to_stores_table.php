@@ -14,7 +14,7 @@ class AddNewClientTypeRegisterToStoresTable extends Migration
     public function up()
     {
         Schema::table('stores', function (Blueprint $table) {
-            $table->string('client_type_register');
+            $table->string('client_type_register')->default('COMMON');
         });
     }
 
