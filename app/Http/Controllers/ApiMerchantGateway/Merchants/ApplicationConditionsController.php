@@ -14,10 +14,10 @@ class ApplicationConditionsController extends ApiBaseController
     public function index(Request $request)
     {
         return Cache::tags($this->merchant_id)->remember($request->fullUrl(), 24 * 60, function () use ($request) {
-            if ($request->has('post_alifshop') AND $request->query('post_alifshop') == false) {
+            if ($request->has('post_alifshop') AND $request->query('post_alifshop') == true) {
                 $conditionQuery = Condition::query()
                     ->active()
-                    ->where('post_merchant', false)
+                    ->where('post_alifshop', true)
                     ->byMerchant($this->merchant_id)
                     ->filterRequest($request)
                     ->orderRequest($request);
