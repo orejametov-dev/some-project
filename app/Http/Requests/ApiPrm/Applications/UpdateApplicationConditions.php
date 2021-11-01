@@ -24,6 +24,7 @@ class UpdateApplicationConditions extends FormRequest
     public function rules()
     {
         return [
+            'store_ids' => 'nullable|array',
             'duration' => 'required|numeric|between:0,15',
             'commission' => 'required|integer|between:0,100',
             'special_offer' => 'nullable|string',
