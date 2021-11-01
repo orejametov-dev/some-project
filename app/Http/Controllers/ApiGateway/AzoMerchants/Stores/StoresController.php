@@ -157,10 +157,10 @@ class StoresController extends ApiBaseController
            'client_type_register' => 'required|string'
         ]);
 
-        ClientTypeRegisterService::getOneByKey($request->input('client_type_register'));
+        $client_type_register = ClientTypeRegisterService::getOneByKey($request->input('client_type_register'));
 
         $store = Store::query()->findOrFail($id);
-        $store->client_type_register = $request->input('client_type_register');
+        $store->client_type_register = $client_type_register['key'];
         $store->save();
 
         Cache::tags($store->merchant_id)->flush();
