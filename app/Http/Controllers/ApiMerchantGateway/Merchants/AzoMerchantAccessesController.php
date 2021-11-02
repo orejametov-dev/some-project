@@ -8,11 +8,15 @@ use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiMerchantGateway\ApiBaseController;
 use App\HttpServices\Auth\AuthMicroService;
 use App\HttpServices\Hooks\DTO\HookData;
+use App\HttpServices\Notify\NotifyMicroService;
 use App\Jobs\SendHook;
 use App\Jobs\ToggleMerchantRoleOfUser;
 use App\Modules\Companies\Models\CompanyUser;
 use App\Modules\Merchants\Models\AzoMerchantAccess;
 use App\Modules\Merchants\Models\Store;
+use App\Services\Helpers\Randomizr;
+use App\Services\SMS\OtpProtector;
+use App\Services\SMS\SmsMessages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -74,17 +78,60 @@ class AzoMerchantAccessesController extends ApiBaseController
         return $azo_merchant_access;
     }
 
+    public function requestStore(Request $request)
+    {
+        $this->validate($request, [
+            'phone' => 'required|string|digits:12'
+        ]);
+        $phone = $request->input('phone');
+
+        $phone_exists = AzoMerchantAccess::query()
+            ->where('phone' , $phone)
+            ->exists();
+
+        if ($phone_exists) {
+            return response()->json(['Клиент с данным номером существует'],400);
+        }
+
+        $otpProtector = new OtpProtector('new_merchant_' . $phone);
+        $otpProtector->verifyRequestOtpCount();
+
+        if (config('app.env') == 'production') {
+            $code = Randomizr::generateOtp();
+            $message = SmsMessages::onAuthentication($code);
+            NotifyMicroService::sendSms($phone, $message);
+        } else {
+            $code = 1111;
+        }
+
+        $otpProtector->writeOtpToCache($code);
+
+        return response()->json(['code' => 'otp_sent', 'message' => 'Код подтверждения отправлен']);
+    }
+
     public function store(Request $request)
     {
         $this->validate($request, [
+            'code' => 'required|digits:4',
             'user_id' => 'required|integer',
             'store_id' => 'required|integer'
         ]);
 
         $user = AuthMicroService::getUserById($request->input('user_id'));
 
+        $protector = new OtpProtector('new_merchant_' . $user['data']['phone']);
+        $protector->verifyOtp($request->input('code'));
+
         if (array_search(AuthMicroService::AZO_MERCHANT_ROLE, array_column($user['data']['roles'], 'name'))) {
             throw new BusinessException('Пользователь уже является мерчантом', 'merchant_exists', 400);
+        }
+
+        $phone_exists = AzoMerchantAccess::query()
+            ->where('phone' , $user['data']['phone'])
+            ->exists();
+
+        if ($phone_exists) {
+            throw new BusinessException('Клиент с данным номером существует' , 'phone_exists', 400);
         }
 
         $store = Store::query()->findOrFail($request->input('store_id'));
