@@ -1,6 +1,8 @@
 <?php
 
 namespace App\HttpServices\Notify;
+use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Support\Facades\Http;
 
 class NotifyMicroService
 {

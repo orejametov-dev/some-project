@@ -83,23 +83,18 @@ class AzoMerchantAccessesController extends ApiBaseController
         $this->validate($request, [
             'phone' => 'required|string|digits:12'
         ]);
-        $phone = $request->input('phone');
 
-        $phone_exists = AzoMerchantAccess::query()
-            ->where('phone' , $phone)
-            ->exists();
-
-        if ($phone_exists) {
-            return response()->json(['Клиент с данным номером существует'],400);
+        if (AzoMerchantAccess::query()->where('phone' , $request->input('phone'))->exists()) {
+            return response()->json(['Пользователь с данным номером существует'],400);
         }
 
-        $otpProtector = new OtpProtector('new_merchant_' . $phone);
+        $otpProtector = new OtpProtector('new_azo_merchant_user_' . $request->input('phone'));
         $otpProtector->verifyRequestOtpCount();
 
         if (config('app.env') == 'production') {
             $code = Randomizr::generateOtp();
             $message = SmsMessages::onAuthentication($code);
-            NotifyMicroService::sendSms($phone, $message);
+            NotifyMicroService::sendSms($request->input('phone'), $message);
         } else {
             $code = 1111;
         }
@@ -119,19 +114,15 @@ class AzoMerchantAccessesController extends ApiBaseController
 
         $user = AuthMicroService::getUserById($request->input('user_id'));
 
-        $protector = new OtpProtector('new_merchant_' . $user['data']['phone']);
+        $protector = new OtpProtector('new_azo_merchant_user_' . $user['data']['phone']);
         $protector->verifyOtp($request->input('code'));
 
         if (array_search(AuthMicroService::AZO_MERCHANT_ROLE, array_column($user['data']['roles'], 'name'))) {
-            throw new BusinessException('Пользователь уже является мерчантом', 'merchant_exists', 400);
+            throw new BusinessException('Пользователь уже является сотрудником мерчанта', 'merchant_exists', 400);
         }
 
-        $phone_exists = AzoMerchantAccess::query()
-            ->where('phone' , $user['data']['phone'])
-            ->exists();
-
-        if ($phone_exists) {
-            throw new BusinessException('Клиент с данным номером существует' , 'phone_exists', 400);
+        if (AzoMerchantAccess::query()->where('phone' , $user['data']['phone'])->exists()) {
+            throw new BusinessException('Пользователь с данным номером существует' , 'phone_exists', 400);
         }
 
         $store = Store::query()->findOrFail($request->input('store_id'));
@@ -143,11 +134,7 @@ class AzoMerchantAccessesController extends ApiBaseController
         $company_user->company_id = $store->merchant->company->id;
         $company_user->save();
 
-        $azo_merchant_access_exists = AzoMerchantAccess::query()
-            ->where('company_user_id', $company_user->id)
-            ->exists();
-
-        if ($azo_merchant_access_exists) {
+        if (AzoMerchantAccess::query()->where('company_user_id', $company_user->id)->exists()) {
             throw new BusinessException('Пользователь уже существует', 'user_exists', 400);;
         }
 
