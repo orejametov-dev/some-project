@@ -40,5 +40,9 @@ return [
     'warehouse' => [
         'domain' => env('SERVICE_WAREHOUSE_DOMAIN'),
         'access_token' => env('SERVICE_WAREHOUSE_ACCESS_TOKEN')
+    ],
+    'service_notify' => [
+        'domain' => env('SERVICES_NOTIFY'),
+        'access_token' => env('SERVICES_NOTIFY_ACCESS_TOKEN')
     ]
 ];
