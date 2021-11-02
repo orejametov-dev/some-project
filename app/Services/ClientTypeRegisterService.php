@@ -31,7 +31,7 @@ class ClientTypeRegisterService
         $type_register = array_search($type, array_column(self::$client_type_register, 'key', 'key'));
 
         if (!$type_register) {
-            throw new BusinessException('Указан не правильный тип регистрации', 'type_not_exists');
+            throw new BusinessException('Указан не правильный тип регистрации', 'type_not_exists', 404);
         }
 
         return self::$client_type_register[$type_register];
