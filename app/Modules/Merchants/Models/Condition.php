@@ -102,15 +102,6 @@ class Condition extends Model
         if ($request->has('active')) {
             $query->where('active', $request->query('active'));
         }
-        if($request->has('post_merchant') && $request->query('post_merchant') == true) {
-            $query->where('post_merchant', true);
-        }
-        if($request->has('post_alifshop') && $request->query('post_alifshop') == true) {
-            $query->where('post_alifshop', true);
-        }
-        if($request->has('post_alifshop') && $request->query('post_alifshop') == true) {
-            $query->where('post_alifshop', true);
-        }
         return $query;
     }
 
