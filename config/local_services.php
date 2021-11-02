@@ -36,5 +36,9 @@ return [
     'service_auth' => [
         'domain' => env('SERVICE_AUTH_DOMAIN'),
         'access_token' => env('SERVICE_AUTH_ACCESS_TOKEN')
+    ],
+    'service_notify' => [
+        'domain' => env('SERVICES_NOTIFY'),
+        'access_token' => env('SERVICES_NOTIFY_ACCESS_TOKEN')
     ]
 ];
