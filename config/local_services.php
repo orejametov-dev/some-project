@@ -36,5 +36,9 @@ return [
     'service_auth' => [
         'domain' => env('SERVICE_AUTH_DOMAIN'),
         'access_token' => env('SERVICE_AUTH_ACCESS_TOKEN')
+    ],
+    'warehouse' => [
+        'domain' => env('SERVICE_WAREHOUSE_DOMAIN'),
+        'access_token' => env('SERVICE_WAREHOUSE_ACCESS_TOKEN')
     ]
 ];

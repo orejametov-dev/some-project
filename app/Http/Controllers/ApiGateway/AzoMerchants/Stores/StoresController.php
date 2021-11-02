@@ -46,31 +46,13 @@ class StoresController extends ApiBaseController
 
         $store_exists = Store::query()
             ->where('name', $request->input('name'))
-            ->where('merchant_id', '!=', $merchant->id)
             ->exists();
 
         if ($store_exists) {
             return response()->json(['message' => 'Указанное имя уже занято другим магазином'], 400);
         }
 
-        $store_exists = $merchant->stores()
-            ->where('name', $request->input('name'))
-            ->exists();
-
-        if ($store_exists) {
-            return response()->json(['message' => 'Магазин уже является партнером алифшоп'], 400);
-        }
-
-        $merchant_store = Store::query()
-            ->where('name', $request->input('name'))
-            ->where('active', true)
-            ->where('is_azo', false)
-            ->where('merchant_id', $merchant->id)
-            ->firstOrNew();
-
-
-        $merchant_store->name = optional($merchant_store)->name ?? $request->input('name');
-        $merchant_store->region = optional($merchant_store)->region ?? $request->input('region');
+        $merchant_store = new Store($request->validated());
         $merchant_store->merchant_id = $merchant->id;
         $merchant_store->is_azo = true;
 
@@ -90,6 +72,27 @@ class StoresController extends ApiBaseController
         Cache::tags('azo_merchants')->flush();
 
         return $merchant_store;
+    }
+
+    public function attachAzo($id, Request $request)
+    {
+        $this->validate($request, [
+            'merchant_id' => 'required|integer'
+        ]);
+
+        $merchant = Merchant::findOrFail($request->input('merchant_id'));
+
+        $store = $merchant->stores()->find($id); // тут $merchant->store() возвращает все мерчанты с типом azo
+
+        if($store) {
+            return response()->json(['Магазин уже сужествует как Аъзо'], 400);
+        }
+
+        $store = Store::query()->byMerchant($merchant->id)->findOrFail($id);
+        $store->is_azo = true;
+        $store->save();
+
+        return $store;
     }
 
     public function update(UpdateStoresRequest $request, $store_id)

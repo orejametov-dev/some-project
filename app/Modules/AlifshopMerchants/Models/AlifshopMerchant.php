@@ -64,6 +64,11 @@ class AlifshopMerchant extends Model
 
     public function scopeFilterRequest(Builder $query, Request $request)
     {
+        if ($alifshop_merchant_ids = $request->query('merchant_ids')) {
+            $alifshop_merchant_ids = explode(';', $alifshop_merchant_ids);
+            $query->whereIn('id', $alifshop_merchant_ids);
+        }
+
         if ($q = $request->query('q')) {
             $query->where('name', 'like', '%' . $q . '%')
                 ->orWhere('legal_name', 'like', '%' . $q . '%');
@@ -80,6 +85,28 @@ class AlifshopMerchant extends Model
 
         if ($maintainer_id = $request->query('maintainer_id')) {
             $query->where('maintainer_id', $maintainer_id);
+        }
+
+        if ($tags_string = $request->query('tags')) {
+            $tags = explode(';', $tags_string);
+
+            $query->whereHas('tags', function ($query) use ($tags) {
+                $query->whereIn('id', $tags);
+            });
+        }
+
+        if ($region = $request->query('region')) {
+            $query->whereHas('stores', function ($query) use ($region) {
+                $query->where('region', $region);
+            });
+        }
+
+        if ($token = $request->query('token')) {
+            $query->where('token', $token);
+        }
+
+        if($status_id = $request->query('status_id')) {
+            $query->where('status_id', $status_id);
         }
 
         if ($request->has('active')) {

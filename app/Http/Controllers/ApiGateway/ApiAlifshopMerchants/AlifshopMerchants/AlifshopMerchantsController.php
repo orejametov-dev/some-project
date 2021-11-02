@@ -35,6 +35,7 @@ class AlifshopMerchantsController extends ApiBaseController
     public function index(Request $request)
     {
         $alifshop_merchants = AlifshopMerchant::query()
+            ->with(['tags'])
             ->filterRequest($request)
             ->orderRequest($request);
 
@@ -77,6 +78,7 @@ class AlifshopMerchantsController extends ApiBaseController
 
         Cache::tags($alifshop_merchant->id)->flush();
         Cache::tags('alifshop_merchants')->flush();
+        Cache::tags('company')->flush();
 
         $this->alifshopService->storeOrUpdateMerchant($alifshop_merchant->fresh());
 
@@ -100,6 +102,7 @@ class AlifshopMerchantsController extends ApiBaseController
 
         Cache::tags($alifshop_merchant->id)->flush();
         Cache::tags('alifshop_merchants')->flush();
+        Cache::tags('company')->flush();
 
         $this->alifshopService->storeOrUpdateMerchant($alifshop_merchant);
 
@@ -163,8 +166,12 @@ class AlifshopMerchantsController extends ApiBaseController
             'created_by_name' => $this->user->name
         ]);
 
+        $alifshop_merchant->company->modules()->updateExistingPivot(Module::ALIFSHOP_MERCHANT, ['active' => $alifshop_merchant->active]);
+
         Cache::tags($alifshop_merchant->id)->flush();
         Cache::tags('alifshop_merchants')->flush();
+        Cache::tags('company')->flush();
+
         return $alifshop_merchant;
     }
 

@@ -42,6 +42,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Store alifshop()
  * @method static Builder|Store newModelQuery()
  * @method static Builder|Store newQuery()
+ * @method static Builder|Store byAlifshopMerchant($alifshop_merchant_id)
  * @method static Builder|Store orderRequest(Request $request, string $default_order_str = 'id:desc')
  * @method static Builder|Store query()
  * @mixin Eloquent
@@ -117,6 +118,11 @@ class Store extends Model
     public function scopeByMerchant(Builder $query, $merchant_id)
     {
         $query->where('merchant_id', $merchant_id);
+    }
+
+    public function scopeByAlifshopMerchant(Builder $query, $alifshop_merchant_id)
+    {
+        $query->where('merchant_id', $alifshop_merchant_id);
     }
 
     public function scopeActive(Builder $query)

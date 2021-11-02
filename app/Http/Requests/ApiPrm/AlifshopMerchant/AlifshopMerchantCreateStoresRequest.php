@@ -28,6 +28,9 @@ class AlifshopMerchantCreateStoresRequest extends FormRequest
         return [
             'name' => 'required|max:255',
             'alifshop_merchant_id' => 'required|numeric',
+            'address' => 'nullable|string',
+            'responsible_person' => 'required_with:responsible_person_phone|nullable|string',
+            'responsible_person_phone' => 'required_with:responsible_person|nullable|digits:12',
             'region' => [
                 'required',
                 Rule::in(RegionService::getKeys()),

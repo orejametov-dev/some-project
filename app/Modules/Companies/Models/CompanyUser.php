@@ -63,4 +63,9 @@ class CompanyUser extends Model
             $query->whereIn('user_id', $user_ids);
         }
     }
+
+    public function scopeByUser(Builder $query, $user_id)
+    {
+        $query->where('user_id', $user_id);
+    }
 }

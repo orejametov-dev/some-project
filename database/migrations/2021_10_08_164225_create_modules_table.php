@@ -21,6 +21,20 @@ class CreateModulesTable extends Migration
             $table->string('key');
             $table->timestamps();
         });
+
+        DB::table('modules')->insert([
+            'title' => 'Azo',
+            'title_uz' => 'A\'zo',
+            'title_ru' => 'Аъзо',
+            'key' => 'azo_merchant'
+        ]);
+
+        DB::table('modules')->insert([
+            'title' => 'Alifshop',
+            'title_uz' => 'Alifshop',
+            'title_ru' => 'Алифшоп',
+            'key' => 'alifshop_merchant'
+        ]);
     }
 
     /**

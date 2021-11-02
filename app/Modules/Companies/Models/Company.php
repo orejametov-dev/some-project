@@ -39,7 +39,7 @@ class Company extends Model
 
     public function modules()
     {
-        return $this->belongsToMany(Module::class, 'company_modules');
+        return $this->belongsToMany(Module::class, 'company_modules')->withPivot('active');
     }
 
     public function scopeFilterRequest(Builder $query, Request $request)

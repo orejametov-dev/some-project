@@ -114,4 +114,19 @@ class CompaniesController extends ApiBaseController
 
         return $company;
     }
+
+    public function detachModule($id, Request $request)
+    {
+        $company = Company::query()->findOrFail($id);
+
+        if($request->input('merchant_type') == 'alifshop_merchant'){
+            $company->modules()->detach(Module::ALIFSHOP_MERCHANT);
+        }
+
+        if($request->input('merchant_type') == 'azo_merchant'){
+            $company->modules()->detach(Module::AZO_MERCHANT);
+        }
+
+        return $company;
+    }
 }

@@ -48,6 +48,14 @@ class AzoMerchantAccessesController extends ApiBaseController
 
         $store = Store::query()->azo()->findOrFail($request->input('store_id'));
 
+        $company_user = CompanyUser::query()->where('user_id', $user['data']['id'])->first();
+
+        if($company_user){
+            if($company_user->alifshop_merchant_access()->exists() and optional($company_user->company->alifshop_merchant)->id != null and optional($company_user->company->alifshop_merchant)->id != $store->merchant_id) {
+                throw new BusinessException('Сотрудника нельзя прикрепить к этому мерчанту', 400);
+            }
+        }
+
         $company_user = CompanyUser::query()->where('user_id', $user['data']['id'])->firstOrNew();
         $company_user->user_id = $user['data']['id'];
         $company_user->phone = $user['data']['id'];

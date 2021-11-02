@@ -17,6 +17,7 @@ class CreateCompanyModulesTable extends Migration
             $table->id();
             $table->foreignId('company_id')->constrained('companies');
             $table->foreignId('module_id')->constrained('modules');
+            $table->boolean('active')->default(true);
             $table->timestamps();
 
             $table->unique(['company_id', 'module_id']);

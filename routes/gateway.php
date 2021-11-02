@@ -16,6 +16,7 @@ Route::prefix('companies')->group(function () {
     Route::get('/{id}', [CompaniesController::class, 'show']);
     Route::post('/', [CompaniesController::class, 'store']);
     Route::post('/special-store', [CompaniesController::class, 'storeSpecial']);
+    Route::post('/{id}/detach-module', [CompaniesController::class, 'detachModule']);
 });
 
 Route::prefix('companies/users')->group(function () {
@@ -30,6 +31,7 @@ Route::prefix('alifshop-merchants/stores')
         Route::post('/', [AlifshopMerchantStoresController::class, 'store']);
         Route::match(['put', 'patch'], '/{id}', [AlifshopMerchantStoresController::class, 'update']);
         Route::match(['put', 'patch'], '/{id}/toggle', [AlifshopMerchantStoresController::class, 'toggle']);
+        Route::match(['put', 'patch'],'/{id}/attach-alifshop' , [AlifshopMerchantStoresController::class, 'attachAlifshop']);
     });
 
 Route::prefix('alifshop-merchants/users')
@@ -138,6 +140,7 @@ Route::prefix('stores')
         Route::post('/', [App\Http\Controllers\ApiGateway\AzoMerchants\Stores\StoresController::class, 'store']);
         Route::match(['put', 'patch'], '/{id}/toggle', [App\Http\Controllers\ApiGateway\AzoMerchants\Stores\StoresController::class, 'toggle']);
         Route::match(['put', 'patch'], '/{id}', [App\Http\Controllers\ApiGateway\AzoMerchants\Stores\StoresController::class, 'update']);
+        Route::match(['put', 'patch'], '/{id}/attach-azo', [App\Http\Controllers\ApiGateway\AzoMerchants\Stores\StoresController::class, 'attachAzo']);
     });
 
 Route::prefix('notifications')
@@ -186,6 +189,7 @@ Route::prefix('merchants')
         Route::match(['put', 'patch'], '/{id}', [MerchantsController::class, 'update']);
 
         Route::post('/{id}/set-main-store', [MerchantsController::class, 'setMainStore']);
+        Route::put('/{id}/toggle-general-goods', [MerchantsController::class, 'toggleGeneralGoods']);
         Route::post('/{id}/update-chat-id', [MerchantsController::class, 'updateChatId']);
         Route::post('/{id}/upload-logo', [MerchantsController::class, 'uploadLogo']);
         Route::post('/{id}/remove-logo', [MerchantsController::class, 'removeLogo']);

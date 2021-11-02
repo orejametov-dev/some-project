@@ -7,6 +7,7 @@ use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Files\StoreFileRequest;
 use App\HttpServices\Auth\AuthMicroService;
 use App\HttpServices\Telegram\TelegramService;
+use App\HttpServices\Warehouse\WarehouseService;
 use App\Modules\Companies\Models\Company;
 use App\Modules\Companies\Models\Module;
 use App\Modules\Companies\Services\CompanyService;
@@ -59,7 +60,7 @@ class MerchantsController extends ApiBaseController
         $company = Company::query()->findOrFail($request->input('company_id'));
 
         if(Merchant::query()->where('company_id', $company->id)->exists()){
-            return response()->json(['message' => 'Указаная компания уже имеет алифшоп модуль'], 400);
+            return response()->json(['message' => 'Указаная компания уже имеет аъзо модуль'], 400);
         }
 
         $merchant = $merchantsService->create(new MerchantsDTO(
@@ -75,6 +76,7 @@ class MerchantsController extends ApiBaseController
 
         Cache::tags($merchant->id)->flush();
         Cache::tags('azo_merchants')->flush();
+        Cache::tags('company')->flush();
 
         $this->alifshopService->storeOrUpdateMerchant($merchant->fresh());
         return $merchant;
@@ -98,6 +100,7 @@ class MerchantsController extends ApiBaseController
 
         Cache::tags($merchant->id)->flush();
         Cache::tags('azo_merchants')->flush();
+        Cache::tags('company')->flush();
         $this->alifshopService->storeOrUpdateMerchant($merchant);
 
         return $merchant;
@@ -238,8 +241,25 @@ class MerchantsController extends ApiBaseController
             'created_by_name' => $this->user->name
         ]);
 
+        $merchant->company->modules()->updateExistingPivot(Module::AZO_MERCHANT, ['active' => $merchant->active]);
+
+        Cache::tags($merchant->id)->flush();
+        Cache::tags('merchants')->flush();
+        return $merchant;
+    }
+
+    public function toggleGeneralGoods($id, Request $request)
+    {
+        $merchant = Merchant::findOrFail($id);
+        $merchant->has_general_goods = !$merchant->has_general_goods;
+
+        WarehouseService::checkDuplicateSKUs($merchant->id);
+
+        $merchant->save();
+
         Cache::tags($merchant->id)->flush();
         Cache::tags('azo_merchants')->flush();
+        Cache::tags('company')->flush();
         return $merchant;
     }
 

@@ -27,6 +27,7 @@ use function Clue\StreamFilter\fun;
  * @property string|null $token
  * @property string $alifshop_slug
  * @property string|null $telegram_chat_id
+ * @property int $has_general_goods
  * @property string|null $logo_url
  * @property string|null $paymo_terminal
  * @property int|null $maintainer_id
@@ -72,6 +73,7 @@ class Merchant extends Model
         'information',
         'logo_url',
         'telegram_chat_id',
+        'has_general_goods',
         'paymo_terminal_id',
         'min_application_price',
         'active'
