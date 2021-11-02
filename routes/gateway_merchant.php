@@ -1,20 +1,8 @@
 <?php
 
 use App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantsController;
-use App\Http\Controllers\ApiMerchantGateway\AlifshopMerchant\AlifshopMerchantAccesses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
-
-//alifshop-merchant
-Route::prefix('alifshop-merchants/users')
-    ->group(function () {
-        Route::get('/', [AlifshopMerchantAccesses::class, 'index']);
-        Route::get('/{id}', [AlifshopMerchantAccesses::class, 'show']);
-        Route::match(['put', 'patch'], '/{id}', [AlifshopMerchantAccesses::class, 'update']);
-        Route::post('/', [AlifshopMerchantAccesses::class, 'store']);
-        Route::delete('/{id}', [AlifshopMerchantAccesses::class, 'destroy']);
-    });
 
 //azo-merchant
 Route::middleware('auth:api')->get('/user', function (Request $request) {
