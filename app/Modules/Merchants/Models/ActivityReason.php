@@ -2,6 +2,7 @@
 
 namespace App\Modules\Merchants\Models;
 
+use App\Modules\AlifshopMerchants\Models\AlifshopMerchant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,8 +17,19 @@ class ActivityReason extends Model
         return $this->belongsToMany(Store::class, 'store_activities');
     }
 
+    public function alifshop_merchant_stores()
+    {
+        return $this->belongsToMany(AlifshopMerchant::class, 'store_activities');
+    }
+
     public function merchants()
     {
-        return $this->belongsToMany(Merchant::class, 'merchant_activities');
+        return $this->morphedByMany(Merchant::class, 'merchant','merchant_activities', 'activity_reason_id', 'merchant_id');
     }
+
+    public function alifshop_merchants()
+    {
+        return $this->morphedByMany(Merchant::class, 'merchant','merchant_activities', 'activity_reason_id', 'merchant_id');
+    }
+
 }

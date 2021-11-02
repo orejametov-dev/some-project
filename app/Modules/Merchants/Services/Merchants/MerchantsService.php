@@ -14,12 +14,14 @@ class MerchantsService
     public function create(MerchantsDTO $merchantsDTO)
     {
         $merchant = new Merchant();
+        $merchant->id = $merchantsDTO->id;
         $merchant->name = $merchantsDTO->name;
         $merchant->legal_name = $merchantsDTO->legal_name;
         $merchant->token = $merchantsDTO->token;
         $merchant->alifshop_slug = $merchantsDTO->alifshop_slug;
         $merchant->information = $merchantsDTO->information;
         $merchant->maintainer_id = $merchantsDTO->maintainer_id;
+        $merchant->company_id = $merchantsDTO->company_id;
         $merchant->save();
 
         return $merchant;

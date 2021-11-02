@@ -5,6 +5,7 @@ namespace App\Http\Controllers\ApiGateway\App;
 
 
 use App\Http\Controllers\ApiGateway\ApiBaseController;
+use App\Modules\Companies\Models\Module;
 use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\CancelReason;
 use App\Modules\Merchants\Models\File;
@@ -31,6 +32,7 @@ class AppController extends ApiBaseController
         $merchant_activity_reasons = ActivityReason::query()->where('type', 'MERCHANT')->get();
         $store_activity_reasons = ActivityReason::query()->where('type', 'STORE')->get();
         $cancel_reasons = CancelReason::query()->get();
+        $modules = Module::query()->get();
 
         $authUser = $this->user;
 
@@ -61,7 +63,8 @@ class AppController extends ApiBaseController
             'problem_case_sources',
             'merchant_activity_reasons',
             'store_activity_reasons',
-            'cancel_reasons'
+            'cancel_reasons',
+            'modules'
         ));
     }
 

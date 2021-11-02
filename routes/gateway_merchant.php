@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 use App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantsController;
 use Illuminate\Http\Request;
@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('merchants/app', [\App\Http\Controllers\ApiMerchantGateway\App\AppController::class, 'index']);
 
 Route::prefix('application-conditions')
     ->group(function () {
@@ -43,10 +45,10 @@ Route::prefix('merchants/tags')
 
 Route::prefix('merchants/users')
     ->group(function () {
-        Route::post('/', [App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantUsersController::class, 'store']);
-        Route::get('/', [App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantUsersController::class, 'index']);
-        Route::get('/{id}', [App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantUsersController::class, 'show']);
-        Route::match(['put', 'patch'], '/{id}', [App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantUsersController::class, 'update']);
+        Route::post('/', [App\Http\Controllers\ApiMerchantGateway\Merchants\AzoMerchantAccessesController::class, 'store']);
+        Route::get('/', [App\Http\Controllers\ApiMerchantGateway\Merchants\AzoMerchantAccessesController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\ApiMerchantGateway\Merchants\AzoMerchantAccessesController::class, 'show']);
+        Route::match(['put', 'patch'], '/{id}', [App\Http\Controllers\ApiMerchantGateway\Merchants\AzoMerchantAccessesController::class, 'update']);
     });
 
 Route::prefix('notifications')

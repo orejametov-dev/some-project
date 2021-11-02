@@ -3,6 +3,7 @@
 namespace App\Modules\Merchants\Models;
 
 
+use App\Modules\AlifshopMerchants\Models\AlifshopMerchant;
 use App\Modules\Merchants\Traits\StoreRelationshipsTrait;
 use App\Traits\SortableByQueryParams;
 use Eloquent;
@@ -28,15 +29,20 @@ use Illuminate\Support\Carbon;
  * @property $responsible_person
  * @property $responsible_person_phone
  * @property $merchant_id
+ * @property $is_alifshop
+ * @property $is_azo
  * @property Merchant $merchant
+ * @property AlifshopMerchant $alifshop_merchant
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Collection|Condition[] $application_conditions
  * @property-read int|null $application_conditions_count
  * @method static Builder|Store filterRequest(Request $request)
  * @method static Builder|Store main()
+ * @method static Builder|Store alifshop()
  * @method static Builder|Store newModelQuery()
  * @method static Builder|Store newQuery()
+ * @method static Builder|Store byAlifshopMerchant($alifshop_merchant_id)
  * @method static Builder|Store orderRequest(Request $request, string $default_order_str = 'id:desc')
  * @method static Builder|Store query()
  * @mixin Eloquent
@@ -67,6 +73,10 @@ class Store extends Model
         $searchIndex = $request->q;
         if ($merchant_id = $request->query('merchant_id')) {
             $query->where('merchant_id', $merchant_id);
+        }
+
+        if ($alifshop_merchant_id = $request->query('alifshop_merchant_id')) {
+            $query->where('merchant_id', $alifshop_merchant_id);
         }
 
         if ($store_id = $request->query('store_id')) {
@@ -110,8 +120,23 @@ class Store extends Model
         $query->where('merchant_id', $merchant_id);
     }
 
+    public function scopeByAlifshopMerchant(Builder $query, $alifshop_merchant_id)
+    {
+        $query->where('merchant_id', $alifshop_merchant_id);
+    }
+
     public function scopeActive(Builder $query)
     {
         $query->where('active', true);
+    }
+
+    public function scopeAlifshop(Builder $query)
+    {
+        $query->where('is_alifshop', true);
+    }
+
+    public function scopeAzo(Builder $query)
+    {
+        $query->where('is_azo', true);
     }
 }
