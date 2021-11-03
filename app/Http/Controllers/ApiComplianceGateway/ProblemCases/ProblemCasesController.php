@@ -16,7 +16,8 @@ class ProblemCasesController extends ApiBaseController
     {
         $this->validate($request, [
             'credit_number' => 'required_without:application_id|string',
-            'application_id' => 'required_without:credit_number|integer'
+            'application_id' => 'required_without:credit_number|integer',
+            'description' => 'required'
         ]);
         $problemCase = new ProblemCase();
 
@@ -42,10 +43,12 @@ class ProblemCasesController extends ApiBaseController
 
         $problemCase->application_items = $data['application_items'];
 
-        $problemCase->created_by_id = $data['merchant_engaged_by']['id'];
-        $problemCase->created_by_name = $data['merchant_engaged_by']['name'];
-        $problemCase->created_from_name = "COMPLIANCE";
+        $problemCase->post_or_pre_id= $data['merchant_engaged_by']['id'];
+        $problemCase->post_or_pre_name = $data['merchant_engaged_by']['name'];
 
+        $problemCase->created_from_name = "COMPLIANCE";
+        $problemCase->created_by_id = $this->user->id;
+        $problemCase->created_by_name = $this->user->name;
         $problemCase->description = $request->input('description');
 
         $problemCase->setStatusNew();

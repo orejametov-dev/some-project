@@ -115,8 +115,6 @@ class ProblemCasesController extends ApiBaseController
         $problemCase = ProblemCase::query()->findOrFail($id);
         $problemCase->assigned_to_id = $request->input('assigned_to_id');
         $problemCase->assigned_to_name = $request->input('assigned_to_name');
-        $problemCase->description = $request->input('description');
-
         $problemCase->save();
 
         return $problemCase;
