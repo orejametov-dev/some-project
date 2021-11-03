@@ -38,19 +38,19 @@ class RemoveForeignCompanyIdToAllTable extends Migration
     public function down()
     {
         Schema::table('merchants', function (Blueprint $table) {
-            //
+            $table->foreign('company_id')->references('id')->on('companies');
         });
 
         Schema::table('azo_merchant_accesses', function (Blueprint $table) {
-            //
+            $table->foreign('company_user_id')->references('id')->on('company_users');
         });
 
         Schema::table('alifshop_merchants', function (Blueprint $table) {
-            //
+            $table->foreign('company_id')->references('id')->on('companies');
         });
 
         Schema::table('alifshop_merchant_accesses', function (Blueprint $table) {
-            //
+            $table->foreign('company_user_id')->references('id')->on('company_users');
         });
     }
 }
