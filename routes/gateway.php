@@ -107,11 +107,11 @@ Route::prefix('merchants/problem-cases')
     ->group(function () {
         Route::get('/tags', [\App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases\ProblemCaseTagsController::class, 'index']);
         Route::get('/', [\App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases\ProblemCasesController::class, 'index']);
-        Route::post('/', [\App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases\ProblemCasesController::class, 'store']);
         Route::get('/{id}', [\App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases\ProblemCasesController::class, 'show']);
         Route::match(['put', 'patch'], '/{id}', [\App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases\ProblemCasesController::class, 'update']);
         Route::match(['put', 'patch'], '/{id}/attach-tags', [\App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases\ProblemCasesController::class, 'attachTags']);
         Route::match(['put', 'patch'], '/{id}/set-status', [\App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases\ProblemCasesController::class, 'setStatus']);
+        Route::match(['put', 'patch'], '/{id}/set-assigned', [\App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases\ProblemCasesController::class, 'setAssigned']);
         Route::get('/{user_id}/consultant', [\App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases\ProblemCasesController::class, 'getProblemCasesOfMerchantUser']);
     });
 
