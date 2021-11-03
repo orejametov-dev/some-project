@@ -12,4 +12,6 @@ Route::prefix('merchants/problem-cases')
     ->group(function () {
         Route::get('/', [ProblemCasesController::class, 'index']);
         Route::get('/statuses', [ProblemCasesController::class, 'getStatusList']);
+        Route::post('/', [ProblemCasesController::class, 'store']);
+
     });
