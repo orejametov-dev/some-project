@@ -58,8 +58,8 @@ class ProblemCasesController extends ApiBaseController
 
         $problemCase->application_items = $data['application_items'];
 
-        $problemCase->post_or_pre_id= $data['merchant_engaged_by']['id'];
-        $problemCase->post_or_pre_name = $data['merchant_engaged_by']['name'];
+        $problemCase->post_or_pre_created_by_id= $data['merchant_engaged_by']['id'];
+        $problemCase->post_or_pre_created_by_name = $data['merchant_engaged_by']['name'];
 
         $problemCase->created_from_name = "CALLS";
         $problemCase->created_by_id = $this->user->id;
