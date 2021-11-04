@@ -90,6 +90,7 @@ class AlifshopMerchantsController extends ApiBaseController
         $validatedData = $this->validate($request, [
             'name' => 'required|max:255|unique:alifshop_merchants,name,' . $alifshop_merchant_id,
             'legal_name' => 'nullable|max:255',
+            'legal_name_prefix' => 'nullable|string',
             'token' => 'required|max:255|unique:alifshop_merchants,alifshop_slug,' . $alifshop_merchant_id,
             'alifshop_slug' => 'required|max:255|unique:alifshop_merchants,alifshop_slug,' . $alifshop_merchant_id,
             'information' => 'nullable|string',
@@ -99,6 +100,8 @@ class AlifshopMerchantsController extends ApiBaseController
         $oldToken = $alifshop_merchant->token;
         $alifshop_merchant->update($validatedData);
         $alifshop_merchant->old_token = $oldToken;
+
+        Company::query()->update(['legal_name_prefix' => $request->input('legal_name_prefix')]);
 
         Cache::tags($alifshop_merchant->id)->flush();
         Cache::tags('alifshop_merchants')->flush();
