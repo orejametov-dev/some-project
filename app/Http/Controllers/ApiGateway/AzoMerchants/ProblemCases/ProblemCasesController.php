@@ -8,8 +8,10 @@ use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\HttpServices\Core\CoreService;
+use App\Modules\Merchants\DTO\ProblemCases\ProblemCaseDTO;
 use App\Modules\Merchants\Models\ProblemCase;
 use App\Modules\Merchants\Models\ProblemCaseTag;
+use App\Modules\Merchants\Services\ProblemCases\ProblemCaseService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -32,7 +34,7 @@ class ProblemCasesController extends ApiBaseController
         return $problemCases->paginate($request->query('per_page') ?? 15);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, ProblemCaseService $problemCaseService)
     {
         $this->validate($request, [
             'created_from_name' => 'required|string',
@@ -42,40 +44,14 @@ class ProblemCasesController extends ApiBaseController
             'assigned_to_name' => 'required|string',
             'search_index' => 'required|string',
         ]);
-        $problemCase = new ProblemCase();
 
         if ($request->has('credit_number') and $request->input('credit_number')) {
             $data = CoreService::getApplicationDataByContractNumber($request->input('credit_number'));
-            $problemCase->credit_number = $request->input('credit_number');
-            $problemCase->credit_contract_date = $data['contract_date'];
         } elseif ($request->has('application_id') and $request->input('application_id')) {
             $data = CoreService::getApplicationDataByApplicationId($request->input('application_id'));
-            $problemCase->application_id = $request->input('application_id');
-            $problemCase->application_created_at = Carbon::parse($data['created_at'])->format('Y-m-d');
-
         }
 
-        $problemCase->merchant_id = $data['merchant_id'];
-        $problemCase->store_id = $data['store_id'];
-        $problemCase->client_id = $data['client']['id'];
-
-        $problemCase->search_index = $data['client']['name']
-            . ' ' . $data['client']['surname']
-            . ' ' . $data['client']['patronymic']
-            . ' ' . $data['client']['phone'];
-
-        $problemCase->application_items = $data['application_items'];
-
-        $problemCase->created_by_id = $data['merchant_engaged_by']['id'];
-        $problemCase->created_by_name = $data['merchant_engaged_by']['name'];
-        $problemCase->created_from_name = $request->input('created_from_name');
-
-        $problemCase->assigned_to_id = $request->input('assigned_to_id');
-        $problemCase->assigned_to_name = $request->input('assigned_to_name');
-        $problemCase->description = $request->input('description');
-
-        $problemCase->setStatusNew();
-        $problemCase->save();
+        $problemCase = $problemCaseService->create((new ProblemCaseDTO())->fromProblemCaseRequest($request,$data));
 
         SendHook::dispatch(new HookData(
             service: 'merchants',
@@ -90,7 +66,6 @@ class ProblemCasesController extends ApiBaseController
             action_at: null,
             created_by_str: $this->user->name,
         ));
-
 
         return $problemCase;
     }
