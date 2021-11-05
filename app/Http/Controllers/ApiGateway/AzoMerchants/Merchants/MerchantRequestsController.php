@@ -66,6 +66,7 @@ class MerchantRequestsController extends ApiBaseController
 
             'director_name' => 'required|max:255',
             'legal_name' => 'required|string',
+            'legal_name_prefix' => 'nullable|string',
             'phone' => 'required|digits:12',
             'vat_number' => 'required|digits:12',
             'mfo' => 'required|digits:5',
