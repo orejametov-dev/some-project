@@ -106,7 +106,7 @@ class MerchantsController extends ApiBaseController
         Cache::tags('company')->flush();
         $this->alifshopService->storeOrUpdateMerchant($merchant);
 
-        return $merchant;
+        return $merchant->load(['company']);
     }
 
     public function uploadLogo($merchant_id, StoreFileRequest $request)
