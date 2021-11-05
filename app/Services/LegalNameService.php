@@ -73,5 +73,8 @@ class LegalNameService
         return self::$legal_name_prefixes;
     }
 
-
+    public static function findNamePrefix($prefix): array
+    {
+        return self::$legal_name_prefixes[$prefix];
+    }
 }
