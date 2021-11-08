@@ -51,11 +51,11 @@ class OtpProtector
     {
         $this->cached_info = Cache::tags(CacheService::OTP)->get($this->key);
         if (!$this->cached_info) {
-            throw new BusinessException(__('otp_not_sent'), 'otp_not_sent');
+            throw new BusinessException('СМС код не был отправлен', 'otp_not_sent', 400);
         }
 
         if (!in_array($otp, $this->cached_info['otps'])) {
-            throw new BusinessException(__('wrong_otp'), 'wrong_otp');
+            throw new BusinessException('Неверный код подтверждения', 'wrong_otp', 400);
         }
 
         if ($forget) {
