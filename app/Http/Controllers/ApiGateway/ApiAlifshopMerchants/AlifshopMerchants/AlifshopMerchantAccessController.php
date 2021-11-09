@@ -57,7 +57,7 @@ class AlifshopMerchantAccessController extends ApiBaseController
 
 
         if($company_user) {
-            if (optional($company_user->company->merchant)->id != $alifshop_merchant_store->merchant_id) {
+            if ($company_user->azo_merchant_access()->exists() and optional($company_user->company->merchant)->id != $alifshop_merchant_store->merchant_id) {
                 throw new BusinessException('Сотрудника нельзя прикрепить к этому мерчанту', 400);
             }
         }

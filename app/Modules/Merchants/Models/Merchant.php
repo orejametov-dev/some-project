@@ -3,7 +3,6 @@
 namespace App\Modules\Merchants\Models;
 
 use App\Modules\Companies\Models\Company;
-use App\Modules\Merchants\Services\MerchantStatus;
 use App\Modules\Merchants\Traits\MerchantFileTrait;
 use App\Modules\Merchants\Traits\MerchantRelationshipsTrait;
 use App\Modules\Merchants\Traits\MerchantStatusesTrait;
@@ -15,7 +14,6 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use function Clue\StreamFilter\fun;
 
 /**
  * App\Modules\Merchants\Models\Merchant
@@ -107,15 +105,18 @@ class Merchant extends Model
         }
 
         if ($q = $request->query('q')) {
-            $query->where('name', 'like', '%' . $q . '%')
-                ->orWhere('legal_name', 'like', '%' . $q . '%');
+            $query->where(function ($query) use ($q) {
+                $query->where('legal_name', 'like', '%' . $q . '%')
+                    ->orWhere('name', 'like', '%' . $q . '%');
+            });
 
-                if(is_numeric($q)){
-                    $query->orWhereHas('merchant_info', function (Builder $query) use ($q) {
-                        $query->Where('tin',  $q)
-                            ->orWhere('contract_number', $q);
-                    });
-                }
+
+            if (is_numeric($q)) {
+                $query->orWhereHas('merchant_info', function (Builder $query) use ($q) {
+                    $query->Where('tin', $q)
+                        ->orWhere('contract_number', $q);
+                });
+            }
         }
 
         if ($merchant_id = $request->query('merchant_id')) {
@@ -165,15 +166,15 @@ class Merchant extends Model
             $query->where('token', $token);
         }
 
-        if($status_id = $request->query('status_id')) {
+        if ($status_id = $request->query('status_id')) {
             $query->where('status_id', $status_id);
         }
 
-        if($request->has('active')) {
+        if ($request->has('active')) {
             $query->where('active', $request->query('active'));
         }
 
-        if($request->query('tin')) {
+        if ($request->query('tin')) {
             $query->whereHas('merchant_info', function ($query) use ($request) {
                 $query->where('tin', $request->query('tin'));
             });
