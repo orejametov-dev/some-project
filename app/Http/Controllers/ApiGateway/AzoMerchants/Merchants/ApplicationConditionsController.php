@@ -10,6 +10,7 @@ use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\Merchant;
+use App\Modules\Merchants\Models\ProblemCaseTag;
 use App\Services\Alifshop\AlifshopService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -54,38 +55,6 @@ class ApplicationConditionsController extends ApiBaseController
 
     public function store(StoreApplicationConditions $request)
     {
-        /** @var Merchant $merchant */
-        $merchant = Merchant::query()->findOrFail($request->input('merchant_id'));
-        $store = $merchant->stores()->main()->first();
-        if (!$store) {
-            return response()->json(['message' => 'Пожалуйста, укажите сначала основной магазин'], 400);
-        }
-        $condition = new Condition($request->validated());
-        $condition->merchant()->associate($merchant);
-        $condition->store()->associate($store);
-        $condition->save();
-
-        SendHook::dispatch(new HookData(
-            service: 'merchants',
-            hookable_type: $merchant->getTable(),
-            hookable_id: $merchant->id,
-            created_from_str: 'PRM',
-            created_by_id: $this->user->id,
-            body: 'Создано условие',
-            keyword: 'id: ' . $condition->id . ' ' . $condition->title,
-            action: 'create',
-            class: 'info',
-            action_at: null,
-            created_by_str: $this->user->name,
-        ));
-
-        Cache::tags($merchant->id)->flush();
-
-        return $condition;
-    }
-
-    public function storeSpecial(StoreApplicationConditions $request)
-    {
 
         /** @var Merchant $merchant */
         $merchant = Merchant::query()->findOrFail($request->input('merchant_id'));
@@ -110,7 +79,7 @@ class ApplicationConditionsController extends ApiBaseController
         $condition->store()->associate($main_store);
         $condition->save();
 
-        if($store_ids) {
+        if ($store_ids) {
             $condition->stores()->attach($request->input('store_ids'));
         }
 
@@ -133,11 +102,6 @@ class ApplicationConditionsController extends ApiBaseController
         return $condition;
     }
 
-    public function updateConditionStore($id, Request $request)
-    {
-//        $condition =
-    }
-
     public function update(UpdateApplicationConditions $request, $condition_id)
     {
         /** @var Condition $condition */
@@ -148,8 +112,24 @@ class ApplicationConditionsController extends ApiBaseController
         if ($applications) {
             return response()->json(['message' => 'Условие не может быть изменено'], 400);
         }
-
         $merchant = $condition->merchant;
+
+        $merchant_stores = $merchant->stores()->active()->get();
+
+        $store_ids = $request->input('store_ids') ?? [];
+        foreach ($store_ids as $id) {
+            if (!$merchant_stores->where('id', $id)->first()) {
+                return response()->json(['message' => 'Указан не правильный магазин'], 400);
+            }
+        }
+
+        $main_store = $merchant_stores->where('is_main')->first();
+        if ($request->input('post_alifshop') and !in_array($main_store->id, $store_ids)) {
+            return response()->json(['message' => 'Для онлайн заявок надо указать основной магазин'], 400);
+        }
+
+        $condition->stores()->detach();
+        $condition->stores()->attach($store_ids);
 
         $condition->fill($request->validated());
         $condition->save();
@@ -260,12 +240,16 @@ class ApplicationConditionsController extends ApiBaseController
         /** @var Condition $condition */
         $condition = Condition::query()->findOrFail($id);
 
+        $merchant = $condition->merchant;
+        $main_store = $merchant->stores()->main()->exists();
+
+        if ($request->input('post_alifshop') and !$main_store) {
+            return response()->json(['message' => 'Для онлайн заявок надо указать основной магазин'], 400);
+        }
+
         $condition->post_merchant = $request->input('post_merchant');
         $condition->post_alifshop = $request->input('post_alifshop');
-
         $condition->save();
-
-        $merchant = $condition->merchant;
 
         $merchant->load(['application_conditions' => function ($q) {
             $q->active();
