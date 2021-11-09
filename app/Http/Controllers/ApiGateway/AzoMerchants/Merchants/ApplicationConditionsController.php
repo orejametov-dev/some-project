@@ -74,11 +74,10 @@ class ApplicationConditionsController extends ApiBaseController
         }
 
         $condition = new Condition($request->validated());
-        $condition->is_special = $store_ids ?? false;
+        $condition->is_special = !empty($store_ids) ?? false;
         $condition->merchant()->associate($merchant);
-        $condition->store()->associate($main_store);
+        $condition->store_id = $main_store->id;
         $condition->save();
-
         if ($store_ids) {
             $condition->stores()->attach($request->input('store_ids'));
         }
@@ -99,7 +98,7 @@ class ApplicationConditionsController extends ApiBaseController
 
         Cache::tags($merchant->id)->flush();
 
-        return $condition;
+        return $condition->load('stores');
     }
 
     public function update(UpdateApplicationConditions $request, $condition_id)
