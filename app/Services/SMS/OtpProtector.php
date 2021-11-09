@@ -51,11 +51,17 @@ class OtpProtector
     {
         $this->cached_info = Cache::tags(CacheService::OTP)->get($this->key);
         if (!$this->cached_info) {
-            throw new BusinessException('СМС код не был отправлен', 'otp_not_sent', 400);
+            throw new BusinessException('СМС код не был отправлен', 'otp_not_sent', [
+                'ru' => 'СМС код не был отправлен',
+                'uz' => ' SMS kodi yuborilmadi'
+            ],400);
         }
 
         if (!in_array($otp, $this->cached_info['otps'])) {
-            throw new BusinessException('Неверный код подтверждения', 'wrong_otp', 400);
+            throw new BusinessException('Неверный код подтверждения', 'wrong_otp', [
+                'ru' => 'Неверный код подтверждения',
+                'uz' => 'Tasdiqlash kodi noto\'g\'ri'
+            ] ,400);
         }
 
         if ($forget) {
@@ -66,7 +72,10 @@ class OtpProtector
     public function verifyRequestOtpCount()
     {
         if (!empty($this->cached_info['otps']) and count($this->cached_info['otps']) >= 3) {
-            throw new BusinessException(__('limit_exceeded'), 'limit_exceeded');
+            throw new BusinessException('Лимит исчерпан', 'limit_exceeded', [
+                'ru' => 'Лимит исчерпан',
+                'uz' => ' limit tugadi'
+            ] , 400);
         }
     }
 }
