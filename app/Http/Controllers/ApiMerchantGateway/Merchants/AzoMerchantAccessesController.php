@@ -221,6 +221,9 @@ class AzoMerchantAccessesController extends ApiBaseController
 
         ToggleMerchantRoleOfUser::dispatch($azo_merchant_access->user_id, AuthMicroService::DEACTIVATE_MERCHANT_ROLE);
 
-        return response()->json(['message' => 'Сотрудник удален']);
+        return response()->json(['message' => [
+            'ru' => 'Сотрудник удален',
+            'uz'  => 'Xodim o\'chirildi'
+        ]]);
     }
 }
