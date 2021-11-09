@@ -14,19 +14,24 @@ class ApplicationConditionsController extends ApiBaseController
 {
     public function index1(Request $request)
     {
-        return Cache::tags($this->merchant_id)->remember($request->fullUrl(), 2 * 60, function () use ($request) {
-            $conditionQuery = Condition::query()
-                ->active()
-                ->where('post_merchant', true)
-                ->byMerchant($this->merchant_id)
-                ->filterRequest($request)
-                ->orderRequest($request);
-
-            if ($request->query('object') == true) {
-                return $conditionQuery->first();
+        return Cache::tags($this->merchant_id)->remember($request->fullUrl(), 24 * 60, function () use ($request) {
+            if ($request->has('post_alifshop') AND $request->query('post_alifshop') == true) {
+                $conditionQuery = Condition::query()
+                    ->active()
+                    ->where('post_alifshop', true)
+                    ->byMerchant($this->merchant_id)
+                    ->filterRequest($request)
+                    ->orderRequest($request);
+            } else {
+                $conditionQuery = Condition::query()
+                    ->active()
+                    ->where('post_merchant', true)
+                    ->byMerchant($this->merchant_id)
+                    ->filterRequest($request)
+                    ->orderRequest($request);
             }
 
-            return $conditionQuery->paginate($request->query('per_page') ?? 15);
+            return $conditionQuery->get();
         });
     }
 

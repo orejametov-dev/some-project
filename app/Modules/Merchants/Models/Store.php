@@ -31,6 +31,7 @@ use Illuminate\Support\Carbon;
  * @property $merchant_id
  * @property $is_alifshop
  * @property $is_azo
+ * @property $client_type_register
  * @property Merchant $merchant
  * @property AlifshopMerchant $alifshop_merchant
  * @property Carbon|null $created_at
@@ -65,7 +66,8 @@ class Store extends Model
         'responsible_person',
         'responsible_person_phone',
         'active',
-        'district'
+        'district',
+        'client_type_register'
     ];
 
     public function scopeFilterRequest(Builder $query, Request $request)
