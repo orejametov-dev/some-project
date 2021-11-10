@@ -2,6 +2,7 @@
 
 namespace App\Services\SMS;
 
+use App\Exceptions\ApiBusinessException;
 use App\Exceptions\BusinessException;
 use App\Services\CacheService;
 use Carbon\Carbon;
@@ -51,14 +52,14 @@ class OtpProtector
     {
         $this->cached_info = Cache::tags(CacheService::OTP)->get($this->key);
         if (!$this->cached_info) {
-            throw new BusinessException('СМС код не был отправлен', 'otp_not_sent', [
+            throw new ApiBusinessException('СМС код не был отправлен', 'otp_not_sent', [
                 'ru' => 'СМС код не был отправлен',
                 'uz' => ' SMS kodi yuborilmadi'
             ],400);
         }
 
         if (!in_array($otp, $this->cached_info['otps'])) {
-            throw new BusinessException('Неверный код подтверждения', 'wrong_otp', [
+            throw new ApiBusinessException('Неверный код подтверждения', 'wrong_otp', [
                 'ru' => 'Неверный код подтверждения',
                 'uz' => 'Tasdiqlash kodi noto\'g\'ri'
             ] ,400);
@@ -72,7 +73,7 @@ class OtpProtector
     public function verifyRequestOtpCount()
     {
         if (!empty($this->cached_info['otps']) and count($this->cached_info['otps']) >= 3) {
-            throw new BusinessException('Лимит исчерпан', 'limit_exceeded', [
+            throw new ApiBusinessException('Лимит исчерпан', 'limit_exceeded', [
                 'ru' => 'Лимит исчерпан',
                 'uz' => ' limit tugadi'
             ] , 400);

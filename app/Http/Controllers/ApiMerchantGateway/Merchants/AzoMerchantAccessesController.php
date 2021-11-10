@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\ApiMerchantGateway\Merchants;
 
 
+use App\Exceptions\ApiBusinessException;
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiMerchantGateway\ApiBaseController;
 use App\HttpServices\Auth\AuthMicroService;
@@ -85,7 +86,7 @@ class AzoMerchantAccessesController extends ApiBaseController
         ]);
 
         if (AzoMerchantAccess::query()->where('phone' , $request->input('phone'))->exists()) {
-            throw new BusinessException('Пользователь с данным номером существует' , 'phone_exists', [
+            throw new ApiBusinessException('Пользователь с данным номером существует' , 'phone_exists', [
                 'ru' => 'Пользователь с данным номером существует',
                 'uz' => 'Bunday raqam egasi tizimda mavjud'
             ],400);
@@ -125,14 +126,14 @@ class AzoMerchantAccessesController extends ApiBaseController
         $protector->verifyOtp($request->input('code'));
 
         if (array_search(AuthMicroService::AZO_MERCHANT_ROLE, array_column($user['data']['roles'], 'name'))) {
-            throw new BusinessException('Пользователь уже является сотрудником мерчанта', 'merchant_exists', [
+            throw new ApiBusinessException('Пользователь уже является сотрудником мерчанта', 'merchant_exists', [
                 'ru' => 'Пользователь уже является сотрудником мерчанта',
                 'uz' => 'Foydalanuvchi merchant tizimiga bog\'langan'
             ],400);
         }
 
         if (AzoMerchantAccess::query()->where('phone' , $user['data']['phone'])->exists()) {
-            throw new BusinessException('Пользователь с данным номером существует' , 'phone_exists', [
+            throw new ApiBusinessException('Пользователь с данным номером существует' , 'phone_exists', [
                 'ru' => 'Пользователь с данным номером существует',
                 'uz' => 'Bunday raqam egasi tizimda mavjud'
             ],400);
@@ -148,7 +149,7 @@ class AzoMerchantAccessesController extends ApiBaseController
         $company_user->save();
 
         if (AzoMerchantAccess::query()->where('company_user_id', $company_user->id)->exists()) {
-            throw new BusinessException('Пользователь уже существует', 'user_exists', [
+            throw new ApiBusinessException('Пользователь уже существует', 'user_exists', [
                 'ru' => 'Пользователь уже существует',
                 'uz' => 'Foydalanuvchi tizimda mavjud'
             ],400);
