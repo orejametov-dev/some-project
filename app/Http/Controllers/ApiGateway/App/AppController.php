@@ -15,6 +15,7 @@ use App\Modules\Merchants\Models\Request;
 use App\Modules\Merchants\Models\Store;
 use App\Modules\Merchants\Services\MerchantStatus;
 use App\Modules\Merchants\Services\RequestStatus;
+use App\Services\ClientTypeRegisterService;
 use App\Services\DistrictService;
 use App\Services\LegalNameService;
 use App\Services\RegionService;
@@ -43,6 +44,8 @@ class AppController extends ApiBaseController
 
         $regions = RegionService::getRegions();
 
+        $client_type_register = ClientTypeRegisterService::getClientTypeRegister();
+
 
         $me = [
             'id' => $authUser->id,
@@ -67,6 +70,7 @@ class AppController extends ApiBaseController
             'store_activity_reasons',
             'cancel_reasons',
             'modules',
+            'client_type_register',
             'legal_name_prefixes'
         ));
     }

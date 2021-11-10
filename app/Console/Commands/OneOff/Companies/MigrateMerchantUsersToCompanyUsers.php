@@ -4,6 +4,8 @@ namespace App\Console\Commands\OneOff\Companies;
 
 use App\Modules\Companies\Models\Company;
 use App\Modules\Companies\Models\CompanyUser;
+use App\Modules\Merchants\Models\AzoMerchantAccess;
+use App\Modules\Merchants\Models\Merchant;
 use Illuminate\Console\Command;
 
 class MigrateMerchantUsersToCompanyUsers extends Command
@@ -13,7 +15,7 @@ class MigrateMerchantUsersToCompanyUsers extends Command
      *
      * @var string
      */
-    protected $signature = 'migrate:merchant_users_to_company_users';
+    protected $signature = 'set:company_user_id';
 
     /**
      * The console command description.
@@ -39,21 +41,19 @@ class MigrateMerchantUsersToCompanyUsers extends Command
      */
     public function handle()
     {
-        Company::query()->chunkById(100, function ($companies) {
-            foreach ($companies as $company) {
-                $azo_merchant_accesses = $company->merchant->azo_merchant_accesses()->get();
-                foreach ($azo_merchant_accesses as $azo_merchant_access) {
-                    $company_user = new CompanyUser();
-                    $company_user->user_id = $azo_merchant_access->user_id;
-                    $company_user->phone = $azo_merchant_access->phone;
-                    $company_user->full_name = $azo_merchant_access->user_name;
-                    $company_user->company_id = $company->id;
-                    $company_user->save();
+        $azo_merchant_accesses = AzoMerchantAccess::whereNull('company_user_id')->get();
 
-                    $azo_merchant_access->company_user_id = $company_user->id;
-                    $azo_merchant_access->save();
-                }
-            }
-        });
+        foreach ($azo_merchant_accesses as $azo_merchant_access) {
+            $company_user = new CompanyUser();
+            $company_user->user_id = $azo_merchant_access->user_id;
+            $company_user->company_id = $azo_merchant_access->merchant->company_id;
+            $company_user->full_name = $azo_merchant_access->user_name;
+            $company_user->phone = $azo_merchant_access->phone;
+
+            $company_user->save();
+
+            $azo_merchant_access->company_user_id = $company_user->id;
+            $azo_merchant_access->save();
+        }
     }
 }

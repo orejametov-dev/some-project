@@ -8,6 +8,7 @@ use App\Http\Requests\ApiPrm\Stores\UpdateStoresRequest;
 use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Store;
+use App\Services\ClientTypeRegisterService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -143,6 +144,24 @@ class StoresController extends ApiBaseController
             'created_by_id' => $this->user->id,
             'created_by_name' => $this->user->name
         ]);
+
+        Cache::tags($store->merchant_id)->flush();
+        Cache::tags('azo_merchants')->flush();
+
+        return $store;
+    }
+
+    public function setTypeRegister($id,Request $request)
+    {
+        $request->validate([
+           'client_type_register' => 'required|string'
+        ]);
+
+        $client_type_register = ClientTypeRegisterService::getOneByKey($request->input('client_type_register'));
+
+        $store = Store::query()->findOrFail($id);
+        $store->client_type_register = $client_type_register['key'];
+        $store->save();
 
         Cache::tags($store->merchant_id)->flush();
         Cache::tags('azo_merchants')->flush();
