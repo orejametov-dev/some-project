@@ -68,6 +68,16 @@ class LegalNameService
                 'description' => 'Частное Предприятие'
             ]
         ],
+        'FP' => [
+            'body_uz' => [
+                'value' => 'OK',
+                'description' => 'Oilaviy Korxona'
+            ],
+            'body_ru' => [
+                'value' => 'СП',
+                'description' => 'Семейное предприятие'
+            ]
+        ]
 
     ];
 
