@@ -3,6 +3,8 @@
 namespace App\Console\Commands\OneOff;
 
 use App\Modules\Companies\Models\Company;
+use App\Modules\Merchants\Models\Merchant;
+use App\Modules\Merchants\Models\MerchantInfo;
 use Illuminate\Console\Command;
 
 class ChangeLegalNamePrefixInCompany extends Command
@@ -38,7 +40,8 @@ class ChangeLegalNamePrefixInCompany extends Command
      */
     public function handle()
     {
-        Company::query()->update(['legal_name_prefix' => 'LLC']);
+        MerchantInfo::query()->update(['legal_name_prefix' => 'LLC']);
+        Merchant::query()->update(['legal_name_prefix' => 'LLC']);
         $this->info('Console command created successfully.');
     }
 }
