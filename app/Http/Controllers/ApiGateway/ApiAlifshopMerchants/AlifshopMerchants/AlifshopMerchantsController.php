@@ -35,7 +35,7 @@ class AlifshopMerchantsController extends ApiBaseController
     public function index(Request $request)
     {
         $alifshop_merchants = AlifshopMerchant::query()
-            ->with(['tags'])
+            ->with(['tags', 'company'])
             ->filterRequest($request)
             ->orderRequest($request);
 
@@ -45,7 +45,7 @@ class AlifshopMerchantsController extends ApiBaseController
     public function show($id)
     {
         return AlifshopMerchant::query()
-            ->with(['tags'])
+            ->with(['tags', 'company'])
             ->findOrFail($id);
     }
 
@@ -90,6 +90,7 @@ class AlifshopMerchantsController extends ApiBaseController
         $validatedData = $this->validate($request, [
             'name' => 'required|max:255|unique:alifshop_merchants,name,' . $alifshop_merchant_id,
             'legal_name' => 'nullable|max:255',
+            'legal_name_prefix' => 'nullable|string',
             'token' => 'required|max:255|unique:alifshop_merchants,alifshop_slug,' . $alifshop_merchant_id,
             'alifshop_slug' => 'required|max:255|unique:alifshop_merchants,alifshop_slug,' . $alifshop_merchant_id,
             'information' => 'nullable|string',
@@ -100,13 +101,17 @@ class AlifshopMerchantsController extends ApiBaseController
         $alifshop_merchant->update($validatedData);
         $alifshop_merchant->old_token = $oldToken;
 
+        Company::query()
+            ->findOrFail($alifshop_merchant->company_id)
+            ->update(['legal_name_prefix' => $request->input('legal_name_prefix')]);
+
         Cache::tags($alifshop_merchant->id)->flush();
         Cache::tags('alifshop_merchants')->flush();
         Cache::tags('company')->flush();
 
         $this->alifshopService->storeOrUpdateMerchant($alifshop_merchant);
 
-        return $alifshop_merchant;
+        return $alifshop_merchant->load(['company']);
     }
 
     public function setMaintainer($id, Request $request)

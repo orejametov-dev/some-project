@@ -44,7 +44,7 @@ class CompaniesController extends ApiBaseController
         $company = $companyService->create(new CompanyDTO(
             name: $request->input('name'),
             legal_name: $request->input('legal_name'),
-            legal_name_prefix: $request->input('legal_name_key')
+            legal_name_prefix: $request->input('legal_name_prefix')
         ));
 
         return $company;
@@ -82,7 +82,7 @@ class CompaniesController extends ApiBaseController
             $company = $companyService->create(new CompanyDTO(
                 name: $request->input('name'),
                 legal_name: $request->input('legal_name'),
-                legal_name_prefix: $request->input('legal_name_key')
+                legal_name_prefix: $request->input('legal_name_prefix')
             ));
 
             if(in_array( 'azo_merchant', $request->input('merchant_type'))){
