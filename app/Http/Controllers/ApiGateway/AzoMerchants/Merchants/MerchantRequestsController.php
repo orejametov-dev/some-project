@@ -177,6 +177,7 @@ class MerchantRequestsController extends ApiBaseController
                 id: $company->id,
                 name: $merchant_request->name,
                 legal_name: $merchant_request->legal_name,
+                legal_name_prefix: $merchant_request->legal_name_prefix,
                 information: $merchant_request->information,
                 maintainer_id: $merchant_request->engaged_by_id,
                 company_id: $company->id
