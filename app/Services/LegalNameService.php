@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use App\Exceptions\ApiBusinessException;
+use App\Exceptions\BusinessException;
+
 class LegalNameService
 {
     private static $legal_name_prefixes = [
@@ -85,6 +88,12 @@ class LegalNameService
 
     public static function findNamePrefix($prefix): array
     {
+        if(!array_key_exists($prefix, self::$legal_name_prefixes)) {
+            throw new ApiBusinessException("Такого юр.имени нету $prefix", 'prefix_not_have' , [
+                'ru'  => 'Такого юридического лица не существует',
+                'uz' => 'Bunday yuridik shaxs mavjud emas'
+            ],400);
+        }
         return self::$legal_name_prefixes[$prefix];
     }
 }
