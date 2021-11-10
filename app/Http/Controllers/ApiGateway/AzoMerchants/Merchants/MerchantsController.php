@@ -36,7 +36,7 @@ class MerchantsController extends ApiBaseController
 
     public function index(Request $request)
     {
-        $merchants = Merchant::query()->with(['stores', 'tags'])
+        $merchants = Merchant::query()->with(['stores', 'tags' ,'company'])
             ->filterRequest($request)
             ->orderRequest($request);
 
@@ -48,7 +48,7 @@ class MerchantsController extends ApiBaseController
 
     public function show($id)
     {
-        return Merchant::with(['stores', 'tags', 'activity_reasons'])->findOrFail($id);
+        return Merchant::with(['stores', 'tags', 'activity_reasons', 'company'])->findOrFail($id);
     }
 
     public function store(Request $request, MerchantsService $merchantsService, CompanyService $companyService)
@@ -87,6 +87,7 @@ class MerchantsController extends ApiBaseController
         $this->validate($request, [
             'name' => 'required|max:255|unique:merchants,name,' . $merchant_id,
             'legal_name' => 'nullable|max:255',
+            'legal_name_prefix' => 'nullable|string',
             'token' => 'required|max:255|unique:merchants,alifshop_slug,' . $merchant_id,
             'alifshop_slug' => 'required|max:255|unique:merchants,alifshop_slug,' . $merchant_id,
             'information' => 'nullable|string',
@@ -98,12 +99,16 @@ class MerchantsController extends ApiBaseController
         $merchant->update($request->all());
         $merchant->old_token = $oldToken;
 
+        Company::query()
+            ->findOrFail($merchant->company_id)
+            ->update(['legal_name_prefix' => $request->input('legal_name_prefix')]);
+
         Cache::tags($merchant->id)->flush();
         Cache::tags('azo_merchants')->flush();
         Cache::tags('company')->flush();
         $this->alifshopService->storeOrUpdateMerchant($merchant);
 
-        return $merchant;
+        return $merchant->load(['company']);
     }
 
     public function uploadLogo($merchant_id, StoreFileRequest $request)

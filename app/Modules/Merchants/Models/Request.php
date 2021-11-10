@@ -68,6 +68,7 @@ class Request extends Model
         'approximate_sales',
         'categories',
         'legal_name',
+        'legal_name_prefix',
 
         'director_name',
         'legal_name',

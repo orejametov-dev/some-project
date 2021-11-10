@@ -10,6 +10,7 @@ class MerchantInfoDTO
 {
     public string $director_name;
     public string $legal_name;
+    public string $legal_name_prefix;
     public string $phone;
     public string $vat_number;
     public string $mfo;
@@ -35,6 +36,7 @@ class MerchantInfoDTO
     public function fromConstructor(
         string $director_name,
         string $legal_name,
+        string $legal_name_prefix,
         string $phone,
         string $vat_number,
         string $mfo,
@@ -47,6 +49,7 @@ class MerchantInfoDTO
     {
         $this->director_name = $director_name;
         $this->legal_name = $legal_name;
+        $this->legal_name_prefix = $legal_name_prefix;
         $this->phone = $phone;
         $this->vat_number = $vat_number;
         $this->mfo = $mfo;
@@ -63,6 +66,7 @@ class MerchantInfoDTO
     {
         $this->director_name = $merchant_request->director_name;
         $this->legal_name = $merchant_request->legal_name;
+        $this->legal_name_prefix = $merchant_request->legal_name_prefix;
         $this->phone = $merchant_request->phone;
         $this->vat_number = $merchant_request->vat_number;
         $this->mfo = $merchant_request->mfo;
@@ -79,6 +83,7 @@ class MerchantInfoDTO
     {
         $this->director_name = $request->director_name;
         $this->legal_name = $request->legal_name;
+        $this->legal_name_prefix = $request->legal_name_prefix;
         $this->phone = $request->phone;
         $this->vat_number = $request->vat_number;
         $this->mfo = $request->mfo;

@@ -17,6 +17,7 @@ class MerchantsService
         $merchant->id = $merchantsDTO->id;
         $merchant->name = $merchantsDTO->name;
         $merchant->legal_name = $merchantsDTO->legal_name;
+
         $merchant->token = $merchantsDTO->token;
         $merchant->alifshop_slug = $merchantsDTO->alifshop_slug;
         $merchant->information = $merchantsDTO->information;
@@ -33,6 +34,7 @@ class MerchantsService
 
         $merchantInfo->merchant_id = $merchant->id;
         $merchantInfo->legal_name = $merchantInfoDTO->legal_name;
+        $merchantInfo->legal_name_prefix = $merchantInfoDTO->legal_name_prefix;
         $merchantInfo->director_name = $merchantInfoDTO->director_name;
         $merchantInfo->phone = $merchantInfoDTO->phone;
         $merchantInfo->vat_number = $merchantInfoDTO->vat_number;
