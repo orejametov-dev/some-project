@@ -37,10 +37,12 @@ class WordService
         $contract_file = storage_path($contract_path);
         $contract_template = new TemplateProcessor($contract_file);
         $current_date = $merchant_info->contract_date;
+        $legal_name_prefix = LegalNameService::findNamePrefix($merchant_info->legal_name_prefix);
 
         $contract_template->setValue('date', Carbon::parse($current_date)->translatedFormat("«d» F Y"));
 
         $contract_template->setValue('legal_name', $merchant_info->legal_name);
+        $contract_template->setValue('legal_name_prefix', $legal_name_prefix['body_ru']['value']);
         $contract_template->setValue('director_name', $merchant_info->director_name);
         $contract_template->setValue('phone', $merchant_info->phone);
         $contract_template->setValue('vat_number', $merchant_info->vat_number);
@@ -75,6 +77,7 @@ class WordService
         $contract_file = storage_path($additional_agreement_path);
         $contract_template = new TemplateProcessor($contract_file);
         $current_date = $merchant_info->contract_date;
+        $legal_name_prefix = LegalNameService::findNamePrefix($merchant_info->legal_name_prefix);
 
         $contract_template->setValue('current_date', Carbon::parse($current_date)->translatedFormat("«d» F Y"));
 
@@ -86,7 +89,7 @@ class WordService
 
         /*Merchant Infos fields*/
         $contract_template->setValue('legal_name', $merchant_info->legal_name);
-        $contract_template->setValue('legal_name_prefix', $merchant_info->legal_name_prefix);
+        $contract_template->setValue('legal_name_prefix', $legal_name_prefix['body_ru']['value']);
         $contract_template->setValue('director_name', $merchant_info->director_name);
         $contract_template->setValue('phone', $merchant_info->phone);
         $contract_template->setValue('vat_number', $merchant_info->vat_number);
