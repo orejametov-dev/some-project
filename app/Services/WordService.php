@@ -53,7 +53,6 @@ class WordService
         $contract_template->setValue('bank_account', $merchant_info->bank_account);
         $contract_template->setValue('bank_name', $merchant_info->bank_name);
         $contract_template->setValue('contract_number', $merchant_info->contract_number);
-        $contract_template->setValue('legal_name_prefix', $merchant_info->legal_name_prefix);
 
 
         $contract_file_name = "app/prm_merchant_" . uniqid('contract') . ".docx";
