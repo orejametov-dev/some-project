@@ -23,8 +23,7 @@ class CompanyService
         return static::http()->post('companies', [
             'name' => $name,
             'legal_name' => $legal_name,
-            'legal_name_prefix' => $legal_name_prefix,
-            'module_azo' => true
+            'legal_name_prefix' => $legal_name_prefix
         ])->throw()->json();
     }
 
@@ -35,13 +34,20 @@ class CompanyService
             'company_id' => $company_id,
             'phone' => $phone,
             'full_name' => $full_name
-        ]);
+        ])->throw()->json();
     }
 
     public static function getCompanyUserByUserId($user_id)
     {
         return static::http()->get('companies/users/get-user-id', [
             'user_id' => $user_id
+        ])->throw()->json();
+    }
+
+    public static function updateCompanyLegalNamePrefix($company_id, string $legal_name_prefix)
+    {
+        return static::http()->post("companies/$company_id" , [
+           'legal_name_prefix' => $legal_name_prefix
         ])->throw()->json();
     }
 
