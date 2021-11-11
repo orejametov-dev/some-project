@@ -29,7 +29,7 @@ class AzoMerchantAccessesController extends ApiBaseController
             ->with(['merchant', 'store'])
             ->byMerchant($this->merchant_id)
             ->filterRequest($request)
-            ->orderRequest($request);
+            ->orderByDesc('updated_at');
 
         return $merchantUsersQuery->paginate($request->query('per_page'));
     }
@@ -186,7 +186,9 @@ class AzoMerchantAccessesController extends ApiBaseController
             created_by_str: $this->user->name,
         ));
 
-        ToggleMerchantRoleOfUser::dispatch($azo_merchant_access->user_id, AuthMicroService::ACTIVATE_MERCHANT_ROLE);
+        (new AuthMicroService)->store($azo_merchant_access->user_id);
+
+//        ToggleMerchantRoleOfUser::dispatch($azo_merchant_access->user_id, AuthMicroService::ACTIVATE_MERCHANT_ROLE);
 
         Cache::tags('azo_merchants')->forget('azo_merchant_user_id_' . $azo_merchant_access->user_id);
         Cache::tags($merchant->id)->flush();
