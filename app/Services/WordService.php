@@ -44,13 +44,16 @@ class WordService
         $contract_template->setValue('legal_name', $merchant_info->legal_name);
         $contract_template->setValue('legal_name_prefix', $legal_name_prefix['body_ru']['value']);
         $contract_template->setValue('director_name', $merchant_info->director_name);
-        $contract_template->setValue('phone', $merchant_info->phone);
+        $contract_template->setValue('phone', '+' .
+            mb_strcut($merchant_info->phone, 0,5) . ' ' .
+            mb_strcut($merchant_info->phone,5,3) . '-' .
+            wordwrap(mb_strcut($merchant_info->phone,8),2,'-',true));
         $contract_template->setValue('vat_number', $merchant_info->vat_number);
         $contract_template->setValue('mfo', $merchant_info->mfo);
-        $contract_template->setValue('tin', $merchant_info->tin);
-        $contract_template->setValue('oked', $merchant_info->oked);
+        $contract_template->setValue('tin', number_format($merchant_info->tin,0,'',' '));
+        $contract_template->setValue('oked', wordwrap($merchant_info->oked,2,'.',true));
         $contract_template->setValue('address', $merchant_info->address);
-        $contract_template->setValue('bank_account', $merchant_info->bank_account);
+        $contract_template->setValue('bank_account', wordwrap($merchant_info->bank_account,4,' ',true));
         $contract_template->setValue('bank_name', $merchant_info->bank_name);
         $contract_template->setValue('contract_number', $merchant_info->contract_number);
 
@@ -90,13 +93,16 @@ class WordService
         $contract_template->setValue('legal_name', $merchant_info->legal_name);
         $contract_template->setValue('legal_name_prefix', $legal_name_prefix['body_ru']['value']);
         $contract_template->setValue('director_name', $merchant_info->director_name);
-        $contract_template->setValue('phone', $merchant_info->phone);
+        $contract_template->setValue('phone', '+' .
+            mb_strcut($merchant_info->phone, 0,5) . ' ' .
+            mb_strcut($merchant_info->phone,5,3) . '-' .
+            wordwrap(mb_strcut($merchant_info->phone,8),2,'-',true));
         $contract_template->setValue('vat_number', $merchant_info->vat_number);
         $contract_template->setValue('mfo', $merchant_info->mfo);
-        $contract_template->setValue('tin', $merchant_info->tin);
-        $contract_template->setValue('oked', $merchant_info->oked);
+        $contract_template->setValue('tin', number_format($merchant_info->tin,0,'',' '));
+        $contract_template->setValue('oked', wordwrap($merchant_info->oked,2,'.',true));
         $contract_template->setValue('address', $merchant_info->address);
-        $contract_template->setValue('bank_account', $merchant_info->bank_account);
+        $contract_template->setValue('bank_account', wordwrap($merchant_info->bank_account,4,' ',true));
         $contract_template->setValue('bank_name', $merchant_info->bank_name);
         $contract_template->setValue('contract_number', $merchant_info->contract_number);
         $contract_template->setValue('contract_date', Carbon::parse($merchant_info->contract_date)->format('d-m-Y'));
