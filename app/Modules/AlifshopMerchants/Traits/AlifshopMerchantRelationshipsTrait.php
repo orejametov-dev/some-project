@@ -3,7 +3,6 @@
 namespace App\Modules\AlifshopMerchants\Traits;
 
 
-use App\Modules\Companies\Models\Company;
 use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\Store;
 use App\Modules\Merchants\Models\Tag;
@@ -17,14 +16,6 @@ trait AlifshopMerchantRelationshipsTrait
     public function stores()
     {
         return $this->hasMany(Store::class, 'merchant_id')->where('is_alifshop' , true);
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function company()
-    {
-        return $this->belongsTo(Company::class);
     }
 
     public function tags()

@@ -6,6 +6,7 @@ use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\AlifshopMerchant\StoreAlifshopMerchantAccess;
 use App\HttpServices\Auth\AuthMicroService;
+use App\HttpServices\Company\CompanyService;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Jobs\ToggleMerchantRoleOfUser;
@@ -53,7 +54,7 @@ class AlifshopMerchantAccessController extends ApiBaseController
             ->alifshop()
             ->findOrFail($request->input('store_id'));
 
-        $company_user = CompanyUser::query()->where('user_id', $user['data']['id'])->first();
+        $company_user = CompanyService::getCompanyUserByUserId($user['data']['id']);
 
 
         if($company_user) {
@@ -63,15 +64,15 @@ class AlifshopMerchantAccessController extends ApiBaseController
         }
 
 
-        $company_user = CompanyUser::query()->where('user_id', $user['data']['id'])->firstOrNew();
-        $company_user->user_id = $user['data']['id'];
-        $company_user->company_id = $alifshop_merchant_store->alifshop_merchant->company->id;
-        $company_user->phone = $user['data']['phone'];
-        $company_user->full_name = $user['data']['name'];
-        $company_user->save();
+        $company_user = CompanyService::createCompanyUser(
+            user_id: $user['data']['id'],
+            company_id: $alifshop_merchant_store->alifshop_merchant->company->id,
+            phone: $user['data']['phone'],
+            full_name: $user['data']['name']
+        );
 
         $alifshop_merchant_access_exists = AlifshopMerchantAccess::query()
-            ->where('company_user_id', $company_user->id)
+            ->where('company_user_id', $company_user['data']['id'])
             ->exists();
 
         if ($alifshop_merchant_access_exists) {
