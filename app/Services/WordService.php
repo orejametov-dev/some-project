@@ -86,7 +86,7 @@ class WordService
         $contract_template->setValue('number', $additional_agreement->number);
         $contract_template->setValue('registration_date', $additional_agreement->registration_date);
         $contract_template->setValue('limit', $additional_agreement->limit / 100);
-        $contract_template->setValue('limit_text', $number_text_formatter->format($additional_agreement->limit));
+        $contract_template->setValue('limit_text', $number_text_formatter->format($additional_agreement->limit / 100));
         $contract_template->setValue('limit_expired_at', Carbon::parse($additional_agreement->limit_expired_at)->format('Y-m-d'));
 
         /*Merchant Infos fields*/
