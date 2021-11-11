@@ -15,9 +15,11 @@ use Illuminate\Http\Request;
 /**
  * @property int $id
  * @property int $store_id
+ * @property int $company_user_id
  * @method static Builder|AlifshopMerchantAccess byUserId($user_id)
  * @property-read AlifshopMerchant $alifshop_merchant
  * @property-read Store $store
+ * @method static Builder|AlifshopMerchantAccess byAlifshopMerchant($alifshop_merchant_id)
  * @method static Builder|AlifshopMerchantAccess filterRequest(Request $request)
  * @method static Builder|AlifshopMerchantAccess orderRequest(Request $request, string $default_order_str = 'id:desc')
  * @method static Builder|AlifshopMerchantAccess query()
@@ -87,6 +89,11 @@ class AlifshopMerchantAccess extends Model
                 $query->whereIn('user_id', $user_ids);
             });
         }
+    }
+
+    public function scopeByAlifshopMerchant(Builder $query, $alifshop_merchant_id)
+    {
+        $query->where('alifshop_merchant_id', $alifshop_merchant_id);
     }
 
     public function scopeByActiveMerchant(Builder $query)

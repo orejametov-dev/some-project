@@ -19,7 +19,8 @@ class CompaniesSeeder extends Seeder
         $merchant_1 = [
             'id' => 1,
             'name' => 'Idea Store',
-            'legal_name' => 'OOO "Idea"',
+            'legal_name' => '"Idea"',
+            'legal_name_prefix' => 'LLC',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
@@ -27,7 +28,8 @@ class CompaniesSeeder extends Seeder
         $merchant_2 = [
             'id' => 2,
             'name' => 'Arena Markaz',
-            'legal_name' => 'ООО «RETAIL OPERATION GROUP»',
+            'legal_name' => '«RETAIL OPERATION GROUP»',
+            'legal_name_prefix' => 'LLC',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
@@ -35,7 +37,8 @@ class CompaniesSeeder extends Seeder
         $merchant_3 = [
             'id' => 3,
             'name' => 'Mobilezone',
-            'legal_name' => 'OOO "Mobilezone Store"',
+            'legal_name' => '"Mobilezone Store"',
+            'legal_name_prefix' => 'LLC',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
@@ -43,7 +46,8 @@ class CompaniesSeeder extends Seeder
         $merchant_4 = [
             'id' => 4,
             'name' => 'GSHOP',
-            'legal_name' => 'OOO "GSHOP"',
+            'legal_name' => '"GSHOP"',
+            'legal_name_prefix' => 'LLC',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
@@ -51,7 +55,8 @@ class CompaniesSeeder extends Seeder
         $merchant_5 = [
             'id' => 5,
             'name' => 'DEADSHOT',
-            'legal_name' => 'OOO "DEADSHOT"',
+            'legal_name' => '"DEADSHOT"',
+            'legal_name_prefix' => 'LLC',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
@@ -59,7 +64,8 @@ class CompaniesSeeder extends Seeder
         $merchant_6 = [
             'id' => 6,
             'name' => 'Mega-shop',
-            'legal_name' => 'OOO "League group"',
+            'legal_name' => '"League group"',
+            'legal_name_prefix' => 'LLC',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
@@ -67,7 +73,8 @@ class CompaniesSeeder extends Seeder
         $merchant_7 = [
             'id' => 7,
             'name' => 'Rolton',
-            'legal_name' => 'OOO "ROLTON"',
+            'legal_name' => '"ROLTON"',
+            'legal_name_prefix' => 'LLC',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
@@ -75,7 +82,8 @@ class CompaniesSeeder extends Seeder
         $merchant_8 = [
             'id' => 8,
             'name' => 'Korzinka.uz',
-            'legal_name' => 'OOO "REDTAG GROUP"',
+            'legal_name' => '"REDTAG GROUP"',
+            'legal_name_prefix' => 'LLC',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
@@ -83,7 +91,8 @@ class CompaniesSeeder extends Seeder
         $merchant_9 = [
             'id' => 9,
             'name' => 'Huawei Store',
-            'legal_name' => 'OOO "HUAWEI"',
+            'legal_name' => '"HUAWEI"',
+            'legal_name_prefix' => 'LLC',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
@@ -91,7 +100,8 @@ class CompaniesSeeder extends Seeder
         $merchant_10 = [
             'id' => 10,
             'name' => 'Oppo',
-            'legal_name' => 'OOO "REDMI GROUP"',
+            'legal_name' => '"REDMI GROUP"',
+            'legal_name_prefix' => 'LLC',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
