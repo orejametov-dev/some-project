@@ -141,6 +141,7 @@ Route::prefix('stores')
         Route::match(['put', 'patch'], '/{id}/toggle', [App\Http\Controllers\ApiGateway\AzoMerchants\Stores\StoresController::class, 'toggle']);
         Route::match(['put', 'patch'], '/{id}', [App\Http\Controllers\ApiGateway\AzoMerchants\Stores\StoresController::class, 'update']);
         Route::match(['put', 'patch'], '/{id}/attach-azo', [App\Http\Controllers\ApiGateway\AzoMerchants\Stores\StoresController::class, 'attachAzo']);
+        Route::match(['put', 'patch'], '/{id}/set-type-register', [App\Http\Controllers\ApiGateway\AzoMerchants\Stores\StoresController::class, 'setTypeRegister']);
     });
 
 Route::prefix('notifications')
