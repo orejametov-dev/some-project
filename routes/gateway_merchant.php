@@ -1,9 +1,10 @@
-    <?php
+<?php
 
 use App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+//azo-merchant
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -40,21 +41,23 @@ Route::prefix('merchants/requests')
 
 Route::prefix('merchants/tags')
     ->group(function () {
-        Route::get('/', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantTagsController::class, 'index'] )->withoutMiddleware(['gateway-access', 'gateway-auth-user']);
+        Route::get('/', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantTagsController::class, 'index'])->withoutMiddleware(['gateway-access', 'gateway-auth-user']);
     });
 
 Route::prefix('merchants/users')
     ->group(function () {
-        Route::post('/', [App\Http\Controllers\ApiMerchantGateway\Merchants\AzoMerchantAccessesController::class, 'store']);
         Route::get('/', [App\Http\Controllers\ApiMerchantGateway\Merchants\AzoMerchantAccessesController::class, 'index']);
         Route::get('/{id}', [App\Http\Controllers\ApiMerchantGateway\Merchants\AzoMerchantAccessesController::class, 'show']);
         Route::match(['put', 'patch'], '/{id}', [App\Http\Controllers\ApiMerchantGateway\Merchants\AzoMerchantAccessesController::class, 'update']);
+        Route::post('/request-store' , [App\Http\Controllers\ApiMerchantGateway\Merchants\AzoMerchantAccessesController::class , 'requestStore']);
+        Route::post('/', [App\Http\Controllers\ApiMerchantGateway\Merchants\AzoMerchantAccessesController::class, 'store']);
+        Route::delete('/{id}', [App\Http\Controllers\ApiMerchantGateway\Merchants\AzoMerchantAccessesController::class, 'destroy']);
     });
 
 Route::prefix('notifications')
     ->group(function () {
-        Route::get('/', [\App\Http\Controllers\ApiMerchantGateway\Notifications\NotificationsController::class, 'index'] );
-        Route::get('/counter', [\App\Http\Controllers\ApiMerchantGateway\Notifications\NotificationsController::class, 'getCounter'] );
+        Route::get('/', [\App\Http\Controllers\ApiMerchantGateway\Notifications\NotificationsController::class, 'index']);
+        Route::get('/counter', [\App\Http\Controllers\ApiMerchantGateway\Notifications\NotificationsController::class, 'getCounter']);
     });
 
 Route::prefix('stores')

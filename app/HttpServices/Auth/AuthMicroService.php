@@ -9,6 +9,7 @@ class AuthMicroService
 {
     const ACTIVATE_MERCHANT_ROLE = "ACTIVATE";
     const DEACTIVATE_MERCHANT_ROLE = "DEACTIVATE";
+    const AZO_MERCHANT_ROLE = 'Merchant';
 
     public function store($user_id)
     {
@@ -43,6 +44,28 @@ class AuthMicroService
     public static function getUserById($user_id)
     {
         return static::http()->get( "users/$user_id")->throw()->json();
+    }
+
+    public static function getUserByPhone($phone)
+    {
+        return static::http()->get('users/exists' , [
+            'phone' => $phone,
+            'role' => 'Merchant'
+        ])
+            ->throw()
+            ->json();
+    }
+
+    public static function createUser(string $name, string $phone, string $password)
+    {
+        return static::http()->post('users' , [
+            'phone' => $phone,
+            'name' => $name,
+            'password' => $password,
+            'roles' => 'Merchant'
+        ])
+            ->throw()
+            ->json();
     }
 
     protected static function http()
