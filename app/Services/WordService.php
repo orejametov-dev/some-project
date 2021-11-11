@@ -112,5 +112,6 @@ class WordService
         $contract_template->saveAs(storage_path($contract_file_name));
 
         return $contract_file_name;
+        return $contract_file_name;
     }
 }
