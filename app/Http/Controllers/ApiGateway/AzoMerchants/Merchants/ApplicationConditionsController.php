@@ -20,6 +20,7 @@ class ApplicationConditionsController extends ApiBaseController
     public function index(Request $request)
     {
         $conditionQuery = Condition::query()
+            ->with('stores')
             ->filterRequest($request)
             ->orderRequest($request);
 
