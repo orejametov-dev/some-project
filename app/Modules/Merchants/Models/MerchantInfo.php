@@ -57,6 +57,7 @@ class MerchantInfo extends Model
         'contract_number',
         'limit',
         'contract_date',
+        'legal_name_prefix'
     ];
 
     public $timestamps = false;
