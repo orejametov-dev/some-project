@@ -180,9 +180,9 @@ class StoresController extends ApiBaseController
             ->where('is_special', false)
             ->byMerchant($store->merchant_id)
             ->filterRequest($request)
-            ->orderRequest($request);
+            ->orderRequest($request)->get();
 
-        return array_merge($conditionQuery->get()->toArray(), $special_conditions->toArray());
+        return $conditionQuery->merge($special_conditions)->sortByDesc('updated_at');
     }
 
 }
