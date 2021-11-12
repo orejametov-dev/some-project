@@ -37,8 +37,7 @@ class ApplicationConditionsController extends ApiBaseController
                     ->orderRequest($request);
             }
 
-            return array_merge($conditionQuery->get()->toArray(), $special_conditions->toArray());
-
+            return $conditionQuery->merge($special_conditions);
         });
     }
 }
