@@ -5,6 +5,8 @@ namespace App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases;
 
 
 use App\Http\Controllers\ApiGateway\ApiBaseController;
+use App\Http\Requests\ApiPrm\Merchants\ProblemCases\ProblemCaseStoreRequest;
+use App\Http\Requests\ApiPrm\Merchants\ProblemCases\ProblemCaseUpdateRequest;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\HttpServices\Core\CoreService;
@@ -22,34 +24,18 @@ class ProblemCasesController extends ApiBaseController
     {
         $problemCases = ProblemCase::with('tags')
             ->filterRequests($request)
-            ->orderBy('created_at', 'DESC');
+            ->orederByDesc('created_at');
 
-        if ($request->has('object') and $request->query('object') == true) {
-            return $problemCases->first();
-        }
-
-        if ($request->has('paginate') and $request->query('paginate') == false) {
-            return $problemCases->get();
-        }
         return $problemCases->paginate($request->query('per_page') ?? 15);
     }
 
-    public function store(Request $request, ProblemCaseService $problemCaseService)
+    public function store(ProblemCaseStoreRequest $request, ProblemCaseService $problemCaseService)
     {
-        $this->validate($request, [
-            'created_from_name' => 'required|string',
-            'credit_number' => 'required_without:application_id|string',
-            'application_id' => 'required_without:credit_number|integer',
-            'assigned_to_id' => 'required|integer',
-            'assigned_to_name' => 'required|string',
-            'search_index' => 'required|string',
-        ]);
-
         if ($request->has('credit_number') and $request->input('credit_number')) {
             $data = CoreService::getApplicationDataByContractNumber($request->input('credit_number'));
         } elseif ($request->has('application_id') and $request->input('application_id')) {
             $data = CoreService::getApplicationDataByApplicationId($request->input('application_id'));
-        }
+        }+
 
         $problemCase = $problemCaseService->create((new ProblemCaseDTO())->fromProblemCaseRequest($request,$data));
 
@@ -77,14 +63,8 @@ class ProblemCasesController extends ApiBaseController
         return $problemCase;
     }
 
-    public function update($id, Request $request)
+    public function update($id, ProblemCaseUpdateRequest $request)
     {
-        $this->validate($request, [
-            'manager_comment' => 'nullable|string',
-            'merchant_comment' => 'nullable|string',
-            'deadline' => 'nullable|date_format:Y-m-d',
-        ]);
-
         $problemCase = ProblemCase::findOrFail($id);
         $problemCase->manager_comment = $request->input('manager_comment');
         $problemCase->merchant_comment = $request->input('merchant_comment');
