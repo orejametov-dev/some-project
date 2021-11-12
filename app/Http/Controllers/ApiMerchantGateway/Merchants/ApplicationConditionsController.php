@@ -17,7 +17,7 @@ class ApplicationConditionsController extends ApiBaseController
         return Cache::tags($this->merchant_id)->remember($request->fullUrl() . $this->store_id, 24 * 60, function () use ($request) {
 
             $store = Store::findOrFail($this->store_id);
-            $special_conditions = $store->conditions;
+            $special_conditions = $store->conditions()->active()->get();
 
             if ($request->has('post_alifshop') AND $request->query('post_alifshop') == true) {
                 $conditionQuery = Condition::query()
