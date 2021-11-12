@@ -178,6 +178,7 @@ class StoresController extends ApiBaseController
         $conditionQuery = Condition::query()
             ->active()
             ->where('is_special', false)
+            ->byMerchant($store->merchant_id)
             ->filterRequest($request)
             ->orderRequest($request);
 
