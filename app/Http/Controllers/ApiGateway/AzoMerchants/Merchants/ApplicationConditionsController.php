@@ -76,6 +76,7 @@ class ApplicationConditionsController extends ApiBaseController
 
         $condition = new Condition($request->validated());
         $condition->is_special = !empty($store_ids) ?? false;
+        $condition->event_id = $request->input('event_id');
         $condition->merchant()->associate($merchant);
         $condition->store_id = $main_store->id;
         $condition->save();
@@ -132,6 +133,7 @@ class ApplicationConditionsController extends ApiBaseController
         $condition->stores()->attach($store_ids);
 
         $condition->fill($request->validated());
+        $condition->event_id = $request->input('event_id');
         $condition->save();
 
         SendHook::dispatch(new HookData(
