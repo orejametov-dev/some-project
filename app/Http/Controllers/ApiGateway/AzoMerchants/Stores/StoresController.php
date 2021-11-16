@@ -6,6 +6,7 @@ use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Stores\StoreStoresRequest;
 use App\Http\Requests\ApiPrm\Stores\UpdateStoresRequest;
 use App\Modules\Merchants\Models\ActivityReason;
+use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Store;
 use App\Services\ClientTypeRegisterService;
@@ -167,6 +168,21 @@ class StoresController extends ApiBaseController
         Cache::tags('azo_merchants')->flush();
 
         return $store;
+    }
+
+    public function getConditions($id, Request $request)
+    {
+        $store = Store::findOrFail($id);
+        $special_conditions = $store->conditions()->active()->get();
+
+        $conditionQuery = Condition::query()
+            ->active()
+            ->where('is_special', false)
+            ->byMerchant($store->merchant_id)
+            ->filterRequest($request)
+            ->orderRequest($request)->get();
+
+        return $conditionQuery->merge($special_conditions)->sortByDesc('updated_at');
     }
 
 }

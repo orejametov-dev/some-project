@@ -125,6 +125,7 @@ Route::prefix('stores')
     ->group(function () {
         Route::get('/', [App\Http\Controllers\ApiGateway\AzoMerchants\Stores\StoresController::class, 'index']);
         Route::get('/{id}', [App\Http\Controllers\ApiGateway\AzoMerchants\Stores\StoresController::class, 'show']);
+        Route::get('/{id}/conditions', [App\Http\Controllers\ApiGateway\AzoMerchants\Stores\StoresController::class, 'getConditions']);
         Route::post('/', [App\Http\Controllers\ApiGateway\AzoMerchants\Stores\StoresController::class, 'store']);
         Route::match(['put', 'patch'], '/{id}/toggle', [App\Http\Controllers\ApiGateway\AzoMerchants\Stores\StoresController::class, 'toggle']);
         Route::match(['put', 'patch'], '/{id}', [App\Http\Controllers\ApiGateway\AzoMerchants\Stores\StoresController::class, 'update']);
@@ -157,6 +158,7 @@ Route::prefix('application-conditions')
         Route::get('/', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class, 'index']);
         Route::get('/actives', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class, 'activeIndex']);
         Route::post('/', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class, 'store']);
+        Route::post('/special-store', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class, 'storeSpecial']);
         Route::match(['put', 'patch'], '/{id}', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class, 'update']);
         Route::post('/{id}/toggle', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class, 'toggle']);
         Route::delete('/{id}', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class, 'delete']);
