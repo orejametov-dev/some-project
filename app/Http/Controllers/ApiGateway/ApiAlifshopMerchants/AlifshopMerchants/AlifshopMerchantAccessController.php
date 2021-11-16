@@ -66,7 +66,7 @@ class AlifshopMerchantAccessController extends ApiBaseController
 
         $company_user = CompanyService::createCompanyUser(
             user_id: $user['data']['id'],
-            company_id: $alifshop_merchant_store->alifshop_merchant->company->id,
+            company_id: $alifshop_merchant_store->alifshop_merchant->company_id,
             phone: $user['data']['phone'],
             full_name: $user['data']['name']
         );

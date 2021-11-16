@@ -48,15 +48,13 @@ class AzoMerchantAccessesController extends ApiBaseController
 
         $store = Store::query()->azo()->findOrFail($request->input('store_id'));
 
-        $company_user = CompanyService::getCompanyUserByUserId($user['data']['id']);
-
         $company_user = CompanyService::createCompanyUser(
             user_id: $user['data']['id'],
             company_id: $store->merchant->company_id,
             phone: $user['data']['phone'],
             full_name: $user['data']['name']
         );
-        dd(__METHOD__,$company_user);
+
         $azo_merchant_access_exists = AzoMerchantAccess::query()
             ->where('company_user_id', $company_user['data']['id'])
             ->exists();
