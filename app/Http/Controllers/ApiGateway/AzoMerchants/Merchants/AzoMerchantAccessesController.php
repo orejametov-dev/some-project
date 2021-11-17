@@ -48,15 +48,20 @@ class AzoMerchantAccessesController extends ApiBaseController
 
         $store = Store::query()->azo()->findOrFail($request->input('store_id'));
 
-        $company_user = CompanyService::createCompanyUser(
-            user_id: $user['data']['id'],
-            company_id: $store->merchant->company_id,
-            phone: $user['data']['phone'],
-            full_name: $user['data']['name']
-        );
+        $company_user = CompanyService::getCompanyUserByUserId($user['data']['id']);
+
+        if (empty($company_user)) {
+            $company_user = CompanyService::createCompanyUser(
+                user_id: $user['data']['id'],
+                company_id: $store->merchant->company_id,
+                phone: $user['data']['phone'],
+                full_name: $user['data']['name']
+            );
+        }
+
 
         $azo_merchant_access_exists = AzoMerchantAccess::query()
-            ->where('company_user_id', $company_user['data']['id'])
+            ->where('company_user_id', $company_user['id'])
             ->exists();
 
         if ($azo_merchant_access_exists) {
@@ -67,7 +72,7 @@ class AzoMerchantAccessesController extends ApiBaseController
         }
 
         $merchant = $store->merchant;
-        if ($azo_merchant_access = AzoMerchantAccess::withTrashed()->where('user_id', $user['data']['id'])->first()) {
+        if ($azo_merchant_access = AzoMerchantAccess::withTrashed()->where('company_user_id', $company_user['id'])->first()) {
             $azo_merchant_access->restore();
         } else {
             $azo_merchant_access = new AzoMerchantAccess();
@@ -76,9 +81,9 @@ class AzoMerchantAccessesController extends ApiBaseController
         $azo_merchant_access->user_id = $request->input('user_id');
         $azo_merchant_access->user_name = $user['data']['name'];
         $azo_merchant_access->phone = $user['data']['phone'];
+        $azo_merchant_access->company_user_id = $company_user['id'];
         $azo_merchant_access->merchant()->associate($merchant);
         $azo_merchant_access->store()->associate($store->id);
-        $azo_merchant_access->company_user_id = $company_user['data']['id'];
 
         $azo_merchant_access->save();
 

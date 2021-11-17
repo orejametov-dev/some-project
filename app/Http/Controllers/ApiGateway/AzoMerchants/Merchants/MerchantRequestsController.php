@@ -159,22 +159,21 @@ class MerchantRequestsController extends ApiBaseController
             return response()->json(['message' => 'Указанное имя партнера уже занято'], 400);
         }
 
+        $company = CompanyService::createCompany(
+            name: $merchant_request->name,
+            legal_name: $merchant_request->legal_name,
+            legal_name_prefix: $merchant_request->legal_name_prefix
+        );
 
-        $merchant = DB::transaction(function () use ($merchantsService, $merchant_request) {
-            $company = CompanyService::createCompany(
-                name: $merchant_request->name,
-                legal_name: $merchant_request->legal_name,
-                legal_name_prefix: $merchant_request->legal_name_prefix
-            );
-
+        $merchant = DB::transaction(function () use ($merchantsService, $merchant_request,$company) {
             $merchant = $merchantsService->create(new MerchantsDTO(
-                id: $company['data']['id'],
+                id: $company['id'],
                 name: $merchant_request->name,
                 legal_name: $merchant_request->legal_name,
                 legal_name_prefix: $merchant_request->legal_name_prefix,
                 information: $merchant_request->information,
                 maintainer_id: $merchant_request->engaged_by_id,
-                company_id: $company['data']['id']
+                company_id: $company['id']
             ));
 
 

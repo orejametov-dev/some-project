@@ -2,13 +2,12 @@
 
 namespace App\Modules\AlifshopMerchants\Models;
 
-use App\Modules\Companies\Models\CompanyUser;
 use App\Modules\Merchants\Models\Store;
+use App\Traits\SortableByQueryParams;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\SortableByQueryParams;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 
@@ -42,15 +41,10 @@ class AlifshopMerchantAccess extends Model
         return $this->belongsTo(Store::class);
     }
 
-    public function company_user()
-    {
-        return $this->belongsTo(CompanyUser::class);
-    }
-
     public function scopeFilterRequest(Builder $query, Request $request)
     {
         if ($q = $request->query('q')) {
-            $query->whereHas('company_user' , function ($query) use ($q) {
+            $query->whereHas('company_user', function ($query) use ($q) {
                 $query->where('full_name', 'LIKE', '%' . $q . '%')
                     ->orWhere('phone', 'LIKE', '%' . $q . '%');
             });
@@ -78,14 +72,14 @@ class AlifshopMerchantAccess extends Model
         }
 
         if ($user = $request->query('user_id')) {
-            $query->whereHas( 'company_user' , function ($query) use ($user) {
+            $query->whereHas('company_user', function ($query) use ($user) {
                 $query->where('user_id', $user);
-        });
+            });
         }
 
         if ($user_ids = $request->query('user_ids')) {
             $user_ids = explode(';', $user_ids);
-            $query->whereHas( 'company_user' , function ($query)  use ($user_ids){
+            $query->whereHas('company_user', function ($query) use ($user_ids) {
                 $query->whereIn('user_id', $user_ids);
             });
         }
@@ -112,8 +106,8 @@ class AlifshopMerchantAccess extends Model
 
     public function scopeByUserId(Builder $query, $user_id)
     {
-        $query->whereHas('company_user' , function ($query) use ($user_id) {
-                $query->where('user_id', $user_id);
+        $query->whereHas('company_user', function ($query) use ($user_id) {
+            $query->where('user_id', $user_id);
         });
     }
 }
