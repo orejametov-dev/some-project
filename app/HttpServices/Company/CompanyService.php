@@ -39,12 +39,16 @@ class CompanyService
 
     public static function setStatusExist(int $id)
     {
-        return static::http()->post('companies/' . $id . '/status-exists', )->throw()->json();
+        return static::http()->post('companies/' . $id . '/status-exists', [
+            'company_module' => 'azo'
+        ])->throw()->json();
     }
 
     public static function setStatusNotActive(int $id)
     {
-        return static::http()->post('companies/' . $id . '/status-not-active', )->throw()->json();
+        return static::http()->post('companies/' . $id . '/status-not-active', [
+            'company_module' => 'azo'
+        ])->throw()->json();
     }
 
     public static function createCompanyUser(int $user_id, int $company_id, string $phone, string $full_name)
