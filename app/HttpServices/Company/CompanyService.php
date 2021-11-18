@@ -53,7 +53,7 @@ class CompanyService
 
     protected static function http()
     {
-        return Http::baseUrl(config('local_services.service_prm.domain') . '/api/')
+        return Http::baseUrl(config('local_services.service_prm.domain') . '/api/gate/')
             ->withHeaders([
                 'Accept' => 'application/json',
                 'Access-Token' => config('local_services.service_prm.service_token'),
