@@ -34,7 +34,7 @@ class AlifshopMerchantsController extends ApiBaseController
     public function index(Request $request)
     {
         $alifshop_merchants = AlifshopMerchant::query()
-            ->with(['tags', 'company'])
+            ->with(['tags'])
             ->filterRequest($request)
             ->orderRequest($request);
 
@@ -44,7 +44,7 @@ class AlifshopMerchantsController extends ApiBaseController
     public function show($id)
     {
         return AlifshopMerchant::query()
-            ->with(['tags', 'company'])
+            ->with(['tags'])
             ->findOrFail($id);
     }
 
@@ -107,7 +107,7 @@ class AlifshopMerchantsController extends ApiBaseController
 
         $this->alifshopService->storeOrUpdateMerchant($alifshop_merchant);
 
-        return $alifshop_merchant->load(['company']);
+        return $alifshop_merchant;
     }
 
     public function setMaintainer($id, Request $request)
