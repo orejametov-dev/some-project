@@ -27,9 +27,30 @@ class CompanyService
         ])->throw()->json();
     }
 
+    public static function createCompanyBySpecial(int $id, string $name, string $legal_name, string $legal_name_prefix)
+    {
+        return static::http()->post('companies/special', [
+            'id' => $id,
+            'name' => $name,
+            'legal_name' => $legal_name,
+            'legal_name_prefix' => $legal_name_prefix
+        ])->throw()->json();
+    }
+
     public static function createCompanyUser(int $user_id, int $company_id, string $phone, string $full_name)
     {
         return static::http()->post('companies/users', [
+            'user_id' => $user_id,
+            'company_id' => $company_id,
+            'phone' => $phone,
+            'full_name' => $full_name
+        ])->throw()->json();
+    }
+
+    public static function createCompanyUserSpecial(int $id, int $user_id, int $company_id, string $phone, string $full_name)
+    {
+        return static::http()->post('companies/users/special', [
+            'id' => $id,
             'user_id' => $user_id,
             'company_id' => $company_id,
             'phone' => $phone,

@@ -42,7 +42,8 @@ class TransefCompanies extends Command
     {
         DB::table('companies')->chunkById(100, function ($companies) {
             foreach ($companies as $company) {
-                CompanyService::createCompany(
+                CompanyService::createCompanyBySpecial(
+                    $company->id,
                     $company->name,
                     $company->legal_name,
                     $company->legal_name_prefix
@@ -52,7 +53,8 @@ class TransefCompanies extends Command
 
         DB::table('company_users')->chunkById(100, function ($company_users) {
             foreach ($company_users as $company_user) {
-                CompanyService::createCompanyUser(
+                CompanyService::createCompanyUserSpecial(
+                    $company_user->id,
                     $company_user->user_id,
                     $company_user->company_id,
                     $company_user->phone,
