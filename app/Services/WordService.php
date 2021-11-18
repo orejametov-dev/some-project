@@ -79,14 +79,15 @@ class WordService
         $contract_file = storage_path($additional_agreement_path);
         $contract_template = new TemplateProcessor($contract_file);
         $current_date = $merchant_info->contract_date;
+        $limit = $additional_agreement->limit / 100;
         $legal_name_prefix = LegalNameService::findNamePrefix($merchant_info->legal_name_prefix);
 
         $contract_template->setValue('current_date', Carbon::parse($current_date)->translatedFormat("«d» F Y"));
 
         $contract_template->setValue('number', $additional_agreement->number);
         $contract_template->setValue('registration_date', $additional_agreement->registration_date);
-        $contract_template->setValue('limit', $additional_agreement->limit);
-        $contract_template->setValue('limit_text', $number_text_formatter->format($additional_agreement->limit));
+        $contract_template->setValue('limit', $limit);
+        $contract_template->setValue('limit_text', $number_text_formatter->format($limit));
         $contract_template->setValue('limit_expired_at', Carbon::parse($additional_agreement->limit_expired_at)->format('Y-m-d'));
 
         /*Merchant Infos fields*/
