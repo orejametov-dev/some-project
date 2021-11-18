@@ -10,7 +10,6 @@ use App\HttpServices\Company\CompanyService;
 use App\Modules\AlifshopMerchants\DTO\AlifshopMerchantDTO;
 use App\Modules\AlifshopMerchants\Models\AlifshopMerchant;
 use App\Modules\AlifshopMerchants\Services\AlifshopMerchantService;
-use App\Modules\Companies\Models\Module;
 use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\Store;
 use App\Modules\Merchants\Models\Tag;

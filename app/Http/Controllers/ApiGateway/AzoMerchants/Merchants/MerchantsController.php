@@ -72,6 +72,7 @@ class MerchantsController extends ApiBaseController
             company_id: $company['id']
         ));
 
+        CompanyService::setStatusExist($company->id);
 
         Cache::tags($merchant->id)->flush();
         Cache::tags('azo_merchants')->flush();
@@ -243,7 +244,7 @@ class MerchantsController extends ApiBaseController
             'created_by_name' => $this->user->name
         ]);
 
-        $merchant->company->modules()->updateExistingPivot(Module::AZO_MERCHANT, ['active' => $merchant->active]);
+        CompanyService::setStatusNotActive($merchant->company_id);
 
         Cache::tags($merchant->id)->flush();
         Cache::tags('merchants')->flush();
