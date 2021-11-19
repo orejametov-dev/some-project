@@ -37,10 +37,10 @@ class CompanyService
         ])->throw()->json();
     }
 
-    public static function setStatusExist(int $id)
+    public static function setStatusExist(int $id, string $company_module = null)
     {
         return static::http()->post('companies/' . $id . '/status-exists', [
-            'company_module' => 'azo'
+            'company_module' => is_null($company_module) ? 'azo' : $company_module
         ])->throw()->json();
     }
 

@@ -68,7 +68,7 @@ class AlifshopMerchantsController extends ApiBaseController
             company_id: $company['id']
         ));
 
-        CompanyService::setStatusNotActive($alifshop_merchant->company_id, 'alifshop');
+        CompanyService::setStatusExist($alifshop_merchant->company_id, 'alifshop');
 
         Store::query()
             ->where('merchant_id', $alifshop_merchant->id)
@@ -166,7 +166,7 @@ class AlifshopMerchantsController extends ApiBaseController
             'created_by_name' => $this->user->name
         ]);
 
-        $alifshop_merchant->company->modules()->updateExistingPivot(Module::ALIFSHOP_MERCHANT, ['active' => $alifshop_merchant->active]);
+        CompanyService::setStatusNotActive($alifshop_merchant->company_id, 'alifshop');
 
         Cache::tags($alifshop_merchant->id)->flush();
         Cache::tags('alifshop_merchants')->flush();
