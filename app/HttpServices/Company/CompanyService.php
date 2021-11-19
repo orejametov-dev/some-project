@@ -44,10 +44,10 @@ class CompanyService
         ])->throw()->json();
     }
 
-    public static function setStatusNotActive(int $id)
+    public static function setStatusNotActive(int $id, string $company_module = null)
     {
         return static::http()->post('companies/' . $id . '/status-not-active', [
-            'company_module' => 'azo'
+            'company_module' => is_null($company_module) ? 'azo' : $company_module
         ])->throw()->json();
     }
 

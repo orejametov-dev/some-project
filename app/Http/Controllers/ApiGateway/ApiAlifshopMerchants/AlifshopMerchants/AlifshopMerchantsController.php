@@ -55,7 +55,7 @@ class AlifshopMerchantsController extends ApiBaseController
 
         $company = CompanyService::getCompanyById($request->input('company_id'));
 
-        if (AlifshopMerchant::query()->where('company_id', $company->id)->exists()) {
+        if (AlifshopMerchant::query()->where('company_id', $company['id'])->exists()) {
             return response()->json(['message' => 'Указаная компания уже имеет алифшоп модуль'], 400);
         }
 
@@ -68,7 +68,7 @@ class AlifshopMerchantsController extends ApiBaseController
             company_id: $company['id']
         ));
 
-        $company->modules()->attach([Module::ALIFSHOP_MERCHANT]);
+        CompanyService::setStatusNotActive($alifshop_merchant->company_id, 'alifshop');
 
         Store::query()
             ->where('merchant_id', $alifshop_merchant->id)
