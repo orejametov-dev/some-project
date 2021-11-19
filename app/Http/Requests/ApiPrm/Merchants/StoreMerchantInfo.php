@@ -25,6 +25,7 @@ class StoreMerchantInfo extends FormRequest
     {
         return [
             'legal_name' => 'required|max:255',
+            'legal_name_prefix' => 'required|string',
             'director_name' => 'required|max:255',
             'phone' => 'required|digits:12',
             'vat_number' => 'required|digits:12',
