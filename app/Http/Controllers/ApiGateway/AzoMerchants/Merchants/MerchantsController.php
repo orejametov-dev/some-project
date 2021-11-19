@@ -9,7 +9,6 @@ use App\HttpServices\Auth\AuthMicroService;
 use App\HttpServices\Company\CompanyService;
 use App\HttpServices\Telegram\TelegramService;
 use App\HttpServices\Warehouse\WarehouseService;
-use App\Modules\Companies\Models\Module;
 use App\Modules\Merchants\DTO\Merchants\MerchantsDTO;
 use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\Merchant;
@@ -72,11 +71,11 @@ class MerchantsController extends ApiBaseController
             company_id: $company['id']
         ));
 
-
         Cache::tags($merchant->id)->flush();
         Cache::tags('azo_merchants')->flush();
         Cache::tags('company')->flush();
 
+        CompanyService::setStatusExist($company['id']);
         $this->alifshopService->storeOrUpdateMerchant($merchant->fresh());
         return $merchant;
     }
@@ -243,7 +242,7 @@ class MerchantsController extends ApiBaseController
             'created_by_name' => $this->user->name
         ]);
 
-        $merchant->company->modules()->updateExistingPivot(Module::AZO_MERCHANT, ['active' => $merchant->active]);
+        CompanyService::setStatusNotActive($merchant->company_id);
 
         Cache::tags($merchant->id)->flush();
         Cache::tags('merchants')->flush();
