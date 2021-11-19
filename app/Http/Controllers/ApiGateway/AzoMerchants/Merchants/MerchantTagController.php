@@ -45,9 +45,6 @@ class MerchantTagController extends Controller
             return response()->json(['message' => 'Тег невозможно удалить.']);
         }
 
-        if ($tag->alifshop_merchants()->count()) {
-            return response()->json(['message' => 'Тег невозможно удалить.']);
-        }
 
         $tag->delete();
         return response()->json(['message' => 'Тэг успешно удалён.']);

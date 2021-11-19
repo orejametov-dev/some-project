@@ -5,8 +5,6 @@ namespace App\Http\Controllers\ApiGateway\Companies;
 
 
 use App\Http\Controllers\ApiGateway\ApiBaseController;
-use App\Modules\AlifshopMerchants\DTO\AlifshopMerchantDTO;
-use App\Modules\AlifshopMerchants\Services\AlifshopMerchantService;
 use App\Modules\Companies\DTO\CompanyDTO;
 use App\Modules\Companies\Models\Company;
 use App\Modules\Companies\Models\Module;

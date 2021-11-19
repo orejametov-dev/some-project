@@ -2,7 +2,6 @@
 
 namespace App\Modules\Merchants\Traits;
 
-use App\Modules\AlifshopMerchants\Models\AlifshopMerchant;
 use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\Merchant;

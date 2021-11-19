@@ -2,7 +2,6 @@
 
 namespace App\Modules\Companies\Models;
 
-use App\Modules\AlifshopMerchants\Models\AlifshopMerchant;
 use App\Modules\Merchants\Models\Merchant;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;

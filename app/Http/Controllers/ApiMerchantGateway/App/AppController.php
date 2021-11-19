@@ -23,7 +23,6 @@ class AppController extends Controller
             $company_user_modules = [];
 
             $company_user_modules['azo_merchant'] = $company_user->company->merchant()->active()->exists();
-            $company_user_modules['alifshop_merchant'] = $company_user->company->alifshop_merchant()->active()->exists();
 
             return $company_user_modules;
         });
