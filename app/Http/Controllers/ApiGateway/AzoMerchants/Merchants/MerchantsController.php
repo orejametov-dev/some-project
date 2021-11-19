@@ -35,7 +35,7 @@ class MerchantsController extends ApiBaseController
 
     public function index(Request $request)
     {
-        $merchants = Merchant::query()->with(['stores', 'tags' ,'company'])
+        $merchants = Merchant::query()->with(['stores', 'tags'])
             ->filterRequest($request)
             ->orderRequest($request);
 
@@ -47,7 +47,7 @@ class MerchantsController extends ApiBaseController
 
     public function show($id)
     {
-        return Merchant::with(['stores', 'tags', 'activity_reasons', 'company'])->findOrFail($id);
+        return Merchant::with(['stores', 'tags', 'activity_reasons'])->findOrFail($id);
     }
 
     public function store(Request $request, MerchantsService $merchantsService)
