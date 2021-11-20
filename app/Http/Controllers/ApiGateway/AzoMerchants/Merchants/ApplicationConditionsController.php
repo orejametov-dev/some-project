@@ -221,6 +221,7 @@ class ApplicationConditionsController extends ApiBaseController
                 'commission' => $item->commission,
                 'duration' => $item->duration,
                 'is_active' => $item->active,
+                'special_offer' => $item->special_offer,
                 'event_id' => $item->event_id
             ];
         });
@@ -264,6 +265,7 @@ class ApplicationConditionsController extends ApiBaseController
                 'commission' => $item->commission,
                 'duration' => $item->duration,
                 'is_active' => $item->active,
+                'special_offer' => $item->special_offer,
                 'event_id' => $item->event_id
             ];
         });
