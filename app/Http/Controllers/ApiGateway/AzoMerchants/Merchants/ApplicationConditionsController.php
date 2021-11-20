@@ -76,6 +76,7 @@ class ApplicationConditionsController extends ApiBaseController
 
         $condition = new Condition($request->validated());
         $condition->is_special = !empty($store_ids) ?? false;
+        $condition->event_id = $request->input('event_id');
         $condition->merchant()->associate($merchant);
         $condition->store_id = $main_store->id;
         $condition->save();
@@ -132,6 +133,7 @@ class ApplicationConditionsController extends ApiBaseController
         $condition->stores()->attach($store_ids);
 
         $condition->fill($request->validated());
+        $condition->event_id = $request->input('event_id');
         $condition->save();
 
         SendHook::dispatch(new HookData(
@@ -215,10 +217,12 @@ class ApplicationConditionsController extends ApiBaseController
 
         $conditions = $merchant->application_conditions->where('post_alifshop', true)->map(function ($item) {
             return [
+                'id' => $item->id,
                 'commission' => $item->commission,
                 'duration' => $item->duration,
                 'is_active' => $item->active,
-                'special_offer' => $item->special_offer
+                'special_offer' => $item->special_offer,
+                'event_id' => $item->event_id
             ];
         });
 
@@ -257,10 +261,12 @@ class ApplicationConditionsController extends ApiBaseController
 
         $conditions = $merchant->application_conditions->where('post_alifshop', true)->map(function ($item) {
             return [
+                'id' => $item->id,
                 'commission' => $item->commission,
                 'duration' => $item->duration,
                 'is_active' => $item->active,
-                'special_offer' => $item->special_offer
+                'special_offer' => $item->special_offer,
+                'event_id' => $item->event_id
             ];
         });
 
