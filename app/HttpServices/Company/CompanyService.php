@@ -27,14 +27,24 @@ class CompanyService
         ])->throw()->json();
     }
 
-    public static function createCompanyBySpecial(int $id, string $name, string $legal_name, string $legal_name_prefix, string $status)
+    public static function createCompanyBySpecial(
+        int $id,
+        string $name,
+        string $legal_name,
+        string $legal_name_prefix,
+        string $status,
+        string $created_at,
+        string $updated_at
+    )
     {
         return static::http()->post('companies/special', [
             'id' => $id,
             'name' => $name,
             'legal_name' => $legal_name,
             'legal_name_prefix' => $legal_name_prefix,
-            'status' => $status
+            'status' => $status,
+            'created_at' => $created_at,
+            'updated_at' => $updated_at,
         ])->throw()->json();
     }
 

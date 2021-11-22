@@ -5,6 +5,7 @@ namespace App\Console\Commands\OneOff;
 use App\HttpServices\Company\CompanyService;
 use App\HttpServices\Core\CoreService;
 use App\Modules\Merchants\Models\Merchant;
+use Carbon\Carbon;
 use DB;
 use Illuminate\Console\Command;
 
@@ -49,7 +50,9 @@ class TransefCompanies extends Command
                     $company->name,
                     $company->legal_name,
                     $company->legal_name_prefix,
-                    $merchant->active ? "YES" : "NOT_ACTIVE"
+                    $merchant->active ? "YES" : "NOT_ACTIVE",
+                    Carbon::parse($company->created_at)->toString(),
+                    Carbon::parse($company->updated_at)->toString(),
                 );
             }
         });
