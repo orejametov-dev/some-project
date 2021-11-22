@@ -66,6 +66,7 @@ class MerchantRequestsController extends ApiBaseController
 
             'director_name' => 'required|max:255',
             'legal_name' => 'required|string',
+            'legal_name_prefix' => 'nullable|string',
             'phone' => 'required|digits:12',
             'vat_number' => 'required|digits:12',
             'mfo' => 'required|digits:5',
@@ -166,7 +167,8 @@ class MerchantRequestsController extends ApiBaseController
         $merchant = DB::transaction(function () use ($merchantsService, $merchant_request, $companyService) {
             $company = $companyService->create(new CompanyDTO(
                 name: $merchant_request->name,
-                legal_name: $merchant_request->legal_name
+                legal_name: $merchant_request->legal_name,
+                legal_name_prefix: $merchant_request->legal_name_prefix
             ));
 
             $company->modules()->attach(Module::AZO_MERCHANT);
@@ -175,6 +177,7 @@ class MerchantRequestsController extends ApiBaseController
                 id: $company->id,
                 name: $merchant_request->name,
                 legal_name: $merchant_request->legal_name,
+                legal_name_prefix: $merchant_request->legal_name_prefix,
                 information: $merchant_request->information,
                 maintainer_id: $merchant_request->engaged_by_id,
                 company_id: $company->id

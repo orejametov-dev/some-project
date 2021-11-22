@@ -5,7 +5,7 @@ namespace App\Http\Resources\ApiCredtisGateway\Merchants;
 use App\Services\LegalNameService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class MerchantsResource extends JsonResource
+class SpecialMerchantResourse extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,10 +16,9 @@ class MerchantsResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name,
+            'merchant_ids' => $this->merchant_ids,
             'legal_name' => LegalNameService::findNamePrefix($this->legal_name_prefix)['body_ru']['value'] . ' ' . $this->legal_name,
-            'tin' => optional($this->whenLoaded('merchant_info'))->tin
+            'logo_path' => $this->logo_path
         ];
     }
 }

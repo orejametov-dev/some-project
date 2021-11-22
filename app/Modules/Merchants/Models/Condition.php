@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -24,6 +25,7 @@ use Illuminate\Support\Carbon;
  * @property string $special_offer
  * @property int $merchant_id
  * @property int $store_id
+ * @property boolean $is_special
  * @property Merchant $merchant
  * @property Store $store
  * @property Carbon|null $created_at
@@ -59,6 +61,11 @@ class Condition extends Model
     public function store(): BelongsTo
     {
         return $this->belongsTo(Store::class);
+    }
+
+    public function stores(): BelongsToMany
+    {
+        return $this->belongsToMany(Store::class, 'special_store_conditions', 'condition_id', 'store_id');
     }
 
     public function merchant(): BelongsTo
