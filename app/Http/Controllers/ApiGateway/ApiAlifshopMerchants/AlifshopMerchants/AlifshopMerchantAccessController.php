@@ -20,11 +20,7 @@ class AlifshopMerchantAccessController extends ApiBaseController
     public function index(Request $request)
     {
         $alifshop_merchant_accesses = AlifshopMerchantAccess::query()
-            ->with(
-                'company_user:id,user_id,phone,full_name',
-                'alifshop_merchant',
-                'store'
-            )
+            ->with('alifshop_merchant', 'store')
             ->filterRequest($request)
             ->orderRequest($request);
 
@@ -34,11 +30,7 @@ class AlifshopMerchantAccessController extends ApiBaseController
     public function show($id)
     {
         return AlifshopMerchantAccess::query()
-            ->with(
-                'company_user:id,user_id,phone,full_name',
-                'alifshop_merchant',
-                'store'
-            )
+            ->with('alifshop_merchant', 'store')
             ->findOrFail($id);
     }
 
@@ -83,6 +75,9 @@ class AlifshopMerchantAccessController extends ApiBaseController
             $alifshop_merchant_access = new AlifshopMerchantAccess();
         }
 
+        $alifshop_merchant_access->user_id = $request->input('user_id');
+        $alifshop_merchant_access->user_name = $user['data']['name'];
+        $alifshop_merchant_access->phone = $user['data']['phone'];
         $alifshop_merchant_access->company_user_id = $company_user['id'];
         $alifshop_merchant_access->alifshop_merchant()->associate($alifshop_merchant);
         $alifshop_merchant_access->store()->associate($alifshop_merchant_store->id);
