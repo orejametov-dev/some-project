@@ -2,7 +2,6 @@
 
 namespace App\Modules\Merchants\Traits;
 
-use App\Modules\Companies\Models\Company;
 use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\AdditionalAgreement;
 use App\Modules\Merchants\Models\AzoMerchantAccess;
@@ -57,11 +56,6 @@ trait MerchantRelationshipsTrait
     public function activity_reasons()
     {
         return $this->morphToMany(ActivityReason::class, 'merchant', 'merchant_activities', 'merchant_id', 'activity_reason_id')->withTimestamps();
-    }
-
-    public function company()
-    {
-        return $this->belongsTo(Company::class);
     }
 
 }

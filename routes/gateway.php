@@ -10,18 +10,6 @@ use App\Http\Controllers\ApiGateway\ApiAlifshopMerchants\AlifshopStores\Alifshop
 use Illuminate\Support\Facades\Route;
 
 
-//Companies
-Route::prefix('companies')->group(function () {
-    Route::get('/', [CompaniesController::class, 'index']);
-    Route::get('/{id}', [CompaniesController::class, 'show']);
-    Route::post('/', [CompaniesController::class, 'store']);
-    Route::post('/special-store', [CompaniesController::class, 'storeSpecial']);
-    Route::post('/{id}/detach-module', [CompaniesController::class, 'detachModule']);
-});
-
-Route::prefix('companies/users')->group(function () {
-    Route::get('/', [CompanyUsersController::class, 'index']);
-});
 
 //AlifshopMerchants
 Route::prefix('alifshop-merchants/stores')

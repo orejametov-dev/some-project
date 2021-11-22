@@ -44,5 +44,9 @@ return [
     'service_notify' => [
         'domain' => env('SERVICES_NOTIFY'),
         'access_token' => env('SERVICES_NOTIFY_ACCESS_TOKEN')
-    ]
+    ],
+    'service_prm' => [
+        'domain' => env('SERVICE_PRM_URL'),
+        'service_token' => env('SERVICE_PRM_TOKEN')
+    ],
 ];

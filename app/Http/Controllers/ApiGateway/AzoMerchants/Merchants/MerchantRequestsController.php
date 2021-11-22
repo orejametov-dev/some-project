@@ -5,11 +5,8 @@ namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Resources\ApiPrmGateway\Merchants\MerchantRequestsResource;
-use App\Modules\Companies\DTO\CompanyDTO;
-use App\Modules\Companies\Models\Company;
-use App\Modules\Companies\Models\Module;
-use App\Modules\Companies\Services\CompanyService;
 use App\HttpServices\Auth\AuthMicroService;
+use App\HttpServices\Company\CompanyService;
 use App\Modules\Merchants\DTO\Merchants\MerchantInfoDTO;
 use App\Modules\Merchants\DTO\Merchants\MerchantsDTO;
 use App\Modules\Merchants\Models\CancelReason;
@@ -19,7 +16,6 @@ use App\Modules\Merchants\Models\Request as MerchantRequest;
 use App\Modules\Merchants\Models\Tag;
 use App\Modules\Merchants\Services\Merchants\MerchantsService;
 use App\Services\Alifshop\AlifshopService;
-use App\Services\Core\ServiceCore;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -145,7 +141,7 @@ class MerchantRequestsController extends ApiBaseController
         return response()->json(['message' => 'Не возможно менять статус']);
     }
 
-    public function allow($id, MerchantsService $merchantsService, CompanyService $companyService, AlifshopService $alifshopService)
+    public function allow($id, MerchantsService $merchantsService, AlifshopService $alifshopService)
     {
         $merchant_request = MerchantRequest::findOrFail($id);
 
@@ -153,7 +149,7 @@ class MerchantRequestsController extends ApiBaseController
             return response()->json(['message' => 'Статус заявки должен быть "На переговорах"'], 400);
         }
 
-        $company_name_exists = Company::query()->where('name', $merchant_request->name)->exists();
+        $company_name_exists = CompanyService::getCompanyByName($merchant_request->name);
         if ($company_name_exists) {
             return response()->json(['message' => 'Указанное имя компании уже занято'], 400);
         }
@@ -163,25 +159,23 @@ class MerchantRequestsController extends ApiBaseController
             return response()->json(['message' => 'Указанное имя партнера уже занято'], 400);
         }
 
+        $company = CompanyService::createCompany(
+            name: $merchant_request->name,
+            legal_name: $merchant_request->legal_name,
+            legal_name_prefix: $merchant_request->legal_name_prefix
+        );
 
-        $merchant = DB::transaction(function () use ($merchantsService, $merchant_request, $companyService) {
-            $company = $companyService->create(new CompanyDTO(
-                name: $merchant_request->name,
-                legal_name: $merchant_request->legal_name,
-                legal_name_prefix: $merchant_request->legal_name_prefix
-            ));
-
-            $company->modules()->attach(Module::AZO_MERCHANT);
-
+        $merchant = DB::transaction(function () use ($merchantsService, $merchant_request,$company) {
             $merchant = $merchantsService->create(new MerchantsDTO(
-                id: $company->id,
+                id: $company['id'],
                 name: $merchant_request->name,
                 legal_name: $merchant_request->legal_name,
                 legal_name_prefix: $merchant_request->legal_name_prefix,
                 information: $merchant_request->information,
                 maintainer_id: $merchant_request->engaged_by_id,
-                company_id: $company->id
+                company_id: $company['id']
             ));
+
 
             $merchant_request->files()->update(['merchant_id' => $merchant->id]);
             $merchantsService->createMerchantInfo((new MerchantInfoDTO())->fromMerchantRequest($merchant_request), $merchant);
