@@ -55,20 +55,14 @@ class AlifshopMerchantAccessController extends ApiBaseController
 
         $company_user = CompanyService::getCompanyUserByUserId($user['data']['id']);
 
-
-        if ($company_user) {
-            if ($company_user->azo_merchant_access()->exists() and optional($company_user->company->merchant)->id != $alifshop_merchant_store->merchant_id) {
-                throw new BusinessException('Сотрудника нельзя прикрепить к этому мерчанту', 400);
-            }
+        if (empty($company_user)) {
+            $company_user = CompanyService::createCompanyUser(
+                user_id: $user['data']['id'],
+                company_id: $alifshop_merchant_store->alifshop_merchant->company_id,
+                phone: $user['data']['phone'],
+                full_name: $user['data']['name']
+            );
         }
-
-
-        $company_user = CompanyService::createCompanyUser(
-            user_id: $user['id'],
-            company_id: $alifshop_merchant_store->alifshop_merchant->company_id,
-            phone: $user['phone'],
-            full_name: $user['name']
-        );
 
         $alifshop_merchant_access_exists = AlifshopMerchantAccess::query()
             ->where('company_user_id', $company_user['id'])
