@@ -8,14 +8,14 @@ use App\Modules\Merchants\Models\Merchant;
 use DB;
 use Illuminate\Console\Command;
 
-class TransefCompanies extends Command
+class TranserCompanyUsers extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'create:company';
+    protected $signature = 'create:company_users';
 
     /**
      * The console command description.
@@ -39,17 +39,16 @@ class TransefCompanies extends Command
      *
      * @return int
      */
-    public function handle()
+    public function handle(CoreService $coreService)
     {
-        DB::table('companies')->chunkById(100, function ($companies) {
-            foreach ($companies as $company) {
-                $merchant = Merchant::where('company_id', $company->id)->first();
-                CompanyService::createCompanyBySpecial(
-                    $company->id,
-                    $company->name,
-                    $company->legal_name,
-                    $company->legal_name_prefix,
-                    $merchant->active ? "YES" : "NOT_ACTIVE"
+        DB::table('company_users')->chunkById(100, function ($company_users) {
+            foreach ($company_users as $company_user) {
+                CompanyService::createCompanyUserSpecial(
+                    $company_user->id,
+                    $company_user->user_id,
+                    $company_user->company_id,
+                    $company_user->phone,
+                    $company_user->full_name
                 );
             }
         });
