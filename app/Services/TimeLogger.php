@@ -56,6 +56,5 @@ class TimeLogger
                 ]
             ]));
         }
-        dd(Cache::tags(CacheService::LOGS)->get($this->key));
     }
 }
