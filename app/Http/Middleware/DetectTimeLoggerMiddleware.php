@@ -19,7 +19,7 @@ class DetectTimeLoggerMiddleware
     public function handle(Request $request, Closure $next)
     {
         $routeName = Route::getCurrentRoute()->getActionName();
-        $timeLogger = new TimeLogger($routeName);
+        $timeLogger = new TimeLogger('logs_' , $routeName);
         $timeLogger->start();
 
         $response = $next($request);
