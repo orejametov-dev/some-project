@@ -22,7 +22,7 @@ class WriteLogsToTable extends Command
      *
      * @var string
      */
-    protected $description = 'Writing logs to table logs every ten minutesы';
+    protected $description = 'Writing logs to table logs every ten minutes';
 
     /**
      * Create a new command instance.

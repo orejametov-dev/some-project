@@ -8,18 +8,16 @@ use Illuminate\Support\Facades\Cache;
 
 class TimeLogger
 {
-    private $key;
-    private $cached_info;
+    public const CACHE_KEY = "logs_";
+    public const CACHE_TTL = 24 * 60;
     public $name;
     public $started_at;
     public $finished_at;
     public $diff;
 
-    public function __construct($key, $name)
+    public function __construct($name)
     {
-        $this->key = $key;
         $this->name = $name;
-        $this->cached_info = Cache::tags(CacheService::LOGS)->get($this->key);
     }
 
     public function start()
@@ -36,25 +34,25 @@ class TimeLogger
 
     private function save()
     {
-
-        if (empty($this->cached_info)) {
-            Cache::tags(CacheService::LOGS)->put($this->key, [
+        $cached_info = Cache::get(self::CACHE_KEY);
+        if (empty($cached_info)) {
+            Cache::put(self::CACHE_KEY, [
                 [
                     'name' => $this->name,
                     'started_at' => $this->started_at,
                     'finished_at' => $this->finished_at,
                     'diff' => $this->diff,
                 ]
-            ]);
+            ], self::CACHE_TTL);
         } else {
-            Cache::tags(CacheService::LOGS)->put($this->key, array_merge($this->cached_info,[
+            Cache::put(self::CACHE_KEY, array_merge($cached_info,[
                 [
                     'name' => $this->name,
                     'started_at' => $this->started_at,
                     'finished_at' => $this->finished_at,
                     'diff' => $this->diff,
                 ]
-            ]));
+            ]), self::CACHE_TTL);
         }
     }
 }
