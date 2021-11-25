@@ -58,7 +58,5 @@ class TimeLogger
                 ]), self::CACHE_TTL);
             }
         }
-
-        dd(Cache::get(self::CACHE_KEY));
     }
 }
