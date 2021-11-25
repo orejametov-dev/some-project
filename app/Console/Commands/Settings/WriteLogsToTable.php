@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\Settings;
 
-use App\Services\CacheService;
+use App\Services\TimeLogger;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -35,7 +35,7 @@ class WriteLogsToTable extends Command
     public function __construct()
     {
         parent::__construct();
-        $this->logs = Cache::tags(CacheService::LOGS)->get('logs_');
+        $this->logs = Cache::get(TimeLogger::CACHE_KEY);
     }
 
     /**
@@ -45,9 +45,24 @@ class WriteLogsToTable extends Command
      */
     public function handle()
     {
-        if (!empty($this->logs)) {
-            DB::connection('logs')->table('logs')->insert($this->logs);
-            Cache::tags(CacheService::LOGS)->flush();
+        try {
+            if (!empty($this->logs)) {
+                foreach (array_chunk($this->logs, 10000) as $chunk_logs) {
+                    DB::connection('logs')
+                        ->table('logs')
+                        ->insert($chunk_logs);
+                }
+
+                Cache::forget(TimeLogger::CACHE_KEY);
+            }
+        } catch (\Exception $e) {
+            if (app()->bound('sentry')) {
+                app('sentry')->captureException($e);
+            }
+
+            Cache::forget(TimeLogger::CACHE_KEY);
         }
     }
+
+
 }

@@ -34,25 +34,31 @@ class TimeLogger
 
     private function save()
     {
-        $cached_info = Cache::get(self::CACHE_KEY);
-        if (empty($cached_info)) {
-            Cache::put(self::CACHE_KEY, [
-                [
-                    'name' => $this->name,
-                    'started_at' => $this->started_at,
-                    'finished_at' => $this->finished_at,
-                    'diff' => $this->diff,
-                ]
-            ], self::CACHE_TTL);
-        } else {
-            Cache::put(self::CACHE_KEY, array_merge($cached_info,[
-                [
-                    'name' => $this->name,
-                    'started_at' => $this->started_at,
-                    'finished_at' => $this->finished_at,
-                    'diff' => $this->diff,
-                ]
-            ]), self::CACHE_TTL);
+
+        if (config('local_services.time_logger')) {
+            $cached_info = Cache::get(self::CACHE_KEY);
+
+            if (empty($cached_info)) {
+                Cache::put(self::CACHE_KEY, [
+                    [
+                        'name' => $this->name,
+                        'started_at' => $this->started_at,
+                        'finished_at' => $this->finished_at,
+                        'diff' => $this->diff,
+                    ]
+                ], self::CACHE_TTL);
+            } else {
+                Cache::put(self::CACHE_KEY, array_merge($cached_info, [
+                    [
+                        'name' => $this->name,
+                        'started_at' => $this->started_at,
+                        'finished_at' => $this->finished_at,
+                        'diff' => $this->diff,
+                    ]
+                ]), self::CACHE_TTL);
+            }
         }
+
+        dd(Cache::get(self::CACHE_KEY));
     }
 }
