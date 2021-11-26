@@ -3,7 +3,6 @@
 namespace App\Modules\AlifshopMerchants\Models;
 
 use App\Modules\AlifshopMerchants\Traits\AlifshopMerchantRelationshipsTrait;
-use App\Modules\Companies\Models\Company;
 use App\Modules\Merchants\Traits\MerchantFileTrait;
 use App\Modules\Merchants\Traits\MerchantStatusesTrait;
 use App\Traits\SortableByQueryParams;
@@ -22,7 +21,6 @@ use Illuminate\Http\Request;
  * @property string|null $information
  * @property int|null $maintainer_id
  * @property int $company_id
- * @property-read Company $company
  * @method static Builder|AlifshopMerchant filterRequest(Request $request)
  * @method static Builder|AlifshopMerchant orderRequest(Request $request, string $default_order_str = 'id:desc')
  * @method static Builder|AlifshopMerchant query()
@@ -105,7 +103,7 @@ class AlifshopMerchant extends Model
             $query->where('token', $token);
         }
 
-        if($status_id = $request->query('status_id')) {
+        if ($status_id = $request->query('status_id')) {
             $query->where('status_id', $status_id);
         }
 

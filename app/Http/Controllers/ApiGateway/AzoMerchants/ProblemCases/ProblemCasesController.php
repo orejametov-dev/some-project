@@ -31,7 +31,7 @@ class ProblemCasesController extends ApiBaseController
 
     public function show($id)
     {
-        $problemCase = ProblemCase::findOrFail($id);
+        $problemCase = ProblemCase::with('tags')->findOrFail($id);
 
         return $problemCase;
     }

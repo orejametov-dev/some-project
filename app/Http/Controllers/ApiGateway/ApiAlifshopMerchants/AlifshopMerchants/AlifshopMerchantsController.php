@@ -6,15 +6,13 @@ use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\AlifshopMerchant\AlifshopMerchantStoreFileRequest;
 use App\HttpServices\Auth\AuthMicroService;
+use App\HttpServices\Company\CompanyService;
 use App\Modules\AlifshopMerchants\DTO\AlifshopMerchantDTO;
 use App\Modules\AlifshopMerchants\Models\AlifshopMerchant;
 use App\Modules\AlifshopMerchants\Services\AlifshopMerchantService;
-use App\Modules\Companies\Models\Company;
-use App\Modules\Companies\Models\Module;
 use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\Store;
 use App\Modules\Merchants\Models\Tag;
-use App\Modules\Merchants\Services\Merchants\MerchantsService;
 use App\Services\Alifshop\AlifshopService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -55,22 +53,22 @@ class AlifshopMerchantsController extends ApiBaseController
             'company_id' => 'required|integer'
         ]);
 
-        $company = Company::query()->findOrFail($request->input('company_id'));
+        $company = CompanyService::getCompanyById($request->input('company_id'));
 
-        if (AlifshopMerchant::query()->where('company_id', $company->id)->exists()) {
+        if (AlifshopMerchant::query()->where('company_id', $company['id'])->exists()) {
             return response()->json(['message' => 'Указаная компания уже имеет алифшоп модуль'], 400);
         }
 
         $alifshop_merchant = $alifshopMerchantService->create(new AlifshopMerchantDTO(
-            id: $company->id,
-            name: $company->name,
-            legal_name: $company->legal_name,
+            id: $company['id'],
+            name: $company['name'],
+            legal_name: $company['legal_name'],
             information: null,
             maintainer_id: $this->user->id,
-            company_id: $company->id
+            company_id: $company['id']
         ));
 
-        $company->modules()->attach([Module::ALIFSHOP_MERCHANT]);
+        CompanyService::setStatusExist($alifshop_merchant->company_id, 'alifshop');
 
         Store::query()
             ->where('merchant_id', $alifshop_merchant->id)
@@ -90,6 +88,7 @@ class AlifshopMerchantsController extends ApiBaseController
         $validatedData = $this->validate($request, [
             'name' => 'required|max:255|unique:alifshop_merchants,name,' . $alifshop_merchant_id,
             'legal_name' => 'nullable|max:255',
+            'legal_name_prefix' => 'nullable|string',
             'token' => 'required|max:255|unique:alifshop_merchants,alifshop_slug,' . $alifshop_merchant_id,
             'alifshop_slug' => 'required|max:255|unique:alifshop_merchants,alifshop_slug,' . $alifshop_merchant_id,
             'information' => 'nullable|string',
@@ -99,6 +98,7 @@ class AlifshopMerchantsController extends ApiBaseController
         $oldToken = $alifshop_merchant->token;
         $alifshop_merchant->update($validatedData);
         $alifshop_merchant->old_token = $oldToken;
+
 
         Cache::tags($alifshop_merchant->id)->flush();
         Cache::tags('alifshop_merchants')->flush();
@@ -166,7 +166,7 @@ class AlifshopMerchantsController extends ApiBaseController
             'created_by_name' => $this->user->name
         ]);
 
-        $alifshop_merchant->company->modules()->updateExistingPivot(Module::ALIFSHOP_MERCHANT, ['active' => $alifshop_merchant->active]);
+        CompanyService::setStatusNotActive($alifshop_merchant->company_id, 'alifshop');
 
         Cache::tags($alifshop_merchant->id)->flush();
         Cache::tags('alifshop_merchants')->flush();
