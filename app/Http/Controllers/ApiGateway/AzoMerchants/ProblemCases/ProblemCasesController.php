@@ -4,15 +4,17 @@
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases;
 
 
+use App\Exceptions\ApiBusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
-use App\HttpServices\Hooks\DTO\HookData;
-use App\Jobs\SendHook;
 use App\HttpServices\Core\CoreService;
+use App\HttpServices\Hooks\DTO\HookData;
+use App\HttpServices\Notify\NotifyMicroService;
+use App\Jobs\SendHook;
 use App\Modules\Merchants\Models\ProblemCase;
 use App\Modules\Merchants\Models\ProblemCaseTag;
+use App\Services\SMS\SmsMessages;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class ProblemCasesController extends ApiBaseController
 {
@@ -46,10 +48,30 @@ class ProblemCasesController extends ApiBaseController
 
         if ($request->has('credit_number') and $request->input('credit_number')) {
             $data = CoreService::getApplicationDataByContractNumber($request->input('credit_number'));
+
+            if ($problem_case = ProblemCase::query()->where('credit_number', $request->input('credit_number'))->orderByDesc('id')->first()) {
+                if ($problem_case->status_id != ProblemCase::FINISHED) {
+                    throw new ApiBusinessException('На данный кредитный номер был уже создан проблемный кейс', 'problem_case_exist', [
+                        'ru' => "На данный кредитный номер был уже создан проблемный кейс",
+                        'uz' => ''
+                    ], 400);
+                }
+            }
+
             $problemCase->credit_number = $request->input('credit_number');
             $problemCase->credit_contract_date = $data['contract_date'];
         } elseif ($request->has('application_id') and $request->input('application_id')) {
             $data = CoreService::getApplicationDataByApplicationId($request->input('application_id'));
+
+            if ($problem_case = ProblemCase::query()->where('application_id', $request->input('application_id'))->orderByDesc('id')->first()) {
+                if ($problem_case->status_id != ProblemCase::FINISHED) {
+                    throw new ApiBusinessException('На данный кредитный номер был уже создан проблемный кейс', 'problem_case_exist', [
+                        'ru' => "На данный кредитный номер был уже создан проблемный кейс",
+                        'uz' => ''
+                    ], 400);
+                }
+            }
+
             $problemCase->application_id = $request->input('application_id');
             $problemCase->application_created_at = Carbon::parse($data['created_at'])->format('Y-m-d');
 
@@ -125,7 +147,7 @@ class ProblemCasesController extends ApiBaseController
         $request->validate([
             'tags' => 'required|array',
             'tags.*.name' => 'required|string',
-            'tags.*.type_id' => 'required|integer|in:' . ProblemCaseTag::BEFORE_TYPE .', '. ProblemCaseTag::AFTER_TYPE
+            'tags.*.type_id' => 'required|integer|in:' . ProblemCaseTag::BEFORE_TYPE . ', ' . ProblemCaseTag::AFTER_TYPE
         ]);
 
         $problemCase = ProblemCase::findOrFail($id);
@@ -150,9 +172,18 @@ class ProblemCasesController extends ApiBaseController
                 . ProblemCase::DONE . ','
                 . ProblemCase::FINISHED
         ]);
-        $problemCase = ProblemCase::findOrFail($id);
+        $problemCase = ProblemCase::query()->findOrFail($id);
         $problemCase->setStatus($request->input('status_id'));
         $problemCase->save();
+
+        if ($problemCase->status_id === ProblemCase::FINISHED) {
+            preg_match("/" . preg_quote("9989") . "(.*)/", $problemCase->search_index, $phone);
+
+            if (!empty($phone)) {
+                $message = SmsMessages::onFinishedProblemCases();
+                NotifyMicroService::sendSms(array_shift($phone), $message);
+            }
+        }
 
         SendHook::dispatch(new HookData(
             service: 'merchants',
@@ -171,9 +202,9 @@ class ProblemCasesController extends ApiBaseController
         return $problemCase;
     }
 
-    public function getProblemCasesOfMerchantUser($user_id,Request $request)
+    public function getProblemCasesOfMerchantUser($user_id, Request $request)
     {
-        $problemCases = ProblemCase::query()->with('tags', function($query) {
+        $problemCases = ProblemCase::query()->with('tags', function ($query) {
             $query->where('type_id', 2);
         })->where('created_by_id', $user_id)
             ->orderByDesc('id');
