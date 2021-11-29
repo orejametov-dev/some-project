@@ -53,7 +53,7 @@ class ProblemCasesController extends ApiBaseController
                 if ($problem_case->status_id != ProblemCase::FINISHED) {
                     throw new ApiBusinessException('На данный кредитный номер был уже создан проблемный кейс', 'problem_case_exist', [
                         'ru' => "На данный кредитный номер был уже создан проблемный кейс",
-                        'uz' => ''
+                        'uz' => 'Bu kredit raqami uchun muammoli holat allaqachon yaratilgan'
                     ], 400);
                 }
             }
@@ -66,8 +66,8 @@ class ProblemCasesController extends ApiBaseController
             if ($problem_case = ProblemCase::query()->where('application_id', $request->input('application_id'))->orderByDesc('id')->first()) {
                 if ($problem_case->status_id != ProblemCase::FINISHED) {
                     throw new ApiBusinessException('На данный кредитный номер был уже создан проблемный кейс', 'problem_case_exist', [
-                        'ru' => "На данный кредитный номер был уже создан проблемный кейс",
-                        'uz' => ''
+                        'ru' => 'На данный кредитный номер был уже создан проблемный кейс',
+                        'uz' => 'Bu kredit raqami uchun muammoli holat allaqachon yaratilgan'
                     ], 400);
                 }
             }
