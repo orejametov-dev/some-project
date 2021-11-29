@@ -49,13 +49,12 @@ class ProblemCasesController extends ApiBaseController
         if ($request->has('credit_number') and $request->input('credit_number')) {
             $data = CoreService::getApplicationDataByContractNumber($request->input('credit_number'));
 
-            if ($problem_case = ProblemCase::query()->where('credit_number', $request->input('credit_number'))->orderByDesc('id')->first()) {
-                if ($problem_case->status_id != ProblemCase::FINISHED) {
-                    throw new ApiBusinessException('На данный кредитный номер был уже создан проблемный кейс', 'problem_case_exist', [
-                        'ru' => "На данный кредитный номер был уже создан проблемный кейс",
-                        'uz' => 'Bu kredit raqami uchun muammoli holat allaqachon yaratilgan'
-                    ], 400);
-                }
+            if (ProblemCase::query()->where('credit_number', $request->input('credit_number'))
+                    ->orderByDesc('id')->first()->status_id != ProblemCase::FINISHED) {
+                throw new ApiBusinessException('На данный кредитный номер был уже создан проблемный кейс', 'problem_case_exist', [
+                    'ru' => "На данный кредитный номер был уже создан проблемный кейс",
+                    'uz' => 'Bu kredit raqami uchun muammoli holat allaqachon yaratilgan'
+                ], 400);
             }
 
             $problemCase->credit_number = $request->input('credit_number');
@@ -63,13 +62,12 @@ class ProblemCasesController extends ApiBaseController
         } elseif ($request->has('application_id') and $request->input('application_id')) {
             $data = CoreService::getApplicationDataByApplicationId($request->input('application_id'));
 
-            if ($problem_case = ProblemCase::query()->where('application_id', $request->input('application_id'))->orderByDesc('id')->first()) {
-                if ($problem_case->status_id != ProblemCase::FINISHED) {
+            if (ProblemCase::query()->where('application_id', $request->input('application_id'))
+                    ->orderByDesc('id')->first()->status_id != ProblemCase::FINISHED) {
                     throw new ApiBusinessException('На данный кредитный номер был уже создан проблемный кейс', 'problem_case_exist', [
                         'ru' => 'На данный кредитный номер был уже создан проблемный кейс',
                         'uz' => 'Bu kredit raqami uchun muammoli holat allaqachon yaratilgan'
                     ], 400);
-                }
             }
 
             $problemCase->application_id = $request->input('application_id');
