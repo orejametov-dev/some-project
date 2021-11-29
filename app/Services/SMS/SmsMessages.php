@@ -10,4 +10,11 @@ class SmsMessages
         $uzbek_text = ":Menejerga kodni ayting: $code";
         return $russian_text . PHP_EOL . $uzbek_text;
     }
+
+    public static function onFinishedProblemCases()
+    {
+        $russian_text = "hello";
+        $uzbek_text = ":Assolom";
+        return $russian_text . PHP_EOL . $uzbek_text;
+    }
 }
