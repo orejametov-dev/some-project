@@ -97,7 +97,7 @@ class ProblemCasesController extends ApiBaseController
 
     public function show($id)
     {
-        $problemCase = ProblemCase::with('tags')->findOrFail($id);
+        $problemCase = ProblemCase::with('tags'  , 'comments')->findOrFail($id);
 
         return $problemCase;
     }
@@ -111,8 +111,8 @@ class ProblemCasesController extends ApiBaseController
         ]);
 
         $problemCase = ProblemCase::findOrFail($id);
-        $problemCase->manager_comment = $request->input('manager_comment');
-        $problemCase->merchant_comment = $request->input('merchant_comment');
+        $problemCase->comments()->create(['body' => $request->input('manager_comment') , 'from_manager' => true]);
+        $problemCase->comments()->create(['body' => $request->input('merchant_comment') , 'from_merchant' => true]);
         $problemCase->deadline = $request->input('deadline');
 
         $problemCase->save();
