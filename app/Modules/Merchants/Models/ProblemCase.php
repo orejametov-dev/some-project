@@ -91,8 +91,6 @@ class ProblemCase extends Model implements SimpleStateMachinable
         'created_by_id',
         'created_by_name',
         'created_from_name',
-        'manager_comment',
-        'merchant_comment',
         'credit_number',
         'application_id',
         'client_id',
@@ -124,6 +122,11 @@ class ProblemCase extends Model implements SimpleStateMachinable
     {
         return $this->belongsToMany(ProblemCaseTag::class, 'problem_case_tag', 'problem_case_id', 'problem_case_tag_id')
             ->where('type_id', ProblemCaseTag::BEFORE_TYPE);
+    }
+
+    public function comments()
+    {
+        return $this->morphToMany(Comment::class, 'comment', 'problem_case_comment', 'problem_case_id', 'comment_id');
     }
 
     public function scopeFilterRequests(Builder $query, \Illuminate\Http\Request $request)
