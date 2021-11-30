@@ -4,12 +4,18 @@
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases;
 
 
+use App\Exceptions\ApiBusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
+use App\HttpServices\Core\CoreService;
 use App\HttpServices\Hooks\DTO\HookData;
+use App\HttpServices\Notify\NotifyMicroService;
 use App\Jobs\SendHook;
 use App\Modules\Merchants\Models\ProblemCase;
 use App\Modules\Merchants\Models\ProblemCaseTag;
+use App\Services\SMS\SmsMessages;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Arr;
 
 class ProblemCasesController extends ApiBaseController
 {
@@ -84,9 +90,19 @@ class ProblemCasesController extends ApiBaseController
                 . ProblemCase::DONE . ','
                 . ProblemCase::FINISHED
         ]);
-        $problemCase = ProblemCase::findOrFail($id);
+        $problemCase = ProblemCase::query()->findOrFail($id);
         $problemCase->setStatus($request->input('status_id'));
         $problemCase->save();
+
+        if ($problemCase->isStatusFinished()) {
+            preg_match("/" . preg_quote("9989") . "(.*)/", $problemCase->search_index, $phone);
+            $name = explode('9989',$problemCase->search_index);
+
+            if (!empty($phone)) {
+                $message = SmsMessages::onFinishedProblemCases(Arr::first($name), $problemCase->id);
+                NotifyMicroService::sendSms(Arr::first($phone), $message);
+            }
+        }
 
         SendHook::dispatch(new HookData(
             service: 'merchants',
