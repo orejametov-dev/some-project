@@ -15,6 +15,7 @@ use App\Modules\Merchants\Models\ProblemCaseTag;
 use App\Services\SMS\SmsMessages;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Arr;
 
 class ProblemCasesController extends ApiBaseController
 {
@@ -50,10 +51,11 @@ class ProblemCasesController extends ApiBaseController
             $data = CoreService::getApplicationDataByContractNumber($request->input('credit_number'));
 
             if (ProblemCase::query()->where('credit_number', $request->input('credit_number'))
-                    ->orderByDesc('id')->first()->status_id != ProblemCase::FINISHED) {
+                ->where('status_id', '!=' ,ProblemCase::FINISHED)
+                ->orderByDesc('id')->exists()) {
                 throw new ApiBusinessException('На данный кредитный номер был уже создан проблемный кейс', 'problem_case_exist', [
                     'ru' => "На данный кредитный номер был уже создан проблемный кейс",
-                    'uz' => 'Bu kredit raqami uchun muammoli holat allaqachon yaratilgan'
+                    'uz' => 'Bu kredit raqamiga tegishli muammoli keys avval yuborilgan.'
                 ], 400);
             }
 
@@ -62,17 +64,17 @@ class ProblemCasesController extends ApiBaseController
         } elseif ($request->has('application_id') and $request->input('application_id')) {
             $data = CoreService::getApplicationDataByApplicationId($request->input('application_id'));
 
-            if (ProblemCase::query()->where('application_id', $request->input('application_id'))
-                    ->orderByDesc('id')->first()->status_id != ProblemCase::FINISHED) {
-                    throw new ApiBusinessException('На данный кредитный номер был уже создан проблемный кейс', 'problem_case_exist', [
-                        'ru' => 'На данный кредитный номер был уже создан проблемный кейс',
-                        'uz' => 'Bu kredit raqami uchun muammoli holat allaqachon yaratilgan'
-                    ], 400);
+            if (ProblemCase::query()->where('credit_number', $request->input('credit_number'))
+                ->where('status_id', '!=',ProblemCase::FINISHED)
+                ->orderByDesc('id')->exists()) {
+                throw new ApiBusinessException('На данную заявку был уже создан проблемный кейс', 'problem_case_exist', [
+                    'ru' => 'На данную заявку был уже создан проблемный кейс',
+                    'uz' => 'Bu arizaga tegishli muammoli keys avval yuborilgan.'
+                ], 400);
             }
 
             $problemCase->application_id = $request->input('application_id');
             $problemCase->application_created_at = Carbon::parse($data['created_at'])->format('Y-m-d');
-
         }
 
         $problemCase->merchant_id = $data['merchant_id'];
@@ -96,6 +98,14 @@ class ProblemCasesController extends ApiBaseController
 
         $problemCase->setStatusNew();
         $problemCase->save();
+
+        preg_match("/" . preg_quote("9989") . "(.*)/", $problemCase->search_index, $phone);
+        $name = explode('9989',$problemCase->search_index);
+
+        if (!empty($phone)) {
+            $message = SmsMessages::onNewProblemCases(Arr::first($name), $problemCase->id);
+            NotifyMicroService::sendSms(Arr::first($phone), $message);
+        }
 
         SendHook::dispatch(new HookData(
             service: 'merchants',
@@ -174,12 +184,13 @@ class ProblemCasesController extends ApiBaseController
         $problemCase->setStatus($request->input('status_id'));
         $problemCase->save();
 
-        if ($problemCase->status_id === ProblemCase::FINISHED) {
+        if ($problemCase->isStatusFinished()) {
             preg_match("/" . preg_quote("9989") . "(.*)/", $problemCase->search_index, $phone);
+            $name = explode('9989',$problemCase->search_index);
 
             if (!empty($phone)) {
-                $message = SmsMessages::onFinishedProblemCases();
-                NotifyMicroService::sendSms(array_shift($phone), $message);
+                $message = SmsMessages::onFinishedProblemCases(Arr::first($name), $problemCase->id);
+                NotifyMicroService::sendSms(Arr::first($phone), $message);
             }
         }
 
