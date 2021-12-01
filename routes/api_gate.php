@@ -18,3 +18,6 @@ Route::get('/merchants/{id}', [MerchantsController::class, 'show']);
 Route::post('/merchants/verify', [MerchantsController::class, 'verifyToken']);
 
 Route::get('credits/{tin}/get-merchant-by-tin', [MerchantsController::class, 'getMerchantByTinForCredits']);
+
+Route::post('/problem-cases', [\App\Http\Controllers\ApiGate\ProblemCase\ProblemCasesController::class, 'store']);
+
