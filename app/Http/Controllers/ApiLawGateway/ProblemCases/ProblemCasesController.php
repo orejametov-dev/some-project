@@ -9,6 +9,7 @@ use App\HttpServices\Core\CoreService;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\HttpServices\Notify\NotifyMicroService;
 use App\Jobs\SendHook;
+use App\Jobs\SendProblemCaseSms;
 use App\Modules\Merchants\Models\ProblemCase;
 use App\Services\SMS\SmsMessages;
 use Carbon\Carbon;
@@ -79,14 +80,6 @@ class ProblemCasesController extends ApiBaseController
         $problemCase->setStatusNew();
         $problemCase->save();
 
-        preg_match("/" . preg_quote("9989") . "(.*)/", $problemCase->search_index, $phone);
-        $name = explode('9989', $problemCase->search_index);
-
-        if (!empty($phone)) {
-            $message = SmsMessages::onNewProblemCases(Arr::first($name), $problemCase->id);
-            NotifyMicroService::sendSms(Arr::first($phone), $message);
-        }
-
         SendHook::dispatch(new HookData(
             service: 'merchants',
             hookable_type: $problemCase->getTable(),
@@ -100,6 +93,12 @@ class ProblemCasesController extends ApiBaseController
             action_at: null,
             created_by_str: $this->user->name,
         ));
+
+        preg_match("/" . preg_quote("9989") . "(.*)/", $problemCase->search_index, $phone);
+        $name = explode('9989', $problemCase->search_index);
+
+        SendProblemCaseSms::dispatch($name , $phone , $problemCase->id);
+
 
         return $problemCase;
     }
