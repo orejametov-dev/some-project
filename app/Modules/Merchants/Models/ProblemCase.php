@@ -160,8 +160,11 @@ class ProblemCase extends Model implements SimpleStateMachinable
         }
 
         if ($q = $request->query('q')) {
-                $query->where('search_index', 'LIKE', '%' . $q . '%')
-                    ->orWhere('id' , $q);
+            if (is_null($query->where('id', $q))) {
+                $query->where('id', $q);
+            } else {
+                $query->where('search_index', 'LIKE', '%' . $q . '%');
+            }
         }
 
         if ($request->query('tag_id')) {
