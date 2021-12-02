@@ -5,14 +5,16 @@ namespace App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases;
 
 
 use App\Http\Controllers\ApiGateway\ApiBaseController;
+use App\HttpServices\Core\CoreService;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
-use App\HttpServices\Core\CoreService;
+use App\Modules\Merchants\DTO\Comments\CommentDTO;
+use App\Modules\Merchants\Models\Comment;
 use App\Modules\Merchants\Models\ProblemCase;
 use App\Modules\Merchants\Models\ProblemCaseTag;
+use App\Modules\Merchants\Services\Comments\CommentService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class ProblemCasesController extends ApiBaseController
 {
@@ -97,12 +99,12 @@ class ProblemCasesController extends ApiBaseController
 
     public function show($id)
     {
-        $problemCase = ProblemCase::with('tags'  , 'comments')->findOrFail($id);
+        $problemCase = ProblemCase::with('tags')->findOrFail($id);
 
         return $problemCase;
     }
 
-    public function update($id, Request $request)
+    public function update($id, Request $request , CommentService $commentService)
     {
         $this->validate($request, [
             'manager_comment' => 'nullable|string',
@@ -111,9 +113,27 @@ class ProblemCasesController extends ApiBaseController
         ]);
 
         $problemCase = ProblemCase::findOrFail($id);
-        $problemCase->comments()->create(['body' => $request->input('manager_comment') , 'from_manager' => true]);
-        $problemCase->comments()->create(['body' => $request->input('merchant_comment') , 'from_merchant' => true]);
         $problemCase->deadline = $request->input('deadline');
+
+        if (!empty($request->input('manager_comment'))) {
+            $commentService->create(new CommentDTO(
+                commentable_type: Comment::PROBLEM_CASE_FOR_PRM,
+                commentable_id: $problemCase->id,
+                body: $request->input('manager_comment'),
+                created_by_id: $this->user->id,
+                created_by_name: $this->user->name
+            ));
+        }
+
+        if (!empty($request->input('merchant_comment'))) {
+            $commentService->create(new CommentDTO(
+                commentable_type: Comment::PROBLEM_CASE_FOR_MERCHANT,
+                commentable_id: $problemCase->id,
+                body: $request->input('merchant_comment'),
+                created_by_id: $this->user->id,
+                created_by_name: $this->user->name
+            ));
+        }
 
         $problemCase->save();
 
@@ -125,7 +145,7 @@ class ProblemCasesController extends ApiBaseController
         $request->validate([
             'tags' => 'required|array',
             'tags.*.name' => 'required|string',
-            'tags.*.type_id' => 'required|integer|in:' . ProblemCaseTag::BEFORE_TYPE .', '. ProblemCaseTag::AFTER_TYPE
+            'tags.*.type_id' => 'required|integer|in:' . ProblemCaseTag::BEFORE_TYPE . ', ' . ProblemCaseTag::AFTER_TYPE
         ]);
 
         $problemCase = ProblemCase::findOrFail($id);
@@ -171,9 +191,9 @@ class ProblemCasesController extends ApiBaseController
         return $problemCase;
     }
 
-    public function getProblemCasesOfMerchantUser($user_id,Request $request)
+    public function getProblemCasesOfMerchantUser($user_id, Request $request)
     {
-        $problemCases = ProblemCase::query()->with('tags', function($query) {
+        $problemCases = ProblemCase::query()->with('tags', function ($query) {
             $query->where('type_id', 2);
         })->where('created_by_id', $user_id)
             ->orderByDesc('id');

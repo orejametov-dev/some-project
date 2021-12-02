@@ -126,7 +126,7 @@ class ProblemCase extends Model implements SimpleStateMachinable
 
     public function comments()
     {
-        return $this->morphToMany(Comment::class, 'comment', 'problem_case_comment', 'problem_case_id', 'comment_id');
+        return $this->morphMany(Comment::class, 'commentable');
     }
 
     public function scopeFilterRequests(Builder $query, \Illuminate\Http\Request $request)
