@@ -113,7 +113,7 @@ class ProblemCasesController extends ApiBaseController
             return ProblemCase::query()
                 ->whereNull('engaged_by_id')
                 ->whereNull('engaged_by_name')
-                ->byMerchant(1)
+                ->byMerchant($this->merchant_id)
                 ->filterRequests($request)->onlyNew()->count();
         });
 
