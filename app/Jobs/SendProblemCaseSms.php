@@ -16,8 +16,7 @@ class SendProblemCaseSms implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public string $name;
-    public int $problem_case_id;
+    public string $message;
     public string $phone;
 
     /**
@@ -25,11 +24,11 @@ class SendProblemCaseSms implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($name , $phone , $problem_case_id)
+    public function __construct($phone , $message)
     {
-        $this->name = Arr::first($name);
+        self::onQueue('service-notify');
         $this->phone = Arr::first($phone);
-        $this->problem_case_id = $problem_case_id;
+        $this->message = $message;
     }
 
     /**
@@ -39,7 +38,6 @@ class SendProblemCaseSms implements ShouldQueue
      */
     public function handle()
     {
-            $message = SmsMessages::onNewProblemCases($this->name, $this->problem_case_id);
-            NotifyMicroService::sendSms($this->phone, $message);
+        NotifyMicroService::sendSms($this->phone, $this->message);
     }
 }

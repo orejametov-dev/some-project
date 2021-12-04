@@ -95,8 +95,9 @@ class ProblemCasesController extends ApiBaseController
 
         preg_match("/" . preg_quote("9989") . "(.*)/", $problemCase->search_index, $phone);
         $name = explode('9989', $problemCase->search_index);
+        $message = SmsMessages::onNewProblemCases($name, $problemCase->id);
 
-        SendProblemCaseSms::dispatch($name , $phone , $problemCase->id);
+        SendProblemCaseSms::dispatch($phone , $message);
 
         return $problemCase;
     }
