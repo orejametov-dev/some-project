@@ -96,7 +96,7 @@ class ProblemCasesController extends ApiBaseController
         $name = preg_replace('/[^\\/\-a-z\s]/i', '', $problemCase->search_index);
 
         if (!empty($phone)) {
-            $message = SmsMessages::onNewProblemCases(Arr::first($name), $problemCase->id);
+            $message = SmsMessages::onNewProblemCases($name, $problemCase->id);
             NotifyMicroService::sendSms(Arr::first($phone), $message);
         }
 
