@@ -102,6 +102,8 @@ Route::prefix('merchants/problem-cases')
         Route::match(['put', 'patch'], '/{id}/attach-tags', [\App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases\ProblemCasesController::class, 'attachTags']);
         Route::match(['put', 'patch'], '/{id}/set-status', [\App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases\ProblemCasesController::class, 'setStatus']);
         Route::match(['put', 'patch'], '/{id}/set-assigned', [\App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases\ProblemCasesController::class, 'setAssigned']);
+        Route::match(['put', 'patch'], '/{id}/set-manager-comment', [\App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases\ProblemCasesController::class, 'setManagerComment']);
+        Route::match(['put', 'patch'], '/{id}/set-merchant-comment', [\App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases\ProblemCasesController::class, 'setMerchantComment']);
         Route::get('/{user_id}/consultant', [\App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases\ProblemCasesController::class, 'getProblemCasesOfMerchantUser']);
     });
 

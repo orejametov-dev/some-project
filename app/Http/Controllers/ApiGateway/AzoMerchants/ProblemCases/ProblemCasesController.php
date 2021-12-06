@@ -16,6 +16,7 @@ use App\Modules\Merchants\Services\Comments\CommentService;
 use App\Services\SMS\SmsMessages;
 use Arr;
 use Illuminate\Http\Request;
+use Laravel\Horizon\Repositories\RedisWorkloadRepository;
 
 class ProblemCasesController extends ApiBaseController
 {
@@ -42,40 +43,51 @@ class ProblemCasesController extends ApiBaseController
         return $problemCase;
     }
 
-    public function update($id, Request $request, CommentService $commentService)
+    public function update($id, Request $request)
     {
         $this->validate($request, [
-            'manager_comment' => 'nullable|string',
-            'merchant_comment' => 'nullable|string',
             'deadline' => 'nullable|date_format:Y-m-d',
         ]);
 
         $problemCase = ProblemCase::findOrFail($id);
         $problemCase->deadline = $request->input('deadline');
-
-        if (!empty($request->input('manager_comment'))) {
-            $commentService->create(new CommentDTO(
-                commentable_type: Comment::PROBLEM_CASE_FOR_PRM,
-                commentable_id: $problemCase->id,
-                body: $request->input('manager_comment'),
-                created_by_id: $this->user->id,
-                created_by_name: $this->user->name
-            ));
-        }
-
-        if (!empty($request->input('merchant_comment'))) {
-            $commentService->create(new CommentDTO(
-                commentable_type: Comment::PROBLEM_CASE_FOR_MERCHANT,
-                commentable_id: $problemCase->id,
-                body: $request->input('merchant_comment'),
-                created_by_id: $this->user->id,
-                created_by_name: $this->user->name
-            ));
-        }
-
         $problemCase->save();
 
         return $problemCase;
+    }
+
+    public function setManagerComment($id , Request $request, CommentService $commentService)
+    {
+        $this->validate($request, [
+            'manager_comment' => 'required|string',
+        ]);
+
+        $managerComment = $commentService->create(new CommentDTO(
+            commentable_type: Comment::PROBLEM_CASE_FOR_PRM,
+            commentable_id: $id,
+            body: $request->input('manager_comment'),
+            created_by_id: $this->user->id,
+            created_by_name: $this->user->name
+        ));
+
+        return $managerComment;
+    }
+
+    public function setMerchantComment($id , Request $request , CommentService $commentService)
+    {
+        $this->validate($request, [
+            'merchant_comment' => 'required|string',
+        ]);
+
+        $merchantComment = $commentService->create(new CommentDTO(
+            commentable_type: Comment::PROBLEM_CASE_FOR_MERCHANT,
+            commentable_id: $id,
+            body: $request->input('merchant_comment'),
+            created_by_id: $this->user->id,
+            created_by_name: $this->user->name
+        ));
+
+        return $merchantComment;
     }
 
     public function attachTags(Request $request, $id)
