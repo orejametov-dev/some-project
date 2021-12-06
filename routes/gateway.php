@@ -10,34 +10,33 @@ use App\Http\Controllers\ApiGateway\ApiAlifshopMerchants\AlifshopStores\Alifshop
 use Illuminate\Support\Facades\Route;
 
 
-
 //AlifshopMerchants
 Route::prefix('alifshop-merchants/stores')
     ->group(function () {
-        Route::get('/' , [AlifshopMerchantStoresController::class , 'index']);
-        Route::get('/{id}' , [AlifshopMerchantStoresController::class , 'show']);
+        Route::get('/', [AlifshopMerchantStoresController::class, 'index']);
+        Route::get('/{id}', [AlifshopMerchantStoresController::class, 'show']);
         Route::post('/', [AlifshopMerchantStoresController::class, 'store']);
         Route::match(['put', 'patch'], '/{id}', [AlifshopMerchantStoresController::class, 'update']);
         Route::match(['put', 'patch'], '/{id}/toggle', [AlifshopMerchantStoresController::class, 'toggle']);
-        Route::match(['put', 'patch'],'/{id}/attach-alifshop' , [AlifshopMerchantStoresController::class, 'attachAlifshop']);
+        Route::match(['put', 'patch'], '/{id}/attach-alifshop', [AlifshopMerchantStoresController::class, 'attachAlifshop']);
     });
 
 Route::prefix('alifshop-merchants/users')
     ->group(function () {
-        Route::get('/' , [AlifshopMerchantAccessController::class, 'index']);
-        Route::get('/{id}' , [AlifshopMerchantAccessController::class, 'show']);
-        Route::post('/' , [AlifshopMerchantAccessController::class, 'store']);
-        Route::match(['put' , 'patch'], '/{id}' , [AlifshopMerchantAccessController::class, 'update']);
+        Route::get('/', [AlifshopMerchantAccessController::class, 'index']);
+        Route::get('/{id}', [AlifshopMerchantAccessController::class, 'show']);
+        Route::post('/', [AlifshopMerchantAccessController::class, 'store']);
+        Route::match(['put', 'patch'], '/{id}', [AlifshopMerchantAccessController::class, 'update']);
         Route::delete('/{id}', [AlifshopMerchantAccessController::class, 'destroy']);
     });
 
 Route::prefix('alifshop-merchants')
     ->group(function () {
-        Route::get('/' , [AlifshopMerchantsController::class, 'index']);
-        Route::get('/{id}' , [AlifshopMerchantsController::class, 'show']);
-        Route::post('/' , [AlifshopMerchantsController::class, 'store']);
-        Route::match(['put' , 'patch'], '/{id}' , [AlifshopMerchantsController::class, 'update']);
-        Route::post('/{id}/set-maintainer' , [AlifshopMerchantsController::class, 'setMaintainer']);
+        Route::get('/', [AlifshopMerchantsController::class, 'index']);
+        Route::get('/{id}', [AlifshopMerchantsController::class, 'show']);
+        Route::post('/', [AlifshopMerchantsController::class, 'store']);
+        Route::match(['put', 'patch'], '/{id}', [AlifshopMerchantsController::class, 'update']);
+        Route::post('/{id}/set-maintainer', [AlifshopMerchantsController::class, 'setMaintainer']);
         Route::post('/{id}/upload-logo', [AlifshopMerchantsController::class, 'uploadLogo']);
         Route::post('/{id}/remove-logo', [AlifshopMerchantsController::class, 'removeLogo']);
         Route::match(['put', 'patch'], '/{id}/toggle', [AlifshopMerchantsController::class, 'toggle']);
@@ -59,6 +58,7 @@ Route::prefix('merchants/requests')
         Route::delete('/{id}/delete-file', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'deleteFile']);
         Route::post('/{id}/allow', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'allow']);
         Route::post('/{id}/reject', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'reject']);
+        Route::match(['put', 'patch'], '/{id}/on-bord', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'onBord']);
         Route::post('/', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'store']);
         Route::post('/set-engage/{id}', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'setEngage']);
         Route::get('counters/new', [App\Http\Controllers\ApiGateway\App\CountersController::class, 'merchantRequests']);
@@ -139,7 +139,7 @@ Route::prefix('notifications')
         Route::get('/{id}', [\App\Http\Controllers\ApiGateway\AzoMerchants\Stores\NotificationsController::class, 'show']);
         Route::post('/', [\App\Http\Controllers\ApiGateway\AzoMerchants\Stores\NotificationsController::class, 'store']);
         Route::match(['put', 'patch'], '/{id}', [\App\Http\Controllers\ApiGateway\AzoMerchants\Stores\NotificationsController::class, 'update']);
-        Route::delete( '/{id}', [\App\Http\Controllers\ApiGateway\AzoMerchants\Stores\NotificationsController::class, 'remove']);
+        Route::delete('/{id}', [\App\Http\Controllers\ApiGateway\AzoMerchants\Stores\NotificationsController::class, 'remove']);
     });
 
 Route::prefix('app')
@@ -162,7 +162,7 @@ Route::prefix('application-conditions')
         Route::match(['put', 'patch'], '/{id}', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class, 'update']);
         Route::post('/{id}/toggle', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class, 'toggle']);
         Route::delete('/{id}', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class, 'delete']);
-        Route::post('/{id}/toggle-posts' , [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class , 'togglePosts']);
+        Route::post('/{id}/toggle-posts', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class, 'togglePosts']);
     });
 
 Route::prefix('dashboard')
