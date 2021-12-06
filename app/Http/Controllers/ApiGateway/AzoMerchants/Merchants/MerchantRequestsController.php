@@ -211,4 +211,18 @@ class MerchantRequestsController extends ApiBaseController
 
         return $merchant_request;
     }
+
+    public function onBord($id , Request $request)
+    {
+        $this->validate($request , [
+           'status_id' => 'required|integer|in:'
+                . MerchantRequest::ON_TRAINING
+        ]);
+
+        $merchant_request = MerchantRequest::findOrFail($id);
+        $merchant_request->setStatus($request->input('status_id'));
+        $merchant_request->save();
+
+        return $merchant_request;
+    }
 }
