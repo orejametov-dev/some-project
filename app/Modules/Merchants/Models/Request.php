@@ -163,10 +163,10 @@ class Request extends Model
             ],
             self::IN_PROCESS => [
                 self::ON_TRAINING,
+                self::TRASH
             ],
             self::ON_TRAINING => [
-                self::ALLOWED,
-                self::TRASH
+                self::ALLOWED
             ],
             self::ALLOWED => [],
             self::TRASH => []
