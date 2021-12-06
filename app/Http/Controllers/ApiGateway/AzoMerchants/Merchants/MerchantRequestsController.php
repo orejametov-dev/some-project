@@ -212,7 +212,7 @@ class MerchantRequestsController extends ApiBaseController
         return $merchant_request;
     }
 
-    public function onBord($id , Request $request)
+    public function setOnBoarding($id , Request $request)
     {
         $this->validate($request , [
            'status_id' => 'required|integer|in:'
