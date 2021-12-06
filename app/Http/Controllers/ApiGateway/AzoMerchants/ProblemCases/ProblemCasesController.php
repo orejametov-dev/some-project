@@ -59,13 +59,13 @@ class ProblemCasesController extends ApiBaseController
     public function setManagerComment($id , Request $request, CommentService $commentService)
     {
         $this->validate($request, [
-            'manager_comment' => 'required|string',
+            'body' => 'required|string',
         ]);
 
         $managerComment = $commentService->create(new CommentDTO(
             commentable_type: Comment::PROBLEM_CASE_FOR_PRM,
             commentable_id: $id,
-            body: $request->input('manager_comment'),
+            body: $request->input('body'),
             created_by_id: $this->user->id,
             created_by_name: $this->user->name
         ));
@@ -76,13 +76,13 @@ class ProblemCasesController extends ApiBaseController
     public function setMerchantComment($id , Request $request , CommentService $commentService)
     {
         $this->validate($request, [
-            'merchant_comment' => 'required|string',
+            'body' => 'required|string',
         ]);
 
         $merchantComment = $commentService->create(new CommentDTO(
             commentable_type: Comment::PROBLEM_CASE_FOR_MERCHANT,
             commentable_id: $id,
-            body: $request->input('merchant_comment'),
+            body: $request->input('body'),
             created_by_id: $this->user->id,
             created_by_name: $this->user->name
         ));
