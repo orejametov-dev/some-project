@@ -1,15 +1,17 @@
 <?php
 
-use App\Http\Controllers\ApiGateway\Companies\CompaniesController;
-use App\Http\Controllers\ApiGateway\Companies\CompanyUsersController;
 use App\Http\Controllers\ApiGateway\AzoMerchants\ExtraServices\MerchantsController as ExtraMerchantsController;
 use App\Http\Controllers\ApiGateway\ApiAlifshopMerchants\AlifshopMerchants\AlifshopMerchantsController;
 use App\Http\Controllers\ApiGateway\ApiAlifshopMerchants\AlifshopMerchants\AlifshopMerchantAccessController;
 use App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantsController;
 use App\Http\Controllers\ApiGateway\ApiAlifshopMerchants\AlifshopStores\AlifshopMerchantStoresController;
+use App\Http\Controllers\ApiGateway\AzoMerchants\Comments\CommentsController;
 use Illuminate\Support\Facades\Route;
 
 
+Route::prefix('comments')->group(function () {
+    Route::get('/' , [CommentsController::class , 'index']);
+});
 
 //AlifshopMerchants
 Route::prefix('alifshop-merchants/stores')
@@ -100,6 +102,8 @@ Route::prefix('merchants/problem-cases')
         Route::match(['put', 'patch'], '/{id}/attach-tags', [\App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases\ProblemCasesController::class, 'attachTags']);
         Route::match(['put', 'patch'], '/{id}/set-status', [\App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases\ProblemCasesController::class, 'setStatus']);
         Route::match(['put', 'patch'], '/{id}/set-assigned', [\App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases\ProblemCasesController::class, 'setAssigned']);
+        Route::match(['put', 'patch'], '/{id}/manager-comment', [\App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases\ProblemCasesController::class, 'setManagerComment']);
+        Route::match(['put', 'patch'], '/{id}/merchant-comment', [\App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases\ProblemCasesController::class, 'setMerchantComment']);
         Route::get('/{user_id}/consultant', [\App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases\ProblemCasesController::class, 'getProblemCasesOfMerchantUser']);
     });
 

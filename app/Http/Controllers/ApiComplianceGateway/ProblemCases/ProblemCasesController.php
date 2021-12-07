@@ -79,10 +79,10 @@ class ProblemCasesController extends ApiBaseController
         $problemCase->save();
 
         preg_match("/" . preg_quote("9989") . "(.*)/", $problemCase->search_index, $phone);
-        $name = explode('9989', $problemCase->search_index);
+        $name = preg_replace('/[^\\/\-a-z\s]/i', '', $problemCase->search_index);
 
         if (!empty($phone)) {
-            $message = SmsMessages::onNewProblemCases(Arr::first($name), $problemCase->id);
+            $message = SmsMessages::onNewProblemCases($name, $problemCase->id);
             NotifyMicroService::sendSms(Arr::first($phone), $message);
         }
 
