@@ -11,6 +11,7 @@ class NotifyMicroService
     public const CREDIT_CONFIRMATION = 'CREDIT_CONFIRMATION';
     public const REJECT_CASE = 'REJECT_CASE';
     public const COMMON = 'COMMON';
+    public const PROBLEM_CASE = 'PROBLEM_CASE';
 
     public static function sendSms($phone, $body, $tag = self::COMMON): array
     {

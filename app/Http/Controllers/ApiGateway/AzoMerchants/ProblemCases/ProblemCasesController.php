@@ -130,7 +130,7 @@ class ProblemCasesController extends ApiBaseController
 
             if (!empty($phone)) {
                 $message = SmsMessages::onFinishedProblemCases(Arr::first($name), $problemCase->id);
-                NotifyMicroService::sendSms(Arr::first($phone), $message);
+                NotifyMicroService::sendSms(Arr::first($phone), $message, NotifyMicroService::PROBLEM_CASE);
             }
         }
 
