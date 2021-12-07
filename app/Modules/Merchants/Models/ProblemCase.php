@@ -133,6 +133,19 @@ class ProblemCase extends Model implements SimpleStateMachinable
 
     public function scopeFilterRequests(Builder $query, \Illuminate\Http\Request $request)
     {
+        if ($client = $request->query('q')) {
+            collect(explode(' ', $client))->filter()->each(function ($q) use ($query) {
+                $q = '%' . $q . '%';
+
+                $query->where(function ($query) use ($q) {
+                    $query->where('client_name', 'like', $q)
+                        ->orWhere('client_surname', 'like', $q)
+                        ->orWhere('client_patronymic', 'like', $q)
+                        ->orWhere('phone', 'like', $q);
+                });
+            });
+        }
+
         if ($id = $request->query('id')) {
             $query->where('id', $id);
         }
@@ -164,10 +177,6 @@ class ProblemCase extends Model implements SimpleStateMachinable
         if ($request->query('date')) {
             $date = Carbon::parse($request->query('date'));
             $query->whereDate('created_at', $date);
-        }
-
-        if ($q = $request->query('q')) {
-            $query->where('search_index', 'LIKE', '%' . $q . '%');
         }
 
         if ($request->query('tag_id')) {
