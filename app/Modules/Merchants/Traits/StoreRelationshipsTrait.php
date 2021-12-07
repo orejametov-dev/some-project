@@ -29,4 +29,9 @@ trait StoreRelationshipsTrait
     {
         return $this->morphToMany(ActivityReason::class, 'store', 'store_activities')->withTimestamps();
     }
+
+    public function conditions()
+    {
+        return $this->belongsToMany(Condition::class, 'special_store_conditions', 'store_id', 'condition_id');
+    }
 }

@@ -26,8 +26,8 @@ class ProblemCaseService
       $problemCase->created_by_name = $problemCasesDTO->created_by_name;
       $problemCase->created_from_name = $problemCasesDTO->created_from_name;
 
-      $problemCase->assigned_to_id = $problemCasesDTO->assigned_to_id;
-      $problemCase->assigned_to_name = $problemCasesDTO->assigned_to_name;
+      $problemCase->post_or_pre_created_by_id = $problemCasesDTO->post_or_pre_created_by_id;
+      $problemCase->post_or_pre_created_by_name = $problemCasesDTO->post_or_pre_created_by_name;
       $problemCase->description = $problemCasesDTO->description;
 
       if ($problemCasesDTO->credit_number) {

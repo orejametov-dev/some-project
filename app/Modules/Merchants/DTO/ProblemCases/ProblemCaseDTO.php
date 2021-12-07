@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 
 class ProblemCaseDTO
 {
+
+
     public int $merchant_id;
     public int $store_id;
     public int $client_id;
@@ -15,8 +17,8 @@ class ProblemCaseDTO
     public int $created_by_id;
     public string $created_by_name;
     public string $created_from_name;
-    public int $assigned_to_id;
-    public string $assigned_to_name;
+    public int $post_or_pre_created_by_id;
+    public string $post_or_pre_created_by_name;
     public ?string $description;
 
     public ?int $credit_number;
@@ -33,13 +35,14 @@ class ProblemCaseDTO
         int     $created_by_id,
         string  $created_by_name,
         string  $created_from_name,
-        int     $assigned_to_id,
-        string  $assigned_to_name,
+        int     $post_or_pre_created_by_id,
+        string  $post_or_pre_created_by_name,
         ?string $description,
         ?int    $credit_number,
                 $credit_contract_date,
         ?int    $application_id,
                 $application_created_at
+
     )
     {
         $this->merchant_id = $merchant_id;
@@ -50,8 +53,8 @@ class ProblemCaseDTO
         $this->created_by_id = $created_by_id;
         $this->created_by_name = $created_by_name;
         $this->created_from_name = $created_from_name;
-        $this->assigned_to_id = $assigned_to_id;
-        $this->assigned_to_name = $assigned_to_name;
+        $this->post_or_pre_created_by_id = $post_or_pre_created_by_id;
+        $this->post_or_pre_created_by_name = $post_or_pre_created_by_name;
         $this->description = $description;
         $this->credit_number = $credit_number;
         $this->credit_contract_date = $credit_contract_date;
@@ -61,7 +64,7 @@ class ProblemCaseDTO
         return $this;
     }
 
-    public function fromProblemCaseRequest(Request $request, array $data)
+    public function fromProblemCaseRequest(Request $request, array $data ,string $create_from_name , $user)
     {
         $this->credit_number = $request->input('credit_number');
         $this->credit_contract_date = $data['contract_date'];
@@ -75,12 +78,15 @@ class ProblemCaseDTO
             . ' ' . $data['client']['surname']
             . ' ' . $data['client']['patronymic']
             . ' ' . $data['client']['phone'];
+
         $this->application_items = $data['application_items'];
-        $this->created_by_id = $data['merchant_engaged_by']['id'];
-        $this->created_by_name = $data['merchant_engaged_by']['name'];
-        $this->created_from_name = $request->input('created_from_name');
-        $this->assigned_to_id = $request->input('assigned_to_id');
-        $this->assigned_to_name = $request->input('assigned_to_name');
+
+        $this->post_or_pre_created_by_id = $data['merchant_engaged_by']['id'];
+        $this->post_or_pre_created_by_name = $data['merchant_engaged_by']['name'];
+
+        $this->created_from_name = $create_from_name;
+        $this->created_by_id = $user->id;
+        $this->created_by_name = $user->name;
         $this->description = $request->input('description');
 
         return $this;

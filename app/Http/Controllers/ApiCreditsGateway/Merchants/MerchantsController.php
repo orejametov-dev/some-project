@@ -6,6 +6,7 @@ namespace App\Http\Controllers\ApiCreditsGateway\Merchants;
 
 use App\Http\Controllers\ApiCreditsGateway\ApiBaseController;
 use App\Http\Resources\ApiCredtisGateway\Merchants\MerchantsResource;
+use App\Http\Resources\ApiCredtisGateway\Merchants\SpecialMerchantResourse;
 use App\Http\Resources\ApiMerchantGateway\ProblemCases\ProblemCaseResource;
 use App\Modules\Merchants\Models\Merchant;
 use DB;
@@ -33,15 +34,16 @@ class MerchantsController extends ApiBaseController
         $query = Merchant::query()
             ->select([
                 DB::raw('group_concat(id) as merchant_ids'),
-                'legal_name'
+                'legal_name',
+                'legal_name_prefix'
             ])
             ->filterRequest($request)
-            ->groupBy('legal_name');
+            ->groupBy('legal_name', 'legal_name_prefix');
 
         if ($request->query('object') == true) {
-            return $query->first();
+            return new  SpecialMerchantResourse($query->first());
         }
 
-        return $query->paginate($request->query('per_page'));
+        return SpecialMerchantResourse::collection($query->paginate($request->query('per_page')));
     }
 }

@@ -98,7 +98,9 @@ class ProblemCase extends Model implements SimpleStateMachinable
         'client_id',
         'application_items',
         'application_created_at',
-        'credit_contract_date'
+        'credit_contract_date',
+        'post_or_pre_created_by_id',
+        'post_or_pre_created_by_name'
     ];
 
     protected $casts = [
@@ -128,27 +130,31 @@ class ProblemCase extends Model implements SimpleStateMachinable
 
     public function scopeFilterRequests(Builder $query, \Illuminate\Http\Request $request)
     {
-        if($request->merchant_id) {
+        if ($id = $request->query('id')) {
+            $query->where('id', $id);
+        }
+
+        if ($request->merchant_id) {
             $query->where('merchant_id', $request->merchant_id);
         }
 
-        if($request->store_id) {
+        if ($request->store_id) {
             $query->where('store_id', $request->store_id);
         }
 
-        if($request->query('engaged_by_id')) {
+        if ($request->query('engaged_by_id')) {
             $query->where('engaged_by_id', $request->query('engaged_by_id'));
         }
 
-        if($request->query('created_at')) {
+        if ($request->query('created_at')) {
             $query->where('created_at', $request->query('created_at'));
         }
 
-        if($request->query('client_id')) {
+        if ($request->query('client_id')) {
             $query->where('client_id', $request->query('client_id'));
         }
 
-        if($request->query('assigned_to_id')) {
+        if ($request->query('assigned_to_id')) {
             $query->where('assigned_to_id', $request->query('client_id'));
         }
 
@@ -157,21 +163,21 @@ class ProblemCase extends Model implements SimpleStateMachinable
             $query->whereDate('created_at', $date);
         }
 
-        if($request->query('q')) {
-            $query->where('search_index', 'LIKE', "%{$request->input('q')}%");
+        if ($q = $request->query('q')) {
+            $query->where('search_index', 'LIKE', '%' . $q . '%');
         }
 
-        if($request->query('tag_id')) {
+        if ($request->query('tag_id')) {
             $query->whereHas('tags', function ($query) use ($request) {
                 $query->where('problem_case_tag_id', $request->query('tag_id'));
             });
         }
 
-        if($request->query('source')){
-            $query->where('created_from_name', 'LIKE', '%' . $request->query('source'). '%');
+        if ($request->query('source')) {
+            $query->where('created_from_name', 'LIKE', '%' . $request->query('source') . '%');
         }
 
-        if($request->query('status_id')) {
+        if ($request->query('status_id')) {
             $query->where('status_id', $request->query('status_id'));
         }
     }

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\ApiGateway\App;
 
 
 use App\Http\Controllers\ApiGateway\ApiBaseController;
-use App\Modules\Companies\Models\Module;
 use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\CancelReason;
 use App\Modules\Merchants\Models\File;
@@ -15,7 +14,9 @@ use App\Modules\Merchants\Models\Request;
 use App\Modules\Merchants\Models\Store;
 use App\Modules\Merchants\Services\MerchantStatus;
 use App\Modules\Merchants\Services\RequestStatus;
+use App\Services\ClientTypeRegisterService;
 use App\Services\DistrictService;
+use App\Services\LegalNameService;
 use App\Services\RegionService;
 
 class AppController extends ApiBaseController
@@ -32,7 +33,7 @@ class AppController extends ApiBaseController
         $merchant_activity_reasons = ActivityReason::query()->where('type', 'MERCHANT')->get();
         $store_activity_reasons = ActivityReason::query()->where('type', 'STORE')->get();
         $cancel_reasons = CancelReason::query()->get();
-        $modules = Module::query()->get();
+        $legal_name_prefixes = LegalNameService::getNamePrefixes();
 
         $authUser = $this->user;
 
@@ -40,6 +41,8 @@ class AppController extends ApiBaseController
         $registration_file_types = File::$registration_file_types;
 
         $regions = RegionService::getRegions();
+
+        $client_type_register = ClientTypeRegisterService::getClientTypeRegister();
 
 
         $me = [
@@ -64,7 +67,8 @@ class AppController extends ApiBaseController
             'merchant_activity_reasons',
             'store_activity_reasons',
             'cancel_reasons',
-            'modules'
+            'client_type_register',
+            'legal_name_prefixes'
         ));
     }
 

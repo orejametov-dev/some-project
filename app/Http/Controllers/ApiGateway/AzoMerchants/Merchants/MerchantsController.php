@@ -6,11 +6,9 @@ use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Files\StoreFileRequest;
 use App\HttpServices\Auth\AuthMicroService;
+use App\HttpServices\Company\CompanyService;
 use App\HttpServices\Telegram\TelegramService;
 use App\HttpServices\Warehouse\WarehouseService;
-use App\Modules\Companies\Models\Company;
-use App\Modules\Companies\Models\Module;
-use App\Modules\Companies\Services\CompanyService;
 use App\Modules\Merchants\DTO\Merchants\MerchantsDTO;
 use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\Merchant;
@@ -51,33 +49,33 @@ class MerchantsController extends ApiBaseController
         return Merchant::with(['stores', 'tags', 'activity_reasons'])->findOrFail($id);
     }
 
-    public function store(Request $request, MerchantsService $merchantsService, CompanyService $companyService)
+    public function store(Request $request, MerchantsService $merchantsService)
     {
         $this->validate($request, [
             'company_id' => 'required|integer'
         ]);
 
-        $company = Company::query()->findOrFail($request->input('company_id'));
+        $company = CompanyService::getCompanyById($request->input('company_id'));
 
-        if(Merchant::query()->where('company_id', $company->id)->exists()){
+        if (Merchant::query()->where('company_id', $company['id'])->exists()) {
             return response()->json(['message' => 'Указаная компания уже имеет аъзо модуль'], 400);
         }
 
         $merchant = $merchantsService->create(new MerchantsDTO(
-            id: $company->id,
-            name: $company->name,
-            legal_name: $company->legal_name,
+            id: $company['id'],
+            name: $company['name'],
+            legal_name: $company['legal_name'],
+            legal_name_prefix: $company['legal_name_prefix'],
             information: null,
             maintainer_id: $this->user->id,
-            company_id: $company->id
+            company_id: $company['id']
         ));
-
-        $company->modules()->attach([Module::AZO_MERCHANT]);
 
         Cache::tags($merchant->id)->flush();
         Cache::tags('azo_merchants')->flush();
         Cache::tags('company')->flush();
 
+        CompanyService::setStatusExist($company['id']);
         $this->alifshopService->storeOrUpdateMerchant($merchant->fresh());
         return $merchant;
     }
@@ -87,6 +85,7 @@ class MerchantsController extends ApiBaseController
         $this->validate($request, [
             'name' => 'required|max:255|unique:merchants,name,' . $merchant_id,
             'legal_name' => 'nullable|max:255',
+            'legal_name_prefix' => 'nullable|string',
             'token' => 'required|max:255|unique:merchants,alifshop_slug,' . $merchant_id,
             'alifshop_slug' => 'required|max:255|unique:merchants,alifshop_slug,' . $merchant_id,
             'information' => 'nullable|string',
@@ -97,6 +96,8 @@ class MerchantsController extends ApiBaseController
         $oldToken = $merchant->token;
         $merchant->update($request->all());
         $merchant->old_token = $oldToken;
+
+        CompanyService::updateCompanyLegalNamePrefix($merchant->company_id, $request->input('legal_name_prefix'));
 
         Cache::tags($merchant->id)->flush();
         Cache::tags('azo_merchants')->flush();
@@ -185,7 +186,7 @@ class MerchantsController extends ApiBaseController
         $tags = Tag::whereIn('id', $tags)->get();
 
         foreach ($request->input('tags') as $tag) {
-            if(!$tags->contains('id', $tag)){
+            if (!$tags->contains('id', $tag)) {
                 return response()->json(['message' => 'Указан не правильный тег'], 400);
             }
         }
@@ -241,7 +242,7 @@ class MerchantsController extends ApiBaseController
             'created_by_name' => $this->user->name
         ]);
 
-        $merchant->company->modules()->updateExistingPivot(Module::AZO_MERCHANT, ['active' => $merchant->active]);
+        CompanyService::setStatusNotActive($merchant->company_id);
 
         Cache::tags($merchant->id)->flush();
         Cache::tags('merchants')->flush();
