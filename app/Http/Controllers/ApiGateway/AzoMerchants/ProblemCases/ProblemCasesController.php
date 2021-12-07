@@ -125,13 +125,8 @@ class ProblemCasesController extends ApiBaseController
         $problemCase->save();
 
         if ($problemCase->isStatusFinished()) {
-            preg_match("/" . preg_quote("9989") . "(.*)/", $problemCase->search_index, $phone);
-            $name = explode('9989', $problemCase->search_index);
-
-            if (!empty($phone)) {
-                $message = SmsMessages::onFinishedProblemCases(Arr::first($name), $problemCase->id);
-                NotifyMicroService::sendSms(Arr::first($phone), $message, NotifyMicroService::PROBLEM_CASE);
-            }
+            $message = SmsMessages::onNewProblemCases($problemCase->client_name . ' ' . $problemCase->client_surname, $problemCase->id);
+            NotifyMicroService::sendSms($problemCase->phone, $message, NotifyMicroService::PROBLEM_CASE);
         }
 
         SendHook::dispatch(new HookData(
