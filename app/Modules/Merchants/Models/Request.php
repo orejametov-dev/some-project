@@ -110,7 +110,7 @@ class Request extends Model
         ],
         self::ON_TRAINING => [
             'id' => self::ON_TRAINING,
-            'name' => 'на обучении',
+            'name' => 'На обучении',
         ]
     ];
 
