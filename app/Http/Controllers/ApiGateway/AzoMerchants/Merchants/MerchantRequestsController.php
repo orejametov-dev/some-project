@@ -145,8 +145,8 @@ class MerchantRequestsController extends ApiBaseController
     {
         $merchant_request = MerchantRequest::findOrFail($id);
 
-        if (!$merchant_request->isInProcess()) {
-            return response()->json(['message' => 'Статус заявки должен быть "На переговорах"'], 400);
+        if (!$merchant_request->isOnTraining()) {
+            return response()->json(['message' => 'Статус заявки должен быть "На обучении"'], 400);
         }
 
         $company_name_exists = CompanyService::getCompanyByName($merchant_request->name);
