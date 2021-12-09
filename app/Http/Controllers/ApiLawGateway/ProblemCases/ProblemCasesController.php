@@ -66,6 +66,12 @@ class ProblemCasesController extends ApiBaseController
             . ' ' . $data['client']['patronymic']
             . ' ' . $data['client']['phone'];
 
+        $problemCase->client_name = $data['client']['name'];
+        $problemCase->client_surname = $data['client']['surname'];
+        $problemCase->client_patronymic = $data['client']['patronymic'];
+        $problemCase->phone = $data['client']['phone'];
+
+
         $problemCase->application_items = $data['application_items'];
 
         $problemCase->post_or_pre_created_by_id = $data['merchant_engaged_by']['id'];
@@ -79,13 +85,8 @@ class ProblemCasesController extends ApiBaseController
         $problemCase->setStatusNew();
         $problemCase->save();
 
-        preg_match("/" . preg_quote("9989") . "(.*)/", $problemCase->search_index, $phone);
-        $name = preg_replace('/[^\\/\-a-z\s]/i', '', $problemCase->search_index);
-
-        if (!empty($phone)) {
-            $message = SmsMessages::onNewProblemCases($name, $problemCase->id);
-            NotifyMicroService::sendSms(Arr::first($phone), $message , NotifyMicroService::PROBLEM_CASE);
-        }
+        $message = SmsMessages::onNewProblemCases($problemCase->client_name . ' ' . $problemCase->client_surname, $problemCase->id);
+        NotifyMicroService::sendSms($problemCase->phone, $message, NotifyMicroService::PROBLEM_CASE);
 
         SendHook::dispatch(new HookData(
             service: 'merchants',
