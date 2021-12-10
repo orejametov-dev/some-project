@@ -43,12 +43,14 @@ class UpdateStorePhone extends Command
     {
         Store::query()->chunkById(100, function ($stores) {
             foreach ($stores as $store) {
-               if (empty($store->phone)) {
-                   $merchant_access = AzoMerchantAccess::query()
-                       ->where('store_id' , $store->id)->first();
+                if (empty($store->phone)) {
+                    $merchant_access = AzoMerchantAccess::query()
+                        ->where('store_id', $store->id)->whereNotNull('phone')->first();
 
-                   $store->update(['phone' => $merchant_access->phone]);
-               }
+                    if ($merchant_access) {
+                        $store->update(['phone' => $merchant_access->phone]);
+                    }
+                }
             }
         });
     }
