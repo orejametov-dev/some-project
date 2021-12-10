@@ -5,6 +5,7 @@ namespace App\Modules\Merchants\Traits;
 use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\AdditionalAgreement;
 use App\Modules\Merchants\Models\AzoMerchantAccess;
+use App\Modules\Merchants\Models\Competitor;
 use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\File;
 use App\Modules\Merchants\Models\MerchantInfo;
@@ -56,6 +57,11 @@ trait MerchantRelationshipsTrait
     public function activity_reasons()
     {
         return $this->morphToMany(ActivityReason::class, 'merchant', 'merchant_activities', 'merchant_id', 'activity_reason_id')->withTimestamps();
+    }
+
+    public function competitors()
+    {
+        return $this->belongsToMany(Competitor::class , 'merchant_competitor')->withPivot('volume_sales', 'percentage_approve' , 'partnership_at')->withTimestamps();;
     }
 
 }
