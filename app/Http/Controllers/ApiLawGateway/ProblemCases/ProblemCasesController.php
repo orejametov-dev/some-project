@@ -7,7 +7,7 @@ use App\Http\Controllers\ApiLawGateway\ApiBaseController;
 use App\HttpServices\Core\CoreService;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
-use App\Jobs\SendProblemCaseSms;
+use App\Jobs\SendSmsJob;
 use App\Modules\Merchants\Models\ProblemCase;
 use App\Services\SMS\SmsMessages;
 use Carbon\Carbon;
@@ -98,7 +98,7 @@ class ProblemCasesController extends ApiBaseController
         ));
 
         $message = SmsMessages::onNewProblemCases($problemCase->client_name . ' ' . $problemCase->client_surname, $problemCase->id);
-        SendProblemCaseSms::dispatch($problemCase->phone, $message);
+        SendSmsJob::dispatch($problemCase->phone, $message);
 
         return $problemCase;
     }
