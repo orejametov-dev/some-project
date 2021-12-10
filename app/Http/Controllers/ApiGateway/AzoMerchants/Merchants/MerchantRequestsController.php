@@ -74,6 +74,7 @@ class MerchantRequestsController extends ApiBaseController
         ]);
 
         $merchant_request = MerchantRequest::findOrFail($id);
+
         $merchant_request->fill($validatedRequest);
 
         $merchant_request->save();
@@ -149,8 +150,7 @@ class MerchantRequestsController extends ApiBaseController
             return response()->json(['message' => 'Статус заявки должен быть "На переговорах"'], 400);
         }
 
-        $company_name_exists = CompanyService::getCompanyByName($merchant_request->name);
-        if ($company_name_exists) {
+        if (CompanyService::getCompanyByName($merchant_request->name)) {
             return response()->json(['message' => 'Указанное имя компании уже занято'], 400);
         }
 
