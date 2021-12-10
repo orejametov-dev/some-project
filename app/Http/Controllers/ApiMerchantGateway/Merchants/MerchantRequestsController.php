@@ -61,7 +61,6 @@ class MerchantRequestsController extends Controller
             return response()->json(['message' => 'Указанное имя компании уже занято'], 400);
         }
 
-
         if($merchant_request = MerchantRequest::onlyByToken($request->input('token'))->first()){
             $merchant_request->fill($validatedRequest);
         } else {

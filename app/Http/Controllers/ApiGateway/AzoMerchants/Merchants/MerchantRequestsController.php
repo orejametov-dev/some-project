@@ -75,6 +75,10 @@ class MerchantRequestsController extends ApiBaseController
 
         $merchant_request = MerchantRequest::findOrFail($id);
 
+        if (CompanyService::getCompanyByName($request->input('name'))) {
+            return response()->json(['message' => 'Указанное имя компании уже занято'], 400);
+        }
+
         $merchant_request->fill($validatedRequest);
 
         $merchant_request->save();
