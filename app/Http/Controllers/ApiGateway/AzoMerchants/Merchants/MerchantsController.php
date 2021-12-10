@@ -298,6 +298,13 @@ class MerchantsController extends ApiBaseController
 
     public function updateCompetitor($id , Request $request)
     {
+        $request->validate([
+            'competitor_id' => 'required|integer',
+            'volume_sales' => 'required|integer',
+            'percentage_approve' => 'required|integer',
+            'partnership_at' => 'required|date'
+        ]);
+
         $merchant = Merchant::query()->findOrFail($id);
         $competitor = Competitor::query()->findOrFail($request->input('competitor_id'));
 
