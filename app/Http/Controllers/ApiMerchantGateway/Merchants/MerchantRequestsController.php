@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiMerchantsGateway\Merchants\MerchantRequestStoreDocuments;
 use App\Http\Requests\ApiMerchantsGateway\Merchants\MerchantRequestStoreMain;
 use App\Http\Requests\ApiMerchantsGateway\Merchants\MerchantRequestUploadFile;
+use App\HttpServices\Company\CompanyService;
 use App\Modules\Merchants\Models\File;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Request as MerchantRequest;
@@ -55,6 +56,11 @@ class MerchantRequestsController extends Controller
                 . RequestStatus::getOneById((int) $merchant_request->status_id)->name);
         }
         $validatedRequest = $request->validated();
+
+        if (CompanyService::getCompanyByName($request->input('name'))) {
+            return response()->json(['message' => 'Указанное имя компании уже занято'], 400);
+        }
+
         if($merchant_request = MerchantRequest::onlyByToken($request->input('token'))->first()){
             $merchant_request->fill($validatedRequest);
         } else {
