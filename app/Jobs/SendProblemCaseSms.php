@@ -27,7 +27,7 @@ class SendProblemCaseSms implements ShouldQueue
     public function __construct($phone , $message)
     {
         self::onQueue('service-notify');
-        $this->phone = Arr::first($phone);
+        $this->phone = $phone;
         $this->message = $message;
     }
 
@@ -38,6 +38,6 @@ class SendProblemCaseSms implements ShouldQueue
      */
     public function handle()
     {
-        NotifyMicroService::sendSms($this->phone, $this->message);
+        NotifyMicroService::sendSms($this->phone, $this->message , NotifyMicroService::PROBLEM_CASE);
     }
 }

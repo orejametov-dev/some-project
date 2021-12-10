@@ -6,12 +6,10 @@ use App\Exceptions\ApiBusinessException;
 use App\Http\Controllers\ApiComplianceGateway\ApiBaseController;
 use App\HttpServices\Core\CoreService;
 use App\HttpServices\Hooks\DTO\HookData;
-use App\HttpServices\Notify\NotifyMicroService;
 use App\Jobs\SendHook;
 use App\Jobs\SendProblemCaseSms;
 use App\Modules\Merchants\Models\ProblemCase;
 use App\Services\SMS\SmsMessages;
-use Arr;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -66,6 +64,11 @@ class ProblemCasesController extends ApiBaseController
             . ' ' . $data['client']['patronymic']
             . ' ' . $data['client']['phone'];
 
+        $problemCase->client_name = $data['client']['name'];
+        $problemCase->client_surname = $data['client']['surname'];
+        $problemCase->client_patronymic = $data['client']['patronymic'];
+        $problemCase->phone = $data['client']['phone'];
+
         $problemCase->application_items = $data['application_items'];
 
         $problemCase->post_or_pre_created_by_id = $data['merchant_engaged_by']['id'];
@@ -93,11 +96,8 @@ class ProblemCasesController extends ApiBaseController
             created_by_str: $this->user->name,
         ));
 
-        preg_match("/" . preg_quote("9989") . "(.*)/", $problemCase->search_index, $phone);
-        $name = explode('9989', $problemCase->search_index);
-        $message = SmsMessages::onNewProblemCases($name, $problemCase->id);
-
-        SendProblemCaseSms::dispatch($phone , $message);
+        $message = SmsMessages::onNewProblemCases($problemCase->client_name . ' ' . $problemCase->client_surname, $problemCase->id);
+        SendProblemCaseSms::dispatch($problemCase->phone, $message);
 
         return $problemCase;
     }
