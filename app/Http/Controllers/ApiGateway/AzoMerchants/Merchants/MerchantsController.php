@@ -305,7 +305,7 @@ class MerchantsController extends ApiBaseController
             throw new NotFoundException('No query result in table [merchant_competitor]', 404);
         }
 
-        $merchant_competitor = $merchant->competitors()->sync([$competitor->id => [
+        $merchant->competitors()->sync([$competitor->id => [
             'volume_sales' => $request->input('volume_sales') * 100,
             'percentage_approve' => $request->input('percentage_approve'),
             'partnership_at' => Carbon::parse($request->input('partnership_at'))->format('Y-m-d H:i:s'),
