@@ -27,7 +27,7 @@ class SendProblemCaseSms implements ShouldQueue
     public function __construct($phone , $message)
     {
         self::onQueue('service-notify');
-        $this->phone = Arr::first($phone);
+        $this->phone = $phone;
         $this->message = $message;
     }
 
