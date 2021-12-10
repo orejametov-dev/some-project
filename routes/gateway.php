@@ -188,6 +188,8 @@ Route::prefix('merchants')
         Route::post('/{id}/update-chat-id', [MerchantsController::class, 'updateChatId']);
         Route::post('/{id}/upload-logo', [MerchantsController::class, 'uploadLogo']);
         Route::post('/{id}/remove-logo', [MerchantsController::class, 'removeLogo']);
+        Route::post('/{id}/attach-competitor', [MerchantsController::class, 'attachCompetitor']);
+        Route::match(['put', 'patch'],'/{id}/update-competitor', [MerchantsController::class, 'updateCompetitor']);
         Route::post('/{id}/set-responsible-user', [MerchantsController::class, 'setResponsibleUser']);
         Route::match(['put', 'patch'], '/{id}/toggle', [MerchantsController::class, 'toggle']);
         Route::post('/{id}/set-tags', [MerchantsController::class, 'setTags']);
