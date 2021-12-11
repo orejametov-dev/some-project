@@ -5,6 +5,7 @@ namespace App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases;
 
 
 use App\Http\Controllers\ApiGateway\ApiBaseController;
+use App\Http\Requests\ApiPrm\Merchants\ProblemCases\ProblemCaseUpdateRequest;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\HttpServices\Notify\NotifyMicroService;
 use App\Jobs\SendHook;
@@ -15,7 +16,6 @@ use App\Modules\Merchants\Models\ProblemCaseTag;
 use App\Modules\Merchants\Services\Comments\CommentService;
 use App\Services\SMS\SmsMessages;
 use Illuminate\Http\Request;
-use Laravel\Horizon\Repositories\RedisWorkloadRepository;
 
 class ProblemCasesController extends ApiBaseController
 {
@@ -23,15 +23,8 @@ class ProblemCasesController extends ApiBaseController
     {
         $problemCases = ProblemCase::with('tags')
             ->filterRequests($request)
-            ->orderBy('created_at', 'DESC');
+            ->orederByDesc('created_at');
 
-        if ($request->has('object') and $request->query('object') == true) {
-            return $problemCases->first();
-        }
-
-        if ($request->has('paginate') and $request->query('paginate') == false) {
-            return $problemCases->get();
-        }
         return $problemCases->paginate($request->query('per_page') ?? 15);
     }
 
@@ -42,7 +35,7 @@ class ProblemCasesController extends ApiBaseController
         return $problemCase;
     }
 
-    public function update($id, Request $request)
+    public function update($id, ProblemCaseUpdateRequest $request)
     {
         $this->validate($request, [
             'deadline' => 'nullable|date_format:Y-m-d',
@@ -55,7 +48,7 @@ class ProblemCasesController extends ApiBaseController
         return $problemCase;
     }
 
-    public function setManagerComment($id , Request $request, CommentService $commentService)
+    public function setManagerComment($id, Request $request, CommentService $commentService)
     {
         $this->validate($request, [
             'body' => 'required|string',
@@ -72,7 +65,7 @@ class ProblemCasesController extends ApiBaseController
         return $managerComment;
     }
 
-    public function setMerchantComment($id , Request $request , CommentService $commentService)
+    public function setMerchantComment($id, Request $request, CommentService $commentService)
     {
         $this->validate($request, [
             'body' => 'required|string',

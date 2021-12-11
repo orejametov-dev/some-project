@@ -4,6 +4,7 @@ namespace App\Http\Controllers\ApiComplianceGateway\ProblemCases;
 
 use App\Exceptions\ApiBusinessException;
 use App\Http\Controllers\ApiComplianceGateway\ApiBaseController;
+use App\Http\Requests\ApiPrm\Merchants\ProblemCases\ProblemCaseStoreRequest;
 use App\HttpServices\Core\CoreService;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
@@ -17,14 +18,8 @@ use Illuminate\Http\Request;
 
 class ProblemCasesController extends ApiBaseController
 {
-    public function store(Request $request, ProblemCaseService $problemCaseService)
+    public function store(ProblemCaseStoreRequest $request, ProblemCaseService $problemCaseService)
     {
-        $this->validate($request, [
-            'credit_number' => 'required_without:application_id|string',
-            'application_id' => 'required_without:credit_number|integer',
-            'description' => 'required'
-        ]);
-
         if ($request->has('credit_number') and $request->input('credit_number')) {
             $data = CoreService::getApplicationDataByContractNumber($request->input('credit_number'));
 

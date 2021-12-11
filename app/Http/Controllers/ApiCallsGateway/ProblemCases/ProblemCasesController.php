@@ -6,6 +6,7 @@ namespace App\Http\Controllers\ApiCallsGateway\ProblemCases;
 
 use App\Exceptions\ApiBusinessException;
 use App\Http\Controllers\ApiCallsGateway\ApiBaseController;
+use App\Http\Requests\ApiPrm\Merchants\ProblemCases\ProblemCaseStoreRequest;
 use App\Http\Resources\ApiCallsGateway\ProblemCases\ProblemCaseResource;
 use App\HttpServices\Core\CoreService;
 use App\HttpServices\Hooks\DTO\HookData;
@@ -32,14 +33,8 @@ class ProblemCasesController extends ApiBaseController
         return ProblemCaseResource::collection($problemCases->paginate($request->query('per_page') ?? 15));
     }
 
-    public function store(Request $request, ProblemCaseService $problemCaseService)
+    public function store(ProblemCaseStoreRequest $request, ProblemCaseService $problemCaseService)
     {
-        $this->validate($request, [
-            'credit_number' => 'required_without:application_id|string',
-            'application_id' => 'required_without:credit_number|integer',
-            'description' => 'required'
-        ]);
-
         if ($request->has('credit_number') and $request->input('credit_number')) {
             $data = CoreService::getApplicationDataByContractNumber($request->input('credit_number'));
 
@@ -52,8 +47,6 @@ class ProblemCasesController extends ApiBaseController
                 ], 400);
             }
 
-            $problemCase->credit_number = $request->input('credit_number');
-            $problemCase->credit_contract_date = $data['contract_date'];
         } elseif ($request->has('application_id') and $request->input('application_id')) {
             $data = CoreService::getApplicationDataByApplicationId($request->input('application_id'));
 
@@ -67,11 +60,7 @@ class ProblemCasesController extends ApiBaseController
             }
         }
 
-        $problemCase = $problemCaseService->create((new ProblemCaseDTO())->fromProblemCaseRequest($request,$data));
-
-        $problemCase->setStatusNew();
-        $problemCase->save();
-
+        $problemCase = $problemCaseService->create((new ProblemCaseDTO())->fromProblemCaseRequest($request,$data , 'CALLS' , $this->user));
 
         SendHook::dispatch(new HookData(
             service: 'merchants',

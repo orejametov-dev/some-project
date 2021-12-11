@@ -13,6 +13,13 @@ class ProblemCaseDTO
     public int $store_id;
     public int $client_id;
     public string $search_index;
+
+    public string $client_name;
+    public string $client_surname;
+    public string $client_patronymic;
+    public string $phone;
+
+
     public ?array $application_items;
     public int $created_by_id;
     public string $created_by_name;
@@ -31,6 +38,10 @@ class ProblemCaseDTO
         int     $store_id,
         int     $client_id,
         string  $search_index,
+        string  $client_name,
+        string  $client_surname,
+        string  $client_patronymic,
+        string  $phone,
         ?array  $application_items,
         int     $created_by_id,
         string  $created_by_name,
@@ -41,7 +52,8 @@ class ProblemCaseDTO
         ?int    $credit_number,
                 $credit_contract_date,
         ?int    $application_id,
-                $application_created_at
+                $application_created_at,
+
 
     )
     {
@@ -49,6 +61,10 @@ class ProblemCaseDTO
         $this->store_id = $store_id;
         $this->client_id = $client_id;
         $this->search_index = $search_index;
+        $this->client_name = $client_name;
+        $this->client_surname = $client_surname;
+        $this->client_patronymic = $client_patronymic;
+        $this->phone = $phone;
         $this->application_items = $application_items;
         $this->created_by_id = $created_by_id;
         $this->created_by_name = $created_by_name;
@@ -64,7 +80,7 @@ class ProblemCaseDTO
         return $this;
     }
 
-    public function fromProblemCaseRequest(Request $request, array $data ,string $create_from_name , $user)
+    public function fromProblemCaseRequest(Request $request, array $data, string $create_from_name, $user)
     {
         $this->credit_number = $request->input('credit_number');
         $this->credit_contract_date = $data['contract_date'];
@@ -78,6 +94,11 @@ class ProblemCaseDTO
             . ' ' . $data['client']['surname']
             . ' ' . $data['client']['patronymic']
             . ' ' . $data['client']['phone'];
+
+        $this->client_name = $data['client']['name'];
+        $this->client_surname = $data['client']['surname'];
+        $this->client_patronymic = $data['client']['patronymic'];
+        $this->phone = $data['client']['phone'];
 
         $this->application_items = $data['application_items'];
 

@@ -20,6 +20,11 @@ class ProblemCaseService
 
       $problemCase->search_index = $problemCasesDTO->search_index;
 
+      $problemCase->client_name = $problemCasesDTO->client_name;
+      $problemCase->client_surname = $problemCasesDTO->client_surname;
+      $problemCase->client_patronymic = $problemCasesDTO->client_patronymic;
+      $problemCase->phone = $problemCasesDTO->phone;
+
       $problemCase->application_items = $problemCasesDTO->application_items;
 
       $problemCase->created_by_id = $problemCasesDTO->created_by_id;
