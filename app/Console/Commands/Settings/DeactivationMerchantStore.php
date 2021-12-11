@@ -90,5 +90,7 @@ class DeactivationMerchantStore extends Command
                     }
                 }
             });
+
+        \Log::info(DeactivationMerchantStore::class . "|" . now());
     }
 }

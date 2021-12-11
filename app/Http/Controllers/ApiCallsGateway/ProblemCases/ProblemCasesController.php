@@ -12,12 +12,12 @@ use App\HttpServices\Hooks\DTO\HookData;
 use App\HttpServices\Notify\NotifyMicroService;
 use App\Jobs\SendHook;
 use App\Modules\Merchants\DTO\ProblemCases\ProblemCaseDTO;
+use App\Jobs\SendSmsJob;
 use App\Modules\Merchants\Models\ProblemCase;
 use App\Modules\Merchants\Services\ProblemCases\ProblemCaseService;
 use App\Services\SMS\SmsMessages;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Arr;
 
 class ProblemCasesController extends ApiBaseController
 {
@@ -51,6 +51,9 @@ class ProblemCasesController extends ApiBaseController
                     'uz' => 'Bu kredit raqamiga tegishli muammoli keys avval yuborilgan.'
                 ], 400);
             }
+
+            $problemCase->credit_number = $request->input('credit_number');
+            $problemCase->credit_contract_date = $data['contract_date'];
         } elseif ($request->has('application_id') and $request->input('application_id')) {
             $data = CoreService::getApplicationDataByApplicationId($request->input('application_id'));
 
@@ -69,13 +72,6 @@ class ProblemCasesController extends ApiBaseController
         $problemCase->setStatusNew();
         $problemCase->save();
 
-        preg_match("/" . preg_quote("9989") . "(.*)/", $problemCase->search_index, $phone);
-        $name = explode('9989', $problemCase->search_index);
-
-        if (!empty($phone)) {
-            $message = SmsMessages::onNewProblemCases(Arr::first($name), $problemCase->id);
-            NotifyMicroService::sendSms(Arr::first($phone), $message);
-        }
 
         SendHook::dispatch(new HookData(
             service: 'merchants',
@@ -91,13 +87,16 @@ class ProblemCasesController extends ApiBaseController
             created_by_str: $this->user->name,
         ));
 
+        $message = SmsMessages::onNewProblemCases($problemCase->client_name . ' ' . $problemCase->client_surname, $problemCase->id);
+        SendSmsJob::dispatch($problemCase->phone, $message);
+
         return $problemCase;
     }
 
 
-        public function getStatusList()
-        {
-            return array_values(ProblemCase::$statuses);
-        }
-
+    public function getStatusList()
+    {
+        return array_values(ProblemCase::$statuses);
     }
+
+}
