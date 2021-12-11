@@ -97,7 +97,10 @@ class MerchantsController extends ApiBaseController
         $merchant->update($request->all());
         $merchant->old_token = $oldToken;
 
-        CompanyService::updateCompanyLegalNamePrefix($merchant->company_id, $request->input('legal_name_prefix'));
+        CompanyService::updateCompany(
+            company_id: $merchant->company_id,
+            name:$request->input('name'),
+            legal_name_prefix: $request->input('legal_name_prefix'));
 
         Cache::tags($merchant->id)->flush();
         Cache::tags('azo_merchants')->flush();
