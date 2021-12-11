@@ -11,6 +11,7 @@ use App\HttpServices\Core\CoreService;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\HttpServices\Notify\NotifyMicroService;
 use App\Jobs\SendHook;
+use App\Jobs\SendSmsJob;
 use App\Modules\Merchants\Models\ProblemCase;
 use App\Services\SMS\SmsMessages;
 use Carbon\Carbon;
@@ -112,6 +113,9 @@ class ProblemCasesController extends ApiBaseController
             action_at: null,
             created_by_str: $this->user->name,
         ));
+
+        $message = SmsMessages::onNewProblemCases($problemCase->client_name . ' ' . $problemCase->client_surname, $problemCase->id);
+        SendSmsJob::dispatch($problemCase->phone, $message);
 
         return $problemCase;
     }

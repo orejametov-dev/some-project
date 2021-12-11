@@ -90,9 +90,10 @@ class CompanyService
         ])->throw()->json();
     }
 
-    public static function updateCompanyLegalNamePrefix($company_id, string $legal_name_prefix)
+    public static function updateCompany($company_id, $name, $legal_name_prefix)
     {
-        return static::http()->post("companies/$company_id" , [
+        return static::http()->put("companies/$company_id" , [
+            'name' => $name,
            'legal_name_prefix' => $legal_name_prefix
         ])->throw()->json();
     }
