@@ -13,7 +13,6 @@ use App\HttpServices\Company\CompanyService;
 use App\Modules\Merchants\Models\File;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Request as MerchantRequest;
-use App\Modules\Merchants\Services\RequestStatus;
 use App\Services\DistrictService;
 use App\Services\LegalNameService;
 use App\Services\RegionService;
@@ -51,9 +50,9 @@ class MerchantRequestsController extends Controller
 //        user_phone
         $merchant_request = MerchantRequest::where('user_phone', $request->user_phone)->first();
 
-        if($merchant_request) {
+        if ($merchant_request) {
             throw new BusinessException('Запрос с таким номером телефона уже существует, статус запроса '
-                . RequestStatus::getOneById((int) $merchant_request->status_id)->name);
+                . MerchantRequest::getOneById((int)$merchant_request->status_id)->name);
         }
         $validatedRequest = $request->validated();
 
@@ -78,7 +77,7 @@ class MerchantRequestsController extends Controller
     {
         $validatedRequest = $request->validated();
 
-        if($merchant_request = MerchantRequest::onlyByToken($request->input('token'))->first()){
+        if ($merchant_request = MerchantRequest::onlyByToken($request->input('token'))->first()) {
             $merchant_request->fill($validatedRequest);
         } else {
             $merchant_request = new MerchantRequest();
@@ -102,7 +101,7 @@ class MerchantRequestsController extends Controller
 
     public function deleteFile(Request $request, $file_id)
     {
-        $this->validate($request,[
+        $this->validate($request, [
             'token' => 'required|string'
         ]);
 
@@ -115,7 +114,7 @@ class MerchantRequestsController extends Controller
 
     public function getDistricts(Request $request)
     {
-        if($request->query('region')) {
+        if ($request->query('region')) {
             return DistrictService::getDistrictsByRegion($request->query('region'));
 
         }
