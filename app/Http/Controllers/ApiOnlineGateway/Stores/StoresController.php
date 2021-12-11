@@ -17,6 +17,10 @@ class StoresController extends Controller
             ->active()
             ->filterRequest($request);
 
+        if($request->has('object') and $request->query('object') == true) {
+            return $stores->first();
+        }
+
         return $stores->paginate($request->query('per_page'));
     }
 }

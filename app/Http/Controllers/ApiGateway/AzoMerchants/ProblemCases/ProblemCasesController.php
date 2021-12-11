@@ -8,15 +8,21 @@ use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Merchants\ProblemCases\ProblemCaseStoreRequest;
 use App\Http\Requests\ApiPrm\Merchants\ProblemCases\ProblemCaseUpdateRequest;
 use App\HttpServices\Hooks\DTO\HookData;
+use App\HttpServices\Notify\NotifyMicroService;
 use App\Jobs\SendHook;
 use App\HttpServices\Core\CoreService;
 use App\Modules\Merchants\DTO\ProblemCases\ProblemCaseDTO;
+use App\Modules\Merchants\DTO\Comments\CommentDTO;
+use App\Modules\Merchants\Models\Comment;
 use App\Modules\Merchants\Models\ProblemCase;
 use App\Modules\Merchants\Models\ProblemCaseTag;
 use App\Modules\Merchants\Services\ProblemCases\ProblemCaseService;
 use Carbon\Carbon;
+use App\Modules\Merchants\Services\Comments\CommentService;
+use App\Services\SMS\SmsMessages;
+use Arr;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Laravel\Horizon\Repositories\RedisWorkloadRepository;
 
 class ProblemCasesController extends ApiBaseController
 {
@@ -58,21 +64,56 @@ class ProblemCasesController extends ApiBaseController
 
     public function show($id)
     {
-        $problemCase = ProblemCase::findOrFail($id);
+        $problemCase = ProblemCase::with('tags')->findOrFail($id);
 
         return $problemCase;
     }
 
     public function update($id, ProblemCaseUpdateRequest $request)
     {
-        $problemCase = ProblemCase::findOrFail($id);
-        $problemCase->manager_comment = $request->input('manager_comment');
-        $problemCase->merchant_comment = $request->input('merchant_comment');
-        $problemCase->deadline = $request->input('deadline');
+        $this->validate($request, [
+            'deadline' => 'nullable|date_format:Y-m-d',
+        ]);
 
+        $problemCase = ProblemCase::findOrFail($id);
+        $problemCase->deadline = $request->input('deadline');
         $problemCase->save();
 
         return $problemCase;
+    }
+
+    public function setManagerComment($id , Request $request, CommentService $commentService)
+    {
+        $this->validate($request, [
+            'body' => 'required|string',
+        ]);
+
+        $managerComment = $commentService->create(new CommentDTO(
+            commentable_type: Comment::PROBLEM_CASE_FOR_PRM,
+            commentable_id: $id,
+            body: $request->input('body'),
+            created_by_id: $this->user->id,
+            created_by_name: $this->user->name
+        ));
+
+        return $managerComment;
+    }
+
+    public function setMerchantComment($id , Request $request , CommentService $commentService)
+    {
+        $this->validate($request, [
+            'body' => 'required|string',
+        ]);
+
+        $merchantComment = $commentService->create(new CommentDTO(
+            commentable_type: Comment::PROBLEM_CASE_FOR_MERCHANT,
+            commentable_id: $id,
+            body: $request->input('body'),
+            created_by_id: $this->user->id,
+            created_by_name: $this->user->name
+        ));
+
+        return $merchantComment;
     }
 
     public function attachTags(Request $request, $id)
@@ -80,7 +121,7 @@ class ProblemCasesController extends ApiBaseController
         $request->validate([
             'tags' => 'required|array',
             'tags.*.name' => 'required|string',
-            'tags.*.type_id' => 'required|integer|in:' . ProblemCaseTag::BEFORE_TYPE .', '. ProblemCaseTag::AFTER_TYPE
+            'tags.*.type_id' => 'required|integer|in:' . ProblemCaseTag::BEFORE_TYPE . ', ' . ProblemCaseTag::AFTER_TYPE
         ]);
 
         $problemCase = ProblemCase::findOrFail($id);
@@ -105,9 +146,14 @@ class ProblemCasesController extends ApiBaseController
                 . ProblemCase::DONE . ','
                 . ProblemCase::FINISHED
         ]);
-        $problemCase = ProblemCase::findOrFail($id);
+        $problemCase = ProblemCase::query()->findOrFail($id);
         $problemCase->setStatus($request->input('status_id'));
         $problemCase->save();
+
+        if ($problemCase->isStatusFinished()) {
+            $message = SmsMessages::onNewProblemCases($problemCase->client_name . ' ' . $problemCase->client_surname, $problemCase->id);
+            NotifyMicroService::sendSms($problemCase->phone, $message, NotifyMicroService::PROBLEM_CASE);
+        }
 
         SendHook::dispatch(new HookData(
             service: 'merchants',
@@ -126,9 +172,24 @@ class ProblemCasesController extends ApiBaseController
         return $problemCase;
     }
 
-    public function getProblemCasesOfMerchantUser($user_id,Request $request)
+    public function setAssigned($id, Request $request)
     {
-        $problemCases = ProblemCase::query()->with('tags', function($query) {
+        $request->validate([
+            'assigned_to_id' => 'required|integer',
+            'assigned_to_name' => 'required|string',
+        ]);
+
+        $problemCase = ProblemCase::query()->findOrFail($id);
+        $problemCase->assigned_to_id = $request->input('assigned_to_id');
+        $problemCase->assigned_to_name = $request->input('assigned_to_name');
+        $problemCase->save();
+
+        return $problemCase;
+    }
+
+    public function getProblemCasesOfMerchantUser($user_id, Request $request)
+    {
+        $problemCases = ProblemCase::query()->with('tags', function ($query) {
             $query->where('type_id', 2);
         })->where('created_by_id', $user_id)
             ->orderByDesc('id');
