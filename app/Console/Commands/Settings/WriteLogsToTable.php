@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\Settings;
 
+use App\Modules\Merchants\Models\Log;
 use App\Services\TimeLogger;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
@@ -48,9 +49,7 @@ class WriteLogsToTable extends Command
         try {
             if (!empty($this->logs)) {
                 foreach (array_chunk($this->logs, 10000) as $chunk_logs) {
-                    DB::connection('logs')
-                        ->table('logs')
-                        ->insert($chunk_logs);
+                    Log::query()->insert($chunk_logs);
                 }
 
                 Cache::forget(TimeLogger::CACHE_KEY);
