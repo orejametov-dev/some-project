@@ -11,11 +11,11 @@ use App\HttpServices\Core\CoreService;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\HttpServices\Notify\NotifyMicroService;
 use App\Jobs\SendHook;
+use App\Jobs\SendSmsJob;
 use App\Modules\Merchants\Models\ProblemCase;
 use App\Services\SMS\SmsMessages;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Arr;
 
 class ProblemCasesController extends ApiBaseController
 {
@@ -79,6 +79,11 @@ class ProblemCasesController extends ApiBaseController
             . ' ' . $data['client']['patronymic']
             . ' ' . $data['client']['phone'];
 
+        $problemCase->client_name = $data['client']['name'];
+        $problemCase->client_surname = $data['client']['surname'];
+        $problemCase->client_patronymic = $data['client']['patronymic'];
+        $problemCase->phone = $data['client']['phone'];
+
         $problemCase->application_items = $data['application_items'];
 
         $problemCase->post_or_pre_created_by_id = $data['merchant_engaged_by']['id'];
@@ -92,13 +97,8 @@ class ProblemCasesController extends ApiBaseController
         $problemCase->setStatusNew();
         $problemCase->save();
 
-        preg_match("/" . preg_quote("9989") . "(.*)/", $problemCase->search_index, $phone);
-        $name = explode('9989', $problemCase->search_index);
-
-        if (!empty($phone)) {
-            $message = SmsMessages::onNewProblemCases(Arr::first($name), $problemCase->id);
-            NotifyMicroService::sendSms(Arr::first($phone), $message);
-        }
+        $message = SmsMessages::onNewProblemCases($problemCase->client_name . ' ' . $problemCase->client_surname, $problemCase->id);
+        NotifyMicroService::sendSms($problemCase->phone, $message, NotifyMicroService::PROBLEM_CASE);
 
         SendHook::dispatch(new HookData(
             service: 'merchants',
@@ -114,13 +114,16 @@ class ProblemCasesController extends ApiBaseController
             created_by_str: $this->user->name,
         ));
 
+        $message = SmsMessages::onNewProblemCases($problemCase->client_name . ' ' . $problemCase->client_surname, $problemCase->id);
+        SendSmsJob::dispatch($problemCase->phone, $message);
+
         return $problemCase;
     }
 
 
-        public function getStatusList()
-        {
-            return array_values(ProblemCase::$statuses);
-        }
-
+    public function getStatusList()
+    {
+        return array_values(ProblemCase::$statuses);
     }
+
+}
