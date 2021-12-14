@@ -262,6 +262,17 @@ class MerchantsController extends ApiBaseController
         return $merchant;
     }
 
+    public function toggleRecommend($id)
+    {
+        $merchant = Merchant::findOrFail($id);
+        $merchant->recommend = !$merchant->recommend;
+        $merchant->save();
+
+        Cache::tags('merchants')->flush();
+
+        return $merchant;
+    }
+
 }
 
 
