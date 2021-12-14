@@ -34,7 +34,7 @@ class AppController extends ApiBaseController
         $store_activity_reasons = ActivityReason::query()->where('type', 'STORE')->get();
         $cancel_reasons = CancelReason::query()->get();
         $legal_name_prefixes = LegalNameService::getNamePrefixes();
-        $competitors = Competitor::query()->select('id', 'name')->get();
+        $competitors = Competitor::query()->select('id', 'name')->get()->toArray();
 
         $authUser = $this->user;
 
