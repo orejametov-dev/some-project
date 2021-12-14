@@ -220,7 +220,7 @@ class MerchantRequestsController extends ApiBaseController
     {
 
         $merchant_request = MerchantRequest::findOrFail($id);
-        $merchant_request->setStatus(MerchantRequest::ON_TRAINING);
+        $merchant_request->setStatusOnTraining();
         $merchant_request->save();
 
         return $merchant_request;
