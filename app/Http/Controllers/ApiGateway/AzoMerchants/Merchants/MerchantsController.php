@@ -319,5 +319,19 @@ class MerchantsController extends ApiBaseController
 
         return $merchant->load('competitors');
     }
+
+    public function detachCompetitor($id , Request $request)
+    {
+        $merchant = Merchant::query()->findOrFail($id);
+        $competitor = Competitor::query()->findOrFail($request->input('competitor_id'));
+
+        if (!$merchant->competitors()->find($competitor->id)) {
+            throw new NotFoundException('No query result in table [merchant_competitor]', 404);
+        }
+
+        $merchant->competitors()->detach($competitor->id);
+
+        return response()->json(['message' => 'Данные о конкуренте были удалены у этого мерчанта']);
+    }
 }
 
