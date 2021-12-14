@@ -4,9 +4,8 @@ namespace App\Modules\Merchants\Models;
 
 
 use App\HttpServices\Storage\StorageMicroService;
-use App\Modules\Merchants\Services\RequestStatus;
-use App\Modules\Merchants\Traits\MerchantFileTrait;
 use App\Modules\Merchants\Traits\MerchantRequestStatusesTrait;
+use App\Services\SimpleStateMachine\SimpleStateMachineTrait;
 use App\Traits\SortableByQueryParams;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
@@ -37,6 +36,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Request filterRequest(\Illuminate\Http\Request $request)
  * @method static Builder|Request onlyCompletedRequests(\Illuminate\Http\Request $request)
  * @method static Builder|Request inProcess()
+ * @method static Builder|Request onTraining()
  * @method static Builder|Request new()
  * @method static Builder|Request newModelQuery()
  * @method static Builder|Request newQuery()
@@ -49,7 +49,14 @@ class Request extends Model
 {
     use HasFactory;
     use MerchantRequestStatusesTrait;
+    use SimpleStateMachineTrait;
     use SortableByQueryParams;
+
+    public const NEW = 1;
+    public const ALLOWED = 2;
+    public const TRASH = 3;
+    public const IN_PROCESS = 4;
+    public const ON_TRAINING = 5;
 
     protected $table = 'merchant_requests';
     protected $appends = ['status', 'checkers'];
@@ -84,6 +91,28 @@ class Request extends Model
         'completed',
     ];
 
+    private static $statuses = [
+        self::NEW => [
+            'id' => self::NEW,
+            'name' => 'новый',
+        ],
+        self::ALLOWED => [
+            'id' => self::ALLOWED,
+            'name' => 'Одобрено',
+        ],
+        self::TRASH => [
+            'id' => self::TRASH,
+            'name' => 'В корзине',
+        ],
+        self::IN_PROCESS => [
+            'id' => self::IN_PROCESS,
+            'name' => 'На переговорах',
+        ],
+        self::ON_TRAINING => [
+            'id' => self::ON_TRAINING,
+            'name' => 'На обучении',
+        ]
+    ];
 
     public function getCheckersAttribute()
     {
@@ -111,10 +140,48 @@ class Request extends Model
         ];
     }
 
+    public static function getOneById(int $id)
+    {
+        return json_decode(json_encode(self::$statuses[$id]));
+    }
+
+    public function getStateAttribute()
+    {
+        return $this->status_id;
+    }
 
     public function getStatusAttribute()
     {
-        return RequestStatus::getOneById($this->status_id);
+        return self::getOneById($this->status_id);
+    }
+
+    public function getSimpleStateMachineMap(): array
+    {
+        return [
+            self::NEW => [
+                self::IN_PROCESS
+            ],
+            self::IN_PROCESS => [
+                self::ON_TRAINING,
+                self::TRASH
+            ],
+            self::ON_TRAINING => [
+                self::ALLOWED
+            ],
+            self::ALLOWED => [],
+            self::TRASH => []
+        ];
+    }
+
+    public static function statusLists(): array
+    {
+        return [
+            array('id' => self::NEW, 'name' => 'Новый'),
+            array('id' => self::IN_PROCESS, 'name' => 'На переговорах'),
+            array('id' => self::ON_TRAINING, 'name' => 'На обучении'),
+            array('id' => self::ALLOWED, 'name' => 'Одобрено'),
+            array('id' => self::TRASH, 'name' => 'В корзине')
+        ];
     }
 
     public function files()
@@ -141,11 +208,11 @@ class Request extends Model
             $query->where('status_id', $status);
         }
 
-        if($request->has('completed') && $request->query('completed') == true) {
+        if ($request->has('completed') && $request->query('completed') == true) {
             $query->where('completed', true);
         }
 
-        if($request->has('completed') && $request->query('completed') == false) {
+        if ($request->has('completed') && $request->query('completed') == false) {
             $query->where('completed', false);
         }
     }
@@ -193,10 +260,9 @@ class Request extends Model
 
     public function checkToCompleted()
     {
-        if( $this->checkers['main'] &&
+        if ($this->checkers['main'] &&
             $this->checkers['documents'] &&
-            $this->checkers['files'])
-        {
+            $this->checkers['files']) {
             $this->completed = true;
             $this->save();
         }

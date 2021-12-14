@@ -14,7 +14,6 @@ use App\Modules\Merchants\Models\ProblemCase;
 use App\Modules\Merchants\Models\Request;
 use App\Modules\Merchants\Models\Store;
 use App\Modules\Merchants\Services\MerchantStatus;
-use App\Modules\Merchants\Services\RequestStatus;
 use App\Services\ClientTypeRegisterService;
 use App\Services\DistrictService;
 use App\Services\LegalNameService;
@@ -27,7 +26,7 @@ class AppController extends ApiBaseController
         $merchant_requests_count = Request::query()->new()->count();
         $merchants_count = Merchant::query()->count();
         $stores_count = Store::query()->count();
-        $merchant_request_statuses = RequestStatus::statusLists();
+        $merchant_request_statuses = Request::statusLists();
         $merchant_statuses = MerchantStatus::get();
         $problem_case_statuses = array_values(ProblemCase::$statuses);
         $problem_case_sources = ProblemCase::$sources;
@@ -77,7 +76,7 @@ class AppController extends ApiBaseController
 
     public function getDistricts(\Illuminate\Http\Request $request)
     {
-        if($request->query('region')) {
+        if ($request->query('region')) {
             return DistrictService::getDistrictsByRegion($request->query('region'));
 
         }
