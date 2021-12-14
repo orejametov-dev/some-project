@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddCompanyIdColumnToMerchantsTable extends Migration
+class AddNewRecommendColumnToMerchantsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +14,7 @@ class AddCompanyIdColumnToMerchantsTable extends Migration
     public function up()
     {
         Schema::table('merchants', function (Blueprint $table) {
-            $table->unsignedBigInteger('company_id')->nullable()->after('legal_name');
-            $table->foreign('company_id')->references('id')->on('companies');
+            $table->boolean('recommend')->default(false);
         });
     }
 
@@ -27,8 +26,7 @@ class AddCompanyIdColumnToMerchantsTable extends Migration
     public function down()
     {
         Schema::table('merchants', function (Blueprint $table) {
-            $table->dropForeign('company_id');
-            $table->dropColumn('company_id');
+            $table->dropColumn('recommend');
         });
     }
 }
