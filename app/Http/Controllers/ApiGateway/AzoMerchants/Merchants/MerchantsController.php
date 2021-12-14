@@ -50,7 +50,7 @@ class MerchantsController extends ApiBaseController
 
     public function show($id)
     {
-        return Merchant::with(['stores', 'tags', 'activity_reasons'])->findOrFail($id);
+        return Merchant::with(['stores', 'tags', 'activity_reasons' , 'competitors'])->findOrFail($id);
     }
 
     public function store(Request $request, MerchantsService $merchantsService)
