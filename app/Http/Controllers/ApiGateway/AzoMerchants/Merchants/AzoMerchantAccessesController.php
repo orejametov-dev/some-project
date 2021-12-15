@@ -8,10 +8,10 @@ use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\MerchantUsers\StoreMerchantUsers;
 use App\HttpServices\Auth\AuthMicroService;
+use App\HttpServices\Company\CompanyService;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Jobs\ToggleMerchantRoleOfUser;
-use App\Modules\Companies\Models\CompanyUser;
 use App\Modules\Merchants\Models\AzoMerchantAccess;
 use App\Modules\Merchants\Models\Store;
 use Illuminate\Http\Request;
@@ -48,14 +48,20 @@ class AzoMerchantAccessesController extends ApiBaseController
 
         $store = Store::query()->azo()->findOrFail($request->input('store_id'));
 
-        $company_user = CompanyUser::query()->where('user_id', $user['data']['id'])->firstOrNew();
-        $company_user->user_id = $user['data']['id'];
-        $company_user->phone = $user['data']['id'];
-        $company_user->full_name = $user['data']['name'];
-        $company_user->company_id = $store->merchant->company->id;
-        $company_user->save();
+        $company_user = CompanyService::getCompanyUserByUserId($user['data']['id']);
+
+        if (empty($company_user)) {
+            $company_user = CompanyService::createCompanyUser(
+                user_id: $user['data']['id'],
+                company_id: $store->merchant->company_id,
+                phone: $user['data']['phone'],
+                full_name: $user['data']['name']
+            );
+        }
+
+
         $azo_merchant_access_exists = AzoMerchantAccess::query()
-            ->where('company_user_id', $company_user->id)
+            ->where('company_user_id', $company_user['id'])
             ->exists();
 
         if ($azo_merchant_access_exists) {
@@ -66,7 +72,7 @@ class AzoMerchantAccessesController extends ApiBaseController
         }
 
         $merchant = $store->merchant;
-        if ($azo_merchant_access = AzoMerchantAccess::withTrashed()->where('user_id', $user['data']['id'])->first()) {
+        if ($azo_merchant_access = AzoMerchantAccess::withTrashed()->where('company_user_id', $company_user['id'])->first()) {
             $azo_merchant_access->restore();
         } else {
             $azo_merchant_access = new AzoMerchantAccess();
@@ -75,9 +81,9 @@ class AzoMerchantAccessesController extends ApiBaseController
         $azo_merchant_access->user_id = $request->input('user_id');
         $azo_merchant_access->user_name = $user['data']['name'];
         $azo_merchant_access->phone = $user['data']['phone'];
+        $azo_merchant_access->company_user_id = $company_user['id'];
         $azo_merchant_access->merchant()->associate($merchant);
         $azo_merchant_access->store()->associate($store->id);
-        $azo_merchant_access->company_user()->associate($company_user->id);
 
         $azo_merchant_access->save();
 

@@ -7,8 +7,10 @@ namespace App\Http\Controllers\ApiMerchantGateway\ProblemCases;
 use App\Http\Controllers\ApiMerchantGateway\ApiBaseController;
 use App\Http\Resources\ApiMerchantGateway\ProblemCases\ProblemCaseResource;
 use App\HttpServices\Hooks\DTO\HookData;
+use App\HttpServices\Notify\NotifyMicroService;
 use App\Jobs\SendHook;
 use App\Modules\Merchants\Models\ProblemCase;
+use App\Services\SMS\SmsMessages;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Cache;
@@ -58,8 +60,16 @@ class ProblemCasesController extends ApiBaseController
 
         $problemCase = ProblemCase::findOrFail($id);
         $problemCase->setStatus($request->input('status_id'));
-
         $problemCase->save();
+
+        if ($problemCase->status_id === ProblemCase::FINISHED) {
+            preg_match("/" . preg_quote("9989") . "(.*)/", $problemCase->search_index, $phone);
+
+            if (!empty($phone)) {
+                $message = SmsMessages::onFinishedProblemCases();
+                NotifyMicroService::sendSms(array_shift($phone), $message);
+            }
+        }
 
         SendHook::dispatch(new HookData(
             service: 'merchants',
@@ -100,9 +110,13 @@ class ProblemCasesController extends ApiBaseController
     public function getNewProblemCasesCounter(Request $request)
     {
         $counter =  Cache::remember('new-problem-cases-counter_' . $this->merchant_id, 10 * 60, function () use ($request) {
-            return ProblemCase::query()->byMerchant($this->merchant_id)
+            return ProblemCase::query()
+                ->whereNull('engaged_by_id')
+                ->whereNull('engaged_by_name')
+                ->byMerchant($this->merchant_id)
                 ->filterRequests($request)->onlyNew()->count();
         });
+
 
         return response()->json(['count' => $counter]);
     }

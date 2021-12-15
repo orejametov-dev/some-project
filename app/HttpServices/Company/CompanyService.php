@@ -23,8 +23,42 @@ class CompanyService
         return static::http()->post('companies', [
             'name' => $name,
             'legal_name' => $legal_name,
+            'legal_name_prefix' => $legal_name_prefix
+        ])->throw()->json();
+    }
+
+    public static function createCompanyBySpecial(
+        int $id,
+        string $name,
+        string $legal_name,
+        string $legal_name_prefix,
+        string $status,
+        string $created_at,
+        string $updated_at
+    )
+    {
+        return static::http()->post('companies/special', [
+            'id' => $id,
+            'name' => $name,
+            'legal_name' => $legal_name,
             'legal_name_prefix' => $legal_name_prefix,
-            'module_azo' => true
+            'status' => $status,
+            'created_at' => $created_at,
+            'updated_at' => $updated_at,
+        ])->throw()->json();
+    }
+
+    public static function setStatusExist(int $id, string $company_module = null)
+    {
+        return static::http()->post('companies/' . $id . '/status-exists', [
+            'company_module' => is_null($company_module) ? 'azo' : $company_module
+        ])->throw()->json();
+    }
+
+    public static function setStatusNotActive(int $id, string $company_module = null)
+    {
+        return static::http()->post('companies/' . $id . '/status-not-active', [
+            'company_module' => is_null($company_module) ? 'azo' : $company_module
         ])->throw()->json();
     }
 
@@ -35,7 +69,18 @@ class CompanyService
             'company_id' => $company_id,
             'phone' => $phone,
             'full_name' => $full_name
-        ]);
+        ])->throw()->json();
+    }
+
+    public static function createCompanyUserSpecial(int $id, int $user_id, int $company_id, string $phone, string $full_name)
+    {
+        return static::http()->post('companies/users/special', [
+            'id' => $id,
+            'user_id' => $user_id,
+            'company_id' => $company_id,
+            'phone' => $phone,
+            'full_name' => $full_name
+        ])->throw()->json();
     }
 
     public static function getCompanyUserByUserId($user_id)
@@ -45,9 +90,17 @@ class CompanyService
         ])->throw()->json();
     }
 
+    public static function updateCompany($company_id, $name, $legal_name_prefix)
+    {
+        return static::http()->put("companies/$company_id" , [
+            'name' => $name,
+           'legal_name_prefix' => $legal_name_prefix
+        ])->throw()->json();
+    }
+
     protected static function http()
     {
-        return Http::baseUrl(config('local_services.service_prm.domain') . '/api/')
+        return Http::baseUrl(config('local_services.service_prm.domain') . '/api/gate/')
             ->withHeaders([
                 'Accept' => 'application/json',
                 'Access-Token' => config('local_services.service_prm.service_token'),

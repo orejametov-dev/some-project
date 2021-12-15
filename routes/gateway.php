@@ -1,23 +1,13 @@
 <?php
 
-use App\Http\Controllers\ApiGateway\Companies\CompaniesController;
-use App\Http\Controllers\ApiGateway\Companies\CompanyUsersController;
 use App\Http\Controllers\ApiGateway\AzoMerchants\ExtraServices\MerchantsController as ExtraMerchantsController;
 use App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantsController;
+use App\Http\Controllers\ApiGateway\AzoMerchants\Comments\CommentsController;
 use Illuminate\Support\Facades\Route;
 
 
-//Companies
-Route::prefix('companies')->group(function () {
-    Route::get('/', [CompaniesController::class, 'index']);
-    Route::get('/{id}', [CompaniesController::class, 'show']);
-    Route::post('/', [CompaniesController::class, 'store']);
-    Route::post('/special-store', [CompaniesController::class, 'storeSpecial']);
-    Route::post('/{id}/detach-module', [CompaniesController::class, 'detachModule']);
-});
-
-Route::prefix('companies/users')->group(function () {
-    Route::get('/', [CompanyUsersController::class, 'index']);
+Route::prefix('comments')->group(function () {
+    Route::get('/' , [CommentsController::class , 'index']);
 });
 
 //Azo-Merchants
@@ -35,6 +25,7 @@ Route::prefix('merchants/requests')
         Route::delete('/{id}/delete-file', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'deleteFile']);
         Route::post('/{id}/allow', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'allow']);
         Route::post('/{id}/reject', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'reject']);
+        Route::match(['put', 'patch'], '/{id}/on-boarding', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'setOnBoarding']);
         Route::post('/', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'store']);
         Route::post('/set-engage/{id}', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'setEngage']);
         Route::get('counters/new', [App\Http\Controllers\ApiGateway\App\CountersController::class, 'merchantRequests']);
@@ -71,11 +62,13 @@ Route::prefix('merchants/problem-cases')
     ->group(function () {
         Route::get('/tags', [\App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases\ProblemCaseTagsController::class, 'index']);
         Route::get('/', [\App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases\ProblemCasesController::class, 'index']);
-        Route::post('/', [\App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases\ProblemCasesController::class, 'store']);
         Route::get('/{id}', [\App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases\ProblemCasesController::class, 'show']);
         Route::match(['put', 'patch'], '/{id}', [\App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases\ProblemCasesController::class, 'update']);
         Route::match(['put', 'patch'], '/{id}/attach-tags', [\App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases\ProblemCasesController::class, 'attachTags']);
         Route::match(['put', 'patch'], '/{id}/set-status', [\App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases\ProblemCasesController::class, 'setStatus']);
+        Route::match(['put', 'patch'], '/{id}/set-assigned', [\App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases\ProblemCasesController::class, 'setAssigned']);
+        Route::match(['put', 'patch'], '/{id}/manager-comment', [\App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases\ProblemCasesController::class, 'setManagerComment']);
+        Route::match(['put', 'patch'], '/{id}/merchant-comment', [\App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases\ProblemCasesController::class, 'setMerchantComment']);
         Route::get('/{user_id}/consultant', [\App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases\ProblemCasesController::class, 'getProblemCasesOfMerchantUser']);
     });
 
@@ -115,7 +108,7 @@ Route::prefix('notifications')
         Route::get('/{id}', [\App\Http\Controllers\ApiGateway\AzoMerchants\Stores\NotificationsController::class, 'show']);
         Route::post('/', [\App\Http\Controllers\ApiGateway\AzoMerchants\Stores\NotificationsController::class, 'store']);
         Route::match(['put', 'patch'], '/{id}', [\App\Http\Controllers\ApiGateway\AzoMerchants\Stores\NotificationsController::class, 'update']);
-        Route::delete( '/{id}', [\App\Http\Controllers\ApiGateway\AzoMerchants\Stores\NotificationsController::class, 'remove']);
+        Route::delete('/{id}', [\App\Http\Controllers\ApiGateway\AzoMerchants\Stores\NotificationsController::class, 'remove']);
     });
 
 Route::prefix('app')
@@ -138,7 +131,7 @@ Route::prefix('application-conditions')
         Route::match(['put', 'patch'], '/{id}', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class, 'update']);
         Route::post('/{id}/toggle', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class, 'toggle']);
         Route::delete('/{id}', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class, 'delete']);
-        Route::post('/{id}/toggle-posts' , [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class , 'togglePosts']);
+        Route::post('/{id}/toggle-posts', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class, 'togglePosts']);
     });
 
 Route::prefix('dashboard')

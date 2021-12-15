@@ -93,8 +93,12 @@ class Store extends Model
             $query->where('name', 'like', '%' . $searchIndex . '%');
         }
 
-        if($request->query('region')) {
+        if ($request->query('region')) {
             $query->where('region', $request->query('region'));
+        }
+
+        if ($request->has('active')) {
+            $query->where('active', $request->query('active'));
         }
     }
 
