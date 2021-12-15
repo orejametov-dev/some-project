@@ -5,6 +5,7 @@ namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 use App\Exceptions\ApiBusinessException;
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
+use App\Http\Requests\ApiPrm\Competitors\CompetitorsRequest;
 use App\Http\Requests\ApiPrm\Files\StoreFileRequest;
 use App\HttpServices\Auth\AuthMicroService;
 use App\HttpServices\Company\CompanyService;
@@ -266,15 +267,8 @@ class MerchantsController extends ApiBaseController
         return $merchant;
     }
 
-    public function attachCompetitor($id, Request $request)
+    public function attachCompetitor($id, CompetitorsRequest $request)
     {
-        $request->validate([
-            'competitor_id' => 'required|integer',
-            'volume_sales' => 'required|integer',
-            'percentage_approve' => 'required|integer',
-            'partnership_at' => 'required|date'
-        ]);
-
         $merchant = Merchant::query()->findOrFail($id);
         $competitor = Competitor::query()->findOrFail($request->input('competitor_id'));
 
@@ -294,15 +288,8 @@ class MerchantsController extends ApiBaseController
         return $merchant->load('competitors');
     }
 
-    public function updateCompetitor($id , Request $request)
+    public function updateCompetitor($id , CompetitorsRequest $request)
     {
-        $request->validate([
-            'competitor_id' => 'required|integer',
-            'volume_sales' => 'required|integer',
-            'percentage_approve' => 'required|integer',
-            'partnership_at' => 'required|date'
-        ]);
-
         $merchant = Merchant::query()->findOrFail($id);
         $competitor = Competitor::query()->findOrFail($request->input('competitor_id'));
 
@@ -310,11 +297,13 @@ class MerchantsController extends ApiBaseController
             throw new NotFoundException('No query result in table [merchant_competitor]', 404);
         }
 
-        $merchant->competitors()->sync([$competitor->id => [
+        $merchant->competitors()->detach($competitor->id);
+
+        $merchant->competitors()->attach($competitor->id,[
             'volume_sales' => $request->input('volume_sales') * 100,
             'percentage_approve' => $request->input('percentage_approve'),
             'partnership_at' => Carbon::parse($request->input('partnership_at'))->format('Y-m-d H:i:s'),
-        ]]);
+        ]);
 
 
         return $merchant->load('competitors');
