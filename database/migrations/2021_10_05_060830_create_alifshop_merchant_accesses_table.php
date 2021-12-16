@@ -15,7 +15,7 @@ class CreateAlifshopMerchantAccessesTable extends Migration
     {
         Schema::create('alifshop_merchant_accesses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_user_id')->constrained('company_users');
+            $table->unsignedBigInteger('company_user_id');
             $table->foreignId('alifshop_merchant_id')->constrained('alifshop_merchants');
             $table->foreignId('store_id')->constrained('stores');
 

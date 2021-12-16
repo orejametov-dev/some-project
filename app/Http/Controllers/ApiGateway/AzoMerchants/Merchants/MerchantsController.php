@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
+use App\Exceptions\ApiBusinessException;
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
+use App\Http\Requests\ApiPrm\Competitors\CompetitorsRequest;
 use App\Http\Requests\ApiPrm\Files\StoreFileRequest;
 use App\HttpServices\Auth\AuthMicroService;
 use App\HttpServices\Company\CompanyService;
@@ -11,10 +13,13 @@ use App\HttpServices\Telegram\TelegramService;
 use App\HttpServices\Warehouse\WarehouseService;
 use App\Modules\Merchants\DTO\Merchants\MerchantsDTO;
 use App\Modules\Merchants\Models\ActivityReason;
+use App\Modules\Merchants\Models\Competitor;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Tag;
 use App\Modules\Merchants\Services\Merchants\MerchantsService;
 use App\Services\Alifshop\AlifshopService;
+use Carbon\Carbon;
+use Http\Discovery\Exception\NotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -46,7 +51,7 @@ class MerchantsController extends ApiBaseController
 
     public function show($id)
     {
-        return Merchant::with(['stores', 'tags', 'activity_reasons'])->findOrFail($id);
+        return Merchant::with(['stores', 'tags', 'activity_reasons', 'competitors'])->findOrFail($id);
     }
 
     public function store(Request $request, MerchantsService $merchantsService)
@@ -96,8 +101,6 @@ class MerchantsController extends ApiBaseController
         $oldToken = $merchant->token;
         $merchant->update($request->all());
         $merchant->old_token = $oldToken;
-
-        CompanyService::updateCompanyLegalNamePrefix($merchant->company_id, $request->input('legal_name_prefix'));
 
         Cache::tags($merchant->id)->flush();
         Cache::tags('azo_merchants')->flush();
@@ -264,6 +267,54 @@ class MerchantsController extends ApiBaseController
         return $merchant;
     }
 
-}
+    public function attachCompetitor($id, CompetitorsRequest $request)
+    {
+        $merchant = Merchant::query()->findOrFail($id);
+        $competitor = Competitor::query()->findOrFail($request->input('competitor_id'));
 
+        if ($merchant->competitors()->find($competitor->id)) {
+            throw new ApiBusinessException('Информация о данном конкуренте на этого мерчанта уже была создана' , 'merchant_competitor_exists' , [
+                'ru' => 'Информация о данном конкуренте на этого мерчанта уже была создана',
+                'uz' => 'Merchantdagi bu konkurent haqidagi ma\'lumot qo\'shib bo\'lingan ekan'
+            ],400);
+        }
+
+        $merchant->competitors()->attach($competitor->id,[
+                'volume_sales' => $request->input('volume_sales') * 100,
+                'percentage_approve' => $request->input('percentage_approve'),
+                'partnership_at' => Carbon::parse($request->input('partnership_at'))->format('Y-m-d H:i:s'),
+            ]);
+
+        return $merchant->load('competitors');
+    }
+
+    public function updateCompetitor($id , CompetitorsRequest $request)
+    {
+        $merchant = Merchant::query()->findOrFail($id);
+        $competitor = Competitor::query()->findOrFail($request->input('competitor_id'));
+
+        $merchant->competitors()->findOrFail($competitor->id);
+        $merchant->competitors()->detach($competitor->id);
+        $merchant->competitors()->attach($competitor->id,[
+            'volume_sales' => $request->input('volume_sales') * 100,
+            'percentage_approve' => $request->input('percentage_approve'),
+            'partnership_at' => Carbon::parse($request->input('partnership_at'))->format('Y-m-d H:i:s'),
+        ]);
+
+
+        return $merchant->load('competitors');
+    }
+
+    public function detachCompetitor($id , Request $request)
+    {
+        $merchant = Merchant::query()->findOrFail($id);
+        $competitor = Competitor::query()->findOrFail($request->input('competitor_id'));
+
+        $merchant->competitors()->findOrFail($competitor->id);
+
+        $merchant->competitors()->detach($competitor->id);
+
+        return response()->json(['message' => 'Данные о конкуренте были удалены у этого мерчанта']);
+    }
+}
 

@@ -1,15 +1,11 @@
 <?php
 
-
-namespace App\Http\Controllers\ApiCallsGateway\ProblemCases;
-
+namespace App\Http\Controllers\ApiLawGateway\ProblemCases;
 
 use App\Exceptions\ApiBusinessException;
-use App\Http\Controllers\ApiCallsGateway\ApiBaseController;
-use App\Http\Resources\ApiCallsGateway\ProblemCases\ProblemCaseResource;
+use App\Http\Controllers\ApiLawGateway\ApiBaseController;
 use App\HttpServices\Core\CoreService;
 use App\HttpServices\Hooks\DTO\HookData;
-use App\HttpServices\Notify\NotifyMicroService;
 use App\Jobs\SendHook;
 use App\Jobs\SendSmsJob;
 use App\Modules\Merchants\Models\ProblemCase;
@@ -19,17 +15,6 @@ use Illuminate\Http\Request;
 
 class ProblemCasesController extends ApiBaseController
 {
-    public function index(Request $request)
-    {
-        $problemCases = ProblemCase::query()->filterRequests($request);
-
-        if ($request->query('object') == true) {
-            return new ProblemCaseResource($problemCases->first());
-        }
-
-        return ProblemCaseResource::collection($problemCases->paginate($request->query('per_page') ?? 15));
-    }
-
     public function store(Request $request)
     {
         $this->validate($request, [
@@ -84,12 +69,13 @@ class ProblemCasesController extends ApiBaseController
         $problemCase->client_patronymic = $data['client']['patronymic'];
         $problemCase->phone = $data['client']['phone'];
 
+
         $problemCase->application_items = $data['application_items'];
 
         $problemCase->post_or_pre_created_by_id = $data['merchant_engaged_by']['id'];
         $problemCase->post_or_pre_created_by_name = $data['merchant_engaged_by']['name'];
 
-        $problemCase->created_from_name = "CALLS";
+        $problemCase->created_from_name = "LAW";
         $problemCase->created_by_id = $this->user->id;
         $problemCase->created_by_name = $this->user->name;
         $problemCase->description = $request->input('description');
@@ -97,14 +83,11 @@ class ProblemCasesController extends ApiBaseController
         $problemCase->setStatusNew();
         $problemCase->save();
 
-        $message = SmsMessages::onNewProblemCases($problemCase->client_name . ' ' . $problemCase->client_surname, $problemCase->id);
-        NotifyMicroService::sendSms($problemCase->phone, $message, NotifyMicroService::PROBLEM_CASE);
-
         SendHook::dispatch(new HookData(
             service: 'merchants',
             hookable_type: $problemCase->getTable(),
             hookable_id: $problemCase->id,
-            created_from_str: 'CALLS',
+            created_from_str: 'LAW',
             created_by_id: $this->user->id,
             body: 'Создан проблемный кейс co статусом',
             keyword: ProblemCase::$statuses[$problemCase->status_id]['name'],
@@ -119,11 +102,4 @@ class ProblemCasesController extends ApiBaseController
 
         return $problemCase;
     }
-
-
-    public function getStatusList()
-    {
-        return array_values(ProblemCase::$statuses);
-    }
-
 }

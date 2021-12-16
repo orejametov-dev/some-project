@@ -15,7 +15,6 @@ class AddCompanyUserIdToMerchantUsersTable extends Migration
     {
         Schema::table('merchant_users', function (Blueprint $table) {
             $table->unsignedBigInteger('company_user_id')->nullable()->after('id');
-            $table->foreign('company_user_id')->references('id')->on('company_users');
         });
     }
 
@@ -27,7 +26,6 @@ class AddCompanyUserIdToMerchantUsersTable extends Migration
     public function down()
     {
         Schema::table('merchant_users', function (Blueprint $table) {
-            $table->dropForeign('company_user_id');
             $table->dropColumn('company_user_id');
         });
     }

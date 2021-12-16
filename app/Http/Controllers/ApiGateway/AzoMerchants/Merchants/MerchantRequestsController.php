@@ -74,6 +74,11 @@ class MerchantRequestsController extends ApiBaseController
         ]);
 
         $merchant_request = MerchantRequest::findOrFail($id);
+
+        if (CompanyService::getCompanyByName($request->input('name'))) {
+            return response()->json(['message' => 'Указанное имя компании уже занято'], 400);
+        }
+
         $merchant_request->fill($validatedRequest);
 
         $merchant_request->save();
@@ -145,12 +150,11 @@ class MerchantRequestsController extends ApiBaseController
     {
         $merchant_request = MerchantRequest::findOrFail($id);
 
-        if (!$merchant_request->isInProcess()) {
-            return response()->json(['message' => 'Статус заявки должен быть "На переговорах"'], 400);
+        if (!$merchant_request->isOnTraining()) {
+            return response()->json(['message' => 'Статус заявки должен быть "На обучении"'], 400);
         }
 
-        $company_name_exists = CompanyService::getCompanyByName($merchant_request->name);
-        if ($company_name_exists) {
+        if (CompanyService::getCompanyByName($merchant_request->name)) {
             return response()->json(['message' => 'Указанное имя компании уже занято'], 400);
         }
 
@@ -207,6 +211,16 @@ class MerchantRequestsController extends ApiBaseController
 
         $merchant_request->setStatusTrash();
         $merchant_request->cancel_reason()->associate($cancelReason);
+        $merchant_request->save();
+
+        return $merchant_request;
+    }
+
+    public function setOnBoarding($id)
+    {
+
+        $merchant_request = MerchantRequest::findOrFail($id);
+        $merchant_request->setStatusOnTraining();
         $merchant_request->save();
 
         return $merchant_request;

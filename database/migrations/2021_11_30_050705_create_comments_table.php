@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCompanyModulesTable extends Migration
+class CreateCommentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,13 @@ class CreateCompanyModulesTable extends Migration
      */
     public function up()
     {
-        Schema::create('company_modules', function (Blueprint $table) {
+        Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained('companies');
-            $table->foreignId('module_id')->constrained('modules');
-            $table->boolean('active')->default(true);
+            $table->morphs('commentable');
+            $table->text('body');
+            $table->string('created_by_id');
+            $table->string('created_by_name');
             $table->timestamps();
-
-            $table->unique(['company_id', 'module_id']);
         });
     }
 
@@ -31,6 +30,6 @@ class CreateCompanyModulesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('company_modules');
+        Schema::dropIfExists('comments');
     }
 }
