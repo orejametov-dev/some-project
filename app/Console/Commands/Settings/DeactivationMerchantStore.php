@@ -66,31 +66,6 @@ class DeactivationMerchantStore extends Command
                     }
                 }
             });
-
-
-        Store::whereHas('merchant', function($query) {
-            $query->where('active', true);
-        })->where('active' , true)
-            ->chunkById(100, function ($stores) use ($coreService, $from_date, $to_date) {
-                foreach ($stores as $store) {
-                    $result = $coreService->getStoreApplicationsAndClientsCountByRange($store->id, $from_date, $to_date);
-                    $resultData = $result['data'];
-                    if ($resultData['applications_count'] == 0 && $resultData['clients_count'] == 0)
-                    {
-                        $store->active = false;
-                        $store->save();
-
-                        $store->activity_reasons()->attach(ActivityReason::STORE_AUTO_DEACTIVATION_REASON_ID, [
-                            'active' => $store->active,
-                        ]);
-
-                        $merchant = $store->merchant;
-                        Cache::tags($merchant->id)->flush();
-                        Cache::tags('merchants')->flush();
-                    }
-                }
-            });
-
         \Log::info(DeactivationMerchantStore::class . "|" . now());
     }
 }
