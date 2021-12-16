@@ -280,10 +280,10 @@ class MerchantsController extends ApiBaseController
         }
 
         $merchant->competitors()->attach($competitor->id,[
-                'volume_sales' => $request->input('volume_sales') * 100,
-                'percentage_approve' => $request->input('percentage_approve'),
-                'partnership_at' => Carbon::parse($request->input('partnership_at'))->format('Y-m-d H:i:s'),
-            ]);
+            'volume_sales' => $request->input('volume_sales') * 100,
+            'percentage_approve' => $request->input('percentage_approve'),
+            'partnership_at' => Carbon::parse($request->input('partnership_at'))->format('Y-m-d H:i:s'),
+        ]);
 
         return $merchant->load('competitors');
     }
@@ -322,5 +322,18 @@ class MerchantsController extends ApiBaseController
 
         return response()->json(['message' => 'Данные о конкуренте были удалены у этого мерчанта']);
     }
+
+    public function toggleRecommend($id)
+    {
+        $merchant = Merchant::findOrFail($id);
+        $merchant->recommend = !$merchant->recommend;
+        $merchant->save();
+
+        Cache::tags('merchants')->flush();
+
+        return $merchant;
+    }
+
 }
+
 
