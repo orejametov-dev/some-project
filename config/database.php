@@ -91,9 +91,8 @@ return [
             'username' => env('DB_LOGS_USERNAME', 'local_service_merchant_log'),
             'password' => env('DB_LOGS_PASSWORD', ''),
             'options' => [
-                // here you can pass more settings to the Mongo Driver Manager
-                // see https://www.php.net/manual/en/mongodb-driver-manager.construct.php under "Uri Options" for a list of complete parameters that you can use
-
+                'authSource' => env('DB_LOGS_DATABASE', 'sv_core_logs'),
+                'authMechanism' => 'SCRAM-SHA-1',
                 'database' => env('DB_AUTHENTICATION_DATABASE', 'admin'), // required with Mongo 3+
             ],
         ],
