@@ -267,6 +267,18 @@ class MerchantsController extends ApiBaseController
         return $merchant;
     }
 
+    public function toggleRecommend($id)
+    {
+        $merchant = Merchant::findOrFail($id);
+        $merchant->recommend = !$merchant->recommend;
+        $merchant->save();
+
+        Cache::tags($merchant->id)->flush();
+        Cache::tags('azo_merchants')->flush();
+
+        return $merchant;
+    }
+
     public function attachCompetitor($id, CompetitorsRequest $request)
     {
         $merchant = Merchant::query()->findOrFail($id);
