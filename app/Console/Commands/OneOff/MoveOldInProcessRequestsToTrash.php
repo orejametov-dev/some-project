@@ -46,6 +46,6 @@ class MoveOldInProcessRequestsToTrash extends Command
     {
         Request::where('created_at', '<=', Carbon::parse('2021-09-21'))
             ->where('status_id', Request::IN_PROCESS)
-            ->update(['status_id', Request::TRASH]);
+            ->update(['status_id' => Request::TRASH]);
     }
 }
