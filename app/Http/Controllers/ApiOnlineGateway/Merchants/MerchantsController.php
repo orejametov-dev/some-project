@@ -18,7 +18,8 @@ class MerchantsController extends Controller
             ->with('tags')
             ->active()
             ->filterRequest($request)
-            ->orderByDesc('recommend');
+            ->orderByDesc('recommend')
+            ->orderByDesc('current_sales');
 
         return MerchantResource::collection($query->paginate($request->query('per_page')));
     }
