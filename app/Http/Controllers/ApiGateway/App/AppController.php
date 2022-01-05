@@ -8,6 +8,7 @@ use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\CancelReason;
 use App\Modules\Merchants\Models\Competitor;
+use App\Modules\Merchants\Models\ConditionTemplate;
 use App\Modules\Merchants\Models\File;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\ProblemCase;
@@ -35,6 +36,7 @@ class AppController extends ApiBaseController
         $cancel_reasons = CancelReason::query()->get();
         $legal_name_prefixes = LegalNameService::getNamePrefixes();
         $competitors = Competitor::query()->select('id', 'name')->get()->toArray();
+        $condition_templates = ConditionTemplate::query()->get();
 
         $authUser = $this->user;
 
@@ -70,7 +72,8 @@ class AppController extends ApiBaseController
             'cancel_reasons',
             'client_type_register',
             'legal_name_prefixes',
-            'competitors'
+            'competitors',
+            'condition_templates'
         ));
     }
 
