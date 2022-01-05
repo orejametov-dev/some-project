@@ -14,7 +14,7 @@ class AddNewDocumentTypeColumnToMerchantAdditionalAgreementsTable extends Migrat
     public function up()
     {
         Schema::table('merchant_additional_agreements', function (Blueprint $table) {
-            $table->string('document_type');
+            $table->string('document_type')->nullable();
         });
 
         DB::table('merchant_additional_agreements')
