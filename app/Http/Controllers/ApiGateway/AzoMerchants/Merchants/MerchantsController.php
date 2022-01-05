@@ -203,7 +203,9 @@ class MerchantsController extends ApiBaseController
     {
         $percentage_of_limit = Merchant::$percentage_of_limit;
 
-        $merchant_query = DB::table('merchants')->select([
+        $merchant_query = DB::table('merchants')
+            ->whereRaw('active = 1')
+            ->select([
             'merchants.id',
             'merchants.name',
             DB::raw('sum(merchant_additional_agreements.limit) as agreement_sum'),
