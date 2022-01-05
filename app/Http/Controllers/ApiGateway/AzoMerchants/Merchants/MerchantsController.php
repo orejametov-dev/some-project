@@ -203,7 +203,9 @@ class MerchantsController extends ApiBaseController
     {
         $percentage_of_limit = Merchant::$percentage_of_limit;
 
-        $merchant_query = DB::table('merchants')->select([
+        $merchant_query = DB::table('merchants')
+            ->whereRaw('active = 1')
+            ->select([
             'merchants.id',
             'merchants.name',
             DB::raw('sum(merchant_additional_agreements.limit) as agreement_sum'),
@@ -217,13 +219,13 @@ class MerchantsController extends ApiBaseController
                     ->from('merchant_infos')
                     ->whereColumn('merchants.id', 'merchant_infos.merchant_id');
             })
-            ->groupBy(['merchants.id', 'merchants.name', 'merchant_infos.limit']);
+            ->groupBy(['merchants.id', 'merchants.name',  'merchant_infos.limit']);
 
         return DB::table(DB::raw("({$merchant_query->toSql()}) as sub_query"))
             ->select([
                 'sub_query.id',
                 'sub_query.name'
-            ])->whereRaw("(IFNULL(sub_query.limit, 0) + IFNULL(sub_query.agreement_sum, 0)) $percentage_of_limit <= sub_query.current_sales")->get();
+            ])->whereRaw("(IFNULL(sub_query.limit, 0) + IFNULL(sub_query.agreement_sum, 0)) $percentage_of_limit <= sub_query.current_sales ")->get();
     }
 
     public function toggle($id, Request $request)
