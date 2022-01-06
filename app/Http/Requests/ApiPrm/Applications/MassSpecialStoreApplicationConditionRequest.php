@@ -4,7 +4,7 @@ namespace App\Http\Requests\ApiPrm\Applications;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class MassStoreApplicationConditionsRequest extends FormRequest
+class MassSpecialStoreApplicationConditionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,12 @@ class MassStoreApplicationConditionsRequest extends FormRequest
     public function rules()
     {
         return [
+            'store_ids' => 'nullable|array',
+            'duration' => 'required|numeric|between:0,24',
+            'commission' => 'required|integer|between:0,100',
             'special_offer' => 'nullable|string',
-            'template' => 'required|integer',
             'event_id' => 'nullable|integer',
+            'discount'  => 'required|integer|between:0,100',
             'post_merchant' => 'required|boolean',
             'post_alifshop' => 'required|boolean',
             'merchant_ids' => 'required|array',
