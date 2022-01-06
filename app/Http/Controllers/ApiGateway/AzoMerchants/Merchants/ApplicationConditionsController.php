@@ -12,6 +12,7 @@ use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\ProblemCaseTag;
 use App\Services\Alifshop\AlifshopService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -79,6 +80,8 @@ class ApplicationConditionsController extends ApiBaseController
         $condition->event_id = $request->input('event_id');
         $condition->merchant()->associate($merchant);
         $condition->store_id = $main_store->id;
+        $condition->started_at = Carbon::parse($request->input('started_at'))->format('Y-m-d');
+        $condition->finished_at = Carbon::parse($request->input('started_at'))->format('Y-m-d');
         $condition->save();
         if ($store_ids) {
             $condition->stores()->attach($request->input('store_ids'));

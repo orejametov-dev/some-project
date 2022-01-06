@@ -33,6 +33,8 @@ class StoreApplicationConditions extends FormRequest
             'discount'  => 'required|integer|between:0,100',
             'post_merchant' => 'required|boolean',
             'post_alifshop' => 'required|boolean',
+            'started_at' => 'nullable',
+            'finished_at' => 'nullable',
         ];
     }
 }
