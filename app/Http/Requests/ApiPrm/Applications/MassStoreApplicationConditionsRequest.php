@@ -25,11 +25,11 @@ class MassStoreApplicationConditionsRequest extends FormRequest
     {
         return [
             'special_offer' => 'nullable|string',
-            'template' => 'required|integer',
             'event_id' => 'nullable|integer',
             'post_merchant' => 'required|boolean',
             'post_alifshop' => 'required|boolean',
             'merchant_ids' => 'required|array',
+            'template_ids' => 'required|array',
         ];
     }
 }
