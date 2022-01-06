@@ -33,8 +33,7 @@ class ProblemCasesController extends ApiBaseController
     public function store(Request $request)
     {
         $this->validate($request, [
-            'credit_number' => 'required_without:application_id|string',
-            'application_id' => 'required_without:credit_number|integer',
+            'credit_number' => 'required|string',
             'description' => 'required'
         ]);
 
