@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
+use App\Exceptions\ApiBusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
+use App\Http\Requests\ApiPrm\Applications\MassStoreApplicationConditions;
 use App\Http\Requests\ApiPrm\Applications\StoreApplicationConditions;
 use App\Http\Requests\ApiPrm\Applications\UpdateApplicationConditions;
 use App\HttpServices\Core\CoreService;
@@ -11,6 +13,7 @@ use App\Jobs\SendHook;
 use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\ProblemCaseTag;
+use App\Modules\Merchants\Models\Store;
 use App\Services\Alifshop\AlifshopService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -101,6 +104,50 @@ class ApplicationConditionsController extends ApiBaseController
         Cache::tags($merchant->id)->flush();
 
         return $condition->load('stores');
+    }
+
+    public function massStore(MassStoreApplicationConditions $request)
+    {
+        $merchant_not_exists = array_diff($request->input('merchant_ids') , Merchant::query()->whereIn('id' , $request->input('merchant_ids'))->pluck('id')->toArray());
+
+        if (!empty($merchant_not_exists)) {
+            throw new ApiBusinessException('Мерчант не существует' , 'merchant_not_exists' , [
+                'ru' => 'Мерчант не существует'
+            ] ,400);
+        }
+
+        foreach ($request->input('merchant_ids') as $merchant_id)
+        {
+            $merchant = Merchant::query()->findOrFail($merchant_id);
+
+            $main_store = Store::query()
+                ->where('merchant_id' , $merchant_id)
+                ->where('is_main' , true)->first();
+
+            $condition = new Condition($request->validated());
+            $condition->event_id = $request->input('event_id');
+            $condition->merchant()->associate($merchant);
+            $condition->store_id = $main_store->id;
+            $condition->save();
+
+            SendHook::dispatch(new HookData(
+                service: 'merchants',
+                hookable_type: $merchant->getTable(),
+                hookable_id: $merchant->id,
+                created_from_str: 'PRM',
+                created_by_id: $this->user->id,
+                body: 'Создано условие',
+                keyword: 'id: ' . $condition->id . ' ' . $condition->title,
+                action: 'create',
+                class: 'info',
+                action_at: null,
+                created_by_str: $this->user->name,
+            ));
+
+            Cache::tags($merchant->id)->flush();
+        }
+
+        return response()->json(['message' => 'Условия изменены']);
     }
 
     public function update(UpdateApplicationConditions $request, $condition_id)
