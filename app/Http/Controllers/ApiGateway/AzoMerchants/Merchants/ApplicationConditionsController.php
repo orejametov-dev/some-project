@@ -4,7 +4,7 @@ namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
 use App\Exceptions\ApiBusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
-use App\Http\Requests\ApiPrm\Applications\MassStoreApplicationConditions;
+use App\Http\Requests\ApiPrm\Applications\MassStoreApplicationConditionsRequest;
 use App\Http\Requests\ApiPrm\Applications\StoreApplicationConditions;
 use App\Http\Requests\ApiPrm\Applications\UpdateApplicationConditions;
 use App\HttpServices\Core\CoreService;
@@ -106,7 +106,7 @@ class ApplicationConditionsController extends ApiBaseController
         return $condition->load('stores');
     }
 
-    public function massStore(MassStoreApplicationConditions $request)
+    public function massStore(MassStoreApplicationConditionsRequest $request)
     {
         $merchant_not_exists = array_diff($request->input('merchant_ids') , Merchant::query()->whereIn('id' , $request->input('merchant_ids'))->pluck('id')->toArray());
 
