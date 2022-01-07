@@ -3,6 +3,7 @@
 namespace App\Console\Commands\Settings;
 
 use App\Modules\Merchants\Models\Condition;
+use App\Modules\Merchants\Services\MerchantStatus;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -41,6 +42,12 @@ class DeactivationApplicationConditions extends Command
     {
         $to_date = Carbon::now()->format('Y-m-d');
 
-        Condition::query()->where('finished_at' , $to_date)->update(['active' => false]);
+        Condition::query()
+            ->with('merchant')
+            ->whereHas('merchant' , function ($query) {
+                $query->where('active' , true);
+            })
+            ->where('started_at' , $to_date)
+            ->update(['active' => false]);
     }
 }

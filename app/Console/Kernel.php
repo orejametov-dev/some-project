@@ -2,6 +2,8 @@
 
 namespace App\Console;
 
+use App\Console\Commands\Settings\ActivationApplicationConditions;
+use App\Console\Commands\Settings\DeactivationApplicationConditions;
 use App\Console\Commands\Settings\DeactivationMerchantStore;
 use App\Console\Commands\Settings\UpdateCurrentSales;
 use Illuminate\Console\Scheduling\Schedule;
@@ -27,6 +29,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command(UpdateCurrentSales::class)->dailyAt('00:00');
+        $schedule->command(ActivationApplicationConditions::class)->dailyAt('00:00');
+        $schedule->command(DeactivationApplicationConditions::class)->dailyAt('00:00');
         $schedule->command(DeactivationMerchantStore::class)->dailyAt('01:00');
     }
 
