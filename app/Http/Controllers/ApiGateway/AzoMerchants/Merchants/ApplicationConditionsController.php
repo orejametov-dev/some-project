@@ -80,8 +80,8 @@ class ApplicationConditionsController extends ApiBaseController
         $condition->event_id = $request->input('event_id');
         $condition->merchant()->associate($merchant);
         $condition->store_id = $main_store->id;
-        $condition->started_at = Carbon::parse($request->input('started_at'))->format('Y-m-d');
-        $condition->finished_at = Carbon::parse($request->input('started_at'))->format('Y-m-d');
+        $condition->started_at = !empty($request->input('started_at')) ? Carbon::parse($request->input('started_at'))->format('Y-m-d') : null;
+        $condition->finished_at = !empty($request->input('started_at')) ? Carbon::parse($request->input('finished_at'))->format('Y-m-d') : null;
         $condition->save();
         if ($store_ids) {
             $condition->stores()->attach($request->input('store_ids'));

@@ -14,8 +14,8 @@ class AddMewStartedAtAndFinishedAtColumnsToApplicationConditionsTable extends Mi
     public function up()
     {
         Schema::table('application_conditions', function (Blueprint $table) {
-            $table->timestamp('started_at')->nullable();
-            $table->timestamp('finished_at')->nullable();
+            $table->dateTime('started_at')->nullable();
+            $table->dateTime('finished_at')->nullable();
         });
     }
 
