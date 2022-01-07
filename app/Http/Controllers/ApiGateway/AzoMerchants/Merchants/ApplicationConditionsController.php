@@ -111,31 +111,44 @@ class ApplicationConditionsController extends ApiBaseController
 
     public function massStore(MassStoreApplicationConditionsRequest $request)
     {
-        $merchant_not_exists = array_diff($request->input('merchant_ids'), Merchant::query()->whereIn('id', $request->input('merchant_ids'))->pluck('id')->toArray());
+        $merchants = Merchant::query()
+            ->whereIn('id', $request->input('merchant_ids'))
+            ->get();
 
-        if (!empty($merchant_not_exists)) {
+        if (!empty(array_diff($request->input('merchant_ids'), $merchants->pluck('id')->toArray()))) {
             throw new ApiBusinessException('Мерчант не существует', 'merchant_not_exists', [
                 'ru' => 'Мерчант не существует'
             ], 400);
         }
 
-        foreach ($request->input('merchant_ids') as $merchant_id) {
-            $merchant = Merchant::query()->findOrFail($merchant_id);
+        $templates = ConditionTemplate::query()
+            ->whereIn('id', $request->input('template_ids'))
+            ->get();
 
-            $main_store = Store::query()
-                ->where('merchant_id', $merchant_id)
-                ->where('is_main', true)->first();
+        if (!empty(array_diff($request->input('template_ids'), $templates->pluck('id')->toArray()))) {
+            throw new ApiBusinessException('Условие не существует', 'merchant_not_exists', [
+                'ru' => 'Условие не существует'
+            ], 400);
+        }
 
+        foreach ($merchants as $merchant) {
+            foreach ($templates as $template) {
+                $condition = Condition::query()->where('merchant_id', $merchant->id)
+                    ->where('duration', $template->duration)
+                    ->where('commission', $template->commission)
+                    ->exists();
 
-            foreach ($request->input('template_ids') as $template) {
-
-                $template = ConditionTemplate::query()
-                    ->where('id', $template)
-                    ->first();
-
-                if (!$template) {
-                    throw new BusinessException('Указано не правильно условие', 'template_not_exists', 400);
+                if ($condition) {
+                    throw new BusinessException('Данное условие существует для этого мерчанта '
+                        . $merchant->name . ' ' . $template->duration . '|' . $template->commission . '%',
+                        'condition_exists', 400);
                 }
+            }
+        }
+
+        foreach ($merchants as $merchant) {
+            $main_store = $merchant->stores()->where('active', true)->first();
+            foreach ($templates as $template) {
 
                 $condition = new Condition();
                 $condition->duration = $template->duration;
@@ -158,9 +171,8 @@ class ApplicationConditionsController extends ApiBaseController
                     action_at: null,
                     created_by_str: $this->user->name,
                 ));
-
-                Cache::tags($merchant->id)->flush();
             }
+            Cache::tags($merchant->id)->flush();
         }
 
         return response()->json(['message' => 'Условия изменены']);
@@ -168,20 +180,18 @@ class ApplicationConditionsController extends ApiBaseController
 
     public function massSpecialStore(MassSpecialStoreApplicationConditionRequest $request)
     {
-        $merchant_not_exists = array_diff($request->input('merchant_ids'), Merchant::query()->whereIn('id', $request->input('merchant_ids'))->pluck('id')->toArray());
+        $merchants = Merchant::query()
+            ->whereIn('id', $request->input('merchant_ids'))
+            ->get();
 
-        if (!empty($merchant_not_exists)) {
+        if (!empty(array_diff($request->input('merchant_ids'), $merchants->pluck('id')->toArray()))) {
             throw new ApiBusinessException('Мерчант не существует', 'merchant_not_exists', [
                 'ru' => 'Мерчант не существует'
             ], 400);
         }
 
-        foreach ($request->input('merchant_ids') as $merchant_id) {
-            $merchant = Merchant::query()->findOrFail($merchant_id);
-
-            $main_store = Store::query()
-                ->where('merchant_id', $merchant_id)
-                ->where('is_main', true)->first();
+        foreach ($merchants as $merchant) {
+            $main_store = $merchant->stores()->where('active', true)->first();
 
             $condition = new Condition($request->validated());
             $condition->event_id = $request->input('event_id');

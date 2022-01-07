@@ -36,7 +36,7 @@ class AppController extends ApiBaseController
         $cancel_reasons = CancelReason::query()->get();
         $legal_name_prefixes = LegalNameService::getNamePrefixes();
         $competitors = Competitor::query()->select('id', 'name')->get()->toArray();
-        $condition_templates = ConditionTemplate::query()->get();
+        $condition_templates = ConditionTemplate::allCached();
 
         $authUser = $this->user;
 
