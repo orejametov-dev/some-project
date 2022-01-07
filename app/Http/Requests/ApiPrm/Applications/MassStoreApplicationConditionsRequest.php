@@ -28,6 +28,7 @@ class MassStoreApplicationConditionsRequest extends FormRequest
             'event_id' => 'nullable|integer',
             'post_merchant' => 'required|boolean',
             'post_alifshop' => 'required|boolean',
+            'active' => 'required|boolean',
             'merchant_ids' => 'required|array',
             'template_ids' => 'required|array',
         ];

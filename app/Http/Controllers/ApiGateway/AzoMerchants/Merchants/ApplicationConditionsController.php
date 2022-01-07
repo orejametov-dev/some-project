@@ -156,6 +156,7 @@ class ApplicationConditionsController extends ApiBaseController
                 $condition->event_id = $request->input('event_id');
                 $condition->merchant()->associate($merchant);
                 $condition->store_id = $main_store->id;
+                $condition->active = $request->input('active');
                 $condition->save();
 
                 SendHook::dispatch(new HookData(
