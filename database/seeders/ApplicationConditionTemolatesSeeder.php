@@ -51,41 +51,7 @@ class ApplicationConditionTemolatesSeeder extends Seeder
 
         $condition_template_6 = [
             'duration' => 15,
-            'commission' => 47,
-            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
-        ];
-
-        $condition_template_7 = [
-            'duration' => 6,
-            'commission' => 0,
-            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
-        ];
-
-        $condition_template_8 = [
-            'duration' => 12,
-            'commission' => 35,
-            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
-        ];
-
-        $condition_template_9 = [
-            'duration' => 9,
-            'commission' => 34,
-            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
-        ];
-
-        $condition_template_10 = [
-            'duration' => 12,
-            'commission' => 39,
-            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
-        ];
-        $condition_template_11 = [
-            'duration' => 15,
-            'commission' => 0,
+            'commission' => 50,
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
@@ -97,11 +63,6 @@ class ApplicationConditionTemolatesSeeder extends Seeder
             $condition_template_4,
             $condition_template_5,
             $condition_template_6,
-            $condition_template_7,
-            $condition_template_8,
-            $condition_template_9,
-            $condition_template_10,
-            $condition_template_11
         ]);
     }
 }
