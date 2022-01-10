@@ -147,7 +147,7 @@ class ApplicationConditionsController extends ApiBaseController
         }
 
         foreach ($merchants as $merchant) {
-            $main_store = $merchant->stores()->where('active', true)->first();
+            $main_store = $merchant->stores()->where('is_main', true)->first();
             foreach ($templates as $template) {
 
                 $condition = new Condition();
@@ -192,7 +192,7 @@ class ApplicationConditionsController extends ApiBaseController
         }
 
         foreach ($merchants as $merchant) {
-            $main_store = $merchant->stores()->where('active', true)->first();
+            $main_store = $merchant->stores()->where('is_main', true)->first();
 
             $condition = new Condition($request->validated());
             $condition->event_id = $request->input('event_id');

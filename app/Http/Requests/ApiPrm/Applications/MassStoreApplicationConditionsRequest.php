@@ -31,6 +31,8 @@ class MassStoreApplicationConditionsRequest extends FormRequest
             'active' => 'required|boolean',
             'merchant_ids' => 'required|array',
             'template_ids' => 'required|array',
+            'started_at' => 'nullable|date_format:Y-m-d',
+            'finished_at' => 'nullable|date_format:Y-m-d',
         ];
     }
 }
