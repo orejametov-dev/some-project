@@ -83,6 +83,19 @@ return [
             ]) : [],
         ],
 
+        'mongodb' => [
+            'driver' => 'mongodb',
+            'host' => env('DB_LOGS_HOST', '127.0.0.1'),
+            'port' => env('DB_LOGS_PORT', 27017),
+            'database' => env('DB_LOGS_DATABASE', 'local_service_merchant_log'),
+            'username' => env('DB_LOGS_USERNAME', 'local_service_merchant_log'),
+            'password' => env('DB_LOGS_PASSWORD', ''),
+            'options' => [
+                'authSource' => env('DB_LOGS_DATABASE', 'sv_merchant_logs'),
+                'authMechanism' => 'SCRAM-SHA-1',
+            ],
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),
