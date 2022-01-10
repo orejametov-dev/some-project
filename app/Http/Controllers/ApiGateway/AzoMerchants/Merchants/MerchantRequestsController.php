@@ -191,8 +191,6 @@ class MerchantRequestsController extends ApiBaseController
             return $merchant;
         });
 
-        $alifshopService->storeOrUpdateMerchant($merchant->fresh());
-
         return $merchant_request;
     }
 

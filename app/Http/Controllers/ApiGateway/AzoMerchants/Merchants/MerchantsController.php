@@ -81,7 +81,6 @@ class MerchantsController extends ApiBaseController
         Cache::tags('company')->flush();
 
         CompanyService::setStatusExist($company['id']);
-        $this->alifshopService->storeOrUpdateMerchant($merchant->fresh());
         return $merchant;
     }
 
@@ -105,7 +104,6 @@ class MerchantsController extends ApiBaseController
         Cache::tags($merchant->id)->flush();
         Cache::tags('azo_merchants')->flush();
         Cache::tags('company')->flush();
-        $this->alifshopService->storeOrUpdateMerchant($merchant);
 
         return $merchant;
     }
@@ -115,7 +113,6 @@ class MerchantsController extends ApiBaseController
         $merchant = Merchant::query()->findOrFail($merchant_id);
         $merchant->uploadLogo($request->file('file'));
 
-        $this->alifshopService->storeOrUpdateMerchant($merchant);
         return $merchant;
     }
 
@@ -124,7 +121,6 @@ class MerchantsController extends ApiBaseController
         $merchant = Merchant::query()->findOrFail($merchant_id);
         $merchant->deleteLogo();
 
-        $this->alifshopService->storeOrUpdateMerchant($merchant);
         return response()->json(['message' => 'Логотип удалён']);
     }
 
