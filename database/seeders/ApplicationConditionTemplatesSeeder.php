@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
-class ApplicationConditionTemolatesSeeder extends Seeder
+class ApplicationConditionTemplatesSeeder extends Seeder
 {
     /**
      * Run the database seeds.

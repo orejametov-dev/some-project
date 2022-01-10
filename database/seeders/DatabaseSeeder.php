@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
            MerchantTags::class,
            MerchantTag::class,
            CompetitorsSeeder::class,
-           ApplicationConditionTemolatesSeeder::class,
+           ApplicationConditionTemplatesSeeder::class,
        ]);
     }
 }
