@@ -20,6 +20,7 @@ class AlifshopService
         return new HttpClient([
             'base_uri' => config('local_services.alifshop.domain'),
             'headers' => [
+                'Access-Token' => config('local_services.alifshop.token'),
                 'Accept' => 'application/json'
             ],
         ]);
