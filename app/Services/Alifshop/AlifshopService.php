@@ -6,7 +6,7 @@ use GuzzleHttp\Client as HttpClient;
 
 class AlifshopService
 {
-    public function storeOrUpdateConditions(int $company_id, array $conditions)
+    public function storeOrUpdateConditions(int $company_id, $conditions)
     {
         $client = self::createRequest();
         $response = $client->request('POST', '/gate/service-merchants/companies/' . $company_id . '/conditions', [
