@@ -108,7 +108,7 @@ return [
 
         'command' => [
             'driver' => 'single',
-            'path' => storage_path('logs/command/' . \Carbon\Carbon::parse(now())->format('Y-m-d')),
+            'path' => storage_path('logs/command/schedule-command-' . \Carbon\Carbon::parse(now())->format('Y-m-d')),
             'level' => env('LOG_LEVEL'),
         ]
     ],
