@@ -77,7 +77,7 @@ class ApplicationConditionsController extends ApiBaseController
 
         $main_store = $merchant_stores->where('is_main')->first();
         if ($request->input('post_alifshop') and !in_array($main_store->id, $store_ids)) {
-            return response()->json(['message' => 'Для онлайн заявок надо указать основной магазин'], 400);
+            $store_ids[] = $main_store;
         }
 
         $condition = new Condition($request->validated());
@@ -87,7 +87,7 @@ class ApplicationConditionsController extends ApiBaseController
         $condition->store_id = $main_store->id;
         $condition->save();
         if ($store_ids) {
-            $condition->stores()->attach($request->input('store_ids'));
+            $condition->stores()->attach($store_ids);
         }
 
         SendHook::dispatch(new HookData(
