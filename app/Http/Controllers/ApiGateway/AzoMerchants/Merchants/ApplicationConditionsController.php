@@ -77,7 +77,7 @@ class ApplicationConditionsController extends ApiBaseController
 
         $main_store = $merchant_stores->where('is_main')->first();
         if ($request->input('post_alifshop') and !in_array($main_store->id, $store_ids)) {
-            $store_ids[] = $main_store;
+            $store_ids[] = $main_store->id;
         }
 
         $condition = new Condition($request->validated());
@@ -85,6 +85,10 @@ class ApplicationConditionsController extends ApiBaseController
         $condition->event_id = $request->input('event_id');
         $condition->merchant()->associate($merchant);
         $condition->store_id = $main_store->id;
+        if (empty($request->input('started_at')))
+        {
+            $condition->active = true;
+        }
         $condition->save();
         if ($store_ids) {
             $condition->stores()->attach($store_ids);
@@ -156,7 +160,10 @@ class ApplicationConditionsController extends ApiBaseController
                 $condition->event_id = $request->input('event_id');
                 $condition->merchant()->associate($merchant);
                 $condition->store_id = $main_store->id;
-                $condition->active = $request->input('active');
+                if (empty($request->input('started_at')))
+                {
+                    $condition->active = true;
+                }
                 $condition->save();
 
                 SendHook::dispatch(new HookData(
