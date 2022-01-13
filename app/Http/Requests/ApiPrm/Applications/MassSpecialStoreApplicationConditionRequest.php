@@ -32,6 +32,8 @@ class MassSpecialStoreApplicationConditionRequest extends FormRequest
             'post_merchant' => 'required|boolean',
             'post_alifshop' => 'required|boolean',
             'merchant_ids' => 'required|array',
+            'started_at' => 'nullable|date_format:Y-m-d',
+            'finished_at' => 'nullable|date_format:Y-m-d',
         ];
     }
 }

@@ -85,6 +85,10 @@ class ApplicationConditionsController extends ApiBaseController
         $condition->event_id = $request->input('event_id');
         $condition->merchant()->associate($merchant);
         $condition->store_id = $main_store->id;
+
+        $condition->started_at = $request->input('started_at') ?? null;
+        $condition->finished_at = $request->input('finished_at') ?? null;
+
         if (empty($request->input('started_at')))
         {
             $condition->active = true;
@@ -160,10 +164,14 @@ class ApplicationConditionsController extends ApiBaseController
                 $condition->event_id = $request->input('event_id');
                 $condition->merchant()->associate($merchant);
                 $condition->store_id = $main_store->id;
+                $condition->started_at = $request->input('started_at') ?? null;
+                $condition->finished_at = $request->input('finished_at') ?? null;
+
                 if (empty($request->input('started_at')))
                 {
                     $condition->active = true;
                 }
+
                 $condition->save();
 
                 SendHook::dispatch(new HookData(
@@ -205,6 +213,14 @@ class ApplicationConditionsController extends ApiBaseController
             $condition->event_id = $request->input('event_id');
             $condition->merchant()->associate($merchant);
             $condition->store_id = $main_store->id;
+            $condition->started_at = $request->input('started_at') ?? null;
+            $condition->finished_at = $request->input('finished_at') ?? null;
+
+            if (empty($request->input('started_at')))
+            {
+                $condition->active = true;
+            }
+
             $condition->save();
 
             SendHook::dispatch(new HookData(
