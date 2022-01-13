@@ -82,7 +82,7 @@ class ProblemCasesController extends ApiBaseController
         $problemCase->save();
 
         $message = SmsMessages::onNewProblemCases($problemCase->client_name . ' ' . $problemCase->client_surname, $problemCase->id);
-        NotifyMicroService::sendSms($problemCase->phone, $message, NotifyMicroService::PROBLEM_CASE);
+        SendSmsJob::dispatch($problemCase->phone, $message);
 
         SendHook::dispatch(new HookData(
             service: 'merchants',

@@ -15,6 +15,7 @@ class ConditionsController extends Controller
     {
         $conditionQuery = Condition::query()
             ->active()
+            ->postMerchant()
             ->filterRequest($request)
             ->orderRequest($request);
 
