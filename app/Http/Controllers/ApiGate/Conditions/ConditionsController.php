@@ -24,6 +24,7 @@ class ConditionsController extends Controller
     public function getAlifshopConditionsByCompanyId($company_id)
     {
         $merchant = Merchant::query()->where('company_id', $company_id)->firstOrFail();
-        return ConditionsResource::collection($merchant->application_conditions);
+        return ConditionsResource::collection($merchant->application_conditions()
+            ->where('post_alifshop', true)->get());
     }
 }
