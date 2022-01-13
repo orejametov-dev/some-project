@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Console\Command;
 use App\HttpServices\Core\CoreService;
 use Illuminate\Support\Facades\Cache;
+use Log;
 
 class DeactivationMerchantStore extends Command
 {
@@ -43,6 +44,8 @@ class DeactivationMerchantStore extends Command
      */
     public function handle(CoreService $coreService)
     {
+        Log::channel('command')->info(DeactivationMerchantStore::class . '|' . now() . ':' . 'started');
+
         $from_date = Carbon::now()->subWeeks(2)->format('Y-m-d');;
         $to_date = Carbon::now()->format('Y-m-d');
 
@@ -66,6 +69,7 @@ class DeactivationMerchantStore extends Command
                     }
                 }
             });
-        \Log::info(DeactivationMerchantStore::class . "|" . now());
+        Log::channel('command')->info(DeactivationMerchantStore::class . '|' . now() . ':' . 'finished');
+
     }
 }
