@@ -81,7 +81,7 @@ class ApplicationConditionsController extends ApiBaseController
         $condition->merchant()->associate($merchant);
         $condition->store_id = $main_store->id;
         $condition->started_at = $request->input('started_at') ?? null;
-        $condition->finished_at =$request->input('finished_at') ?? null;
+        $condition->finished_at = $request->input('finished_at') ?? null;
         $condition->save();
         if ($store_ids) {
             $condition->stores()->attach($request->input('store_ids'));
