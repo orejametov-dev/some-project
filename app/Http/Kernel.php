@@ -6,7 +6,6 @@ use App\Http\Middleware\AccessTokenMiddleware;
 use App\Http\Middleware\CheckGatewayAuthUser;
 use App\Http\Middleware\DetectTimeLoggerMiddleware;
 use App\Http\Middleware\GatewayAccessMiddleware;
-use App\Http\Middleware\ServiceMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
