@@ -48,37 +48,37 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/web.php'));
 
             Route::prefix('gateway')
-                ->middleware(['api', 'service', 'gateway-access', 'gateway-auth-user'])
+                ->middleware(['api', 'gateway-access', 'gateway-auth-user'])
                 ->namespace($this->namespace)
                 ->group(base_path('routes/gateway.php'));
 
             Route::prefix('gateway-merchant')
-                ->middleware(['api', 'service', 'gateway-access', 'gateway-auth-user'])
+                ->middleware(['api', 'gateway-access', 'gateway-auth-user'])
                 ->namespace($this->namespace)
                 ->group(base_path('routes/gateway_merchant.php'));
 
             Route::prefix('gateway/credits')
-                ->middleware(['api', 'service', 'gateway-access', 'gateway-auth-user'])
+                ->middleware(['api', 'gateway-access', 'gateway-auth-user'])
                 ->namespace($this->namespace)
                 ->group(base_path('routes/gateway_credits.php'));
 
             Route::prefix('gateway-compliance')
-                ->middleware(['api', 'service', 'gateway-access', 'gateway-auth-user'])
+                ->middleware(['api', 'gateway-access', 'gateway-auth-user'])
                 ->namespace($this->namespace)
                 ->group(base_path('routes/gateway_compliance.php'));
 
             Route::prefix('gateway-calls')
-                ->middleware(['api', 'service', 'gateway-access', 'gateway-auth-user'])
+                ->middleware(['api', 'gateway-access', 'gateway-auth-user'])
                 ->namespace($this->namespace)
                 ->group(base_path('routes/gateway_calls.php'));
 
             Route::prefix('gateway/law')
-                ->middleware(['api', 'service', 'gateway-access', 'gateway-auth-user'])
+                ->middleware(['api', 'gateway-access', 'gateway-auth-user'])
                 ->namespace($this->namespace)
                 ->group(base_path('routes/gateway_law.php'));
 
             Route::prefix('gateway/online')
-                ->middleware(['api', 'service', 'gateway-access', 'gateway-auth-user'])
+                ->middleware(['api', 'gateway-access', 'gateway-auth-user'])
                 ->namespace($this->namespace)
                 ->group(base_path('routes/gateway_online.php'));
         });

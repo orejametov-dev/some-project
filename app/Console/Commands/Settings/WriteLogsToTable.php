@@ -46,6 +46,8 @@ class WriteLogsToTable extends Command
      */
     public function handle()
     {
+        \Log::channel('command')->info(WriteLogsToTable::class . '|' . now() . ':' . 'started');
+
         try {
             if (!empty($this->logs)) {
                 foreach (array_chunk($this->logs, 10000) as $chunk_logs) {
@@ -61,6 +63,8 @@ class WriteLogsToTable extends Command
 
             Cache::forget(TimeLogger::CACHE_KEY);
         }
+
+        \Log::channel('command')->info(WriteLogsToTable::class . '|' . now() . ':' . 'finished');
     }
 
 
