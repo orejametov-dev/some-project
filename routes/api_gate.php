@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 
 //Core
 Route::get('/merchants/{merchant_id}/conditions/{condition_id}', [ConditionsController::class, 'getConditionByMerchantId']);
+Route::get('/alifshop/company/{company_id}/conditions', [ConditionsController::class, 'getAlifshopConditionsByCompanyId']);
 Route::get('/merchants/{merchant_id}/stores/{store_id}', [StoresController::class, 'getStoreByMerchantId']);
 Route::get('/merchants/users/{user_id}/by-user', [AzoMerchantAccesses::class, 'getByUserId']);
 Route::get('/alifshop-merchants/users/{user_id}/by-user', [AlifshopMerchantAccesses::class, 'getByUserId']);
