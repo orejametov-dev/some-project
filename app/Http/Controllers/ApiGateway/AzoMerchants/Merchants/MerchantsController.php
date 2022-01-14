@@ -71,6 +71,7 @@ class MerchantsController extends ApiBaseController
             name: $company['name'],
             legal_name: $company['legal_name'],
             legal_name_prefix: $company['legal_name_prefix'],
+            token: $company['token'],
             information: null,
             maintainer_id: $this->user->id,
             company_id: $company['id']
