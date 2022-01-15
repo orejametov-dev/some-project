@@ -19,7 +19,6 @@ class StoresController extends ApiBaseController
     public function index(Request $request)
     {
         $stores = Store::query()->with(['merchant'])
-            ->azo()
             ->filterRequest($request);
 
         if ($request->query('object') == 'true') {
@@ -37,7 +36,6 @@ class StoresController extends ApiBaseController
     public function show($store_id)
     {
         $store = Store::with(['merchant', 'activity_reasons'])
-            ->azo()
             ->findOrFail($store_id);
         return $store;
     }
@@ -100,7 +98,6 @@ class StoresController extends ApiBaseController
     public function update(UpdateStoresRequest $request, $store_id)
     {
         $store = Store::query()
-            ->azo()
             ->findOrFail($store_id);
 
         $store->fill($request->all());

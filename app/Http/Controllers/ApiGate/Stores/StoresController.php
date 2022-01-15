@@ -15,7 +15,6 @@ class StoresController extends Controller
     public function getStoreByMerchantId($merchant_id, $store_id)
     {
         $store = Store::query()
-            ->azo()
             ->byMerchant($merchant_id)
             ->findOrFail($store_id);
 
