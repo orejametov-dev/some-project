@@ -87,7 +87,6 @@ class MerchantsController extends ApiBaseController
         $merchant = Merchant::query()->findOrFail($merchant_id);
         $merchant->uploadLogo($request->file('file'));
 
-        $this->alifshopService->storeOrUpdateMerchant($merchant);
         return $merchant;
     }
 
@@ -96,7 +95,6 @@ class MerchantsController extends ApiBaseController
         $merchant = Merchant::query()->findOrFail($merchant_id);
         $merchant->deleteLogo();
 
-        $this->alifshopService->storeOrUpdateMerchant($merchant);
         return response()->json(['message' => 'Логотип удалён']);
     }
 
