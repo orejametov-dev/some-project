@@ -17,7 +17,9 @@ class MerchantsController extends Controller
         $query = Merchant::query()
             ->with('tags')
             ->active()
-            ->filterRequest($request);
+            ->filterRequest($request)
+            ->orderByDesc('recommend')
+            ->orderByDesc('current_sales');
 
         return MerchantResource::collection($query->paginate($request->query('per_page')));
     }

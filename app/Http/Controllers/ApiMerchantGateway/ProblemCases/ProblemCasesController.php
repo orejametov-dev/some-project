@@ -118,7 +118,7 @@ class ProblemCasesController extends ApiBaseController
         });
 
 
-        return response()->json(['count' => $counter]);
+        return response()->json(['count' =>  (int) $counter]);
     }
 
 }

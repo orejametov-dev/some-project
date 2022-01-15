@@ -6,20 +6,11 @@ use GuzzleHttp\Client as HttpClient;
 
 class AlifshopService
 {
-    public function storeOrUpdateMerchant($merchant, $conditions = null)
+    public function storeOrUpdateConditions(int $company_id, $conditions)
     {
-        $partner = [
-            'name' => $merchant->name,
-            'slug' => $merchant->alifshop_slug,
-            'old_token' => $merchant->old_token ?? $merchant->token,
-            'token' => $merchant->token,
-            'information' => $merchant->information,
-            'logo_path' => $merchant->logo_path
-        ];
-
         $client = self::createRequest();
-        $response = $client->request('POST', 'api/gate/service-core/partners', [
-            'json' => compact('partner', 'conditions')
+        $response = $client->request('POST', '/gate/service-merchants/companies/' . $company_id . '/conditions', [
+            'json' => compact('conditions')
         ]);
         return self::parseResponse($response);
     }
@@ -29,6 +20,7 @@ class AlifshopService
         return new HttpClient([
             'base_uri' => config('local_services.alifshop.domain'),
             'headers' => [
+                'Access-Token' => config('local_services.alifshop.token'),
                 'Accept' => 'application/json'
             ],
         ]);

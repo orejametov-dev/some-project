@@ -2,18 +2,23 @@
 
 namespace App\Console\Commands\OneOff;
 
-use App\Modules\Merchants\Models\ProblemCase;
+use App\HttpServices\Storage\StorageMicroService;
+use App\Modules\Merchants\Models\AzoMerchantAccess;
+use App\Modules\Merchants\Models\Merchant;
+use App\Modules\Merchants\Models\Request;
+use App\Modules\Merchants\Models\Store;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use function Clue\StreamFilter\fun;
 
-class SplittingClientDataToColumns extends Command
+class MoveOldInProcessRequestsToTrash extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'set:clients';
+    protected $signature = 'request:move_to_trash';
 
     /**
      * The console command description.
@@ -39,15 +44,8 @@ class SplittingClientDataToColumns extends Command
      */
     public function handle()
     {
-        ProblemCase::query()->chunkById(100 , function ($problem_cases) {
-           foreach ($problem_cases as $problem_case) {
-               $user = explode(' ' , $problem_case->search_index);
-               $problem_case->client_name  = $user[0];
-               $problem_case->client_surname = $user[1];
-               $problem_case->client_patronymic = $user[2];
-               $problem_case->phone = $user[3];
-               $problem_case->save();
-           }
-        });
+        Request::whereDate('created_at', '<=', Carbon::parse('2021-09-21'))
+            ->where('status_id', Request::IN_PROCESS)
+            ->update(['status_id' => Request::TRASH]);
     }
 }

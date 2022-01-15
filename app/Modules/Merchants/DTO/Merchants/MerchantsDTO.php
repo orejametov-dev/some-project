@@ -25,6 +25,7 @@ class MerchantsDTO
         string $name,
         string $legal_name,
         string $legal_name_prefix,
+        string $token,
         ?string $information,
         int $maintainer_id,
         int $company_id
@@ -34,7 +35,7 @@ class MerchantsDTO
         $this->name = $name;
         $this->legal_name = $legal_name;
         $this->legal_name_prefix = $legal_name_prefix;
-        $this->token = Str::uuid();
+        $this->token = $token;
         $this->alifshop_slug = Str::slug($this->name);
         $this->information = $information;
         $this->maintainer_id = $maintainer_id;
