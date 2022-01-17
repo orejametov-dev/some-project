@@ -27,8 +27,6 @@ use Illuminate\Support\Carbon;
  * @property $responsible_person
  * @property $responsible_person_phone
  * @property $merchant_id
- * @property $is_alifshop
- * @property $is_azo
  * @property $client_type_register
  * @property Merchant $merchant
  * @property Carbon|null $created_at
@@ -120,10 +118,5 @@ class Store extends Model
     public function scopeActive(Builder $query)
     {
         $query->where('active', true);
-    }
-
-    public function scopeAzo(Builder $query)
-    {
-        $query->where('is_azo', true);
     }
 }

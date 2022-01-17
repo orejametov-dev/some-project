@@ -54,7 +54,6 @@ class StoresController extends ApiBaseController
 
         $merchant_store = new Store($request->validated());
         $merchant_store->merchant_id = $merchant->id;
-        $merchant_store->is_azo = true;
 
         if (!Store::where('merchant_id', $merchant->id)->count()) {
             $merchant_store->is_main = true;
@@ -89,7 +88,6 @@ class StoresController extends ApiBaseController
         }
 
         $store = Store::query()->byMerchant($merchant->id)->findOrFail($id);
-        $store->is_azo = true;
         $store->save();
 
         return $store;
