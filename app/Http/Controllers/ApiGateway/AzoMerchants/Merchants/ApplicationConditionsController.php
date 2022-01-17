@@ -156,6 +156,11 @@ class ApplicationConditionsController extends ApiBaseController
 
         foreach ($merchants as $merchant) {
             $main_store = $merchant->stores()->where('is_main', true)->first();
+
+            if (!$main_store) {
+                throw new BusinessException('У двнного мерчанта нет основного магазина ' . $merchant->name , 'main_store_not_exists' , 400);
+            }
+
             foreach ($templates as $template) {
 
                 $condition = new Condition();
@@ -225,6 +230,10 @@ class ApplicationConditionsController extends ApiBaseController
 
         foreach ($merchants as $merchant) {
             $main_store = $merchant->stores()->where('is_main', true)->first();
+
+            if (!$main_store) {
+                throw new BusinessException('У двнного мерчанта нет основного магазина ' . $merchant->name , 'main_store_not_exists' , 400);
+            }
 
             $condition = new Condition($request->validated());
             $condition->event_id = $request->input('event_id');
