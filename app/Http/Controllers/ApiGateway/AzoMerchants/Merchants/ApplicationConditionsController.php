@@ -188,6 +188,23 @@ class ApplicationConditionsController extends ApiBaseController
                     created_by_str: $this->user->name,
                 ));
             }
+
+            $merchant->load(['application_conditions' => function ($q) {
+                $q->active();
+            }]);
+
+            $conditions = $merchant->application_conditions->where('post_alifshop', true)->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'commission' => $item->commission,
+                    'duration' => $item->duration,
+                    'event_id' => $item->event_id
+                ];
+            });
+
+            $alifshopService = new AlifshopService;
+            $alifshopService->storeOrUpdateConditions($merchant->company_id, $conditions);
+
             Cache::tags($merchant->id)->flush();
         }
 
@@ -236,6 +253,22 @@ class ApplicationConditionsController extends ApiBaseController
                 action_at: null,
                 created_by_str: $this->user->name,
             ));
+
+            $merchant->load(['application_conditions' => function ($q) {
+                $q->active();
+            }]);
+
+            $conditions = $merchant->application_conditions->where('post_alifshop', true)->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'commission' => $item->commission,
+                    'duration' => $item->duration,
+                    'event_id' => $item->event_id
+                ];
+            });
+
+            $alifshopService = new AlifshopService;
+            $alifshopService->storeOrUpdateConditions($merchant->company_id, $conditions);
 
             Cache::tags($merchant->id)->flush();
         }
