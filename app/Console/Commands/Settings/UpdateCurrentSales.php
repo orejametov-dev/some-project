@@ -5,6 +5,7 @@ namespace App\Console\Commands\Settings;
 use App\HttpServices\Core\CoreService;
 use App\Modules\Merchants\Models\Merchant;
 use Illuminate\Console\Command;
+use Log;
 
 class UpdateCurrentSales extends Command
 {
@@ -39,6 +40,8 @@ class UpdateCurrentSales extends Command
      */
     public function handle()
     {
+        Log::channel('command')->info(UpdateCurrentSales::class . '|' . now() . ':' . 'started');
+
         $percentage_of_limit = Merchant::$percentage_of_limit;
 
         $amount_of_merchants = CoreService::getAmountOfMerchantSales();
@@ -76,5 +79,7 @@ class UpdateCurrentSales extends Command
             ->whereRaw("(IFNULL(merchant_infos.limit, 0) + IFNULL(merchant_additional_agreements.limit, 0)) $percentage_of_limit <= merchants.current_sales")
             ->whereNull('merchant_additional_agreements.limit_expired_at')
             ->update(['merchant_additional_agreements.limit_expired_at' => now()]);
+
+        Log::channel('command')->info(UpdateCurrentSales::class . '|' . now() . ':' . 'finished');
     }
 }

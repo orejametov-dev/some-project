@@ -360,14 +360,12 @@ class ApplicationConditionsController extends ApiBaseController
                 'id' => $item->id,
                 'commission' => $item->commission,
                 'duration' => $item->duration,
-                'is_active' => $item->active,
-                'special_offer' => $item->special_offer,
                 'event_id' => $item->event_id
             ];
         });
 
         $alifshopService = new AlifshopService;
-        $alifshopService->storeOrUpdateMerchant($merchant, $conditions);
+        $alifshopService->storeOrUpdateConditions($merchant->company_id, $conditions);
 
         Cache::tags($merchant->id)->flush();
 
@@ -404,14 +402,12 @@ class ApplicationConditionsController extends ApiBaseController
                 'id' => $item->id,
                 'commission' => $item->commission,
                 'duration' => $item->duration,
-                'is_active' => $item->active,
-                'special_offer' => $item->special_offer,
                 'event_id' => $item->event_id
             ];
         });
 
         $alifshopService = new AlifshopService;
-        $alifshopService->storeOrUpdateMerchant($merchant, $conditions);
+        $alifshopService->storeOrUpdateConditions($merchant->company_id, $conditions);
 
         Cache::tags($merchant->id)->flush();
 
