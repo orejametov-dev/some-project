@@ -15,6 +15,7 @@ class MerchantsController extends Controller
     public function index(Request $request)
     {
         $query = Merchant::query()
+            ->whereHas('application_conditions')
             ->with('tags')
             ->active()
             ->filterRequest($request)
