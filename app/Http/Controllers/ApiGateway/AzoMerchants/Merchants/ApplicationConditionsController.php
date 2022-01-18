@@ -100,7 +100,7 @@ class ApplicationConditionsController extends ApiBaseController
             throw new BusinessException('дата деактивации не может быть меньше или равна сегоднешнего дня', 'wrong_date', 400);
         }
 
-        if ($request->has('started_at') && $request->has('finished_at') && $request->has('started_at') <= $request->has('finished_at')) {
+        if ($request->has('started_at') && $request->has('finished_at') && $request->input('started_at') >= $request->input('finished_at')) {
             throw new BusinessException('дата деактивации не может быть меньше или равна активации', 'wrong_date', 400);
         }
 
@@ -196,7 +196,7 @@ class ApplicationConditionsController extends ApiBaseController
                     throw new BusinessException('дата деактивации не может быть меньше или равна сегоднешнего дня', 'wrong_date', 400);
                 }
 
-                if ($request->has('started_at') && $request->has('finished_at') && $request->has('started_at') <= $request->has('finished_at')) {
+                if ($request->has('started_at') && $request->has('finished_at') && $request->input('started_at') >= $request->input('finished_at')) {
                     throw new BusinessException('дата деактивации не может быть меньше или равна активации', 'wrong_date', 400);
                 }
 
@@ -279,7 +279,7 @@ class ApplicationConditionsController extends ApiBaseController
                 throw new BusinessException('дата деактивации не может быть меньше или равна сегоднешнего дня', 'wrong_date', 400);
             }
 
-            if ($request->has('started_at') && $request->has('finished_at') && $request->has('started_at') <= $request->has('finished_at')) {
+            if ($request->has('started_at') && $request->has('finished_at') && $request->input('started_at') >= $request->input('finished_at')) {
                 throw new BusinessException('дата деактивации не может быть меньше или равна активации', 'wrong_date', 400);
             }
 
