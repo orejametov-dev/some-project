@@ -18,6 +18,7 @@ use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\ProblemCaseTag;
 use App\Modules\Merchants\Models\Store;
 use App\Services\Alifshop\AlifshopService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -90,6 +91,18 @@ class ApplicationConditionsController extends ApiBaseController
         $condition->event_id = $request->input('event_id');
         $condition->merchant()->associate($merchant);
         $condition->store_id = $main_store->id;
+
+        if ($request->has('started_at') && $request->input('started_at') < Carbon::now() ) {
+            throw new BusinessException('дата активации не может быть меньше сегоднешнего дня', 'wrong_date', 400);
+        }
+
+        if ($request->has('finished_at') && $request->input('finished_at') <= Carbon::now()) {
+            throw new BusinessException('дата деактивации не может быть меньше или равна сегоднешнего дня', 'wrong_date', 400);
+        }
+
+        if ($request->has('started_at') && $request->has('finished_at') && $request->has('started_at') <= $request->has('finished_at')) {
+            throw new BusinessException('дата деактивации не может быть меньше или равна активации', 'wrong_date', 400);
+        }
 
         $condition->started_at = $request->input('started_at') ?? null;
         $condition->finished_at = $request->input('finished_at') ?? null;
@@ -174,6 +187,19 @@ class ApplicationConditionsController extends ApiBaseController
                 $condition->event_id = $request->input('event_id');
                 $condition->merchant()->associate($merchant);
                 $condition->store_id = $main_store->id;
+
+                if ($request->has('started_at') && $request->input('started_at') < Carbon::now() ) {
+                    throw new BusinessException('дата активации не может быть меньше сегоднешнего дня', 'wrong_date', 400);
+                }
+
+                if ($request->has('finished_at') && $request->input('finished_at') <= Carbon::now()) {
+                    throw new BusinessException('дата деактивации не может быть меньше или равна сегоднешнего дня', 'wrong_date', 400);
+                }
+
+                if ($request->has('started_at') && $request->has('finished_at') && $request->has('started_at') <= $request->has('finished_at')) {
+                    throw new BusinessException('дата деактивации не может быть меньше или равна активации', 'wrong_date', 400);
+                }
+
                 $condition->started_at = $request->input('started_at') ?? null;
                 $condition->finished_at = $request->input('finished_at') ?? null;
 
@@ -244,6 +270,19 @@ class ApplicationConditionsController extends ApiBaseController
             $condition->event_id = $request->input('event_id');
             $condition->merchant()->associate($merchant);
             $condition->store_id = $main_store->id;
+
+            if ($request->has('started_at') && $request->input('started_at') < Carbon::now() ) {
+                throw new BusinessException('дата активации не может быть меньше сегоднешнего дня', 'wrong_date', 400);
+            }
+
+            if ($request->has('finished_at') && $request->input('finished_at') <= Carbon::now()) {
+                throw new BusinessException('дата деактивации не может быть меньше или равна сегоднешнего дня', 'wrong_date', 400);
+            }
+
+            if ($request->has('started_at') && $request->has('finished_at') && $request->has('started_at') <= $request->has('finished_at')) {
+                throw new BusinessException('дата деактивации не может быть меньше или равна активации', 'wrong_date', 400);
+            }
+
             $condition->started_at = $request->input('started_at') ?? null;
             $condition->finished_at = $request->input('finished_at') ?? null;
 
