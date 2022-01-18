@@ -50,6 +50,7 @@ class DeactivationMerchantStore extends Command
         $to_date = Carbon::now()->format('Y-m-d');
 
         Merchant::where('active' , true)
+            ->where('created_at' ,  '<',$from_date)
             ->chunkById(100, function ($merchants) use ($coreService, $from_date, $to_date) {
                 foreach ($merchants as $merchant)
                 {
