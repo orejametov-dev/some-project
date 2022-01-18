@@ -26,6 +26,7 @@ use Illuminate\Http\Request;
  * @property string|null $telegram_chat_id
  * @property int $has_general_goods
  * @property string|null $logo_url
+ * @property $recommend
  * @property string|null $paymo_terminal
  * @property int|null $maintainer_id
  * @property int|null $current_sales

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
+use App\Exceptions\ApiBusinessException;
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
+use App\Http\Requests\ApiPrm\Competitors\CompetitorsRequest;
 use App\Http\Requests\ApiPrm\Files\StoreFileRequest;
 use App\HttpServices\Auth\AuthMicroService;
 use App\HttpServices\Company\CompanyService;
@@ -11,10 +13,13 @@ use App\HttpServices\Telegram\TelegramService;
 use App\HttpServices\Warehouse\WarehouseService;
 use App\Modules\Merchants\DTO\Merchants\MerchantsDTO;
 use App\Modules\Merchants\Models\ActivityReason;
+use App\Modules\Merchants\Models\Competitor;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Tag;
 use App\Modules\Merchants\Services\Merchants\MerchantsService;
 use App\Services\Alifshop\AlifshopService;
+use Carbon\Carbon;
+use Http\Discovery\Exception\NotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -46,7 +51,7 @@ class MerchantsController extends ApiBaseController
 
     public function show($id)
     {
-        return Merchant::with(['stores', 'tags', 'activity_reasons'])->findOrFail($id);
+        return Merchant::with(['stores', 'tags', 'activity_reasons', 'competitors'])->findOrFail($id);
     }
 
     public function store(Request $request, MerchantsService $merchantsService)
@@ -66,6 +71,7 @@ class MerchantsController extends ApiBaseController
             name: $company['name'],
             legal_name: $company['legal_name'],
             legal_name_prefix: $company['legal_name_prefix'],
+            token: $company['token'],
             information: null,
             maintainer_id: $this->user->id,
             company_id: $company['id']
@@ -76,7 +82,6 @@ class MerchantsController extends ApiBaseController
         Cache::tags('company')->flush();
 
         CompanyService::setStatusExist($company['id']);
-        $this->alifshopService->storeOrUpdateMerchant($merchant->fresh());
         return $merchant;
     }
 
@@ -100,7 +105,6 @@ class MerchantsController extends ApiBaseController
         Cache::tags($merchant->id)->flush();
         Cache::tags('azo_merchants')->flush();
         Cache::tags('company')->flush();
-        $this->alifshopService->storeOrUpdateMerchant($merchant);
 
         return $merchant;
     }
@@ -110,7 +114,6 @@ class MerchantsController extends ApiBaseController
         $merchant = Merchant::query()->findOrFail($merchant_id);
         $merchant->uploadLogo($request->file('file'));
 
-        $this->alifshopService->storeOrUpdateMerchant($merchant);
         return $merchant;
     }
 
@@ -119,7 +122,6 @@ class MerchantsController extends ApiBaseController
         $merchant = Merchant::query()->findOrFail($merchant_id);
         $merchant->deleteLogo();
 
-        $this->alifshopService->storeOrUpdateMerchant($merchant);
         return response()->json(['message' => 'Логотип удалён']);
     }
 
@@ -198,7 +200,9 @@ class MerchantsController extends ApiBaseController
     {
         $percentage_of_limit = Merchant::$percentage_of_limit;
 
-        $merchant_query = DB::table('merchants')->select([
+        $merchant_query = DB::table('merchants')
+            ->whereRaw('active = 1')
+            ->select([
             'merchants.id',
             'merchants.name',
             DB::raw('sum(merchant_additional_agreements.limit) as agreement_sum'),
@@ -262,6 +266,66 @@ class MerchantsController extends ApiBaseController
         return $merchant;
     }
 
-}
+    public function toggleRecommend($id)
+    {
+        $merchant = Merchant::findOrFail($id);
+        $merchant->recommend = !$merchant->recommend;
+        $merchant->save();
 
+        Cache::tags($merchant->id)->flush();
+        Cache::tags('azo_merchants')->flush();
+
+        return $merchant;
+    }
+
+    public function attachCompetitor($id, CompetitorsRequest $request)
+    {
+        $merchant = Merchant::query()->findOrFail($id);
+        $competitor = Competitor::query()->findOrFail($request->input('competitor_id'));
+
+        if ($merchant->competitors()->find($competitor->id)) {
+            throw new ApiBusinessException('Информация о данном конкуренте на этого мерчанта уже была создана' , 'merchant_competitor_exists' , [
+                'ru' => 'Информация о данном конкуренте на этого мерчанта уже была создана',
+                'uz' => 'Merchantdagi bu konkurent haqidagi ma\'lumot qo\'shib bo\'lingan ekan'
+            ],400);
+        }
+
+        $merchant->competitors()->attach($competitor->id,[
+                'volume_sales' => $request->input('volume_sales') * 100,
+                'percentage_approve' => $request->input('percentage_approve'),
+                'partnership_at' => Carbon::parse($request->input('partnership_at'))->format('Y-m-d H:i:s'),
+            ]);
+
+        return $merchant->load('competitors');
+    }
+
+    public function updateCompetitor($id , CompetitorsRequest $request)
+    {
+        $merchant = Merchant::query()->findOrFail($id);
+        $competitor = Competitor::query()->findOrFail($request->input('competitor_id'));
+
+        $merchant->competitors()->findOrFail($competitor->id);
+        $merchant->competitors()->detach($competitor->id);
+        $merchant->competitors()->attach($competitor->id,[
+            'volume_sales' => $request->input('volume_sales') * 100,
+            'percentage_approve' => $request->input('percentage_approve'),
+            'partnership_at' => Carbon::parse($request->input('partnership_at'))->format('Y-m-d H:i:s'),
+        ]);
+
+
+        return $merchant->load('competitors');
+    }
+
+    public function detachCompetitor($id , Request $request)
+    {
+        $merchant = Merchant::query()->findOrFail($id);
+        $competitor = Competitor::query()->findOrFail($request->input('competitor_id'));
+
+        $merchant->competitors()->findOrFail($competitor->id);
+
+        $merchant->competitors()->detach($competitor->id);
+
+        return response()->json(['message' => 'Данные о конкуренте были удалены у этого мерчанта']);
+    }
+}
 

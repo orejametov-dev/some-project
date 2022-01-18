@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\ApiPrm\AlifshopMerchant;
+namespace App\Http\Requests\ApiPrm\Competitors;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreAlifshopMerchantAccess extends FormRequest
+class CompetitorsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,10 @@ class StoreAlifshopMerchantAccess extends FormRequest
     public function rules()
     {
         return [
-            'store_id' => 'required|integer',
-            'user_id' => 'required|integer'
+            'competitor_id' => 'required|integer',
+            'volume_sales' => 'required|integer',
+            'percentage_approve' => 'required|integer',
+            'partnership_at' => 'required|date'
         ];
     }
 }

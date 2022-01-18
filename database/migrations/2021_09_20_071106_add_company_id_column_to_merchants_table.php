@@ -1,3 +1,4 @@
+
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -15,7 +16,6 @@ class AddCompanyIdColumnToMerchantsTable extends Migration
     {
         Schema::table('merchants', function (Blueprint $table) {
             $table->unsignedBigInteger('company_id')->nullable()->after('legal_name');
-            $table->foreign('company_id')->references('id')->on('companies');
         });
     }
 
@@ -27,7 +27,6 @@ class AddCompanyIdColumnToMerchantsTable extends Migration
     public function down()
     {
         Schema::table('merchants', function (Blueprint $table) {
-            $table->dropForeign('company_id');
             $table->dropColumn('company_id');
         });
     }

@@ -178,7 +178,7 @@ class DistrictService
                         'Tomdi tumani',
                         'Uchquduq tumani',
                         'Xatirchi tumani',
-                        'ZarafshonЗарафшон',
+                        'Zarafshon shahri',
                         'Navoiy shahri',
                     ),
             ),

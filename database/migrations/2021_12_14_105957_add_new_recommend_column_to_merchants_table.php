@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class RemoveForeingMerchantIdFromStoreTable extends Migration
+class AddNewRecommendColumnToMerchantsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class RemoveForeingMerchantIdFromStoreTable extends Migration
      */
     public function up()
     {
-        Schema::table('stores', function (Blueprint $table) {
-            $table->dropForeign(['merchant_id']);
+        Schema::table('merchants', function (Blueprint $table) {
+            $table->boolean('recommend')->default(false);
         });
     }
 
@@ -25,8 +25,8 @@ class RemoveForeingMerchantIdFromStoreTable extends Migration
      */
     public function down()
     {
-        Schema::table('stores', function (Blueprint $table) {
-            //
+        Schema::table('merchants', function (Blueprint $table) {
+            $table->dropColumn('recommend');
         });
     }
 }

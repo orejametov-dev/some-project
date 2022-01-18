@@ -171,7 +171,7 @@ class ProblemCase extends Model implements SimpleStateMachinable
         }
 
         if ($request->query('assigned_to_id')) {
-            $query->where('assigned_to_id', $request->query('client_id'));
+            $query->where('assigned_to_id', $request->query('assigned_to_id'));
         }
 
         if ($request->query('date')) {

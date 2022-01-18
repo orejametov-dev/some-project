@@ -58,7 +58,9 @@ trait MerchantRequestStatusesTrait
 
     public function setStatusNew()
     {
-        return $this->setStatus(self::NEW);
+        $status = self::getOneById(self::NEW);
+        $this->status_updated_at = now();
+        $this->status_id = $status->id;
     }
 
     public function setStatusInProcess()

@@ -32,6 +32,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read mixed $title
  * @method static Builder|Condition active()
+ * @method static Builder|Condition postMerchant()
  * @method static Builder|Condition filterRequest(Request $request)
  * @method static Builder|Condition newModelQuery()
  * @method static Builder|Condition newQuery()
@@ -76,6 +77,11 @@ class Condition extends Model
     public function scopeActive($builder)
     {
         return $builder->where('active', true);
+    }
+
+    public function scopePostMerchant($builder)
+    {
+        return $builder->where('post_merchant', true);
     }
 
     public function scopeFilterRequest(Builder $query, Request $request)
