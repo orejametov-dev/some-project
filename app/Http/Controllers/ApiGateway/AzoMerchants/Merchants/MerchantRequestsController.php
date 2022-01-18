@@ -175,6 +175,7 @@ class MerchantRequestsController extends ApiBaseController
                 name: $merchant_request->name,
                 legal_name: $merchant_request->legal_name,
                 legal_name_prefix: $merchant_request->legal_name_prefix,
+                token: $company['token'],
                 information: $merchant_request->information,
                 maintainer_id: $merchant_request->engaged_by_id,
                 company_id: $company['id']
@@ -190,8 +191,6 @@ class MerchantRequestsController extends ApiBaseController
 
             return $merchant;
         });
-
-        $alifshopService->storeOrUpdateMerchant($merchant->fresh());
 
         return $merchant_request;
     }

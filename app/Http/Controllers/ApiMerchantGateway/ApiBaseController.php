@@ -15,10 +15,10 @@ class ApiBaseController extends Controller
     protected $user;
     protected $store_id;
     protected $merchant_id;
-    protected $alifshop_merchant_id;
     protected $azo_merchant_access;
 
     public function __construct()
+
     {
         $this->middleware(function ($request, $next) {
             $this->user = app(User::class);
