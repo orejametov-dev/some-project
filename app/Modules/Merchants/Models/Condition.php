@@ -30,6 +30,8 @@ use Illuminate\Support\Carbon;
  * @property Store $store
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property Carbon|null $started_at
+ * @property Carbon|null $finished_at
  * @property-read mixed $title
  * @method static Builder|Condition active()
  * @method static Builder|Condition postMerchant()
@@ -54,7 +56,9 @@ class Condition extends Model
         'discount',
         'special_offer',// should be unique by partner
         'post_merchant',
-        'post_alifshop'
+        'post_alifshop',
+        'started_at',
+        'finished_at'
     ];
     protected $appends = ['title'];
 

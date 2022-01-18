@@ -1,10 +1,7 @@
 <?php
 
 use App\Http\Controllers\ApiGateway\AzoMerchants\ExtraServices\MerchantsController as ExtraMerchantsController;
-use App\Http\Controllers\ApiGateway\ApiAlifshopMerchants\AlifshopMerchants\AlifshopMerchantsController;
-use App\Http\Controllers\ApiGateway\ApiAlifshopMerchants\AlifshopMerchants\AlifshopMerchantAccessController;
 use App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantsController;
-use App\Http\Controllers\ApiGateway\ApiAlifshopMerchants\AlifshopStores\AlifshopMerchantStoresController;
 use App\Http\Controllers\ApiGateway\AzoMerchants\Comments\CommentsController;
 use Illuminate\Support\Facades\Route;
 
@@ -12,39 +9,6 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('comments')->group(function () {
     Route::get('/' , [CommentsController::class , 'index']);
 });
-
-//AlifshopMerchants
-Route::prefix('alifshop-merchants/stores')
-    ->group(function () {
-        Route::get('/', [AlifshopMerchantStoresController::class, 'index']);
-        Route::get('/{id}', [AlifshopMerchantStoresController::class, 'show']);
-        Route::post('/', [AlifshopMerchantStoresController::class, 'store']);
-        Route::match(['put', 'patch'], '/{id}', [AlifshopMerchantStoresController::class, 'update']);
-        Route::match(['put', 'patch'], '/{id}/toggle', [AlifshopMerchantStoresController::class, 'toggle']);
-        Route::match(['put', 'patch'], '/{id}/attach-alifshop', [AlifshopMerchantStoresController::class, 'attachAlifshop']);
-    });
-
-Route::prefix('alifshop-merchants/users')
-    ->group(function () {
-        Route::get('/', [AlifshopMerchantAccessController::class, 'index']);
-        Route::get('/{id}', [AlifshopMerchantAccessController::class, 'show']);
-        Route::post('/', [AlifshopMerchantAccessController::class, 'store']);
-        Route::match(['put', 'patch'], '/{id}', [AlifshopMerchantAccessController::class, 'update']);
-        Route::delete('/{id}', [AlifshopMerchantAccessController::class, 'destroy']);
-    });
-
-Route::prefix('alifshop-merchants')
-    ->group(function () {
-        Route::get('/', [AlifshopMerchantsController::class, 'index']);
-        Route::get('/{id}', [AlifshopMerchantsController::class, 'show']);
-        Route::post('/', [AlifshopMerchantsController::class, 'store']);
-        Route::match(['put', 'patch'], '/{id}', [AlifshopMerchantsController::class, 'update']);
-        Route::post('/{id}/set-maintainer', [AlifshopMerchantsController::class, 'setMaintainer']);
-        Route::post('/{id}/upload-logo', [AlifshopMerchantsController::class, 'uploadLogo']);
-        Route::post('/{id}/remove-logo', [AlifshopMerchantsController::class, 'removeLogo']);
-        Route::match(['put', 'patch'], '/{id}/toggle', [AlifshopMerchantsController::class, 'toggle']);
-        Route::post('/{id}/set-tags', [AlifshopMerchantsController::class, 'setTags']);
-    });
 
 //Azo-Merchants
 Route::prefix('extra-services')->group(function () {
@@ -164,6 +128,8 @@ Route::prefix('application-conditions')
         Route::get('/actives', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class, 'activeIndex']);
         Route::post('/', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class, 'store']);
         Route::post('/special-store', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class, 'storeSpecial']);
+        Route::post('/mass-store', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class, 'massStore']);
+        Route::post('/mass-special-store', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class, 'massSpecialStore']);
         Route::match(['put', 'patch'], '/{id}', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class, 'update']);
         Route::post('/{id}/toggle', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class, 'toggle']);
         Route::delete('/{id}', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class, 'delete']);

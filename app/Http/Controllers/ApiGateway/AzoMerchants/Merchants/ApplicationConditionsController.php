@@ -2,16 +2,23 @@
 
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
+use App\Exceptions\ApiBusinessException;
+use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
+use App\Http\Requests\ApiPrm\Applications\MassSpecialStoreApplicationConditionRequest;
+use App\Http\Requests\ApiPrm\Applications\MassStoreApplicationConditionsRequest;
 use App\Http\Requests\ApiPrm\Applications\StoreApplicationConditions;
 use App\Http\Requests\ApiPrm\Applications\UpdateApplicationConditions;
 use App\HttpServices\Core\CoreService;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Modules\Merchants\Models\Condition;
+use App\Modules\Merchants\Models\ConditionTemplate;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\ProblemCaseTag;
+use App\Modules\Merchants\Models\Store;
 use App\Services\Alifshop\AlifshopService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -70,8 +77,13 @@ class ApplicationConditionsController extends ApiBaseController
         }
 
         $main_store = $merchant_stores->where('is_main')->first();
+
+        if (!$main_store) {
+            throw new BusinessException('У данного мерчанта нет основного магазина ' . $merchant->name , 'main_store_not_exists' , 400);
+        }
+
         if ($request->input('post_alifshop') and !in_array($main_store->id, $store_ids)) {
-            return response()->json(['message' => 'Для онлайн заявок надо указать основной магазин'], 400);
+            $store_ids[] = $main_store->id;
         }
 
         $condition = new Condition($request->validated());
@@ -79,9 +91,29 @@ class ApplicationConditionsController extends ApiBaseController
         $condition->event_id = $request->input('event_id');
         $condition->merchant()->associate($merchant);
         $condition->store_id = $main_store->id;
+
+        if ($request->has('started_at') && $request->input('started_at') < Carbon::now() ) {
+            throw new BusinessException('дата активации не может быть меньше сегоднешнего дня', 'wrong_date', 400);
+        }
+
+        if ($request->has('finished_at') && $request->input('finished_at') <= Carbon::now()) {
+            throw new BusinessException('дата деактивации не может быть меньше или равна сегоднешнего дня', 'wrong_date', 400);
+        }
+
+        if ($request->has('started_at') && $request->has('finished_at') && $request->has('started_at') <= $request->has('finished_at')) {
+            throw new BusinessException('дата деактивации не может быть меньше или равна активации', 'wrong_date', 400);
+        }
+
+        $condition->started_at = $request->input('started_at') ?? null;
+        $condition->finished_at = $request->input('finished_at') ?? null;
+
+        if (empty($request->input('started_at')))
+        {
+            $condition->active = true;
+        }
         $condition->save();
         if ($store_ids) {
-            $condition->stores()->attach($request->input('store_ids'));
+            $condition->stores()->attach($store_ids);
         }
 
         SendHook::dispatch(new HookData(
@@ -101,6 +133,200 @@ class ApplicationConditionsController extends ApiBaseController
         Cache::tags($merchant->id)->flush();
 
         return $condition->load('stores');
+    }
+
+    public function massStore(MassStoreApplicationConditionsRequest $request)
+    {
+        $merchants = Merchant::query()
+            ->whereIn('id', $request->input('merchant_ids'))
+            ->get();
+
+        if (!empty(array_diff($request->input('merchant_ids'), $merchants->pluck('id')->toArray()))) {
+            throw new ApiBusinessException('Мерчант не существует', 'merchant_not_exists', [
+                'ru' => 'Мерчант не существует'
+            ], 400);
+        }
+
+        $templates = ConditionTemplate::query()
+            ->whereIn('id', $request->input('template_ids'))
+            ->get();
+
+        if (!empty(array_diff($request->input('template_ids'), $templates->pluck('id')->toArray()))) {
+            throw new ApiBusinessException('Условие не существует', 'merchant_not_exists', [
+                'ru' => 'Условие не существует'
+            ], 400);
+        }
+
+        foreach ($merchants as $merchant) {
+            foreach ($templates as $template) {
+                $condition = Condition::query()->where('merchant_id', $merchant->id)
+                    ->where('duration', $template->duration)
+                    ->where('commission', $template->commission)
+                    ->exists();
+
+                if ($condition) {
+                    throw new BusinessException('Данное условие существует для этого мерчанта '
+                        . $merchant->name . ' ' . $template->duration . '|' . $template->commission . '%',
+                        'condition_exists', 400);
+                }
+            }
+        }
+
+        foreach ($merchants as $merchant) {
+            $main_store = $merchant->stores()->where('is_main', true)->first();
+
+            if (!$main_store) {
+                throw new BusinessException('У данного мерчанта нет основного магазина ' . $merchant->name , 'main_store_not_exists' , 400);
+            }
+
+            foreach ($templates as $template) {
+
+                $condition = new Condition();
+                $condition->duration = $template->duration;
+                $condition->commission = $template->commission;
+                $condition->event_id = $request->input('event_id');
+                $condition->merchant()->associate($merchant);
+                $condition->store_id = $main_store->id;
+
+                if ($request->has('started_at') && $request->input('started_at') < Carbon::now() ) {
+                    throw new BusinessException('дата активации не может быть меньше сегоднешнего дня', 'wrong_date', 400);
+                }
+
+                if ($request->has('finished_at') && $request->input('finished_at') <= Carbon::now()) {
+                    throw new BusinessException('дата деактивации не может быть меньше или равна сегоднешнего дня', 'wrong_date', 400);
+                }
+
+                if ($request->has('started_at') && $request->has('finished_at') && $request->has('started_at') <= $request->has('finished_at')) {
+                    throw new BusinessException('дата деактивации не может быть меньше или равна активации', 'wrong_date', 400);
+                }
+
+                $condition->started_at = $request->input('started_at') ?? null;
+                $condition->finished_at = $request->input('finished_at') ?? null;
+
+                if (empty($request->input('started_at')))
+                {
+                    $condition->active = true;
+                }
+
+                $condition->save();
+
+                SendHook::dispatch(new HookData(
+                    service: 'merchants',
+                    hookable_type: $merchant->getTable(),
+                    hookable_id: $merchant->id,
+                    created_from_str: 'PRM',
+                    created_by_id: $this->user->id,
+                    body: 'Создано условие',
+                    keyword: 'id: ' . $condition->id . ' ' . $condition->title,
+                    action: 'create',
+                    class: 'info',
+                    action_at: null,
+                    created_by_str: $this->user->name,
+                ));
+            }
+
+            $merchant->load(['application_conditions' => function ($q) {
+                $q->active();
+            }]);
+
+            $conditions = $merchant->application_conditions->where('post_alifshop', true)->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'commission' => $item->commission,
+                    'duration' => $item->duration,
+                    'event_id' => $item->event_id
+                ];
+            });
+
+            $alifshopService = new AlifshopService;
+            $alifshopService->storeOrUpdateConditions($merchant->company_id, $conditions);
+
+            Cache::tags($merchant->id)->flush();
+        }
+
+        return response()->json(['message' => 'Условия изменены']);
+    }
+
+    public function massSpecialStore(MassSpecialStoreApplicationConditionRequest $request)
+    {
+        $merchants = Merchant::query()
+            ->whereIn('id', $request->input('merchant_ids'))
+            ->get();
+
+        if (!empty(array_diff($request->input('merchant_ids'), $merchants->pluck('id')->toArray()))) {
+            throw new ApiBusinessException('Мерчант не существует', 'merchant_not_exists', [
+                'ru' => 'Мерчант не существует'
+            ], 400);
+        }
+
+        foreach ($merchants as $merchant) {
+            $main_store = $merchant->stores()->where('is_main', true)->first();
+
+            if (!$main_store) {
+                throw new BusinessException('У данного мерчанта нет основного магазина ' . $merchant->name , 'main_store_not_exists' , 400);
+            }
+
+            $condition = new Condition($request->validated());
+            $condition->event_id = $request->input('event_id');
+            $condition->merchant()->associate($merchant);
+            $condition->store_id = $main_store->id;
+
+            if ($request->has('started_at') && $request->input('started_at') < Carbon::now() ) {
+                throw new BusinessException('дата активации не может быть меньше сегоднешнего дня', 'wrong_date', 400);
+            }
+
+            if ($request->has('finished_at') && $request->input('finished_at') <= Carbon::now()) {
+                throw new BusinessException('дата деактивации не может быть меньше или равна сегоднешнего дня', 'wrong_date', 400);
+            }
+
+            if ($request->has('started_at') && $request->has('finished_at') && $request->has('started_at') <= $request->has('finished_at')) {
+                throw new BusinessException('дата деактивации не может быть меньше или равна активации', 'wrong_date', 400);
+            }
+
+            $condition->started_at = $request->input('started_at') ?? null;
+            $condition->finished_at = $request->input('finished_at') ?? null;
+
+            if (empty($request->input('started_at')))
+            {
+                $condition->active = true;
+            }
+
+            $condition->save();
+
+            SendHook::dispatch(new HookData(
+                service: 'merchants',
+                hookable_type: $merchant->getTable(),
+                hookable_id: $merchant->id,
+                created_from_str: 'PRM',
+                created_by_id: $this->user->id,
+                body: 'Создано условие',
+                keyword: 'id: ' . $condition->id . ' ' . $condition->title,
+                action: 'create',
+                class: 'info',
+                action_at: null,
+                created_by_str: $this->user->name,
+            ));
+
+            $merchant->load(['application_conditions' => function ($q) {
+                $q->active();
+            }]);
+
+            $conditions = $merchant->application_conditions->where('post_alifshop', true)->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'commission' => $item->commission,
+                    'duration' => $item->duration,
+                    'event_id' => $item->event_id
+                ];
+            });
+
+            $alifshopService = new AlifshopService;
+            $alifshopService->storeOrUpdateConditions($merchant->company_id, $conditions);
+
+            Cache::tags($merchant->id)->flush();
+        }
+
+        return response()->json(['message' => 'Условия изменены']);
     }
 
     public function update(UpdateApplicationConditions $request, $condition_id)
@@ -220,14 +446,12 @@ class ApplicationConditionsController extends ApiBaseController
                 'id' => $item->id,
                 'commission' => $item->commission,
                 'duration' => $item->duration,
-                'is_active' => $item->active,
-                'special_offer' => $item->special_offer,
                 'event_id' => $item->event_id
             ];
         });
 
         $alifshopService = new AlifshopService;
-        $alifshopService->storeOrUpdateMerchant($merchant, $conditions);
+        $alifshopService->storeOrUpdateConditions($merchant->company_id, $conditions);
 
         Cache::tags($merchant->id)->flush();
 
@@ -264,14 +488,12 @@ class ApplicationConditionsController extends ApiBaseController
                 'id' => $item->id,
                 'commission' => $item->commission,
                 'duration' => $item->duration,
-                'is_active' => $item->active,
-                'special_offer' => $item->special_offer,
                 'event_id' => $item->event_id
             ];
         });
 
         $alifshopService = new AlifshopService;
-        $alifshopService->storeOrUpdateMerchant($merchant, $conditions);
+        $alifshopService->storeOrUpdateConditions($merchant->company_id, $conditions);
 
         Cache::tags($merchant->id)->flush();
 
