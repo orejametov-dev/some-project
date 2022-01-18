@@ -76,6 +76,11 @@ class ApplicationConditionsController extends ApiBaseController
         }
 
         $main_store = $merchant_stores->where('is_main')->first();
+
+        if (!$main_store) {
+            throw new BusinessException('У данного мерчанта нет основного магазина ' . $merchant->name , 'main_store_not_exists' , 400);
+        }
+
         if ($request->input('post_alifshop') and !in_array($main_store->id, $store_ids)) {
             $store_ids[] = $main_store->id;
         }
@@ -158,7 +163,7 @@ class ApplicationConditionsController extends ApiBaseController
             $main_store = $merchant->stores()->where('is_main', true)->first();
 
             if (!$main_store) {
-                throw new BusinessException('У двнного мерчанта нет основного магазина ' . $merchant->name , 'main_store_not_exists' , 400);
+                throw new BusinessException('У данного мерчанта нет основного магазина ' . $merchant->name , 'main_store_not_exists' , 400);
             }
 
             foreach ($templates as $template) {
@@ -232,7 +237,7 @@ class ApplicationConditionsController extends ApiBaseController
             $main_store = $merchant->stores()->where('is_main', true)->first();
 
             if (!$main_store) {
-                throw new BusinessException('У двнного мерчанта нет основного магазина ' . $merchant->name , 'main_store_not_exists' , 400);
+                throw new BusinessException('У данного мерчанта нет основного магазина ' . $merchant->name , 'main_store_not_exists' , 400);
             }
 
             $condition = new Condition($request->validated());
