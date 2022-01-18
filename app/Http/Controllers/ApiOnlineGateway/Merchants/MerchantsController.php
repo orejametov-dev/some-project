@@ -9,12 +9,16 @@ use App\Http\Resources\ApiOnlineGateway\MerchantTagResource;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Tag;
 use Illuminate\Http\Request;
+use function Clue\StreamFilter\fun;
 
 class MerchantsController extends Controller
 {
     public function index(Request $request)
     {
         $query = Merchant::query()
+            ->whereHas('application_conditions' , function ($query) {
+                $query->where('active' , true);
+            })
             ->with('tags')
             ->active()
             ->filterRequest($request)
