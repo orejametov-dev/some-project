@@ -20,28 +20,15 @@ class ProblemCasesController extends ApiBaseController
 {
     public function store(ProblemCaseStoreRequest $request, ProblemCaseService $problemCaseService)
     {
-        if ($request->has('credit_number') and $request->input('credit_number')) {
-            $data = CoreService::getApplicationDataByContractNumber($request->input('credit_number'));
+        $data = CoreService::getApplicationDataByApplicationId($request->input('application_id'));
 
-            if (ProblemCase::query()->where('credit_number', $request->input('credit_number'))
-                ->where('status_id', '!=', ProblemCase::FINISHED)
-                ->orderByDesc('id')->exists()) {
-                throw new ApiBusinessException('На данный кредитный номер был уже создан проблемный кейс', 'problem_case_exist', [
-                    'ru' => "На данный кредитный номер был уже создан проблемный кейс",
-                    'uz' => 'Bu kredit raqamiga tegishli muammoli keys avval yuborilgan.'
-                ], 400);
-            }
-        } elseif ($request->has('application_id') and $request->input('application_id')) {
-            $data = CoreService::getApplicationDataByApplicationId($request->input('application_id'));
-
-            if (ProblemCase::query()->where('application_id', $request->input('application_id'))
-                ->where('status_id', '!=', ProblemCase::FINISHED)
-                ->orderByDesc('id')->exists()) {
-                throw new ApiBusinessException('На данную заявку был уже создан проблемный кейс', 'problem_case_exist', [
-                    'ru' => 'На данную заявку был уже создан проблемный кейс',
-                    'uz' => 'Bu arizaga tegishli muammoli keys avval yuborilgan.'
-                ], 400);
-            }
+        if (ProblemCase::query()->where('application_id', $request->input('application_id'))
+            ->where('status_id', '!=', ProblemCase::FINISHED)
+            ->orderByDesc('id')->exists()) {
+            throw new ApiBusinessException('На данную заявку был уже создан проблемный кейс', 'problem_case_exist', [
+                'ru' => 'На данную заявку был уже создан проблемный кейс',
+                'uz' => 'Bu arizaga tegishli muammoli keys avval yuborilgan.'
+            ], 400);
         }
 
         $problemCase = $problemCaseService->create((new ProblemCaseDTO())->fromProblemCaseRequest($request, $data, "COMPLIANCE", $this->user));
