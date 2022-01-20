@@ -52,14 +52,18 @@ class DeactivationMerchantStore extends Command
 
         Merchant::where('active', true)
             ->where('created_at', '<', $from_date)
-            ->whereHas('activity_reasons', function ($query) use ($from_date) {
-                $query->where('merchant_activities.active', true)
-                    ->where('merchant_activities.created_at', '<', $from_date)
-                    ->orderByDesc('merchant_activities.id')
-                    ->take(1);
-            })
             ->chunkById(100, function ($merchants) use ($coreService, $from_date, $to_date) {
                 foreach ($merchants as $merchant) {
+
+                    if (\DB::table('merchant_activities')
+                        ->where('merchant_id', $merchant->id)
+                        ->where('active', true)
+                        ->where('created_at', '<', $from_date)
+                        ->orderByDesc('id')
+                        ->first() === null) {
+                        continue;
+                    }
+
                     $result = $coreService->getMerchantApplicationsAndClientsCountByRange($merchant->id, $from_date, $to_date);
                     $resultData = $result['data'];
                     if ($resultData['applications_count'] == 0 && $resultData['clients_count'] == 0) {
