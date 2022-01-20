@@ -10,6 +10,7 @@ use Illuminate\Console\Command;
 use App\HttpServices\Core\CoreService;
 use Illuminate\Support\Facades\Cache;
 use Log;
+use function Clue\StreamFilter\fun;
 
 class DeactivationMerchantStore extends Command
 {
@@ -49,15 +50,19 @@ class DeactivationMerchantStore extends Command
         $from_date = Carbon::now()->subWeeks(2)->format('Y-m-d');;
         $to_date = Carbon::now()->format('Y-m-d');
 
-        Merchant::where('active' , true)
-            ->where('created_at' ,  '<',$from_date)
+        Merchant::where('active', true)
+            ->where('created_at', '<', $from_date)
+            ->whereHas('activity_reasons', function ($query) use ($from_date) {
+                $query->where('merchant_activities.active', true)
+                    ->where('merchant_activities.created_at', '<', $from_date)
+                    ->orderByDesc('merchant_activities.id')
+                    ->take(1);
+            })
             ->chunkById(100, function ($merchants) use ($coreService, $from_date, $to_date) {
-                foreach ($merchants as $merchant)
-                {
-                    $result = $coreService->getMerchantApplicationsAndClientsCountByRange($merchant->id,$from_date, $to_date);
+                foreach ($merchants as $merchant) {
+                    $result = $coreService->getMerchantApplicationsAndClientsCountByRange($merchant->id, $from_date, $to_date);
                     $resultData = $result['data'];
-                    if($resultData['applications_count'] == 0 && $resultData['clients_count'] == 0)
-                    {
+                    if ($resultData['applications_count'] == 0 && $resultData['clients_count'] == 0) {
                         $merchant->active = false;
                         $merchant->save();
 
