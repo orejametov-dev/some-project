@@ -7,45 +7,31 @@ namespace App\UseCases\Merchants;
 
 use App\Exceptions\BusinessException;
 use App\HttpRepositories\CompanyHttpRepositories\CompanyHttpRepository;
-use App\HttpServices\Company\CompanyService;
-use App\Modules\Merchants\DTO\Merchants\MerchantsDTO;
 use App\Modules\Merchants\Models\Merchant;
-use Illuminate\Support\Facades\Cache;
+use App\UseCases\Cache\FlushCacheUseCase;
 use Illuminate\Support\Str;
 
 class StoreMerchantUseCase
 {
     public function __construct(
         private CompanyHttpRepository $companyHttpRepository,
-        private MerchantRepository $merchantRepository,
+        private FlushCacheUseCase $flushCacheUseCase
     )
     {
     }
 
-    public function execute(int $company_id, int $user_id) : MerchantResponse
+    public function execute(int $company_id, int $user_id): Merchant
     {
         $company = $this->companyHttpRepository->getCompanyById($company_id);
 
-        if ($merchant->checkCompanyByIdToExists($company_id)) {
+        if (Merchant::where('company_id', $company_id)->exists()) {
             throw new BusinessException('Указаная компания уже имеет аъзо модуль');
         }
 
-        $merchant = new Merchant();
-        $merchant->id = $company->id;
-        $merchant->name = $company->name;
-        $merchant->legal_name = $company->legal_name;
-        $merchant->legal_name_prefix = $company->legal_name_prefix;
-        $merchant->token = $company->token;
-        $merchant->alifshop_slug = Str::slug($company->name);
-        $merchant->maintainer_id = $user_id;
-        $merchant->company_id = $company->id;
+        $merchant = Merchant::fromDto($company, $user_id);
         $merchant->save();
 
-
-        Cache::tags($merchant->id)->get('sdaasdsad')->flush();
-        Cache::tags('azo_merchants')->flush();
-        Cache::tags('company')->flush();
-
+        $this->flushCacheUseCase->execute($merchant->id);
         $this->companyHttpRepository->setStatusExist($company->id);
 
         return $merchant;
