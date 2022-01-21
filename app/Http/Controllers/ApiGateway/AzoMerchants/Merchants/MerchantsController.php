@@ -14,34 +14,19 @@ use App\HttpServices\Auth\AuthMicroService;
 use App\HttpServices\Company\CompanyService;
 use App\HttpServices\Telegram\TelegramService;
 use App\HttpServices\Warehouse\WarehouseService;
-use App\Modules\Merchants\DTO\Merchants\MerchantsDTO;
 use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\Competitor;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Tag;
-use App\Modules\Merchants\Services\Merchants\MerchantsService;
-use App\Services\Alifshop\AlifshopService;
 use App\UseCases\Merchants\StoreMerchantUseCase;
 use App\UseCases\Merchants\UpdateMerchantUseCase;
 use Carbon\Carbon;
-use Http\Discovery\Exception\NotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class MerchantsController extends ApiBaseController
 {
-    /**
-     * @var AlifshopService
-     */
-    private $alifshopService;
-
-    public function __construct(AlifshopService $alifshopService)
-    {
-        parent::__construct();
-        $this->alifshopService = $alifshopService;
-    }
-
     public function index(Request $request)
     {
         $merchants = Merchant::query()->with(['stores', 'tags'])
@@ -62,8 +47,8 @@ class MerchantsController extends ApiBaseController
     public function store(StoreMerchantRequest $request, StoreMerchantUseCase $storeMerchantUseCase)
     {
         $merchant = $storeMerchantUseCase->execute(
-            company_id: (int) $request->input('company_id'),
-            user_id: (int) $this->user->id
+            company_id: (int)$request->input('company_id'),
+            user_id: (int)$this->user->id
         );
 
         return $merchant;
@@ -72,14 +57,14 @@ class MerchantsController extends ApiBaseController
     public function update($merchant_id, UpdateMerchantRequest $request, UpdateMerchantUseCase $updateMerchantUseCase)
     {
         $updateMerchantDTO = new UpdateMerchantDTO(
-            id: (int) $merchant_id,
-            name: (string) $request->input('name'),
-            legal_name: $request->input('legal_name') ? (string) $request->input('legal_name'): null,
-            legal_name_prefix: $request->input('legal_name_prefix') ? (string) $request->input('legal_name_prefix'): null,
-            token: (string) $request->input('token'),
-            alifshop_slug: (string) $request->input('alifshop_slug'),
-            information: $request->input('information') ? (string) $request->input('information'): null,
-            min_application_price: (int) $request->input('min_application_price')
+            id: (int)$merchant_id,
+            name: (string)$request->input('name'),
+            legal_name: $request->input('legal_name') ? (string)$request->input('legal_name') : null,
+            legal_name_prefix: $request->input('legal_name_prefix') ? (string)$request->input('legal_name_prefix') : null,
+            token: (string)$request->input('token'),
+            alifshop_slug: (string)$request->input('alifshop_slug'),
+            information: $request->input('information') ? (string)$request->input('information') : null,
+            min_application_price: (int)$request->input('min_application_price')
         );
         $merchant = $updateMerchantUseCase->execute($updateMerchantDTO);
         return $merchant;
@@ -179,12 +164,12 @@ class MerchantsController extends ApiBaseController
         $merchant_query = DB::table('merchants')
             ->whereRaw('active = 1')
             ->select([
-            'merchants.id',
-            'merchants.name',
-            DB::raw('sum(merchant_additional_agreements.limit) as agreement_sum'),
-            'merchants.current_sales',
-            'merchant_infos.limit'
-        ])
+                'merchants.id',
+                'merchants.name',
+                DB::raw('sum(merchant_additional_agreements.limit) as agreement_sum'),
+                'merchants.current_sales',
+                'merchant_infos.limit'
+            ])
             ->leftJoin('merchant_infos', 'merchants.id', '=', 'merchant_infos.merchant_id')
             ->leftJoin('merchant_additional_agreements', 'merchants.id', '=', 'merchant_additional_agreements.merchant_id')
             ->whereExists(function ($query) {
@@ -260,29 +245,29 @@ class MerchantsController extends ApiBaseController
         $competitor = Competitor::query()->findOrFail($request->input('competitor_id'));
 
         if ($merchant->competitors()->find($competitor->id)) {
-            throw new ApiBusinessException('Информация о данном конкуренте на этого мерчанта уже была создана' , 'merchant_competitor_exists' , [
+            throw new ApiBusinessException('Информация о данном конкуренте на этого мерчанта уже была создана', 'merchant_competitor_exists', [
                 'ru' => 'Информация о данном конкуренте на этого мерчанта уже была создана',
                 'uz' => 'Merchantdagi bu konkurent haqidagi ma\'lumot qo\'shib bo\'lingan ekan'
-            ],400);
+            ], 400);
         }
 
-        $merchant->competitors()->attach($competitor->id,[
-                'volume_sales' => $request->input('volume_sales') * 100,
-                'percentage_approve' => $request->input('percentage_approve'),
-                'partnership_at' => Carbon::parse($request->input('partnership_at'))->format('Y-m-d H:i:s'),
-            ]);
+        $merchant->competitors()->attach($competitor->id, [
+            'volume_sales' => $request->input('volume_sales') * 100,
+            'percentage_approve' => $request->input('percentage_approve'),
+            'partnership_at' => Carbon::parse($request->input('partnership_at'))->format('Y-m-d H:i:s'),
+        ]);
 
         return $merchant->load('competitors');
     }
 
-    public function updateCompetitor($id , CompetitorsRequest $request)
+    public function updateCompetitor($id, CompetitorsRequest $request)
     {
         $merchant = Merchant::query()->findOrFail($id);
         $competitor = Competitor::query()->findOrFail($request->input('competitor_id'));
 
         $merchant->competitors()->findOrFail($competitor->id);
         $merchant->competitors()->detach($competitor->id);
-        $merchant->competitors()->attach($competitor->id,[
+        $merchant->competitors()->attach($competitor->id, [
             'volume_sales' => $request->input('volume_sales') * 100,
             'percentage_approve' => $request->input('percentage_approve'),
             'partnership_at' => Carbon::parse($request->input('partnership_at'))->format('Y-m-d H:i:s'),
@@ -292,7 +277,7 @@ class MerchantsController extends ApiBaseController
         return $merchant->load('competitors');
     }
 
-    public function detachCompetitor($id , Request $request)
+    public function detachCompetitor($id, Request $request)
     {
         $merchant = Merchant::query()->findOrFail($id);
         $competitor = Competitor::query()->findOrFail($request->input('competitor_id'));
