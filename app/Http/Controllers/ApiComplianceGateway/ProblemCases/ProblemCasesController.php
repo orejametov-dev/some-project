@@ -12,7 +12,7 @@ class ProblemCasesController extends ApiBaseController
     public function store(ProblemCaseStoreRequest $request , StoreProblemCaseApplicationIdUseCase $storeProblemCaseUseCase)
     {
         $problemCaseDTO = new ProblemCaseDTO(
-            created_from_name: "CALLS",
+            created_from_name: "COMPLIANCE",
             description: (string) $request->input('description'),
             identifier: (int) $request->input('application_id'),
             user_id: (int) $this->user->id,
