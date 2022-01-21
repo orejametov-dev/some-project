@@ -2,32 +2,24 @@
 
 namespace App\Http\Controllers\ApiComplianceGateway\ProblemCases;
 
-use App\Exceptions\ApiBusinessException;
 use App\Http\Controllers\ApiComplianceGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Merchants\ProblemCases\ProblemCaseStoreRequest;
-use App\HttpServices\Core\CoreService;
-use App\HttpServices\Hooks\DTO\HookData;
-use App\Jobs\SendHook;
-use App\Jobs\SendSmsJob;
 use App\Modules\Merchants\DTO\ProblemCases\ProblemCaseDTO;
-use App\Modules\Merchants\Models\ProblemCase;
-use App\Modules\Merchants\Services\ProblemCases\ProblemCaseService;
-use App\Services\SMS\SmsMessages;
-use App\UseCases\ApiComplianceGateway\ProblemCases\StoreProblemCasesUseCase;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
+use App\UseCases\ProblemCase\StoreProblemCaseApplicationIdUseCase;
 
 class ProblemCasesController extends ApiBaseController
 {
-    public function store(ProblemCaseStoreRequest $request, StoreProblemCasesUseCase $storeProblemCasesUseCase)
+    public function store(ProblemCaseStoreRequest $request , StoreProblemCaseApplicationIdUseCase $storeProblemCaseUseCase)
     {
         $problemCaseDTO = new ProblemCaseDTO(
-            created_from_name: (string)"CALLS",
+            created_from_name: "CALLS",
             description: (string) $request->input('description'),
-            application_id: (int) $request->input('application_id')
+            identifier: (int) $request->input('application_id'),
+            user_id: (int) $this->user->id,
+            user_name: (string) $this->user->name,
         );
 
-        return $storeProblemCasesUseCase->execute($problemCaseDTO, $this->user);
+        return $storeProblemCaseUseCase->execute($problemCaseDTO);
     }
 
 }

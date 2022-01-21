@@ -10,8 +10,9 @@ class ProblemCaseDTO
     public function __construct(
         public string  $created_from_name,
         public ?string $description,
-        public ?int    $credit_number = null,
-        public ?int    $application_id = null,
+        public string|int  $identifier,
+        public int $user_id,
+        public string $user_name
     )
     {
     }

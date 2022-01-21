@@ -2,7 +2,7 @@
 
 namespace App\HttpRepositories\CoreHttpRepositories;
 
-use App\HttpRepositories\CoreHttpResponse\ApplicationDataByApplicationIdResponse;
+use App\HttpRepositories\CoreHttpResponse\ApplicationDataResponse;
 use App\HttpRepositories\CoreHttpResponse\ApplicationDataByContractNumberResponse;
 use Carbon\Carbon;
 use Illuminate\Http\Client\PendingRequest;
@@ -32,7 +32,7 @@ class CoreHttpRepository
     {
         $data = $this->getHttpClient()->get("applications/$contract_number")->throw()->json();
 
-        return new ApplicationDataByContractNumberResponse(
+        return new ApplicationDataResponse(
             id: (int) $data['id'],
             merchant_id: (int) $data['merchant_id'],
             store_id: (int) $data['store_id'],
@@ -52,7 +52,7 @@ class CoreHttpRepository
     {
         $data =  $this->getHttpClient()->get("applications/$application_id")->throw()->json();
 
-        return new ApplicationDataByApplicationIdResponse(
+        return new ApplicationDataResponse(
         id: (int) $data['id'],
         merchant_id: (int) $data['merchant_id'],
         store_id: (int) $data['store_id'],
@@ -64,7 +64,7 @@ class CoreHttpRepository
         application_items: (array) $data['application_items'],
         post_or_pre_created_by_id: (int) $data['merchant_engaged_by']['id'],
         post_or_pre_created_by_name: (string) $data['merchant_engaged_by']['name'],
-        application_created_at: Carbon::parse($data['application_created_at'])
+        application_created_at: Carbon::parse($data['created_at'])
     );
     }
 
