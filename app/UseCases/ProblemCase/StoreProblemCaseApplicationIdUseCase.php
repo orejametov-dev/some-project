@@ -20,9 +20,9 @@ class StoreProblemCaseApplicationIdUseCase extends AbstractStoreProblemCaseUseCa
         if (ProblemCase::query()->where('application_id', $identifier)
             ->where('status_id', '!=', ProblemCase::FINISHED)
             ->orderByDesc('id')->exists()) {
-            throw new ApiBusinessException('На данный кредитный номер был уже создан проблемный кейс', 'problem_case_exist', [
-                'ru' => "На данный кредитный номер был уже создан проблемный кейс",
-                'uz' => 'Bu kredit raqamiga tegishli muammoli keys avval yuborilgan.'
+            throw new ApiBusinessException('На данную заявку был уже создан проблемный кейс', 'problem_case_exist', [
+                'ru' => 'На данную заявку был уже создан проблемный кейс',
+                'uz' => 'Bu arizaga tegishli muammoli keys avval yuborilgan.'
             ], 400);
         }
     }
