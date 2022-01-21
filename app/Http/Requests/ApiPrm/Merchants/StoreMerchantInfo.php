@@ -24,6 +24,7 @@ class StoreMerchantInfo extends FormRequest
     public function rules()
     {
         return [
+            'merchant_id' => 'required|integer',
             'legal_name' => 'required|max:255',
             'legal_name_prefix' => 'required|string',
             'director_name' => 'required|max:255',
