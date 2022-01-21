@@ -2,6 +2,7 @@
 
 namespace App\Modules\Merchants\Models;
 
+use App\DTOs\MerchantInfos\StoreMerchantInfoDTO;
 use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
@@ -15,6 +16,7 @@ use Illuminate\Http\Request;
  * @package App\Modules\Partners\Models
  * @property int $id
  * @property string $legal_name
+ * @property string $legal_name_prefix
  * @property string $director_name
  * @property string $phone
  * @property string $vat_number
@@ -28,6 +30,7 @@ use Illuminate\Http\Request;
  * @property int $merchant_id
  * @property int|null $limit
  * @property string|null $limit_expired_at
+ * @property string|null $contract_date
  * @property int|null $rest_limit
  * @property-read Merchant $merchant
  * @method static Builder|MerchantInfo filterRequest(Request $request)
@@ -77,5 +80,28 @@ class MerchantInfo extends Model
     public static function getMaxContractNumber()
     {
         return MerchantInfo::max('contract_number');
+    }
+
+    public static function fromDTO(StoreMerchantInfoDTO $storeMerchantInfoDTO)
+    {
+        $merchantInfo = new MerchantInfo();
+
+        $merchantInfo->merchant_id = $storeMerchantInfoDTO->merchant_id;
+        $merchantInfo->legal_name = $storeMerchantInfoDTO->legal_name;
+        $merchantInfo->legal_name_prefix = $storeMerchantInfoDTO->legal_name_prefix;
+        $merchantInfo->director_name = $storeMerchantInfoDTO->director_name;
+        $merchantInfo->phone = $storeMerchantInfoDTO->phone;
+        $merchantInfo->vat_number = $storeMerchantInfoDTO->vat_number;
+        $merchantInfo->mfo = $storeMerchantInfoDTO->mfo;
+        $merchantInfo->tin = $storeMerchantInfoDTO->tin;
+        $merchantInfo->oked = $storeMerchantInfoDTO->oked;
+        $merchantInfo->bank_account = $storeMerchantInfoDTO->bank_account;
+        $merchantInfo->bank_name = $storeMerchantInfoDTO->bank_name;
+        $merchantInfo->address = $storeMerchantInfoDTO->address;
+        $merchantInfo->contract_number = MerchantInfo::getMaxContractNumber() + 1;
+        $merchantInfo->contract_date = now();
+        $merchantInfo->limit = MerchantInfo::LIMIT;
+
+        return $merchantInfo;
     }
 }

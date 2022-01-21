@@ -2,6 +2,7 @@
 
 namespace App\Modules\Merchants\Models;
 
+use App\HttpRepositories\HttpResponses\CompanyHttpResponses\CompanyHttpResponse;
 use App\Modules\Merchants\Traits\MerchantFileTrait;
 use App\Modules\Merchants\Traits\MerchantRelationshipsTrait;
 use App\Modules\Merchants\Traits\MerchantStatusesTrait;
@@ -13,6 +14,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 /**
  * App\Modules\Merchants\Models\Merchant
@@ -20,6 +22,7 @@ use Illuminate\Http\Request;
  * @property int $id
  * @property string $name
  * @property string|null $legal_name
+ * @property string|null $legal_name_prefix
  * @property string|null $information
  * @property string|null $token
  * @property string $alifshop_slug
@@ -30,6 +33,8 @@ use Illuminate\Http\Request;
  * @property string|null $paymo_terminal
  * @property int|null $maintainer_id
  * @property int|null $current_sales
+ * @property int $company_id
+ * @property int|null min_application_price
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read Collection|AdditionalAgreement[] $additional_agreements
@@ -184,5 +189,20 @@ class Merchant extends Model
     public function scopeActive(Builder $query)
     {
         $query->where('active', true);
+    }
+
+    public static function fromDto(CompanyHttpResponse $company, int $user_id)
+    {
+        $merchant = new Merchant();
+        $merchant->id = $company->id;
+        $merchant->name = $company->name;
+        $merchant->legal_name = $company->legal_name;
+        $merchant->legal_name_prefix = $company->legal_name_prefix;
+        $merchant->token = $company->token;
+        $merchant->alifshop_slug = Str::slug($company->name);
+        $merchant->maintainer_id = $user_id;
+        $merchant->company_id = $company->id;
+
+        return $merchant;
     }
 }
