@@ -5,6 +5,10 @@ namespace App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases;
 
 
 use App\Http\Controllers\ApiGateway\ApiBaseController;
+use App\Http\Requests\ApiPrm\Comments\StoreCommentRequest;
+use App\Http\Requests\ApiPrm\Merchants\ProblemCases\ProblemCaseAttachTagsRequest;
+use App\Http\Requests\ApiPrm\Merchants\ProblemCases\ProblemCaseSetAssignedRequest;
+use App\Http\Requests\ApiPrm\Merchants\ProblemCases\ProblemCaseSetStatusRequest;
 use App\Http\Requests\ApiPrm\Merchants\ProblemCases\ProblemCaseUpdateRequest;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\HttpServices\Notify\NotifyMicroService;
@@ -12,9 +16,13 @@ use App\Jobs\SendHook;
 use App\Modules\Merchants\DTO\Comments\CommentDTO;
 use App\Modules\Merchants\Models\Comment;
 use App\Modules\Merchants\Models\ProblemCase;
-use App\Modules\Merchants\Models\ProblemCaseTag;
-use App\Modules\Merchants\Services\Comments\CommentService;
 use App\Services\SMS\SmsMessages;
+use App\UseCases\ProblemCase\AttachTagsProblemCaseUseCase;
+use App\UseCases\ProblemCase\SetAssignedProblemCaseUseCase;
+use App\UseCases\ProblemCase\SetStatusProblemCaseUseCase;
+use App\UseCases\ProblemCase\StoreCommentProblemCaseUseCase;
+use App\UseCases\ProblemCase\UpdateProblemCaseUseCase;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ProblemCasesController extends ApiBaseController
@@ -35,122 +43,50 @@ class ProblemCasesController extends ApiBaseController
         return $problemCase;
     }
 
-    public function update($id, ProblemCaseUpdateRequest $request)
+    public function update($id, ProblemCaseUpdateRequest $request , UpdateProblemCaseUseCase $updateProblemCaseUseCase)
     {
-        $this->validate($request, [
-            'deadline' => 'nullable|date_format:Y-m-d',
-        ]);
-
-        $problemCase = ProblemCase::findOrFail($id);
-        $problemCase->deadline = $request->input('deadline');
-        $problemCase->save();
-
-        return $problemCase;
+        return $updateProblemCaseUseCase->execute((int) $id , Carbon::parse($request->input('deadline')));
     }
 
-    public function setManagerComment($id, Request $request, CommentService $commentService)
+    public function setManagerComment($id, StoreCommentRequest $request, StoreCommentProblemCaseUseCase $storeCommentProblemCaseUseCase)
     {
-        $this->validate($request, [
-            'body' => 'required|string',
-        ]);
-
-        $managerComment = $commentService->create(new CommentDTO(
+        $commentDTO = new CommentDTO(
             commentable_type: Comment::PROBLEM_CASE_FOR_PRM,
-            commentable_id: $id,
-            body: $request->input('body'),
-            created_by_id: $this->user->id,
-            created_by_name: $this->user->name
-        ));
+            commentable_id: (int) $id,
+            body: (string) $request->input('body'),
+            created_by_id: (int) $this->user->id,
+            created_by_name: (string) $this->user->name
+        );
 
-        return $managerComment;
+        return $storeCommentProblemCaseUseCase->execute($commentDTO);
     }
 
-    public function setMerchantComment($id, Request $request, CommentService $commentService)
+    public function setMerchantComment($id, StoreCommentRequest $request , StoreCommentProblemCaseUseCase $storeCommentProblemCaseUseCase)
     {
-        $this->validate($request, [
-            'body' => 'required|string',
-        ]);
-
-        $merchantComment = $commentService->create(new CommentDTO(
+        $commentDTO = new CommentDTO(
             commentable_type: Comment::PROBLEM_CASE_FOR_MERCHANT,
-            commentable_id: $id,
-            body: $request->input('body'),
-            created_by_id: $this->user->id,
-            created_by_name: $this->user->name
-        ));
+            commentable_id: (int) $id,
+            body: (string) $request->input('body'),
+            created_by_id: (int) $this->user->id,
+            created_by_name: (string) $this->user->name
+        );
 
-        return $merchantComment;
+        return $storeCommentProblemCaseUseCase->execute($commentDTO);
     }
 
-    public function attachTags(Request $request, $id)
+    public function attachTags($id, ProblemCaseAttachTagsRequest $request , AttachTagsProblemCaseUseCase $attachTagsProblemCaseUseCase)
     {
-        $request->validate([
-            'tags' => 'required|array',
-            'tags.*.name' => 'required|string',
-            'tags.*.type_id' => 'required|integer|in:' . ProblemCaseTag::BEFORE_TYPE . ', ' . ProblemCaseTag::AFTER_TYPE
-        ]);
-
-        $problemCase = ProblemCase::findOrFail($id);
-        $problemCase->tags()->detach();
-        $tags = [];
-        foreach ($request->input('tags') as $item) {
-            $tag = ProblemCaseTag::query()->firstOrCreate(['body' => $item['name'], 'type_id' => $item['type_id']]);
-            $tags[] = $tag->id;
-        }
-        $problemCase->tags()->attach($tags);
-
-
-        return response()->json($problemCase->load('tags'));
+        return $attachTagsProblemCaseUseCase->execute( (int) $id , (array) $request->input('tags'));
     }
 
-    public function setStatus(Request $request, $id)
+    public function setStatus($id , ProblemCaseSetStatusRequest $request  , SetStatusProblemCaseUseCase $setStatusProblemCaseUseCase)
     {
-        $this->validate($request, [
-            'status_id' => 'required|integer|in:'
-                . ProblemCase::NEW . ','
-                . ProblemCase::IN_PROCESS . ','
-                . ProblemCase::DONE . ','
-                . ProblemCase::FINISHED
-        ]);
-        $problemCase = ProblemCase::query()->findOrFail($id);
-        $problemCase->setStatus($request->input('status_id'));
-        $problemCase->save();
-
-        if ($problemCase->isStatusFinished()) {
-            $message = SmsMessages::onNewProblemCases($problemCase->client_name . ' ' . $problemCase->client_surname, $problemCase->id);
-            NotifyMicroService::sendSms($problemCase->phone, $message, NotifyMicroService::PROBLEM_CASE);
-        }
-
-        SendHook::dispatch(new HookData(
-            service: 'merchants',
-            hookable_type: $problemCase->getTable(),
-            hookable_id: $problemCase->id,
-            created_from_str: 'PRM',
-            created_by_id: $this->user->id,
-            body: 'Обновлен на статус',
-            keyword: ProblemCase::$statuses[$problemCase->status_id]['name'],
-            action: 'update',
-            class: 'info',
-            action_at: null,
-            created_by_str: $this->user->name,
-        ));
-
-        return $problemCase;
+        return $setStatusProblemCaseUseCase->execute((int) $id , (int) $request->input('status_id') , $this->user);
     }
 
-    public function setAssigned($id, Request $request)
+    public function setAssigned($id, ProblemCaseSetAssignedRequest $request , SetAssignedProblemCaseUseCase $setAssignedProblemCaseUseCase)
     {
-        $request->validate([
-            'assigned_to_id' => 'required|integer',
-            'assigned_to_name' => 'required|string',
-        ]);
-
-        $problemCase = ProblemCase::query()->findOrFail($id);
-        $problemCase->assigned_to_id = $request->input('assigned_to_id');
-        $problemCase->assigned_to_name = $request->input('assigned_to_name');
-        $problemCase->save();
-
-        return $problemCase;
+        return $setAssignedProblemCaseUseCase->execute((int) $id , (int) $request->input('assigned_to_id') , (string) $request->input('assigned_to_name'));
     }
 
     public function getProblemCasesOfMerchantUser($user_id, Request $request)
