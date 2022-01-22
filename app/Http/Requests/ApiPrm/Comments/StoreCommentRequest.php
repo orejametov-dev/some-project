@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\ApiPrm\Merchants\ProblemCases;
+namespace App\Http\Requests\ApiPrm\Comments;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProblemCaseUpdateRequest extends FormRequest
+class StoreCommentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,7 @@ class ProblemCaseUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'deadline' => 'nullable|date_format:Y-m-d',
+            'body' => 'required|string'
         ];
     }
 }

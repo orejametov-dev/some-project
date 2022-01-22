@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests\ApiPrm\Merchants\ProblemCases;
 
+use App\Modules\Merchants\Models\ProblemCaseTag;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProblemCaseUpdateRequest extends FormRequest
+class ProblemCaseAttachTagsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +25,9 @@ class ProblemCaseUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'deadline' => 'nullable|date_format:Y-m-d',
+            'tags' => 'required|array',
+            'tags.*.name' => 'required|string',
+            'tags.*.type_id' => 'required|integer|in:' . ProblemCaseTag::BEFORE_TYPE . ', ' . ProblemCaseTag::AFTER_TYPE
         ];
     }
 }

@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests\ApiPrm\Merchants\ProblemCases;
 
+use App\Modules\Merchants\Models\ProblemCase;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProblemCaseUpdateRequest extends FormRequest
+class ProblemCaseSetStatusRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +25,11 @@ class ProblemCaseUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'deadline' => 'nullable|date_format:Y-m-d',
+            'status_id' => 'required|integer|in:'
+                . ProblemCase::NEW . ','
+                . ProblemCase::IN_PROCESS . ','
+                . ProblemCase::DONE . ','
+                . ProblemCase::FINISHED
         ];
     }
 }
