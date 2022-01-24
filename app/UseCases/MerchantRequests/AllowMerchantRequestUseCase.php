@@ -7,7 +7,7 @@ namespace App\UseCases\MerchantRequests;
 
 use App\DTOs\MerchantInfos\StoreMerchantInfoDTO;
 use App\Exceptions\BusinessException;
-use App\HttpRepositories\CompanyHttpRepositories\CompanyHttpRepository;
+use App\HttpRepositories\Prm\CompanyHttpRepository;
 use App\Modules\Merchants\Models\File;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\MerchantInfo;

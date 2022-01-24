@@ -1,10 +1,10 @@
 <?php
 
 
-namespace App\HttpRepositories\CompanyHttpRepositories;
+namespace App\HttpRepositories\Prm;
 
 
-use App\HttpRepositories\HttpResponses\CompanyHttpResponses\CompanyHttpResponse;
+use App\HttpRepositories\HttpResponses\Prm\CompanyHttpResponse;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 

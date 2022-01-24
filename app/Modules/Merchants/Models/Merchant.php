@@ -2,7 +2,7 @@
 
 namespace App\Modules\Merchants\Models;
 
-use App\HttpRepositories\HttpResponses\CompanyHttpResponses\CompanyHttpResponse;
+use App\HttpRepositories\HttpResponses\Prm\CompanyHttpResponse;
 use App\Modules\Merchants\Traits\MerchantFileTrait;
 use App\Modules\Merchants\Traits\MerchantRelationshipsTrait;
 use App\Modules\Merchants\Traits\MerchantStatusesTrait;

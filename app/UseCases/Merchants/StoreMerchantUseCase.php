@@ -6,10 +6,9 @@ namespace App\UseCases\Merchants;
 
 
 use App\Exceptions\BusinessException;
-use App\HttpRepositories\CompanyHttpRepositories\CompanyHttpRepository;
+use App\HttpRepositories\Prm\CompanyHttpRepository;
 use App\Modules\Merchants\Models\Merchant;
 use App\UseCases\Cache\FlushCacheUseCase;
-use Illuminate\Support\Str;
 
 class StoreMerchantUseCase
 {

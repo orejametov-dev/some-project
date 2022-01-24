@@ -1,10 +1,12 @@
 <?php
 
 
-namespace App\HttpRepositories\HttpResponses\CompanyHttpResponses;
+namespace App\HttpRepositories\HttpResponses\Prm;
 
 
-class CompanyHttpResponse
+use App\HttpRepositories\HttpResponses\AbstractHttpResponse;
+
+class CompanyHttpResponse extends AbstractHttpResponse
 {
     public function __construct(
         public int $id,
