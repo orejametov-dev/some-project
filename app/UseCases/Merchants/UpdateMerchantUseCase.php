@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace App\UseCases\Merchants;
 
@@ -7,10 +8,22 @@ namespace App\UseCases\Merchants;
 use App\DTOs\Merchants\UpdateMerchantDTO;
 use App\Exceptions\BusinessException;
 use App\Modules\Merchants\Models\Merchant;
+use App\UseCases\Cache\FlushCacheUseCase;
 use Illuminate\Support\Facades\Cache;
 
 class UpdateMerchantUseCase
 {
+
+    public function __construct(
+        private FlushCacheUseCase $flushCacheUseCase,
+        private FindMerchantUseCase $findMerchantUseCase
+    )
+    {
+    }
+
+    /**
+     * @throws BusinessException
+     */
     public function execute(UpdateMerchantDTO $updateMerchantDTO): Merchant
     {
         // check unique name
@@ -31,10 +44,7 @@ class UpdateMerchantUseCase
             throw new BusinessException('Мерчант с таким слагом уже существует');
         }
 
-        $merchant = Merchant::query()->find($updateMerchantDTO->id);
-        if($merchant === null) {
-            throw new BusinessException('Мерчант не найден');
-        }
+        $merchant = $this->findMerchantUseCase->execute($updateMerchantDTO->id);
 
         $merchant->name = $updateMerchantDTO->name;
         $merchant->legal_name = $updateMerchantDTO->legal_name;
@@ -45,9 +55,7 @@ class UpdateMerchantUseCase
         $merchant->min_application_price = $updateMerchantDTO->min_application_price;
         $merchant->save();
 
-        Cache::tags($merchant->id)->flush();
-        Cache::tags('azo_merchants')->flush();
-        Cache::tags('company')->flush();
+        $this->flushCacheUseCase->execute($merchant->id);
 
         return $merchant;
     }
