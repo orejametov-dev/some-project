@@ -6,7 +6,6 @@ use App\HttpRepositories\HttpResponses\Core\ApplicationDataResponse;
 use Carbon\Carbon;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
-use function config;
 
 class CoreHttpRepository
 {
