@@ -54,10 +54,10 @@ class MerchantsController extends ApiBaseController
         return $merchant;
     }
 
-    public function update($merchant_id, UpdateMerchantRequest $request, UpdateMerchantUseCase $updateMerchantUseCase)
+    public function update($id, UpdateMerchantRequest $request, UpdateMerchantUseCase $updateMerchantUseCase)
     {
         $updateMerchantDTO = new UpdateMerchantDTO(
-            id: (int)$merchant_id,
+            id: (int) $id,
             name: (string)$request->input('name'),
             legal_name: $request->input('legal_name') ? (string)$request->input('legal_name') : null,
             legal_name_prefix: $request->input('legal_name_prefix') ? (string)$request->input('legal_name_prefix') : null,
