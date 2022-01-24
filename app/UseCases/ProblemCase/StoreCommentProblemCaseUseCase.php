@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Modules\Merchants\Services\Comments;
+namespace App\UseCases\ProblemCase;
 
 use App\Modules\Merchants\DTO\Comments\CommentDTO;
 use App\Modules\Merchants\Models\Comment;
 
-class CommentService
+class StoreCommentProblemCaseUseCase
 {
-    public function create(CommentDTO $commentDTO): Comment
+    public function execute(CommentDTO $commentDTO): Comment
     {
         $comment = new Comment();
         $comment->commentable_type = $commentDTO->commentable_type;
