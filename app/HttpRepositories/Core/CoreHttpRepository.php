@@ -1,12 +1,12 @@
 <?php
 
-namespace App\HttpRepositories\CoreHttpRepositories;
+namespace App\HttpRepositories\Core;
 
-use App\HttpRepositories\CoreHttpResponse\ApplicationDataByContractNumberResponse;
-use App\HttpRepositories\CoreHttpResponse\ApplicationDataResponse;
+use App\HttpRepositories\HttpResponses\Core\ApplicationDataResponse;
 use Carbon\Carbon;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
+use function config;
 
 class CoreHttpRepository
 {

@@ -3,7 +3,7 @@
 namespace App\UseCases\ProblemCase;
 
 use App\Exceptions\ApiBusinessException;
-use App\HttpRepositories\CoreHttpRepositories\CoreHttpRepository;
+use App\HttpRepositories\Core\CoreHttpRepository;
 use App\Modules\Merchants\Models\ProblemCase;
 
 class StoreProblemCaseApplicationIdUseCase extends AbstractStoreProblemCaseUseCase

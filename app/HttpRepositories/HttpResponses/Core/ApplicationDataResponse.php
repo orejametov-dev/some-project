@@ -1,6 +1,6 @@
 <?php
 
-namespace App\HttpRepositories\CoreHttpResponse;
+namespace App\HttpRepositories\HttpResponses\Core;
 
 use Carbon\Carbon;
 
