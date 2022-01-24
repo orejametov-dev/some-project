@@ -10,6 +10,29 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property $merchant_id
+ * @property $store_id
+ * @property $status_id
+ * @property $status_key
+ * @property $created_by_id
+ * @property $created_by_name
+ * @property $created_from_name
+ * @property $credit_number
+ * @property $application_id
+ * @property $client_id
+ * @property $application_items
+ * @property $application_created_at
+ * @property $credit_contract_date
+ * @property $post_or_pre_created_by_id
+ * @property $post_or_pre_created_by_name
+ * @property $search_index
+ * @property $client_name
+ * @property $client_surname
+ * @property $client_patronymic
+ * @property $phone
+ * @property $description
+ */
 class ProblemCase extends Model implements SimpleStateMachinable
 {
     use HasFactory;
