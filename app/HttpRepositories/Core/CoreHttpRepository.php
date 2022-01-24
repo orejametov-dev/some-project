@@ -28,7 +28,7 @@ class CoreHttpRepository
         ])->json();
     }
 
-    public function getApplicationDataByContractNumber($contract_number)
+    public function getApplicationDataByContractNumber($contract_number): ApplicationDataResponse
     {
         $data = $this->getHttpClient()->get("applications/$contract_number")->throw()->json();
 
@@ -48,7 +48,7 @@ class CoreHttpRepository
         );
     }
 
-    public function getApplicationDataByApplicationId($application_id)
+    public function getApplicationDataByApplicationId($application_id): ApplicationDataResponse
     {
         $data = $this->getHttpClient()->get("applications/$application_id")->throw()->json();
 
