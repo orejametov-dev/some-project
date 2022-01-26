@@ -16,6 +16,7 @@ use App\Modules\Merchants\Models\Request as MerchantRequest;
 use App\Modules\Merchants\Models\Tag;
 use App\Modules\Merchants\Services\Merchants\MerchantsService;
 use App\Services\Alifshop\AlifshopService;
+use App\UseCases\MerchantRequests\AllowMerchantRequestUseCase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -146,52 +147,9 @@ class MerchantRequestsController extends ApiBaseController
         return response()->json(['message' => 'Не возможно менять статус']);
     }
 
-    public function allow($id, MerchantsService $merchantsService, AlifshopService $alifshopService)
+    public function allow($id, AllowMerchantRequestUseCase $allowMerchantRequestUseCase)
     {
-        $merchant_request = MerchantRequest::findOrFail($id);
-
-        if (!$merchant_request->isOnTraining()) {
-            return response()->json(['message' => 'Статус заявки должен быть "На обучении"'], 400);
-        }
-
-        if (CompanyService::getCompanyByName($merchant_request->name)) {
-            return response()->json(['message' => 'Указанное имя компании уже занято'], 400);
-        }
-
-        $merchant_name_exists = Merchant::query()->where('name', $merchant_request->name)->exists();
-        if ($merchant_name_exists) {
-            return response()->json(['message' => 'Указанное имя партнера уже занято'], 400);
-        }
-
-        $company = CompanyService::createCompany(
-            name: $merchant_request->name,
-            legal_name: $merchant_request->legal_name,
-            legal_name_prefix: $merchant_request->legal_name_prefix
-        );
-
-        $merchant = DB::transaction(function () use ($merchantsService, $merchant_request,$company) {
-            $merchant = $merchantsService->create(new MerchantsDTO(
-                id: $company['id'],
-                name: $merchant_request->name,
-                legal_name: $merchant_request->legal_name,
-                legal_name_prefix: $merchant_request->legal_name_prefix,
-                token: $company['token'],
-                information: $merchant_request->information,
-                maintainer_id: $merchant_request->engaged_by_id,
-                company_id: $company['id']
-            ));
-
-
-            $merchant_request->files()->update(['merchant_id' => $merchant->id]);
-            $merchantsService->createMerchantInfo((new MerchantInfoDTO())->fromMerchantRequest($merchant_request), $merchant);
-            $ids = Tag::whereIn('title', $merchant_request->categories)->pluck('id');
-            $merchant->tags()->attach($ids);
-            $merchant_request->setStatusAllowed();
-            $merchant_request->save();
-
-            return $merchant;
-        });
-
+        $merchant_request = $allowMerchantRequestUseCase->execute($id);
         return $merchant_request;
     }
 
