@@ -184,6 +184,8 @@ class ApplicationConditionsController extends ApiBaseController
                 $condition = new Condition();
                 $condition->duration = $template->duration;
                 $condition->commission = $template->commission;
+                $condition->post_merchant = $request->input('post_merchant');
+                $condition->post_alifshop = $request->input('post_alifshop');
                 $condition->event_id = $request->input('event_id');
                 $condition->merchant()->associate($merchant);
                 $condition->store_id = $main_store->id;
