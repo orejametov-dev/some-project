@@ -10,14 +10,15 @@ use App\Jobs\SendHook;
 use App\Modules\Merchants\DTO\Conditions\MassSpecialStoreConditionDTO;
 use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\Merchant;
+use App\UseCases\Cache\FlushCacheUseCase;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Cache;
 
 class MassSpecialStoreApplicationConditionUseCase
 {
     public function __construct(
-        private AlifshopHttpRepository $alifshopHttpRepository,
-        private CheckStartedAtAndFinishedAtConditionUseCase $checkStartedAtAndFinishedAtConditionUseCase
+        private AlifshopHttpRepository                      $alifshopHttpRepository,
+        private CheckStartedAtAndFinishedAtConditionUseCase $checkStartedAtAndFinishedAtConditionUseCase,
+        private FlushCacheUseCase                           $flushCacheUseCase
     )
     {
     }
@@ -28,16 +29,18 @@ class MassSpecialStoreApplicationConditionUseCase
             ->whereIn('id', $massSpecialStoreConditionDTO->merchant_ids)
             ->get();
 
-        if (!empty(array_diff($massSpecialStoreConditionDTO->merchant_ids, $merchants->pluck('id')->toArray()))) {
+        if (array_diff($massSpecialStoreConditionDTO->merchant_ids, $merchants->pluck('id')->toArray()) != null) {
             throw new ApiBusinessException('Мерчант не существует', 'merchant_not_exists', [
                 'ru' => 'Мерчант не существует'
             ], 400);
         }
 
+        $this->checkStartedAtAndFinishedAtConditionUseCase->execute($massSpecialStoreConditionDTO->started_at, $massSpecialStoreConditionDTO->finished_at);
+
         foreach ($merchants as $merchant) {
             $main_store = $merchant->stores()->where('is_main', true)->first();
 
-            if (!$main_store) {
+            if ($main_store === false) {
                 throw new BusinessException('У данного мерчанта нет основного магазина ' . $merchant->name, 'main_store_not_exists', 400);
             }
 
@@ -48,17 +51,11 @@ class MassSpecialStoreApplicationConditionUseCase
             $condition->post_merchant = $massSpecialStoreConditionDTO->post_merchant;
             $condition->post_alifshop = $massSpecialStoreConditionDTO->post_alifshop;
             $condition->event_id = $massSpecialStoreConditionDTO->event_id;
-            $condition->merchant()->associate($merchant);
+            $condition->merchant_id = $merchant->id;
             $condition->store_id = $main_store->id;
-
-            $this->checkStartedAtAndFinishedAtConditionUseCase->execute($massSpecialStoreConditionDTO->started_at, $massSpecialStoreConditionDTO->finished_at);
-
             $condition->started_at = $massSpecialStoreConditionDTO->started_at ? Carbon::parse($massSpecialStoreConditionDTO->started_at)->format('Y-m-d') : null;
             $condition->finished_at = $massSpecialStoreConditionDTO->finished_at ? Carbon::parse($massSpecialStoreConditionDTO->finished_at)->format('Y-m-d') : null;
-
-            if ($massSpecialStoreConditionDTO->started_at === null) {
-                $condition->active = true;
-            }
+            $condition->active = $massSpecialStoreConditionDTO->started_at === null;
 
             $condition->save();
 
@@ -89,10 +86,8 @@ class MassSpecialStoreApplicationConditionUseCase
                 ];
             });
 
-
             $this->alifshopHttpRepository->storeOrUpdateConditions($merchant->company_id, $conditions);
-
-            Cache::tags($merchant->id)->flush();
+            $this->flushCacheUseCase->execute($merchant->id);
         }
 
         return response()->json(['message' => 'Условия изменены']);

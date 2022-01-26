@@ -4,54 +4,52 @@ namespace App\UseCases\ApplicationConditions;
 
 use App\Exceptions\BusinessException;
 use App\HttpRepositories\Core\CoreHttpRepository;
-use App\HttpServices\Core\CoreService;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Modules\Merchants\DTO\Conditions\UpdateConditionDTO;
 use App\Modules\Merchants\Models\Condition;
+use App\Modules\Merchants\Models\Store;
+use App\UseCases\Cache\FlushCacheUseCase;
 use Illuminate\Support\Facades\Cache;
 
 class UpdateApplicationConditionUseCase
 {
     public function __construct(
-        private CoreHttpRepository $coreHttpRepository
+        private CoreHttpRepository $coreHttpRepository,
+        private FindConditionUseCase $findConditionUseCase,
+        private FlushCacheUseCase $flushCacheUseCase
     )
     {
     }
 
-    public function execute(int $condition_id , UpdateConditionDTO $updateConditionDTO)
+    public function execute(int $condition_id, UpdateConditionDTO $updateConditionDTO)
     {
-        /** @var Condition $condition */
-        $condition = Condition::query()->find($condition_id);
+        $condition = $this->findConditionUseCase->execute($condition_id);
 
-        if ($condition === null)
-        {
-            throw new BusinessException('Условие не найдено' , 'condition_not_found' , 404);
-        }
-
-        $applications = $this->coreHttpRepository->getApplicationConditionId($condition_id);
-
-        if ($applications) {
+        if ($this->coreHttpRepository->checkApplicationToExistConditionId($condition_id)) {
             return response()->json(['message' => 'Условие не может быть изменено'], 400);
         }
+
         $merchant = $condition->merchant;
 
-        $merchant_stores = $merchant->stores()->active()->get();
+        $store_ids = $conditionDTO->store_ids ?? [];
 
-        $store_ids = $updateConditionDTO->store_ids ?? [];
-        foreach ($store_ids as $id) {
-            if (!$merchant_stores->where('id', $id)->first()) {
-                return response()->json(['message' => 'Указан не правильный магазин'], 400);
-            }
+        $merchant_stores = Store::query()
+            ->where('merchant_id' , $merchant->id)
+            ->where('active' , true)
+            ->get();
+
+        if (array_diff($store_ids ,$merchant_stores->whereIn('id' , $store_ids)->pluck('id')->toArray()) != null) {
+            throw new BusinessException('Указан не правильно магазин' , 'wrong_store' , 400);
         }
 
-        $main_store = $merchant_stores->where('is_main')->first();
+        $main_store = $merchant_stores->where('is_main', true)->first();
 
-        if (!$main_store) {
+        if ($main_store === null) {
             throw new BusinessException('У данного мерчанта нет основного магазина ' . $merchant->name, 'main_store_not_exists', 400);
         }
 
-        if (!in_array($main_store->id, $store_ids)) {
+        if (in_array($main_store->id, $store_ids) === false) {
             $store_ids[] = $main_store->id;
         }
 
@@ -61,7 +59,7 @@ class UpdateApplicationConditionUseCase
         $condition->duration = $updateConditionDTO->duration;
         $condition->commission = $updateConditionDTO->commission;
         $condition->discount = $updateConditionDTO->discount;
-        $condition->is_special = !empty($store_ids) ?? false;
+        $condition->is_special = $store_ids != null ?? false;
         $condition->special_offer = $updateConditionDTO->special_offer;
         $condition->event_id = $updateConditionDTO->event_id;
 
@@ -81,7 +79,7 @@ class UpdateApplicationConditionUseCase
             created_by_str: $updateConditionDTO->user_name,
         ));
 
-        Cache::tags($merchant->id)->flush();
+        $this->flushCacheUseCase->execute($merchant->id);
 
         return $condition;
     }

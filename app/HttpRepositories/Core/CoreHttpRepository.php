@@ -81,6 +81,17 @@ class CoreHttpRepository
             ->json();
     }
 
+    public function checkApplicationToExistConditionId($condition_id): bool
+    {
+        $result = $this->getHttpClient()->get("applications/count", [
+            'condition_id' => $condition_id
+        ])
+            ->throw()
+            ->json();
+
+        return $result !== null;
+    }
+
     protected function getHttpClient(): PendingRequest
     {
         return Http::baseUrl(config('local_services.service_core.domain') . '/')

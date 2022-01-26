@@ -7,25 +7,22 @@ use App\HttpRepositories\Alifshop\AlifshopHttpRepository;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Modules\Merchants\Models\Condition;
+use App\UseCases\Cache\FlushCacheUseCase;
 use Illuminate\Support\Facades\Cache;
 
 class ToggleActiveApplicationConditionUseCase
 {
     public function __construct(
-        private AlifshopHttpRepository $alifshopHttpRepository
+        private AlifshopHttpRepository $alifshopHttpRepository,
+        private FindConditionUseCase $findConditionUseCase,
+        private FlushCacheUseCase $flushCacheUseCase
     )
     {
     }
 
     public function execute(int $condition_id , $user)
     {
-        $condition = Condition::query()->find($condition_id);
-
-        if ($condition === null)
-        {
-            throw new BusinessException('Условие не найдено' , 'condition_not_found' , 404);
-        }
-
+        $condition = $this->findConditionUseCase->execute($condition_id);
         $condition->active = !$condition->active;
         $condition->save();
 
@@ -60,8 +57,7 @@ class ToggleActiveApplicationConditionUseCase
         });
 
         $this->alifshopHttpRepository->storeOrUpdateConditions($merchant->company_id, $conditions);
-
-        Cache::tags($merchant->id)->flush();
+        $this->flushCacheUseCase->execute($merchant->id);
 
         return $condition;
     }

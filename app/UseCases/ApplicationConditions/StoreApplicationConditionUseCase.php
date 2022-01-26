@@ -8,65 +8,61 @@ use App\Jobs\SendHook;
 use App\Modules\Merchants\DTO\Conditions\StoreConditionDTO;
 use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\Merchant;
+use App\Modules\Merchants\Models\Store;
+use App\UseCases\Merchants\FindMerchantUseCase;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 
 class StoreApplicationConditionUseCase
 {
     public function __construct(
-        private CheckStartedAtAndFinishedAtConditionUseCase $checkStartedAtAndFinishedAtConditionUseCase
+        private CheckStartedAtAndFinishedAtConditionUseCase $checkStartedAtAndFinishedAtConditionUseCase,
+        private FindMerchantUseCase $findMerchantUseCase
     )
     {
     }
 
     public function execute(StoreConditionDTO $conditionDTO)
     {
-        /** @var Merchant $merchant */
-        $merchant = Merchant::query()->find($conditionDTO->merchant_id);
-
-        if ($merchant === null) {
-            throw new BusinessException('мерчант не найден', 'merchant_not_found', 404);
-        }
-
-        $merchant_stores = $merchant->stores()->active()->get();
+        $merchant = $this->findMerchantUseCase->execute($conditionDTO->merchant_id);
 
         $store_ids = $conditionDTO->store_ids ?? [];
-        foreach ($store_ids as $id) {
-            if (!$merchant_stores->where('id', $id)->first()) {
-                return response()->json(['message' => 'Указан не правильный магазин'], 400);
+
+        $merchant_stores = Store::query()
+            ->where('merchant_id' , $merchant->id)
+            ->where('active' , true)
+            ->get();
+
+        if (array_diff($store_ids ,$merchant_stores->whereIn('id' , $store_ids)->pluck('id')->toArray()) != null) {
+                throw new BusinessException('Указан не правильно магазин' , 'wrong_store' , 400);
             }
-        }
 
-        $main_store = $merchant_stores->where('is_main')->first();
+        $main_store = $merchant_stores->where('is_main', true)->first();
 
-        if (!$main_store) {
+        if ($main_store === null) {
             throw new BusinessException('У данного мерчанта нет основного магазина ' . $merchant->name, 'main_store_not_exists', 400);
         }
 
-        if ($conditionDTO->post_alifshop and !in_array($main_store->id, $store_ids)) {
+        if ($conditionDTO->post_alifshop === true and in_array($main_store->id, $store_ids) === false) {
             $store_ids[] = $main_store->id;
         }
+
+        $this->checkStartedAtAndFinishedAtConditionUseCase->execute($conditionDTO->started_at, $conditionDTO->finished_at);
 
         $condition = new Condition();
         $condition->duration = $conditionDTO->duration;
         $condition->commission = $conditionDTO->commission;
         $condition->discount = $conditionDTO->discount;
-        $condition->is_special = !empty($store_ids) ?? false;
+        $condition->is_special = $store_ids != null ?? false;
         $condition->special_offer = $conditionDTO->special_offer;
         $condition->event_id = $conditionDTO->event_id;
         $condition->post_merchant = $conditionDTO->post_merchant;
         $condition->post_alifshop = $conditionDTO->post_alifshop;
-        $condition->merchant()->associate($merchant);
+        $condition->merchant_id = $merchant->id;
         $condition->store_id = $main_store->id;
-
-        $this->checkStartedAtAndFinishedAtConditionUseCase->execute($conditionDTO->started_at, $conditionDTO->finished_at);
-
         $condition->started_at = $conditionDTO->started_at ? Carbon::parse($conditionDTO->started_at)->format('Y-m-d') : null;
         $condition->finished_at = $conditionDTO->finished_at ? Carbon::parse($conditionDTO->finished_at)->format('Y-m-d') : null;
-
-        if ($conditionDTO->started_at === null) {
-            $condition->active = true;
-        }
+        $condition->active = $conditionDTO->started_at === null;
 
         $condition->save();
 

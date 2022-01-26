@@ -2,39 +2,32 @@
 
 namespace App\UseCases\ApplicationConditions;
 
-use App\Exceptions\BusinessException;
 use App\HttpRepositories\Core\CoreHttpRepository;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
-use App\Modules\Merchants\Models\Condition;
-use Illuminate\Support\Facades\Cache;
+use App\UseCases\Cache\FlushCacheUseCase;
 
 class DeleteApplicationConditionUseCase
 {
 
     public function __construct(
-        private CoreHttpRepository $coreHttpRepository
+        private CoreHttpRepository   $coreHttpRepository,
+        private FindConditionUseCase $findConditionUseCase,
+        private FlushCacheUseCase    $flushCacheUseCase
     )
     {
     }
 
-    public function execute(int $condition_id ,$user)
+    public function execute(int $condition_id, $user)
     {
-        $condition = Condition::query()->find($condition_id);
-
-        if ($condition === null)
-        {
-            throw new BusinessException('Условие не найдено' , 'condition_not_found' , 404);
-        }
-
-        $applications = $this->coreHttpRepository->getApplicationConditionId($condition_id);
+        $condition = $this->findConditionUseCase->execute($condition_id);
+        $applications = $this->coreHttpRepository->checkApplicationToExistConditionId($condition_id);
 
         if ($applications) {
             return response()->json(['message' => 'Условие не может быть удалено'], 400);
         }
 
         $merchant = $condition->merchant;
-
         $condition->delete();
 
         SendHook::dispatch(new HookData(
@@ -51,7 +44,7 @@ class DeleteApplicationConditionUseCase
             created_by_str: $user->name,
         ));
 
-        Cache::tags($merchant->id)->flush();
+        $this->flushCacheUseCase->execute($merchant->id);
 
         return response()->json(['message' => 'Условие удалено']);
     }

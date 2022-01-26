@@ -4,30 +4,32 @@ namespace App\UseCases\ApplicationConditions;
 
 use App\Exceptions\BusinessException;
 use App\HttpRepositories\Alifshop\AlifshopHttpRepository;
-use App\Modules\Merchants\Models\Condition;
-use Illuminate\Support\Facades\Cache;
+use App\Modules\Merchants\Models\Store;
+use App\UseCases\Cache\FlushCacheUseCase;
 
 class TogglePostsApplicationConditionUseCase
 {
     public function __construct(
-        private AlifshopHttpRepository $alifshopHttpRepository
+        private AlifshopHttpRepository $alifshopHttpRepository,
+        private FindConditionUseCase   $findConditionUseCase,
+        private FlushCacheUseCase      $flushCacheUseCase
     )
     {
     }
 
     public function execute(int $id, bool $post_merchant, bool $post_alifshop)
     {
-        $condition = Condition::query()->find($id);
-
-        if ($condition === null)
-        {
-            throw new BusinessException('Условие не найдено' , 'condition_not_found' , 404);
-        }
+        $condition = $this->findConditionUseCase->execute($id);
 
         $merchant = $condition->merchant;
-        $main_store = $merchant->stores()->main()->exists();
 
-        if ($post_alifshop and !$main_store) {
+        $main_store = $merchant->stores()->where('is_main' , true)->exists();
+
+        if ($main_store === null) {
+            throw new BusinessException('У данного мерчанта нет основного магазина ' . $merchant->name, 'main_store_not_exists', 400);
+        }
+
+        if ($post_alifshop and $main_store === false) {
             return response()->json(['message' => 'Для онлайн заявок надо указать основной магазин'], 400);
         }
 
@@ -49,8 +51,7 @@ class TogglePostsApplicationConditionUseCase
         });
 
         $this->alifshopHttpRepository->storeOrUpdateConditions($merchant->company_id, $conditions);
-
-        Cache::tags($merchant->id)->flush();
+        $this->flushCacheUseCase->execute($merchant->id);
 
         return $condition;
     }
