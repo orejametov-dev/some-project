@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
-use App\Exceptions\BusinessException;
+use App\DTOs\MerchantInfos\StoreMerchantInfoDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiPrm\Merchants\StoreMerchantInfo;
-use App\Modules\Merchants\DTO\Merchants\MerchantInfoDTO;
-use App\Modules\Merchants\Models\Merchant;
+use App\Http\Requests\ApiPrm\Merchants\UpdateMerchantInfo;
 use App\Modules\Merchants\Models\MerchantInfo;
-use App\Modules\Merchants\Services\Merchants\MerchantsService;
 use App\Services\WordService;
+use App\UseCases\MerchantInfos\StoreMerchantInfoUseCase;
 use Illuminate\Http\Request;
 
 class MerchantInfoController extends Controller
@@ -25,24 +24,27 @@ class MerchantInfoController extends Controller
         return $merchantInfoQuery->paginate($request->query('per_page'));
     }
 
-    public function store(StoreMerchantInfo $request, MerchantsService $merchantsService)
+    public function store(StoreMerchantInfo $request, StoreMerchantInfoUseCase $storeMerchantInfoUseCase)
     {
-        $this->validate($request, [
-            'merchant_id' => 'required|integer'
-        ]);
+        $merchantInfo = $storeMerchantInfoUseCase->execute(new StoreMerchantInfoDTO(
+            merchant_id: (int)$request->input('merchant_id'),
+            director_name: (string)$request->input('director_name'),
+            legal_name: (string)$request->input('legal_name'),
+            legal_name_prefix: (string)$request->input('legal_name_prefix'),
+            phone: (string)$request->input('phone'),
+            vat_number: (string)$request->input('vat_number'),
+            mfo: (string)$request->input('mfo'),
+            tin: (string)$request->input('tin'),
+            oked: (string)$request->input('oked'),
+            bank_account: (string)$request->input('bank_account'),
+            bank_name: (string)$request->input('bank_name'),
+            address: (string)$request->input('address')
+        ));
 
-        $merchant = Merchant::query()->findOrFail($request->input('merchant_id'));
-
-        if($merchant->merchant_info) {
-            throw new BusinessException('Партнер уже имеет основной договор');
-        }
-
-        $merchant_info = $merchantsService->createMerchantInfo((new MerchantInfoDTO())->fromHttpRequest($request), $merchant);
-
-        return $merchant_info;
+        return $merchantInfo;
     }
 
-    public function update(StoreMerchantInfo $request, $id)
+    public function update(UpdateMerchantInfo $request, $id)
     {
         $merchant_info = MerchantInfo::query()->findOrFail($id);
 

@@ -27,8 +27,15 @@ class ProblemCasesController extends ApiBaseController
     {
         $problemCases = ProblemCase::with('tags')
             ->filterRequests($request)
-            ->orederByDesc('created_at');
+            ->orderBy('created_at', 'DESC');
 
+        if ($request->has('object') and $request->query('object') == true) {
+            return $problemCases->first();
+        }
+
+        if ($request->has('paginate') and $request->query('paginate') == false) {
+            return $problemCases->get();
+        }
         return $problemCases->paginate($request->query('per_page') ?? 15);
     }
 
