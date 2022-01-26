@@ -83,11 +83,11 @@ class CoreHttpRepository
 
     public function checkApplicationToExistConditionId($condition_id): bool
     {
-            $result = $this->getHttpClient()->get("applications/count", [
-                'condition_id' => $condition_id
-            ])
-                ->throw()
-                ->json();
+        $result = $this->getHttpClient()->get("applications/count", [
+            'condition_id' => $condition_id
+        ])
+            ->throw()
+            ->json();
 
         return (bool)$result;
     }
