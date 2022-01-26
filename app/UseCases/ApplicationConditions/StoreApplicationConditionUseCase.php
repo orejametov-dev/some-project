@@ -11,8 +11,14 @@ use App\Modules\Merchants\Models\Merchant;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 
-class StoreApplicationConditionUseCase extends AbstractStoreConditionUseCase
+class StoreApplicationConditionUseCase
 {
+    public function __construct(
+        private CheckStartedAtAndFinishedAtConditionUseCase $checkStartedAtAndFinishedAtConditionUseCase
+    )
+    {
+    }
+
     public function execute(StoreConditionDTO $conditionDTO)
     {
         /** @var Merchant $merchant */
@@ -53,7 +59,7 @@ class StoreApplicationConditionUseCase extends AbstractStoreConditionUseCase
         $condition->merchant()->associate($merchant);
         $condition->store_id = $main_store->id;
 
-        $this->checkFinishedAtAndStartedAt($conditionDTO->started_at, $conditionDTO->finished_at);
+        $this->checkStartedAtAndFinishedAtConditionUseCase->execute($conditionDTO->started_at, $conditionDTO->finished_at);
 
         $condition->started_at = $conditionDTO->started_at ? Carbon::parse($conditionDTO->started_at)->format('Y-m-d') : null;
         $condition->finished_at = $conditionDTO->finished_at ? Carbon::parse($conditionDTO->finished_at)->format('Y-m-d') : null;

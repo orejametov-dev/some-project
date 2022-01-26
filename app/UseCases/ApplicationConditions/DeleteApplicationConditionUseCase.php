@@ -3,7 +3,7 @@
 namespace App\UseCases\ApplicationConditions;
 
 use App\Exceptions\BusinessException;
-use App\HttpServices\Core\CoreService;
+use App\HttpRepositories\Core\CoreHttpRepository;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Modules\Merchants\Models\Condition;
@@ -11,6 +11,13 @@ use Illuminate\Support\Facades\Cache;
 
 class DeleteApplicationConditionUseCase
 {
+
+    public function __construct(
+        private CoreHttpRepository $coreHttpRepository
+    )
+    {
+    }
+
     public function execute(int $condition_id ,$user)
     {
         $condition = Condition::query()->find($condition_id);
@@ -20,7 +27,7 @@ class DeleteApplicationConditionUseCase
             throw new BusinessException('Условие не найдено' , 'condition_not_found' , 404);
         }
 
-        $applications = CoreService::getApplicationConditionId($condition_id);
+        $applications = $this->coreHttpRepository->getApplicationConditionId($condition_id);
 
         if ($applications) {
             return response()->json(['message' => 'Условие не может быть удалено'], 400);

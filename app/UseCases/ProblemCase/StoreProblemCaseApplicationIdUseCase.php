@@ -8,7 +8,6 @@ use App\Modules\Merchants\Models\ProblemCase;
 
 class StoreProblemCaseApplicationIdUseCase extends AbstractStoreProblemCaseUseCase
 {
-
     public function __construct(
         private CoreHttpRepository $coreHttpRepository
     )

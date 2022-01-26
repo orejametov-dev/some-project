@@ -3,14 +3,20 @@
 namespace App\UseCases\ApplicationConditions;
 
 use App\Exceptions\BusinessException;
+use App\HttpRepositories\Alifshop\AlifshopHttpRepository;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Modules\Merchants\Models\Condition;
-use App\Services\Alifshop\AlifshopService;
 use Illuminate\Support\Facades\Cache;
 
 class ToggleActiveApplicationConditionUseCase
 {
+    public function __construct(
+        private AlifshopHttpRepository $alifshopHttpRepository
+    )
+    {
+    }
+
     public function execute(int $condition_id , $user)
     {
         $condition = Condition::query()->find($condition_id);
@@ -53,8 +59,7 @@ class ToggleActiveApplicationConditionUseCase
             ];
         });
 
-        $alifshopService = new AlifshopService;
-        $alifshopService->storeOrUpdateConditions($merchant->company_id, $conditions);
+        $this->alifshopHttpRepository->storeOrUpdateConditions($merchant->company_id, $conditions);
 
         Cache::tags($merchant->id)->flush();
 

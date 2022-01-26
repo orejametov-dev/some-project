@@ -4,18 +4,25 @@ namespace App\UseCases\ApplicationConditions;
 
 use App\Exceptions\ApiBusinessException;
 use App\Exceptions\BusinessException;
+use App\HttpRepositories\Alifshop\AlifshopHttpRepository;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Modules\Merchants\DTO\Conditions\MassStoreConditionDTO;
 use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\ConditionTemplate;
 use App\Modules\Merchants\Models\Merchant;
-use App\Services\Alifshop\AlifshopService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 
-class MassStoreApplicationConditionUseCase extends AbstractStoreConditionUseCase
+class MassStoreApplicationConditionUseCase
 {
+    public function __construct(
+        private AlifshopHttpRepository $alifshopHttpRepository,
+        private CheckStartedAtAndFinishedAtConditionUseCase $checkStartedAtAndFinishedAtConditionUseCase
+    )
+    {
+    }
+
     public function execute(MassStoreConditionDTO $massStoreConditionDTO)
     {
         $merchants = Merchant::query()
@@ -71,7 +78,7 @@ class MassStoreApplicationConditionUseCase extends AbstractStoreConditionUseCase
                 $condition->merchant()->associate($merchant);
                 $condition->store_id = $main_store->id;
 
-                $this->checkFinishedAtAndStartedAt($massStoreConditionDTO->started_at, $massStoreConditionDTO->finished_at);
+                $this->checkStartedAtAndFinishedAtConditionUseCase->execute($massStoreConditionDTO->started_at, $massStoreConditionDTO->finished_at);
 
                 $condition->started_at = $massStoreConditionDTO->started_at ? Carbon::parse($massStoreConditionDTO->started_at)->format('Y-m-d') : null;
                 $condition->finished_at = $massStoreConditionDTO->finished_at ? Carbon::parse($massStoreConditionDTO->finished_at)->format('Y-m-d') : null;
@@ -111,8 +118,8 @@ class MassStoreApplicationConditionUseCase extends AbstractStoreConditionUseCase
                 ];
             });
 
-            $alifshopService = new AlifshopService;
-            $alifshopService->storeOrUpdateConditions($merchant->company_id, $conditions);
+
+            $this->alifshopHttpRepository->storeOrUpdateConditions($merchant->company_id, $conditions);
 
             Cache::tags($merchant->id)->flush();
         }

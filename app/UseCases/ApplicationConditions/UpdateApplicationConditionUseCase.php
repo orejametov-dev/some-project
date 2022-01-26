@@ -3,6 +3,7 @@
 namespace App\UseCases\ApplicationConditions;
 
 use App\Exceptions\BusinessException;
+use App\HttpRepositories\Core\CoreHttpRepository;
 use App\HttpServices\Core\CoreService;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
@@ -12,6 +13,12 @@ use Illuminate\Support\Facades\Cache;
 
 class UpdateApplicationConditionUseCase
 {
+    public function __construct(
+        private CoreHttpRepository $coreHttpRepository
+    )
+    {
+    }
+
     public function execute(int $condition_id , UpdateConditionDTO $updateConditionDTO)
     {
         /** @var Condition $condition */
@@ -22,7 +29,7 @@ class UpdateApplicationConditionUseCase
             throw new BusinessException('Условие не найдено' , 'condition_not_found' , 404);
         }
 
-        $applications = CoreService::getApplicationConditionId($condition_id);
+        $applications = $this->coreHttpRepository->getApplicationConditionId($condition_id);
 
         if ($applications) {
             return response()->json(['message' => 'Условие не может быть изменено'], 400);
