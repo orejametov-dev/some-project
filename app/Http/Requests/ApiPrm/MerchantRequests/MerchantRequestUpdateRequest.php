@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\ApiMerchantsGateway\Merchants;
+namespace App\Http\Requests\ApiPrm\MerchantRequests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class MerchantRequestStoreMain extends FormRequest
+class MerchantRequestUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -30,9 +30,12 @@ class MerchantRequestStoreMain extends FormRequest
             'legal_name' => 'required|string',
             'legal_name_prefix' => 'required|string',
             'categories' => 'required|array',
+            'stores_count' => 'required|integer',
+            'merchant_users_count' => 'required|integer',
             'approximate_sales' => 'required|integer',
+            'information' => 'nullable|string',
             'region' => 'required|string',
-            'district' => 'required|string'
+            'district' => 'required|string',
         ];
     }
 }
