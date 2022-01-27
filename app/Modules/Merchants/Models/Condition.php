@@ -26,6 +26,8 @@ use Illuminate\Support\Carbon;
  * @property int $merchant_id
  * @property int $store_id
  * @property boolean $is_special
+ * @property boolean $post_merchant
+ * @property boolean $post_alifshop
  * @property Merchant $merchant
  * @property Store $store
  * @property Carbon|null $created_at
