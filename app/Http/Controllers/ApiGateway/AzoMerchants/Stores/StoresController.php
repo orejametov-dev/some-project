@@ -19,7 +19,6 @@ class StoresController extends ApiBaseController
     public function index(Request $request)
     {
         $stores = Store::query()->with(['merchant'])
-            ->azo()
             ->filterRequest($request);
 
         if ($request->query('object') == 'true') {
@@ -37,7 +36,6 @@ class StoresController extends ApiBaseController
     public function show($store_id)
     {
         $store = Store::with(['merchant', 'activity_reasons'])
-            ->azo()
             ->findOrFail($store_id);
         return $store;
     }
@@ -56,7 +54,6 @@ class StoresController extends ApiBaseController
 
         $merchant_store = new Store($request->validated());
         $merchant_store->merchant_id = $merchant->id;
-        $merchant_store->is_azo = true;
 
         if (!Store::where('merchant_id', $merchant->id)->count()) {
             $merchant_store->is_main = true;
@@ -91,7 +88,6 @@ class StoresController extends ApiBaseController
         }
 
         $store = Store::query()->byMerchant($merchant->id)->findOrFail($id);
-        $store->is_azo = true;
         $store->save();
 
         return $store;
@@ -100,7 +96,6 @@ class StoresController extends ApiBaseController
     public function update(UpdateStoresRequest $request, $store_id)
     {
         $store = Store::query()
-            ->azo()
             ->findOrFail($store_id);
 
         $store->fill($request->all());

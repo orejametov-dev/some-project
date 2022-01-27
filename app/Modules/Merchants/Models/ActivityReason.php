@@ -19,7 +19,7 @@ class ActivityReason extends Model
 
     public function merchants()
     {
-        return $this->morphedByMany(Merchant::class, 'merchant','merchant_activities', 'activity_reason_id', 'merchant_id');
+        return $this->belongsToMany(Merchant::class, 'merchant_activities', 'activity_reason_id', 'merchant_id');
     }
 
 
