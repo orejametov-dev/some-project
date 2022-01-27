@@ -14,7 +14,6 @@ class StoresController extends ApiBaseController
     public function index(Request $request)
     {
         $stores = Store::query()->with(['merchant'])
-            ->azo()
             ->filterRequest($request);
 
         if ($request->query('object') == true) {

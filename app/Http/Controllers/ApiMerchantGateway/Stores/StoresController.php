@@ -15,7 +15,6 @@ class StoresController extends ApiBaseController
     {
         $stores = Store::query()
             ->with(['merchant'])
-            ->azo()
             ->byMerchant($this->merchant_id)
             ->filterRequest($request);
 
