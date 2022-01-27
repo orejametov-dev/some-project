@@ -22,6 +22,7 @@ use App\UseCases\ApplicationConditions\TogglePostsApplicationConditionUseCase;
 use App\UseCases\ApplicationConditions\UpdateApplicationConditionUseCase;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class ApplicationConditionsController extends ApiBaseController
 {
