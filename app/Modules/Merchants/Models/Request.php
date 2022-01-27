@@ -60,10 +60,9 @@ class Request extends Model
     public const ON_TRAINING = 5;
 
     protected $table = 'merchant_requests';
-    protected $appends = ['status', 'checkers'];
+    protected $appends = ['status'];
     protected $casts = ['categories' => 'array'];
     protected $fillable = [
-        'token',
         'name',
         'user_name',
         'user_phone',
@@ -89,7 +88,8 @@ class Request extends Model
         'bank_name',
         'address',
 
-        'completed',
+        'main_completed',
+        'documents_completed',
     ];
 
     private static $statuses = [
@@ -115,14 +115,30 @@ class Request extends Model
         ]
     ];
 
-    public function getCheckersAttribute()
+    public function checkToMainCompleted()
     {
-        $main = $this->user_name && $this->user_phone && $this->name && $this->region
+        $main = $this->user_name && $this->legal_name && $this->user_phone && $this->name && $this->region
             && $this->categories && $this->stores_count && $this->merchant_users_count && $this->approximate_sales;
 
-        $documents = $this->director_name && $this->legal_name && $this->phone && $this->vat_number && $this->mfo
+        if ($main === true) {
+            $this->main_completed = true;
+            $this->save();
+        }
+    }
+
+    public function checkToDocumentSCompleted()
+    {
+        $documents = $this->director_name && $this->phone && $this->vat_number && $this->mfo
             && $this->tin && $this->oked && $this->bank_account && $this->bank_name && $this->address;
 
+        if ($documents === true) {
+            $this->documents_completed = true;
+            $this->save();
+        }
+    }
+
+    public function checkToFileCompleted()
+    {
         $exist_file_type = $this->files->pluck('file_type')->toArray();
         $file_checker = true;
         unset(File::$registration_file_types['store_photo']);
@@ -134,11 +150,10 @@ class Request extends Model
 
         }
 
-        return [
-            'main' => $main,
-            'documents' => $documents,
-            'files' => $file_checker
-        ];
+        if ($file_checker === true) {
+            $this->file_completed = true;
+            $this->save();
+        }
     }
 
     public static function getOneById(int $id)
@@ -257,15 +272,5 @@ class Request extends Model
         $this->engaged_by_id = $user['data']['id'];
         $this->engaged_by_name = $user['data']['name'];
         $this->engaged_at = now();
-    }
-
-    public function checkToCompleted()
-    {
-        if ($this->checkers['main'] &&
-            $this->checkers['documents'] &&
-            $this->checkers['files']) {
-            $this->completed = true;
-            $this->save();
-        }
     }
 }
