@@ -34,9 +34,6 @@ Route::prefix('merchants/requests')
         Route::get('/districts', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'getDistricts'])->withoutMiddleware(['gateway-access', 'gateway-auth-user']);
         Route::get('/{token}', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'show'])->withoutMiddleware(['gateway-access', 'gateway-auth-user']);
         Route::post('/store-main', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'storeMain'])->withoutMiddleware(['gateway-access', 'gateway-auth-user']);
-        Route::post('/store-documents', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'storeDocuments'])->withoutMiddleware(['gateway-access', 'gateway-auth-user']);
-        Route::post('/upload-files', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'upload'])->withoutMiddleware(['gateway-access', 'gateway-auth-user']);
-        Route::delete('/delete-files/{file_id}', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'deleteFile'])->withoutMiddleware(['gateway-access', 'gateway-auth-user']);
     });
 
 Route::prefix('merchants/tags')
