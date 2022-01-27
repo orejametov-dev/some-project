@@ -10,13 +10,9 @@ use App\Http\Requests\ApiPrm\Merchants\ProblemCases\ProblemCaseAttachTagsRequest
 use App\Http\Requests\ApiPrm\Merchants\ProblemCases\ProblemCaseSetAssignedRequest;
 use App\Http\Requests\ApiPrm\Merchants\ProblemCases\ProblemCaseSetStatusRequest;
 use App\Http\Requests\ApiPrm\Merchants\ProblemCases\ProblemCaseUpdateRequest;
-use App\HttpServices\Hooks\DTO\HookData;
-use App\HttpServices\Notify\NotifyMicroService;
-use App\Jobs\SendHook;
 use App\Modules\Merchants\DTO\Comments\CommentDTO;
 use App\Modules\Merchants\Models\Comment;
 use App\Modules\Merchants\Models\ProblemCase;
-use App\Services\SMS\SmsMessages;
 use App\UseCases\ProblemCase\AttachTagsProblemCaseUseCase;
 use App\UseCases\ProblemCase\SetAssignedProblemCaseUseCase;
 use App\UseCases\ProblemCase\SetStatusProblemCaseUseCase;

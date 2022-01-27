@@ -1,9 +1,6 @@
 <?php
 
-namespace App\Modules\Merchants\DTO\ProblemCases;
-
-use Carbon\Carbon;
-use Illuminate\Http\Request;
+namespace App\DTOs\ProblemCases;
 
 class ProblemCaseDTO
 {

@@ -9,7 +9,6 @@ use App\Http\Resources\ApiOnlineGateway\MerchantTagResource;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Tag;
 use Illuminate\Http\Request;
-use function Clue\StreamFilter\fun;
 
 class MerchantsController extends Controller
 {
