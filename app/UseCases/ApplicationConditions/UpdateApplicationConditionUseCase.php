@@ -24,7 +24,7 @@ class UpdateApplicationConditionUseCase
     {
         $condition = $this->findConditionUseCase->execute($condition_id);
 
-        if ($this->coreHttpRepository->checkApplicationToExistConditionId($condition_id)) {
+        if ($this->coreHttpRepository->checkApplicationToExistByConditionId($condition_id)) {
             return response()->json(['message' => 'Условие не может быть изменено'], 400);
         }
 

@@ -8,6 +8,7 @@ use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\Store;
+use App\UseCases\Cache\FlushCacheUseCase;
 use App\UseCases\Merchants\FindMerchantUseCase;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -16,7 +17,8 @@ class StoreApplicationConditionUseCase
 {
     public function __construct(
         private CheckStartedAtAndFinishedAtConditionUseCase $checkStartedAtAndFinishedAtConditionUseCase,
-        private FindMerchantUseCase $findMerchantUseCase
+        private FindMerchantUseCase $findMerchantUseCase,
+        private FlushCacheUseCase $flushCacheUseCase
     )
     {
     }
@@ -32,11 +34,12 @@ class StoreApplicationConditionUseCase
             ->where('active' , true)
             ->get();
 
+        $main_store = $merchant_stores->where('is_main', true)->first();
+
+
         if (array_diff($store_ids ,$merchant_stores->whereIn('id' , $store_ids)->pluck('id')->toArray()) != null) {
                 throw new BusinessException('Указан не правильно магазин' , 'wrong_store' , 400);
             }
-
-        $main_store = $merchant_stores->where('is_main', true)->first();
 
         if ($main_store === null) {
             throw new BusinessException('У данного мерчанта нет основного магазина ' . $merchant->name, 'main_store_not_exists', 400);
@@ -83,7 +86,7 @@ class StoreApplicationConditionUseCase
             created_by_str: $conditionDTO->user_name,
         ));
 
-        Cache::tags($merchant->id)->flush();
+        $this->flushCacheUseCase->execute($merchant->id);
 
         return $condition->load('stores');
     }

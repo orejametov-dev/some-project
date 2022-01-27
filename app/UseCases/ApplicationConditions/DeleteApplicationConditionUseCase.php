@@ -21,7 +21,7 @@ class DeleteApplicationConditionUseCase
     public function execute(int $condition_id, $user)
     {
         $condition = $this->findConditionUseCase->execute($condition_id);
-        $applications = $this->coreHttpRepository->checkApplicationToExistConditionId($condition_id);
+        $applications = $this->coreHttpRepository->checkApplicationToExistByConditionId($condition_id);
 
         if ($applications) {
             return response()->json(['message' => 'Условие не может быть удалено'], 400);
