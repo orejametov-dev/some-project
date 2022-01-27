@@ -2,15 +2,13 @@
 
 namespace App\UseCases\ApplicationConditions;
 
+use App\DTOs\Conditions\UpdateConditionDTO;
 use App\Exceptions\BusinessException;
 use App\HttpRepositories\Core\CoreHttpRepository;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
-use App\Modules\Merchants\DTO\Conditions\UpdateConditionDTO;
-use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\Store;
 use App\UseCases\Cache\FlushCacheUseCase;
-use Illuminate\Support\Facades\Cache;
 
 class UpdateApplicationConditionUseCase
 {

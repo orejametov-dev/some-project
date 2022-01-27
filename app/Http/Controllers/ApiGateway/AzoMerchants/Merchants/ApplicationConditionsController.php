@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
+use App\DTOs\Conditions\MassSpecialStoreConditionDTO;
+use App\DTOs\Conditions\MassStoreConditionDTO;
+use App\DTOs\Conditions\StoreConditionDTO;
+use App\DTOs\Conditions\UpdateConditionDTO;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Applications\MassSpecialStoreApplicationConditionRequest;
 use App\Http\Requests\ApiPrm\Applications\MassStoreApplicationConditionsRequest;
 use App\Http\Requests\ApiPrm\Applications\StoreApplicationConditions;
 use App\Http\Requests\ApiPrm\Applications\TogglePostsApplicationConditionRequest;
 use App\Http\Requests\ApiPrm\Applications\UpdateApplicationConditions;
-use App\Modules\Merchants\DTO\Conditions\MassSpecialStoreConditionDTO;
-use App\Modules\Merchants\DTO\Conditions\MassStoreConditionDTO;
-use App\Modules\Merchants\DTO\Conditions\StoreConditionDTO;
-use App\Modules\Merchants\DTO\Conditions\UpdateConditionDTO;
 use App\Modules\Merchants\Models\Condition;
 use App\UseCases\ApplicationConditions\DeleteApplicationConditionUseCase;
 use App\UseCases\ApplicationConditions\MassSpecialStoreApplicationConditionUseCase;

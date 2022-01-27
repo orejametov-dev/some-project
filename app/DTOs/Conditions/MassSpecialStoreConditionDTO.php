@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Modules\Merchants\DTO\Conditions;
+namespace App\DTOs\Conditions;
 
 use Carbon\Carbon;
 
-class StoreConditionDTO
+class MassSpecialStoreConditionDTO
 {
     public function __construct(
-        public ?int $merchant_id,
-        public array $store_ids,
+        public array $merchant_ids,
         public ?int $duration,
         public int $commission,
         public ?string $special_offer,

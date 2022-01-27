@@ -2,12 +2,12 @@
 
 namespace App\UseCases\ApplicationConditions;
 
+use App\DTOs\Conditions\MassStoreConditionDTO;
 use App\Exceptions\ApiBusinessException;
 use App\Exceptions\BusinessException;
 use App\HttpRepositories\Alifshop\AlifshopHttpRepository;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
-use App\Modules\Merchants\DTO\Conditions\MassStoreConditionDTO;
 use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\ConditionTemplate;
 use App\Modules\Merchants\Models\Merchant;

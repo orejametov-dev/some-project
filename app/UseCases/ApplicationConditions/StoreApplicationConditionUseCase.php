@@ -2,12 +2,11 @@
 
 namespace App\UseCases\ApplicationConditions;
 
+use App\DTOs\Conditions\StoreConditionDTO;
 use App\Exceptions\BusinessException;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
-use App\Modules\Merchants\DTO\Conditions\StoreConditionDTO;
 use App\Modules\Merchants\Models\Condition;
-use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Store;
 use App\UseCases\Merchants\FindMerchantUseCase;
 use Carbon\Carbon;
