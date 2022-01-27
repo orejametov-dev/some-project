@@ -13,7 +13,6 @@ class StoresController extends Controller
     public function index(Request $request)
     {
         $stores = Store::query()
-            ->azo()
             ->active()
             ->filterRequest($request);
 
