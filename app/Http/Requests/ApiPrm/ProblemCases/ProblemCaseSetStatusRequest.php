@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Requests\ApiPrm\Merchants\ProblemCases;
+namespace App\Http\Requests\ApiPrm\ProblemCases;
 
+use App\Modules\Merchants\Models\ProblemCase;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProblemCaseSetAssignedRequest extends FormRequest
+class ProblemCaseSetStatusRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +25,11 @@ class ProblemCaseSetAssignedRequest extends FormRequest
     public function rules()
     {
         return [
-            'assigned_to_id' => 'required|integer',
-            'assigned_to_name' => 'required|string',
+            'status_id' => 'required|integer|in:'
+                . ProblemCase::NEW . ','
+                . ProblemCase::IN_PROCESS . ','
+                . ProblemCase::DONE . ','
+                . ProblemCase::FINISHED
         ];
     }
 }

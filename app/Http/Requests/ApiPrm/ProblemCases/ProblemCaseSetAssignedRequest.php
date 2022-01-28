@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests\ApiPrm\Merchants\ProblemCases;
+namespace App\Http\Requests\ApiPrm\ProblemCases;
 
-use App\Modules\Merchants\Models\ProblemCaseTag;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProblemCaseAttachTagsRequest extends FormRequest
+class ProblemCaseSetAssignedRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,9 +24,8 @@ class ProblemCaseAttachTagsRequest extends FormRequest
     public function rules()
     {
         return [
-            'tags' => 'required|array',
-            'tags.*.name' => 'required|string',
-            'tags.*.type_id' => 'required|integer|in:' . ProblemCaseTag::BEFORE_TYPE . ', ' . ProblemCaseTag::AFTER_TYPE
+            'assigned_to_id' => 'required|integer',
+            'assigned_to_name' => 'required|string',
         ];
     }
 }

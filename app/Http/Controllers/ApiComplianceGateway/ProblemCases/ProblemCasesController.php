@@ -4,7 +4,7 @@ namespace App\Http\Controllers\ApiComplianceGateway\ProblemCases;
 
 use App\DTOs\ProblemCases\ProblemCaseDTO;
 use App\Http\Controllers\ApiComplianceGateway\ApiBaseController;
-use App\Http\Requests\ApiPrm\Merchants\ProblemCases\ProblemCaseStoreRequest;
+use App\Http\Requests\ApiPrm\ProblemCases\ProblemCaseStoreRequest;
 use App\UseCases\ProblemCase\StoreProblemCaseApplicationIdUseCase;
 
 class ProblemCasesController extends ApiBaseController

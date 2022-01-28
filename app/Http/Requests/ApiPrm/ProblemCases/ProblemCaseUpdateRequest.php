@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\ApiPrm\Merchants\ProblemCases;
+namespace App\Http\Requests\ApiPrm\ProblemCases;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProblemCaseStoreRequest extends FormRequest
+class ProblemCaseUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,7 @@ class ProblemCaseStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'credit_number' => 'required_without:application_id|string',
-            'application_id' => 'required_without:credit_number|integer',
-            'description' => 'required'
+            'deadline' => 'nullable|date_format:Y-m-d',
         ];
     }
 }
