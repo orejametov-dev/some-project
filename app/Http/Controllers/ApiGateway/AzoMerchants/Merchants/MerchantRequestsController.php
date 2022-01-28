@@ -66,13 +66,13 @@ class MerchantRequestsController extends ApiBaseController
         $merchant_request = MerchantRequest::query()->find($id);
 
         if ($merchant_request === null) {
-            throw new BusinessException('Запрос не мерчанта не найден', 'merchant_request_not_found', 404);
+            throw new BusinessException('Запрос на мерчанта не найден', 'merchant_request_not_found', 404);
         }
 
         $merchant_request->fill($request->validated());
 
         $merchant_request->save();
-        $merchant_request->checkToDocumentSCompleted();
+        $merchant_request->checkToDocumentsCompleted();
 
         return $merchant_request;
     }
@@ -82,7 +82,7 @@ class MerchantRequestsController extends ApiBaseController
         $merchant_request = MerchantRequest::query()->find($id);
 
         if ($merchant_request === null) {
-            throw new BusinessException('Запрос не мерчанта не найден', 'merchant_request_not_found', 404);
+            throw new BusinessException('Запрос на мерчанта не найден', 'merchant_request_not_found', 404);
         }
 
         $merchant_request_file = $merchant_request->uploadFile($request->file('file'), $request->input('file_type'));

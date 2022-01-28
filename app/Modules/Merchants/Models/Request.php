@@ -117,7 +117,7 @@ class Request extends Model
 
     public function checkToMainCompleted()
     {
-        $main = $this->user_name && $this->legal_name && $this->user_phone && $this->name && $this->region
+        $main = $this->user_name && $this->legal_name && $this->legal_name_prefix && $this->user_phone && $this->name && $this->region
             && $this->categories && $this->stores_count && $this->merchant_users_count && $this->approximate_sales;
 
         if ($main === true) {
@@ -126,7 +126,7 @@ class Request extends Model
         }
     }
 
-    public function checkToDocumentSCompleted()
+    public function checkToDocumentsCompleted()
     {
         $documents = $this->director_name && $this->phone && $this->vat_number && $this->mfo
             && $this->tin && $this->oked && $this->bank_account && $this->bank_name && $this->address;
