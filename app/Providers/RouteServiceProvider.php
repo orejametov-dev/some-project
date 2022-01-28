@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use Alifuz\Utils\Gateway\Entities\GatewayApplication;
+use Alifuz\Utils\Gateway\Middlewares\GatewayMiddleware;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -48,42 +50,42 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/web.php'));
 
             Route::prefix('gateway')
-                ->middleware(['api', 'gateway-access', 'gateway-auth-user'])
+                ->middleware(['api', GatewayMiddleware::class, 'gateway-auth-user'])
                 ->namespace($this->namespace)
                 ->group(base_path('routes/gateway.php'));
 
             Route::prefix('gateway-merchant')
-                ->middleware(['api', 'gateway-access', 'gateway-auth-user'])
+                ->middleware(['api', GatewayMiddleware::class, 'gateway-auth-user'])
                 ->namespace($this->namespace)
                 ->group(base_path('routes/gateway_merchant.php'));
 
             Route::prefix('gateway/credits')
-                ->middleware(['api', 'gateway-access', 'gateway-auth-user'])
+                ->middleware(['api', GatewayMiddleware::class, 'gateway-auth-user'])
                 ->namespace($this->namespace)
                 ->group(base_path('routes/gateway_credits.php'));
 
             Route::prefix('gateway-compliance')
-                ->middleware(['api', 'gateway-access', 'gateway-auth-user'])
+                ->middleware(['api', GatewayMiddleware::class, 'gateway-auth-user'])
                 ->namespace($this->namespace)
                 ->group(base_path('routes/gateway_compliance.php'));
 
             Route::prefix('gateway-calls')
-                ->middleware(['api', 'gateway-access', 'gateway-auth-user'])
+                ->middleware(['api', GatewayMiddleware::class, 'gateway-auth-user'])
                 ->namespace($this->namespace)
                 ->group(base_path('routes/gateway_calls.php'));
 
             Route::prefix('gateway/law')
-                ->middleware(['api', 'gateway-access', 'gateway-auth-user'])
+                ->middleware(['api', GatewayMiddleware::class, 'gateway-auth-user'])
                 ->namespace($this->namespace)
                 ->group(base_path('routes/gateway_law.php'));
 
             Route::prefix('gateway/online')
-                ->middleware(['api', 'gateway-access', 'gateway-auth-user'])
+                ->middleware(['api', GatewayMiddleware::class, 'gateway-auth-user'])
                 ->namespace($this->namespace)
                 ->group(base_path('routes/gateway_online.php'));
 
             Route::prefix('gateway/report')
-                ->middleware(['api', 'gateway-access', 'gateway-auth-user'])
+                ->middleware(['api', GatewayMiddleware::class, 'gateway-auth-user'])
                 ->namespace($this->namespace)
                 ->group(base_path('routes/gateway_report.php'));
         });

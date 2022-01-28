@@ -20,8 +20,15 @@
         "laravel/tinker": "^2.5",
         "phpoffice/phpword": "^0.18.1",
         "predis/predis": "^1.1",
-        "sentry/sentry-laravel": "^2.7"
+        "sentry/sentry-laravel": "^2.7",
+        "alifuz/utils-gateway": "0.1.3"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://gitlab.alifshop.uz/alifuz/backend/backend-utils-gateway.git"
+        }
+    ],
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.10",
         "facade/ignition": "^2.5",
