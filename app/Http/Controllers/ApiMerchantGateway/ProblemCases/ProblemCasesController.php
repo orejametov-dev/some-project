@@ -77,13 +77,13 @@ class ProblemCasesController extends ApiBaseController
             hookable_type: $problemCase->getTable(),
             hookable_id: $problemCase->id,
             created_from_str: 'MERCHANT',
-            created_by_id: $this->user->id,
+            created_by_id: $this->user->getId(),
             body: 'Обновлен на статус',
             keyword: ProblemCase::$statuses[$problemCase->status_id]['name'],
             action: 'create',
             class: 'info',
             action_at: null,
-            created_by_str: $this->user->name,
+            created_by_str: $this->user->getName(),
         ));
 
 
@@ -94,8 +94,8 @@ class ProblemCasesController extends ApiBaseController
     {
         $problemCase = ProblemCase::findOrFail($id);
 
-        $problemCase->engaged_by_id = $this->user->id;
-        $problemCase->engaged_by_name = $this->user->name;
+        $problemCase->engaged_by_id = $this->user->getId();
+        $problemCase->engaged_by_name = $this->user->getName();
         $problemCase->engaged_at = now();
 
         $problemCase->save();

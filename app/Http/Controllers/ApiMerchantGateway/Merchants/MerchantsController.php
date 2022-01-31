@@ -57,7 +57,7 @@ class MerchantsController extends ApiBaseController
             $conditions = Condition::query()->active()->byMerchant($merchant->id)->get();
             $stores = Store::query()->byMerchant($merchant->id)->get();
 
-            $azo_merchant_access = AzoMerchantAccess::query()->byUserId($this->user->id)->firstOrFail();
+            $azo_merchant_access = AzoMerchantAccess::query()->byUserId($this->user->getId())->firstOrFail();
             $store = Store::query()->findOrFail($azo_merchant_access->store_id);
 
             return [

@@ -62,13 +62,13 @@ class AzoMerchantAccessesController extends ApiBaseController
             hookable_type: $azo_merchant_access->getTable(),
             hookable_id: $azo_merchant_access->id,
             created_from_str: 'MERCHANT',
-            created_by_id: $this->user->id,
+            created_by_id: $this->user->getId(),
             body: 'Сотрудник обновлен',
             keyword: 'old_store: (' . $old_store->id . ', ' . $old_store->name . ') -> ' . 'store: (' . $store->id . ', ' . $store->name . ')',
             action: 'update',
             class: 'warning',
             action_at: null,
-            created_by_str: $this->user->name,
+            created_by_str: $this->user->getName(),
         ));
 
 

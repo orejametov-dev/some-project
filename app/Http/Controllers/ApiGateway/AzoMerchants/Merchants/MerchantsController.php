@@ -152,8 +152,8 @@ class MerchantsController extends ApiBaseController
 
         $merchant->activity_reasons()->attach($activity_reason->id, [
             'active' => $merchant->active,
-            'created_by_id' => $this->user->id,
-            'created_by_name' => $this->user->name
+            'created_by_id' => $this->user->getId(),
+            'created_by_name' => $this->user->getName()
         ]);
 
         CompanyService::setStatusNotActive($merchant->company_id);

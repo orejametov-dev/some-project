@@ -2,6 +2,7 @@
 
 namespace App\Modules\Merchants\Models;
 
+use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use Carbon\Traits\Date;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -56,10 +57,10 @@ class Notification extends Model
         return $this->belongsToMany(Store::class, 'store_notification', 'notification_id', 'store_id');
     }
 
-    public function setCreatedBy($user)
+    public function setCreatedBy(GatewayAuthUser $user)
     {
-        $this->created_by_id = $user->id;
-        $this->created_by_name = $user->name;
+        $this->created_by_id = $user->getId();
+        $this->created_by_name = $user->getName();
     }
 
     public function scopeOnlyByMerchant(Builder $query, $merchant_id)
