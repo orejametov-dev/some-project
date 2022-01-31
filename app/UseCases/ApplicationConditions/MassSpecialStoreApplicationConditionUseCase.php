@@ -2,6 +2,7 @@
 
 namespace App\UseCases\ApplicationConditions;
 
+use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\DTOs\Conditions\MassSpecialStoreConditionDTO;
 use App\Exceptions\ApiBusinessException;
 use App\Exceptions\BusinessException;
@@ -18,7 +19,8 @@ class MassSpecialStoreApplicationConditionUseCase
     public function __construct(
         private AlifshopHttpRepository                      $alifshopHttpRepository,
         private CheckStartedAtAndFinishedAtConditionUseCase $checkStartedAtAndFinishedAtConditionUseCase,
-        private FlushCacheUseCase                           $flushCacheUseCase
+        private FlushCacheUseCase                           $flushCacheUseCase,
+        private GatewayAuthUser                             $gatewayAuthUser
     )
     {
     }
@@ -64,13 +66,13 @@ class MassSpecialStoreApplicationConditionUseCase
                 hookable_type: $merchant->getTable(),
                 hookable_id: $merchant->id,
                 created_from_str: 'PRM',
-                created_by_id: $massSpecialStoreConditionDTO->user_id,
+                created_by_id: $this->gatewayAuthUser->getId(),
                 body: 'Создано условие',
                 keyword: 'id: ' . $condition->id . ' ' . $condition->title,
                 action: 'create',
                 class: 'info',
                 action_at: null,
-                created_by_str: $massSpecialStoreConditionDTO->user_name,
+                created_by_str: $this->gatewayAuthUser->getName(),
             ));
 
             $merchant->load(['application_conditions' => function ($q) {
