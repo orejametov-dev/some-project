@@ -9,9 +9,15 @@ use App\UseCases\ProblemCase\StoreProblemCaseApplicationIdUseCase;
 
 class ProblemCasesController extends ApiBaseController
 {
-    public function store(ProblemCaseStoreRequest $request, StoreProblemCaseApplicationIdUseCase $storeProblemCaseUseCase)
+    public function store(ProblemCaseStoreRequest $request , StoreProblemCaseApplicationIdUseCase $storeProblemCaseUseCase)
     {
-        $problemCaseDTO = ProblemCaseDTO::fromArray($request->validated());
+        $problemCaseDTO = new ProblemCaseDTO(
+            created_from_name: "COMPLIANCE",
+            description: (string) $request->input('description'),
+            identifier: (int) $request->input('application_id'),
+            user_id: (int) $this->user->id,
+            user_name: (string) $this->user->name,
+        );
 
         return $storeProblemCaseUseCase->execute($problemCaseDTO);
     }

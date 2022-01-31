@@ -2,8 +2,6 @@
 
 namespace App\UseCases\ProblemCase;
 
-use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
-use Alifuz\Utils\Gateway\Entities\GatewayApplication;
 use App\Exceptions\ApiBusinessException;
 use App\HttpRepositories\Core\CoreHttpRepository;
 use App\Modules\Merchants\Models\ProblemCase;
@@ -11,15 +9,9 @@ use App\Modules\Merchants\Models\ProblemCase;
 class StoreProblemCaseApplicationIdUseCase extends AbstractStoreProblemCaseUseCase
 {
     public function __construct(
-        private CoreHttpRepository $coreHttpRepository,
-        private GatewayAuthUser    $gatewayAuthUser,
-        private GatewayApplication $gatewayApplication
+        private CoreHttpRepository $coreHttpRepository
     )
     {
-        parent::__construct(
-            $this->gatewayApplication,
-            $this->gatewayAuthUser
-        );
     }
 
     protected function checkStatusToFinished(string|int $identifier): void
@@ -34,7 +26,7 @@ class StoreProblemCaseApplicationIdUseCase extends AbstractStoreProblemCaseUseCa
         }
     }
 
-    protected function setIdentifierNumberAndDate(ProblemCase $problemCase, $identifier_number, $data)
+    protected function setIdentifierNumberAndDate(ProblemCase $problemCase ,$identifier_number, $data)
     {
         $problemCase->application_id = $identifier_number;
         $problemCase->application_created_at = $data->application_created_at;

@@ -176,7 +176,6 @@ return [
         App\Providers\HorizonServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Jenssegers\Mongodb\MongodbServiceProvider::class,
-        \Alifuz\Utils\Gateway\GatewayBindServiceProvider::class
 
     ],
 
