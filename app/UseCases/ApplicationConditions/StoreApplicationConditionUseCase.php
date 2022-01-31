@@ -2,7 +2,6 @@
 
 namespace App\UseCases\ApplicationConditions;
 
-use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\DTOs\Conditions\StoreConditionDTO;
 use App\Exceptions\BusinessException;
 use App\HttpServices\Hooks\DTO\HookData;
@@ -19,8 +18,7 @@ class StoreApplicationConditionUseCase
     public function __construct(
         private CheckStartedAtAndFinishedAtConditionUseCase $checkStartedAtAndFinishedAtConditionUseCase,
         private FindMerchantUseCase $findMerchantUseCase,
-        private FlushCacheUseCase $flushCacheUseCase,
-        private GatewayAuthUser $gatewayAuthUser
+        private FlushCacheUseCase $flushCacheUseCase
     )
     {
     }
@@ -79,13 +77,13 @@ class StoreApplicationConditionUseCase
             hookable_type: $merchant->getTable(),
             hookable_id: $merchant->id,
             created_from_str: 'PRM',
-            created_by_id: $this->gatewayAuthUser->getId(),
+            created_by_id: $conditionDTO->user_id,
             body: 'Создано условие',
             keyword: 'id: ' . $condition->id . ' ' . $condition->title,
             action: 'create',
             class: 'info',
             action_at: null,
-            created_by_str: $this->gatewayAuthUser->getName(),
+            created_by_str: $conditionDTO->user_name,
         ));
 
         $this->flushCacheUseCase->execute($merchant->id);

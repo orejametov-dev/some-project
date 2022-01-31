@@ -2,24 +2,25 @@
 
 namespace App\UseCases\ApplicationConditions;
 
-use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
+use App\Exceptions\BusinessException;
 use App\HttpRepositories\Alifshop\AlifshopHttpRepository;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
+use App\Modules\Merchants\Models\Condition;
 use App\UseCases\Cache\FlushCacheUseCase;
+use Illuminate\Support\Facades\Cache;
 
 class ToggleActiveApplicationConditionUseCase
 {
     public function __construct(
         private AlifshopHttpRepository $alifshopHttpRepository,
-        private FindConditionUseCase   $findConditionUseCase,
-        private FlushCacheUseCase      $flushCacheUseCase,
-        private GatewayAuthUser        $gatewayAuthUser
+        private FindConditionUseCase $findConditionUseCase,
+        private FlushCacheUseCase $flushCacheUseCase
     )
     {
     }
 
-    public function execute(int $condition_id)
+    public function execute(int $condition_id , $user)
     {
         $condition = $this->findConditionUseCase->execute($condition_id);
         $condition->active = !$condition->active;
@@ -32,13 +33,13 @@ class ToggleActiveApplicationConditionUseCase
             hookable_type: $merchant->getTable(),
             hookable_id: $merchant->id,
             created_from_str: 'PRM',
-            created_by_id: $this->gatewayAuthUser->getId(),
+            created_by_id: $user->id,
             body: 'Изменено условие',
             keyword: 'id: ' . $condition->id . ' ' . $condition->title . ' на ' . ($condition->active) ? 'активный' : 'не активный',
             action: 'update',
             class: 'warning',
             action_at: null,
-            created_by_str: $this->gatewayAuthUser->getName(),
+            created_by_str: $user->name,
         ));
 
 

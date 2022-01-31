@@ -2,7 +2,6 @@
 
 namespace App\UseCases\ApplicationConditions;
 
-use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\HttpRepositories\Core\CoreHttpRepository;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
@@ -14,13 +13,12 @@ class DeleteApplicationConditionUseCase
     public function __construct(
         private CoreHttpRepository   $coreHttpRepository,
         private FindConditionUseCase $findConditionUseCase,
-        private FlushCacheUseCase    $flushCacheUseCase,
-        private GatewayAuthUser      $gatewayAuthUser
+        private FlushCacheUseCase    $flushCacheUseCase
     )
     {
     }
 
-    public function execute(int $condition_id)
+    public function execute(int $condition_id, $user)
     {
         $condition = $this->findConditionUseCase->execute($condition_id);
         $applications = $this->coreHttpRepository->checkApplicationToExistByConditionId($condition_id);
@@ -37,13 +35,13 @@ class DeleteApplicationConditionUseCase
             hookable_type: $merchant->getTable(),
             hookable_id: $merchant->id,
             created_from_str: 'PRM',
-            created_by_id: $this->gatewayAuthUser->getId(),
+            created_by_id: $user->id,
             body: 'Условие удалено',
             keyword: 'id: ' . $condition->id . ' ' . $condition->title,
             action: 'delete',
             class: 'danger',
             action_at: null,
-            created_by_str: $this->gatewayAuthUser->getName(),
+            created_by_str: $user->name,
         ));
 
         $this->flushCacheUseCase->execute($merchant->id);

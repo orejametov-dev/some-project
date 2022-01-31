@@ -2,7 +2,6 @@
 
 namespace App\UseCases\ProblemCase;
 
-use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\Exceptions\BusinessException;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
@@ -12,13 +11,7 @@ use App\Services\SMS\SmsMessages;
 
 class SetStatusProblemCaseUseCase
 {
-    public function __construct(
-        private GatewayAuthUser $gatewayAuthUser
-    )
-    {
-    }
-
-    public function execute(int $id , int $status_id): ProblemCase
+    public function execute(int $id , int $status_id , $user): ProblemCase
     {
         $problemCase = ProblemCase::query()->find($id);
 
@@ -39,13 +32,13 @@ class SetStatusProblemCaseUseCase
             hookable_type: $problemCase->getTable(),
             hookable_id: $problemCase->id,
             created_from_str: 'PRM',
-            created_by_id: $this->gatewayAuthUser->getId(),
+            created_by_id: $user->id,
             body: 'Обновлен на статус',
             keyword: ProblemCase::$statuses[$problemCase->status_id]['name'],
             action: 'update',
             class: 'info',
             action_at: null,
-            created_by_str: $this->gatewayAuthUser->getName(),
+            created_by_str: $user->name,
         ));
 
         return $problemCase;
