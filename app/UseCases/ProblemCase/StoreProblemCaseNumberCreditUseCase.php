@@ -3,6 +3,7 @@
 namespace App\UseCases\ProblemCase;
 
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
+use Alifuz\Utils\Gateway\Entities\GatewayApplication;
 use App\Exceptions\ApiBusinessException;
 use App\HttpRepositories\Core\CoreHttpRepository;
 use App\Modules\Merchants\Models\ProblemCase;
@@ -12,10 +13,14 @@ class StoreProblemCaseNumberCreditUseCase extends AbstractStoreProblemCaseUseCas
 {
     public function __construct(
         private CoreHttpRepository $coreHttpRepository,
-        private GatewayAuthUser $gatewayAuthUser
+        private GatewayAuthUser $gatewayAuthUser,
+        private GatewayApplication $gatewayApplication
     )
     {
-        parent::__construct($this->gatewayAuthUser);
+        parent::__construct(
+            $this->gatewayApplication,
+            $this->gatewayAuthUser
+        );
     }
 
     protected function checkStatusToFinished(string|int $identifier): void

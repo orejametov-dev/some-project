@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\UseCases\ProblemCase;
 
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
+use Alifuz\Utils\Gateway\Entities\GatewayApplication;
 use App\DTOs\ProblemCases\ProblemCaseDTO;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
@@ -15,15 +16,16 @@ use App\Services\SMS\SmsMessages;
 abstract class AbstractStoreProblemCaseUseCase
 {
     public function __construct(
-       private GatewayAuthUser $gatewayAuthUser
+        private GatewayApplication $gatewayApplication,
+        private GatewayAuthUser    $gatewayAuthUser
     )
     {
     }
 
     public function execute(ProblemCaseDTO $problemCaseDTO): ?ProblemCase
     {
-        $data = $this->getDataByIdentifier($problemCaseDTO->identifier);
-        $this->checkStatusToFinished($problemCaseDTO->identifier);
+        $data = $this->getDataByIdentifier($problemCaseDTO->getIdentifier());
+        $this->checkStatusToFinished($problemCaseDTO->getIdentifier());
 
         $problemCase = new ProblemCase();
 
@@ -45,13 +47,13 @@ abstract class AbstractStoreProblemCaseUseCase
 
         $problemCase->created_by_id = $this->gatewayAuthUser->getId();
         $problemCase->created_by_name = $this->gatewayAuthUser->getName();
-        $problemCase->created_from_name = $problemCaseDTO->created_from_name;
+        $problemCase->created_from_name = $this->gatewayApplication->getApplication();
 
         $problemCase->post_or_pre_created_by_id = $data->post_or_pre_created_by_id;
         $problemCase->post_or_pre_created_by_name = $data->post_or_pre_created_by_name;
         $problemCase->description = $problemCaseDTO->description;
 
-        $this->setIdentifierNumberAndDate($problemCase , $problemCaseDTO->identifier , $data);
+        $this->setIdentifierNumberAndDate($problemCase, $problemCaseDTO->getIdentifier(), $data);
 
         $problemCase->setStatusNew();
         $problemCase->save();
@@ -60,7 +62,7 @@ abstract class AbstractStoreProblemCaseUseCase
             service: 'merchants',
             hookable_type: $problemCase->getTable(),
             hookable_id: $problemCase->id,
-            created_from_str: $problemCaseDTO->created_from_name,
+            created_from_str: $this->gatewayApplication->getApplication()->getValue(),
             created_by_id: $this->gatewayAuthUser->getId(),
             body: 'Создан проблемный кейс co статусом',
             keyword: ProblemCase::$statuses[$problemCase->status_id]['name'],
@@ -80,5 +82,5 @@ abstract class AbstractStoreProblemCaseUseCase
 
     abstract protected function getDataByIdentifier(string|int $identifier): mixed;
 
-    abstract protected function setIdentifierNumberAndDate(ProblemCase $problemCase , $identifier_number , $data);
+    abstract protected function setIdentifierNumberAndDate(ProblemCase $problemCase, $identifier_number, $data);
 }

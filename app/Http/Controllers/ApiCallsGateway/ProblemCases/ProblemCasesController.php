@@ -27,11 +27,7 @@ class ProblemCasesController extends ApiBaseController
 
     public function store(ProblemCaseStoreRequest $request, StoreProblemCaseNumberCreditUseCase $storeProblemCasesUseCase)
     {
-        $problemCaseDTO = new ProblemCaseDTO(
-            created_from_name: "CALLS",
-            description: (string) $request->input('description'),
-            identifier: (string) $request->input('credit_number'),
-        );
+        $problemCaseDTO = ProblemCaseDTO::fromArray($request->validated());
 
         return $storeProblemCasesUseCase->execute($problemCaseDTO);
     }

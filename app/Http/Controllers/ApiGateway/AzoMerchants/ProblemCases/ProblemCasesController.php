@@ -46,50 +46,38 @@ class ProblemCasesController extends ApiBaseController
         return $problemCase;
     }
 
-    public function update($id, ProblemCaseUpdateRequest $request , UpdateProblemCaseUseCase $updateProblemCaseUseCase)
+    public function update($id, ProblemCaseUpdateRequest $request, UpdateProblemCaseUseCase $updateProblemCaseUseCase)
     {
-        return $updateProblemCaseUseCase->execute((int) $id , Carbon::parse($request->input('deadline')));
+        return $updateProblemCaseUseCase->execute((int)$id, Carbon::parse($request->input('deadline')));
     }
 
     public function setManagerComment($id, StoreCommentRequest $request, StoreCommentProblemCaseUseCase $storeCommentProblemCaseUseCase)
     {
-        $commentDTO = new CommentDTO(
-            commentable_type: Comment::PROBLEM_CASE_FOR_PRM,
-            commentable_id: (int) $id,
-            body: (string) $request->input('body'),
-            created_by_id: (int) $this->user->id,
-            created_by_name: (string) $this->user->name
-        );
+        $commentDTO = CommentDTO::fromArray($id, $request->validated(), Comment::PROBLEM_CASE_FOR_PRM);
 
         return $storeCommentProblemCaseUseCase->execute($commentDTO);
     }
 
-    public function setMerchantComment($id, StoreCommentRequest $request , StoreCommentProblemCaseUseCase $storeCommentProblemCaseUseCase)
+    public function setMerchantComment($id, StoreCommentRequest $request, StoreCommentProblemCaseUseCase $storeCommentProblemCaseUseCase)
     {
-        $commentDTO = new CommentDTO(
-            commentable_type: Comment::PROBLEM_CASE_FOR_MERCHANT,
-            commentable_id: (int) $id,
-            body: (string) $request->input('body'),
-            created_by_id: (int) $this->user->id,
-            created_by_name: (string) $this->user->name
-        );
+        $commentDTO = CommentDTO::fromArray($id, $request->validated(), Comment::PROBLEM_CASE_FOR_MERCHANT);
 
         return $storeCommentProblemCaseUseCase->execute($commentDTO);
     }
 
-    public function attachTags($id, ProblemCaseAttachTagsRequest $request , AttachTagsProblemCaseUseCase $attachTagsProblemCaseUseCase)
+    public function attachTags($id, ProblemCaseAttachTagsRequest $request, AttachTagsProblemCaseUseCase $attachTagsProblemCaseUseCase)
     {
-        return $attachTagsProblemCaseUseCase->execute( (int) $id , (array) $request->input('tags'));
+        return $attachTagsProblemCaseUseCase->execute((int)$id, (array)$request->input('tags'));
     }
 
-    public function setStatus($id , ProblemCaseSetStatusRequest $request  , SetStatusProblemCaseUseCase $setStatusProblemCaseUseCase)
+    public function setStatus($id, ProblemCaseSetStatusRequest $request, SetStatusProblemCaseUseCase $setStatusProblemCaseUseCase)
     {
-        return $setStatusProblemCaseUseCase->execute((int) $id , (int) $request->input('status_id'));
+        return $setStatusProblemCaseUseCase->execute((int)$id, (int)$request->input('status_id'));
     }
 
-    public function setAssigned($id, ProblemCaseSetAssignedRequest $request , SetAssignedProblemCaseUseCase $setAssignedProblemCaseUseCase)
+    public function setAssigned($id, ProblemCaseSetAssignedRequest $request, SetAssignedProblemCaseUseCase $setAssignedProblemCaseUseCase)
     {
-        return $setAssignedProblemCaseUseCase->execute((int) $id , (int) $request->input('assigned_to_id') , (string) $request->input('assigned_to_name'));
+        return $setAssignedProblemCaseUseCase->execute((int)$id, (int)$request->input('assigned_to_id'), (string)$request->input('assigned_to_name'));
     }
 
     public function getProblemCasesOfMerchantUser($user_id, Request $request)

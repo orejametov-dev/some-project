@@ -22,11 +22,11 @@ class UpdateApplicationConditionUseCase
     {
     }
 
-    public function execute(int $condition_id, UpdateConditionDTO $updateConditionDTO)
+    public function execute(UpdateConditionDTO $updateConditionDTO)
     {
-        $condition = $this->findConditionUseCase->execute($condition_id);
+        $condition = $this->findConditionUseCase->execute($updateConditionDTO->condition_id);
 
-        if ($this->coreHttpRepository->checkApplicationToExistByConditionId($condition_id)) {
+        if ($this->coreHttpRepository->checkApplicationToExistByConditionId($updateConditionDTO->condition_id)) {
             return response()->json(['message' => 'Условие не может быть изменено'], 400);
         }
 

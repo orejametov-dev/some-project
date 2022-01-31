@@ -1,11 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\Conditions;
 
+use Alifuz\Utils\Parser\ParseDataTrait;
 use Carbon\Carbon;
 
 class MassSpecialStoreConditionDTO
 {
+    use ParseDataTrait;
+
     public function __construct(
         public array $merchant_ids,
         public ?int $duration,
@@ -19,5 +24,21 @@ class MassSpecialStoreConditionDTO
         public ?Carbon $finished_at,
     )
     {
+    }
+
+    public static function fromArray(array $data): self
+    {
+        return new self(
+            self::parseArray($data['merchant_ids']),
+            $data['duration'] ? self::parseNullableInt($data['duration']) : 0,
+            self::parseInt($data['commission']),
+            self::parseNullableString($data['special_offer']),
+            self::parseNullableInt($data['event_id']),
+            self::parseInt($data['discount']),
+            self::parseBool($data['post_merchant']),
+            self::parseBool($data['post_alifshop']),
+            $data['started_at'] ? Carbon::parse($data['started_at']) : null,
+            $data['finished_at'] ? Carbon::parse($data['finished_at']) : null
+        );
     }
 }
