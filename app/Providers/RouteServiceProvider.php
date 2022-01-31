@@ -56,7 +56,7 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/gateway.php'));
 
             Route::prefix('gateway-merchant')
-                ->middleware(['api', 'gateway-access', 'gateway-auth-user'])
+                ->middleware(['api', GatewayMiddleware::class, GatewayAuthMiddleware::class])
                 ->namespace($this->namespace)
                 ->group(base_path('routes/gateway_merchant.php'));
 
@@ -66,7 +66,7 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/gateway_credits.php'));
 
             Route::prefix('gateway-compliance')
-                ->middleware(['api', 'gateway-access', 'gateway-auth-user'])
+                ->middleware(['api', GatewayMiddleware::class, GatewayAuthMiddleware::class])
                 ->namespace($this->namespace)
                 ->group(base_path('routes/gateway_compliance.php'));
 
