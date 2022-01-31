@@ -4,20 +4,21 @@ namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
 use App\DTOs\Merchants\UpdateMerchantDTO;
 use App\Exceptions\ApiBusinessException;
-use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Competitors\CompetitorsRequest;
 use App\Http\Requests\ApiPrm\Files\StoreFileRequest;
+use App\Http\Requests\ApiPrm\Merchants\SetMainStoreRequest;
+use App\Http\Requests\ApiPrm\Merchants\SetResponsibleUserRequest;
 use App\Http\Requests\ApiPrm\Merchants\StoreMerchantRequest;
 use App\Http\Requests\ApiPrm\Merchants\UpdateMerchantRequest;
-use App\HttpServices\Auth\AuthMicroService;
 use App\HttpServices\Company\CompanyService;
-use App\HttpServices\Telegram\TelegramService;
 use App\HttpServices\Warehouse\WarehouseService;
 use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\Competitor;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Tag;
+use App\UseCases\Merchants\SetMainStoreUseCase;
+use App\UseCases\Merchants\SetResponsibleUserUseCase;
 use App\UseCases\Merchants\StoreMerchantUseCase;
 use App\UseCases\Merchants\UpdateMerchantUseCase;
 use Carbon\Carbon;
@@ -76,54 +77,14 @@ class MerchantsController extends ApiBaseController
         return response()->json(['message' => 'Логотип удалён']);
     }
 
-    public function updateChatId($merchant_id)
+    public function setResponsibleUser($id, SetResponsibleUserRequest $request, SetResponsibleUserUseCase $setResponsibleUserUseCase)
     {
-        $merchant = Merchant::findOrFail($merchant_id);
-
-        $updates = TelegramService::getUpdates([]);
-        foreach ($updates['result'] as $update) {
-            if (array_key_exists('message', $update) && array_key_exists('text', $update['message']) && $update['message']['text'] == '/token ' . $merchant->token) {
-                $merchant->telegram_chat_id = $update['message']['chat']['id'];
-                $merchant->save();
-            }
-        }
-
-        return response()->json(['message' => 'Обновлено']);
+        return $setResponsibleUserUseCase->execute($id, $request->input('maintainer_id'));
     }
 
-    public function setResponsibleUser($id, Request $request)
+    public function setMainStore($id, SetMainStoreRequest $request, SetMainStoreUseCase $setMainStoreUseCase)
     {
-        $this->validate($request, [
-            'maintainer_id' => 'required|integer'
-        ]);
-
-        $user = AuthMicroService::getUserById($request->input('maintainer_id'));
-
-        if (!$user)
-            throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
-
-        $merchant = Merchant::query()->findOrFail($id);
-        $merchant->maintainer_id = $request->input('maintainer_id');
-        $merchant->save();
-
-        return $merchant;
-    }
-
-    public function setMainStore($id, Request $request)
-    {
-        $this->validate($request, [
-            'store_id' => 'required|integer|min:0'
-        ]);
-        $merchant = Merchant::query()->findOrFail($id);
-
-        $merchant->stores()->findOrFail($request->store_id)->update([
-            'is_main' => true
-        ]);
-
-        $merchant->stores()->where('id', '<>', $request->input('store_id'))->update([
-            'is_main' => false
-        ]);
-        return $merchant;
+        return $setMainStoreUseCase->execute($id, $request->input('store_id'));
     }
 
     public function setTags($id, Request $request)
