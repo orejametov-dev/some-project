@@ -13,7 +13,7 @@ class StoreConditionDTO
 
     public function __construct(
         public ?int $merchant_id,
-        public array $store_ids,
+        public ?array $store_ids,
         public ?int $duration,
         public int $commission,
         public ?string $special_offer,
@@ -31,7 +31,7 @@ class StoreConditionDTO
     {
         return new self(
             self::parseNullableInt($data['merchant_id']),
-            self::parseArray($data['store_ids']),
+            self::parseNullableArray($data['store_ids']),
             $data['duration'] ? self::parseNullableInt($data['duration']) : 0,
             self::parseInt($data['commission']),
             self::parseNullableString($data['special_offer']),
