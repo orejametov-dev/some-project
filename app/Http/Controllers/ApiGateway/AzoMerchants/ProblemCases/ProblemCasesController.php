@@ -84,7 +84,7 @@ class ProblemCasesController extends ApiBaseController
 
     public function setStatus($id , ProblemCaseSetStatusRequest $request  , SetStatusProblemCaseUseCase $setStatusProblemCaseUseCase)
     {
-        return $setStatusProblemCaseUseCase->execute((int) $id , (int) $request->input('status_id') , $this->user);
+        return $setStatusProblemCaseUseCase->execute((int) $id , (int) $request->input('status_id'));
     }
 
     public function setAssigned($id, ProblemCaseSetAssignedRequest $request , SetAssignedProblemCaseUseCase $setAssignedProblemCaseUseCase)

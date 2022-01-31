@@ -31,8 +31,6 @@ class ProblemCasesController extends ApiBaseController
             created_from_name: "CALLS",
             description: (string) $request->input('description'),
             identifier: (string) $request->input('credit_number'),
-            user_id: $this->user->id,
-            user_name: $this->user->name
         );
 
         return $storeProblemCasesUseCase->execute($problemCaseDTO);

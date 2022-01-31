@@ -77,8 +77,6 @@ class ApplicationConditionsController extends ApiBaseController
             post_alifshop: (bool)$request->input('post_alifshop'),
             started_at: $request->input('started_at') ? Carbon::parse($request->input('started_at')) : null,
             finished_at: $request->input('finished_at') ? Carbon::parse($request->input('finished_at')) : null,
-            user_id: (int)$this->user->id,
-            user_name: (string)$this->user->name
         );
 
         return $storeApplicationConditionUseCase->execute($conditionDTO);
@@ -95,8 +93,6 @@ class ApplicationConditionsController extends ApiBaseController
             post_alifshop: (bool)$request->input('post_alifshop'),
             started_at: $request->input('started_at') ? Carbon::parse($request->input('started_at')) : null,
             finished_at: $request->input('finished_at') ? Carbon::parse($request->input('finished_at')) : null,
-            user_id: (int)$this->user->id,
-            user_name: (string)$this->user->name
         );
 
         return $massStoreApplicationConditionUseCase->execute($massStoreConditionDTO);
@@ -115,8 +111,6 @@ class ApplicationConditionsController extends ApiBaseController
             post_alifshop: (bool)$request->input('post_alifshop'),
             started_at: $request->input('started_at') ? Carbon::parse($request->input('started_at')) : null,
             finished_at: $request->input('finished_at') ? Carbon::parse($request->input('finished_at')) : null,
-            user_id: (int)$this->user->id,
-            user_name: (string)$this->user->name
         );
 
         return $massSpecialStoreApplicationConditionUseCase->execute($massSpecialStoreConditionDTO);
@@ -131,8 +125,6 @@ class ApplicationConditionsController extends ApiBaseController
             special_offer: (string)$request->input('special_offer'),
             event_id: (int)$request->input('event_id'),
             discount: (int)$request->input('discount'),
-            user_id: (int)$this->user->id,
-            user_name: (string)$this->user->name
         );
 
         return $updateApplicationConditionUseCase->execute((int)$condition_id, $updateConditionDTO);
@@ -140,12 +132,12 @@ class ApplicationConditionsController extends ApiBaseController
 
     public function delete($condition_id, DeleteApplicationConditionUseCase $deleteApplicationConditionUseCase)
     {
-        return $deleteApplicationConditionUseCase->execute((int)$condition_id, $this->user);
+        return $deleteApplicationConditionUseCase->execute((int)$condition_id);
     }
 
     public function toggle($condition_id, ToggleActiveApplicationConditionUseCase $toggleActiveApplicationConditionUseCase)
     {
-        return $toggleActiveApplicationConditionUseCase->execute((int)$condition_id, $this->user);
+        return $toggleActiveApplicationConditionUseCase->execute((int)$condition_id);
     }
 
     public function togglePosts($id, TogglePostsApplicationConditionRequest $request, TogglePostsApplicationConditionUseCase $togglePostsApplicationConditionUseCase)

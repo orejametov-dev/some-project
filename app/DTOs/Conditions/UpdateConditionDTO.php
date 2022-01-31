@@ -11,8 +11,6 @@ class UpdateConditionDTO
         public ?string $special_offer,
         public ?int $event_id,
         public int $discount,
-        public int $user_id,
-        public string $user_name
     )
     {
     }

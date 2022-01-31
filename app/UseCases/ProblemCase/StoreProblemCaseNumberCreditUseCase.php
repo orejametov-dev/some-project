@@ -2,16 +2,20 @@
 
 namespace App\UseCases\ProblemCase;
 
+use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\Exceptions\ApiBusinessException;
 use App\HttpRepositories\Core\CoreHttpRepository;
 use App\Modules\Merchants\Models\ProblemCase;
+use JetBrains\PhpStorm\Pure;
 
 class StoreProblemCaseNumberCreditUseCase extends AbstractStoreProblemCaseUseCase
 {
     public function __construct(
-        private CoreHttpRepository $coreHttpRepository
+        private CoreHttpRepository $coreHttpRepository,
+        private GatewayAuthUser $gatewayAuthUser
     )
     {
+        parent::__construct($this->gatewayAuthUser);
     }
 
     protected function checkStatusToFinished(string|int $identifier): void

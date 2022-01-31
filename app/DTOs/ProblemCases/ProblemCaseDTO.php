@@ -8,8 +8,6 @@ class ProblemCaseDTO
         public string  $created_from_name,
         public ?string $description,
         public string|int  $identifier,
-        public int $user_id,
-        public string $user_name
     )
     {
     }

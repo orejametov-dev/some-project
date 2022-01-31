@@ -18,8 +18,6 @@ class StoreConditionDTO
         public bool $post_alifshop,
         public ?Carbon $started_at,
         public ?Carbon $finished_at,
-        public int $user_id,
-        public string $user_name
     )
     {
     }

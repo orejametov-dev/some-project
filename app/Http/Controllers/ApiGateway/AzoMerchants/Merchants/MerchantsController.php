@@ -47,8 +47,7 @@ class MerchantsController extends ApiBaseController
     public function store(StoreMerchantRequest $request, StoreMerchantUseCase $storeMerchantUseCase)
     {
         $merchant = $storeMerchantUseCase->execute(
-            company_id: (int)$request->input('company_id'),
-            user_id: (int)$this->user->id
+            company_id: (int)$request->input('company_id')
         );
 
         return $merchant;
