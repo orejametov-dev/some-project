@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\UseCases\ProblemCase;
 
+use App\DTOs\ProblemCases\ProblemCaseDTO;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Jobs\SendSmsJob;
-use App\Modules\Merchants\DTO\ProblemCases\ProblemCaseDTO;
 use App\Modules\Merchants\Models\ProblemCase;
 use App\Services\SMS\SmsMessages;
 

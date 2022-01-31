@@ -46,7 +46,7 @@ class AzoMerchantAccessesController extends ApiBaseController
         if (!$user)
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
 
-        $store = Store::query()->azo()->findOrFail($request->input('store_id'));
+        $store = Store::query()->findOrFail($request->input('store_id'));
 
         $company_user = CompanyService::getCompanyUserByUserId($user['data']['id']);
 

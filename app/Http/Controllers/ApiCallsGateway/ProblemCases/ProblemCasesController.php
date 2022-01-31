@@ -4,10 +4,10 @@
 namespace App\Http\Controllers\ApiCallsGateway\ProblemCases;
 
 
+use App\DTOs\ProblemCases\ProblemCaseDTO;
 use App\Http\Controllers\ApiCallsGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Merchants\ProblemCases\ProblemCaseStoreRequest;
 use App\Http\Resources\ApiCallsGateway\ProblemCases\ProblemCaseResource;
-use App\Modules\Merchants\DTO\ProblemCases\ProblemCaseDTO;
 use App\Modules\Merchants\Models\ProblemCase;
 use App\UseCases\ProblemCase\StoreProblemCaseNumberCreditUseCase;
 use Illuminate\Http\Request;
