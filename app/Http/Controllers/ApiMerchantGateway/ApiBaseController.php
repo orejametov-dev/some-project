@@ -7,6 +7,7 @@ namespace App\Http\Controllers\ApiMerchantGateway;
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\Http\Controllers\Controller;
 use App\Modules\Merchants\Models\AzoMerchantAccess;
+use App\UseCases\ApplicationConditions\TogglePostsApplicationConditionUseCase;
 use Illuminate\Support\Facades\Cache;
 
 class ApiBaseController extends Controller
@@ -17,7 +18,6 @@ class ApiBaseController extends Controller
     protected $azo_merchant_access;
 
     public function __construct()
-
     {
         $this->middleware(function ($request, $next) {
             $this->user = app(GatewayAuthUser::class);
