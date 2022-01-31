@@ -30,7 +30,7 @@ class SetStatusProblemCaseUseCase
         $problemCase->save();
 
         if ($problemCase->isStatusFinished()) {
-            $message = SmsMessages::onNewProblemCases($problemCase->client_name . ' ' . $problemCase->client_surname, $problemCase->id);
+            $message = SmsMessages::onFinishedProblemCases($problemCase->client_name . ' ' . $problemCase->client_surname, $problemCase->id);
             SendSmsJob::dispatch($problemCase->phone, $message);
         }
 

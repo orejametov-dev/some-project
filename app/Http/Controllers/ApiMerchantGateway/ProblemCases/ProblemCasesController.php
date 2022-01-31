@@ -9,6 +9,7 @@ use App\Http\Resources\ApiMerchantGateway\ProblemCases\ProblemCaseResource;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\HttpServices\Notify\NotifyMicroService;
 use App\Jobs\SendHook;
+use App\Jobs\SendSmsJob;
 use App\Modules\Merchants\Models\ProblemCase;
 use App\Services\SMS\SmsMessages;
 use Illuminate\Http\Request;
@@ -66,8 +67,8 @@ class ProblemCasesController extends ApiBaseController
             preg_match("/" . preg_quote("9989") . "(.*)/", $problemCase->search_index, $phone);
 
             if (!empty($phone)) {
-                $message = SmsMessages::onFinishedProblemCases();
-                NotifyMicroService::sendSms(array_shift($phone), $message);
+                $message = SmsMessages::onFinishedProblemCases($problemCase->client_name . ' ' . $problemCase->client_surname, $problemCase->id);
+                SendSmsJob::dispatch($problemCase->phone, $message);
             }
         }
 

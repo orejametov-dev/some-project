@@ -180,13 +180,13 @@ class AzoMerchantAccessesController extends ApiBaseController
             hookable_type: $azo_merchant_access->getTable(),
             hookable_id: $azo_merchant_access->id,
             created_from_str: 'PRM',
-            created_by_id: $this->user->id,
+            created_by_id: $this->user->getId(),
             body: 'Сотрудник создан',
             keyword: 'Сотрудник добавлен в магазин: (store_id: ' . $store->id . ', store_name: ' . $store->name . ')',
             action: 'create',
             class: 'info',
             action_at: null,
-            created_by_str: $this->user->name,
+            created_by_str: $this->user->getName(),
         ));
 
         (new AuthMicroService)->store($azo_merchant_access->user_id);
@@ -213,13 +213,13 @@ class AzoMerchantAccessesController extends ApiBaseController
             hookable_type: $azo_merchant_access->getTable(),
             hookable_id: $azo_merchant_access->id,
             created_from_str: 'PRM',
-            created_by_id: $this->user->id,
+            created_by_id: $this->user->getId(),
             body: 'Сотрудник удален',
             keyword: 'Сотрудник удален из магазина: (' . $store->id . ', ' . $azo_merchant_access->store->name . ')',
             action: 'delete',
             class: 'danger',
             action_at: null,
-            created_by_str: $this->user->name,
+            created_by_str: $this->user->getName(),
         ));
 
         Cache::tags('azo_merchants')->forget('azo_merchant_user_id_' . $azo_merchant_access->user_id);
