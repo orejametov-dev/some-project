@@ -12,10 +12,13 @@ use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\Store;
 use App\Services\ClientTypeRegisterService;
 use App\UseCases\Stores\DestroyStoresUseCase;
+use App\UseCases\Stores\SetTypeRegisterStoresUseCase;
 use App\UseCases\Stores\StoreStoresUseCase;
+use App\UseCases\Stores\ToggleStoresUseCase;
 use App\UseCases\Stores\UpdateStoresUseCase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use function GuzzleHttp\Psr7\str;
 
 class StoresController extends ApiBaseController
 {
@@ -63,47 +66,22 @@ class StoresController extends ApiBaseController
         return $destroyStoresUseCase->execute((int)$id);
     }
 
-    public function toggle(Request $request, $id)
+    public function toggle($id, Request $request , ToggleStoresUseCase $toggleStoresUseCase)
     {
         $this->validate($request, [
             'activity_reason_id' => 'integer|required'
         ]);
 
-        $active_reason = ActivityReason::where('type', 'STORE')
-            ->findOrFail($request->input('activity_reason_id'));
-
-        $store = Store::findOrFail($id);
-        $store->active = !$store->active;
-        $store->save();
-
-        $store->activity_reasons()->attach($active_reason, [
-            'active' => $store->active,
-            'created_by_id' => $this->user->getId(),
-            'created_by_name' => $this->user->getName()
-        ]);
-
-        Cache::tags($store->merchant_id)->flush();
-        Cache::tags('azo_merchants')->flush();
-
-        return $store;
+        return $toggleStoresUseCase->execute((int)$id, (int)$request->input('activity_reason_id'));
     }
 
-    public function setTypeRegister($id, Request $request)
+    public function setTypeRegister($id, Request $request , SetTypeRegisterStoresUseCase $setTypeRegisterStoresUseCase)
     {
         $request->validate([
             'client_type_register' => 'required|string'
         ]);
 
-        $client_type_register = ClientTypeRegisterService::getOneByKey($request->input('client_type_register'));
-
-        $store = Store::query()->findOrFail($id);
-        $store->client_type_register = $client_type_register['key'];
-        $store->save();
-
-        Cache::tags($store->merchant_id)->flush();
-        Cache::tags('azo_merchants')->flush();
-
-        return $store;
+        return $setTypeRegisterStoresUseCase->execute((int)$id , (string)$request->input('client_type_register'));
     }
 
     public function getConditions($id, Request $request)
