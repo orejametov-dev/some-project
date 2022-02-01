@@ -2,17 +2,20 @@
 
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Stores;
 
+use App\DTOs\Stores\StoreStoresDTO;
+use App\DTOs\Stores\UpdateStoresDTO;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Stores\StoreStoresRequest;
 use App\Http\Requests\ApiPrm\Stores\UpdateStoresRequest;
 use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\Condition;
-use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Store;
 use App\Services\ClientTypeRegisterService;
+use App\UseCases\Stores\DestroyStoresUseCase;
+use App\UseCases\Stores\StoreStoresUseCase;
+use App\UseCases\Stores\UpdateStoresUseCase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 
 class StoresController extends ApiBaseController
 {
@@ -37,89 +40,27 @@ class StoresController extends ApiBaseController
     {
         $store = Store::with(['merchant', 'activity_reasons'])
             ->findOrFail($store_id);
-        return $store;
-    }
-
-    public function store(StoreStoresRequest $request)
-    {
-        $merchant = Merchant::findOrFail($request->merchant_id);
-
-        $store_exists = Store::query()
-            ->where('name', $request->input('name'))
-            ->exists();
-
-        if ($store_exists) {
-            return response()->json(['message' => 'Указанное имя уже занято другим магазином'], 400);
-        }
-
-        $merchant_store = new Store($request->validated());
-        $merchant_store->merchant_id = $merchant->id;
-
-        if (!Store::where('merchant_id', $merchant->id)->count()) {
-            $merchant_store->is_main = true;
-        }
-
-        if (!$request->input('responsible_person')) {
-            $main_store = Store::query()->where('merchant_id', $merchant->id)->main()->first();
-            $merchant_store->responsible_person = $main_store->responsible_person;
-            $merchant_store->responsible_person_phone = $main_store->responsible_person_phone;
-        }
-
-        $merchant_store->save();
-
-        Cache::tags($merchant->id)->flush();
-        Cache::tags('azo_merchants')->flush();
-
-        return $merchant_store;
-    }
-
-    public function attachAzo($id, Request $request)
-    {
-        $this->validate($request, [
-            'merchant_id' => 'required|integer'
-        ]);
-
-        $merchant = Merchant::findOrFail($request->input('merchant_id'));
-
-        $store = $merchant->stores()->find($id); // тут $merchant->store() возвращает все мерчанты с типом azo
-
-        if($store) {
-            return response()->json(['Магазин уже сужествует как Аъзо'], 400);
-        }
-
-        $store = Store::query()->byMerchant($merchant->id)->findOrFail($id);
-        $store->save();
 
         return $store;
     }
 
-    public function update(UpdateStoresRequest $request, $store_id)
+    public function store(StoreStoresRequest $request, StoreStoresUseCase $storeStoresUseCase)
     {
-        $store = Store::query()
-            ->findOrFail($store_id);
+        $storeStoresDTO = StoreStoresDTO::fromArray($request->validated());
 
-        $store->fill($request->all());
-        $store->save();
-
-        Cache::tags($store->merchant_id)->flush();
-        Cache::tags('azo_merchants')->flush();
-
-        return $store;
+        return $storeStoresUseCase->execute($storeStoresDTO);
     }
 
-    public function destroy($id)
+    public function update($store_id, UpdateStoresRequest $request, UpdateStoresUseCase $updateStoresUseCase)
     {
-        $store = Store::findOrFail($id);
+        $updateStoresDTO = UpdateStoresDTO::fromArray((int)$store_id, $request->validated());
 
-        // TODO fix
-        DB::transaction(function () use ($store) {
-            $store->application_conditions()->delete();
-            $store->delete();
-        });
+        return $updateStoresUseCase->execute($updateStoresDTO);
+    }
 
-        Cache::tags($store->merchant_id)->flush();
-        Cache::tags('azo_merchants')->flush();
-        return response()->json(['message' => 'Успешно удалено']);
+    public function destroy($id, DestroyStoresUseCase $destroyStoresUseCase)
+    {
+        return $destroyStoresUseCase->execute((int)$id);
     }
 
     public function toggle(Request $request, $id)
@@ -147,10 +88,10 @@ class StoresController extends ApiBaseController
         return $store;
     }
 
-    public function setTypeRegister($id,Request $request)
+    public function setTypeRegister($id, Request $request)
     {
         $request->validate([
-           'client_type_register' => 'required|string'
+            'client_type_register' => 'required|string'
         ]);
 
         $client_type_register = ClientTypeRegisterService::getOneByKey($request->input('client_type_register'));
