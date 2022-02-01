@@ -9,6 +9,7 @@ use App\Http\Resources\ApiMerchantGateway\ProblemCases\ProblemCaseResource;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\HttpServices\Notify\NotifyMicroService;
 use App\Jobs\SendHook;
+use App\Jobs\SendSmsJob;
 use App\Modules\Merchants\Models\ProblemCase;
 use App\Services\SMS\SmsMessages;
 use Illuminate\Http\Request;
@@ -66,8 +67,8 @@ class ProblemCasesController extends ApiBaseController
             preg_match("/" . preg_quote("9989") . "(.*)/", $problemCase->search_index, $phone);
 
             if (!empty($phone)) {
-                $message = SmsMessages::onFinishedProblemCases();
-                NotifyMicroService::sendSms(array_shift($phone), $message);
+                $message = SmsMessages::onFinishedProblemCases($problemCase->client_name . ' ' . $problemCase->client_surname, $problemCase->id);
+                SendSmsJob::dispatch($problemCase->phone, $message);
             }
         }
 
@@ -76,13 +77,13 @@ class ProblemCasesController extends ApiBaseController
             hookable_type: $problemCase->getTable(),
             hookable_id: $problemCase->id,
             created_from_str: 'MERCHANT',
-            created_by_id: $this->user->id,
+            created_by_id: $this->user->getId(),
             body: 'Обновлен на статус',
             keyword: ProblemCase::$statuses[$problemCase->status_id]['name'],
             action: 'create',
             class: 'info',
             action_at: null,
-            created_by_str: $this->user->name,
+            created_by_str: $this->user->getName(),
         ));
 
 
@@ -93,8 +94,8 @@ class ProblemCasesController extends ApiBaseController
     {
         $problemCase = ProblemCase::findOrFail($id);
 
-        $problemCase->engaged_by_id = $this->user->id;
-        $problemCase->engaged_by_name = $this->user->name;
+        $problemCase->engaged_by_id = $this->user->getId();
+        $problemCase->engaged_by_name = $this->user->getName();
         $problemCase->engaged_at = now();
 
         $problemCase->save();

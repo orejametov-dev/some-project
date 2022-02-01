@@ -137,8 +137,8 @@ class StoresController extends ApiBaseController
 
         $store->activity_reasons()->attach($active_reason, [
             'active' => $store->active,
-            'created_by_id' => $this->user->id,
-            'created_by_name' => $this->user->name
+            'created_by_id' => $this->user->getId(),
+            'created_by_name' => $this->user->getName()
         ]);
 
         Cache::tags($store->merchant_id)->flush();
