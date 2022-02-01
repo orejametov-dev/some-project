@@ -81,7 +81,7 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/gateway_law.php'));
 
             Route::prefix('gateway/online')
-                ->middleware(['api', GatewayMiddleware::class, GatewayAuthMiddleware::class])
+                ->middleware(['api', 'gateway-access', 'gateway-auth-user'])
                 ->namespace($this->namespace)
                 ->group(base_path('routes/gateway_online.php'));
 
