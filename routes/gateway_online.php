@@ -1,5 +1,6 @@
 <?php
 
+use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\Http\Controllers\ApiOnlineGateway\Conditions\ConditionsController;
 use App\Http\Controllers\ApiOnlineGateway\Merchants\MerchantsController as OnlineMerchantsController;
 use App\Http\Controllers\ApiOnlineGateway\Stores\StoresController;
@@ -17,25 +18,25 @@ Route::prefix('public')
         Route::prefix('merchants')
             ->group(function () {
                 Route::get('/', [OnlineMerchantsController::class, 'index'])
-                    ->withoutMiddleware(['gateway-auth-user']);
+                    ->withoutMiddleware([GatewayAuthUser::class]);
 
                 Route::get('tags', [OnlineMerchantsController::class, 'tags'])
-                    ->withoutMiddleware(['gateway-auth-user']);
+                    ->withoutMiddleware([GatewayAuthUser::class]);
 
                 Route::get('/{id}', [OnlineMerchantsController::class, 'show'])
-                    ->withoutMiddleware(['gateway-auth-user']);
+                    ->withoutMiddleware([GatewayAuthUser::class]);
             });
 
         Route::prefix('stores')
             ->group(function () {
                 Route::get('/', [StoresController::class, 'index'])
-                    ->withoutMiddleware(['gateway-auth-user']);
+                    ->withoutMiddleware([GatewayAuthUser::class]);
             });
 
         Route::prefix('conditions')
             ->group(function () {
                 Route::get('/', [ConditionsController::class, 'index'])
-                    ->withoutMiddleware(['gateway-auth-user']);
+                    ->withoutMiddleware([GatewayAuthUser::class]);
             });
     });
 
