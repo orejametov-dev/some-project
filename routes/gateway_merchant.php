@@ -43,7 +43,7 @@ Route::prefix('merchants/requests')
 
 Route::prefix('merchants/tags')
     ->group(function () {
-        Route::get('/', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantTagsController::class, 'index'])->withoutMiddleware(['gateway-access', 'gateway-auth-user']);
+        Route::get('/', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantTagsController::class, 'index'])->withoutMiddleware([GatewayAccessMiddleware::class, GatewayAuthMiddleware::class]);
     });
 
 Route::prefix('merchants/users')
