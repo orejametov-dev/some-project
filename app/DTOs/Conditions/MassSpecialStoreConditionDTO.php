@@ -30,15 +30,15 @@ class MassSpecialStoreConditionDTO
     {
         return new self(
             self::parseArray($data['merchant_ids']),
-            $data['duration'] ? self::parseNullableInt($data['duration']) : 0,
+            array_key_exists('duration',$data) ? self::parseNullableInt($data['duration']) : 0,
             self::parseInt($data['commission']),
             self::parseNullableString($data['special_offer']),
             self::parseNullableInt($data['event_id']),
             self::parseInt($data['discount']),
             self::parseBool($data['post_merchant']),
             self::parseBool($data['post_alifshop']),
-            $data['started_at'] ? Carbon::parse($data['started_at']) : null,
-            $data['finished_at'] ? Carbon::parse($data['finished_at']) : null
+            isset($data['started_at']) ? Carbon::parse($data['started_at']) : null,
+            isset($data['finished_at']) ? Carbon::parse($data['finished_at']) : null
         );
     }
 }

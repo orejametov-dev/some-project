@@ -27,7 +27,7 @@ class UpdateConditionDTO
         return new self(
             self::parseInt($condition_id),
             self::parseNullableArray($data['store_ids']),
-            $data['duration'] ? self::parseInt($data['duration']) : 0,
+            array_key_exists('duration',$data) ? self::parseNullableInt($data['duration']) : 0,
             self::parseInt($data['commission']),
             self::parseNullableString($data['special_offer']),
             self::parseNullableInt($data['event_id']),
