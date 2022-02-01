@@ -13,54 +13,29 @@ class CompanyHttpRepository
     public function getCompanyById(int $company_id): ?CompanyHttpResponse
     {
         $result = $this->getHttpClient()->get("companies/$company_id")->throw()->json();
-
-        return new CompanyHttpResponse(
-            id: (int) $result['id'],
-            name: (string) $result['name'],
-            token: (string) $result['token'],
-            legal_name: (string) $result['legal_name'],
-            legal_name_prefix: (string) $result['legal_name_prefix']
-        );
+        return CompanyHttpResponse::fromArray($result);
     }
 
     public function getCompanyByName(string $name): ?CompanyHttpResponse
     {
-        $company = $this->getHttpClient()->get('companies/company-by-name', [
-            'name' => $name
-        ])->throw()->json();
-
-        return new CompanyHttpResponse(
-            id: (int) $company['id'],
-            name: (string) $company['name'],
-            token: (string) $company['token'],
-            legal_name: (string) $company['legal_name'],
-            legal_name_prefix: (string) $company['legal_name_prefix']
-        );
+        $result = $this->getHttpClient()->get('companies/company-by-name', ['name' => $name])->throw()->json();
+        return CompanyHttpResponse::fromArray($result);
     }
 
     public function createCompany(string $name, string $legal_name, string $legal_name_prefix): ?CompanyHttpResponse
     {
-        $company = $this->getHttpClient()->post('companies', [
+        $result = $this->getHttpClient()->post('companies', [
             'name' => $name,
             'legal_name' => $legal_name,
             'legal_name_prefix' => $legal_name_prefix
         ])->throw()->json();
 
-        return new CompanyHttpResponse(
-            id: (int) $company['id'],
-            name: (string) $company['name'],
-            token: (string) $company['token'],
-            legal_name: (string) $company['legal_name'],
-            legal_name_prefix: (string) $company['legal_name_prefix']
-        );
+        return CompanyHttpResponse::fromArray($result);
     }
 
     public function checkCompanyToExistByName(string $name): bool
     {
-        $result = $this->getHttpClient()->get('companies/company-by-name', [
-            'name' => $name
-        ])->throw()->json();
-
+        $result = $this->getHttpClient()->get('companies/company-by-name', ['name' => $name])->throw()->json();
         return $result !== null;
     }
 
