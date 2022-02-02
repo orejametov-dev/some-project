@@ -12,7 +12,7 @@ class FindStoresUseCase
         $store = Store::query()->find($store_id);
 
         if ($store === null) {
-            throw new BusinessException('Магазин не найден', 'store_not_found', 404);
+            throw new BusinessException('Магазин не найден', 'object_not_found', 404);
         }
 
         return $store;

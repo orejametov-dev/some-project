@@ -24,7 +24,7 @@ class ToggleStoresUseCase
         $active_reason = ActivityReason::where('type', 'STORE')->find($activity_reason_id);
 
         if ($active_reason === null) {
-            throw new  BusinessException('Activity Reason не найден', 'active_reason_not_found', 404);
+            throw new  BusinessException('Причина не найден', 'object_not_found', 404);
         }
 
         $store = $this->findStoresUseCase->execute($id);

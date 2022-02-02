@@ -47,8 +47,10 @@ class StoreStoresUseCase
                 ->main()
                 ->first();
 
-            $merchant_store->responsible_person = $main_store->responsible_person;
-            $merchant_store->responsible_person_phone = $main_store->responsible_person_phone;
+            if ($main_store !== null) {
+                $merchant_store->responsible_person = $main_store->responsible_person;
+                $merchant_store->responsible_person_phone = $main_store->responsible_person_phone;
+            }
         }
 
         $merchant_store->save();
