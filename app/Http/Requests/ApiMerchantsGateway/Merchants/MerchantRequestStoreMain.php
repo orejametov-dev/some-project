@@ -24,15 +24,13 @@ class MerchantRequestStoreMain extends FormRequest
     public function rules()
     {
         return [
-            'token' => 'required|string',
             'user_name' => 'required|string',
             'user_phone' => 'required|digits:12',
             'name' => 'required|string',
+            'legal_name' => 'required|string',
+            'legal_name_prefix' => 'required|string',
             'categories' => 'required|array',
-            'stores_count' => 'required|integer',
-            'merchant_users_count' => 'required|integer',
             'approximate_sales' => 'required|integer',
-            'information' => 'nullable|string',
             'region' => 'required|string',
             'district' => 'required|string'
         ];

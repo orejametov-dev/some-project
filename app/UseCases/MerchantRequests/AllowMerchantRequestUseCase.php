@@ -25,12 +25,17 @@ class AllowMerchantRequestUseCase
     public function execute(int $id): MerchantRequest
     {
         $merchant_request = MerchantRequest::find($id);
+
         if ($merchant_request === null) {
             throw new BusinessException('Запрос на регистарцию не найден', 'object_not_found', 404);
         }
 
         if ($merchant_request->isOnTraining() === false) {
             throw new BusinessException('Статус заявки должен быть "На обучении"');
+        }
+
+        if (($merchant_request->main_completed == true && $merchant_request->documents_completed == true && $merchant_request->file_completed == true) === false) {
+            throw new BusinessException('Не все данные были заполнены для одобрения' , 'data_not_completed', 400);
         }
 
         if ($this->companyHttpRepository->checkCompanyToExistByName($merchant_request->name)) {
