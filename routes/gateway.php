@@ -3,8 +3,13 @@
 use App\Http\Controllers\ApiGateway\AzoMerchants\ExtraServices\MerchantsController as ExtraMerchantsController;
 use App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantsController;
 use App\Http\Controllers\ApiGateway\AzoMerchants\Comments\CommentsController;
+use App\Http\Controllers\ApiGateway\AzoMerchants\Complaints\ComplaintsController;
 use Illuminate\Support\Facades\Route;
 
+Route::prefix('complaints')
+    ->group(function () {
+        Route::get('/' , [ComplaintsController::class, 'index']);
+    });
 
 Route::prefix('comments')->group(function () {
     Route::get('/' , [CommentsController::class , 'index']);
