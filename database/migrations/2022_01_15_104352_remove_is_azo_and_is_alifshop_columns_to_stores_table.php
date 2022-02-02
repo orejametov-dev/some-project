@@ -13,10 +13,12 @@ class RemoveIsAzoAndIsAlifshopColumnsToStoresTable extends Migration
      */
     public function up()
     {
-        Schema::table('stores', function (Blueprint $table) {
-            $table->dropColumn('is_azo');
-            $table->dropColumn('is_alifshop');
-        });
+        if(config('app.env') == 'production') {
+            Schema::table('stores', function (Blueprint $table) {
+                $table->dropColumn('is_azo');
+                $table->dropColumn('is_alifshop');
+            });
+        }
     }
 
     /**
