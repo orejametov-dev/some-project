@@ -7,16 +7,16 @@ namespace App\HttpRepositories\HttpResponses\Prm;
 use Alifuz\Utils\Parser\ParseDataTrait;
 use App\HttpRepositories\HttpResponses\AbstractHttpResponse;
 
-class CompanyHttpResponse extends AbstractHttpResponse
+class CompanyUserHttpResponse extends AbstractHttpResponse
 {
     use ParseDataTrait;
 
     public function __construct(
         public int $id,
+        public int $user_id,
+        public int $company_id,
         public string $name,
-        public string $token,
-        public string $legal_name,
-        public string $legal_name_prefix
+        public string $phone
     )
     {
     }
@@ -25,10 +25,10 @@ class CompanyHttpResponse extends AbstractHttpResponse
     {
         return new self(
             self::parseInt($data['id']),
-            self::parseString($data['name']),
-            self::parseString($data['token']),
-            self::parseString($data['legal_name']),
-            self::parseString($data['legal_name_prefix'])
+            self::parseInt($data['user_id']),
+            self::parseInt($data['company_id']),
+            self::parseString($data['full_name']),
+            self::parseString($data['phone'])
         );
     }
 }
