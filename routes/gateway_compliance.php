@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\ApiComplianceGateway\ProblemCases\ProblemCasesController;
+use App\Http\Controllers\ApiComplianceGateway\Complaints\ComplaintsController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('merchants/problem-cases')
@@ -17,5 +17,10 @@ Route::prefix('merchants')
 Route::prefix('stores')
     ->group(function () {
         Route::get('/', [\App\Http\Controllers\ApiComplianceGateway\Stores\StoresController::class, 'index']);
+    });
+
+Route::prefix('complaints')
+    ->group(function () {
+        Route::post('/', [ComplaintsController::class, 'store']);
     });
 
