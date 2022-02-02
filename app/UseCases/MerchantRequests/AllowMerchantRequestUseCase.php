@@ -34,7 +34,7 @@ class AllowMerchantRequestUseCase
             throw new BusinessException('Статус заявки должен быть "На обучении"');
         }
 
-        if (($merchant_request->main_completed == true && $merchant_request->documents_completed == true && $merchant_request->file_completed == true) !== true) {
+        if (($merchant_request->main_completed == true && $merchant_request->documents_completed == true && $merchant_request->file_completed == true) === false) {
             throw new BusinessException('Не все данные были заполнены для одобрения' , 'data_not_completed', 400);
         }
 
