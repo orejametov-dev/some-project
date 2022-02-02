@@ -48,8 +48,7 @@ class MerchantsController extends ApiBaseController
     public function store(StoreMerchantRequest $request, StoreMerchantUseCase $storeMerchantUseCase)
     {
         $merchant = $storeMerchantUseCase->execute(
-            company_id: (int)$request->input('company_id'),
-            user_id: (int)$this->user->id
+            company_id: (int)$request->input('company_id')
         );
 
         return $merchant;
@@ -57,16 +56,7 @@ class MerchantsController extends ApiBaseController
 
     public function update($id, UpdateMerchantRequest $request, UpdateMerchantUseCase $updateMerchantUseCase)
     {
-        $updateMerchantDTO = new UpdateMerchantDTO(
-            id: (int)$id,
-            name: (string)$request->input('name'),
-            legal_name: $request->input('legal_name') ? (string)$request->input('legal_name') : null,
-            legal_name_prefix: $request->input('legal_name_prefix') ? (string)$request->input('legal_name_prefix') : null,
-            token: (string)$request->input('token'),
-            alifshop_slug: (string)$request->input('alifshop_slug'),
-            information: $request->input('information') ? (string)$request->input('information') : null,
-            min_application_price: (int)$request->input('min_application_price')
-        );
+        $updateMerchantDTO = UpdateMerchantDTO::fromArray((int)$id , $request->validated());
         $merchant = $updateMerchantUseCase->execute($updateMerchantDTO);
         return $merchant;
     }
@@ -162,8 +152,8 @@ class MerchantsController extends ApiBaseController
 
         $merchant->activity_reasons()->attach($activity_reason->id, [
             'active' => $merchant->active,
-            'created_by_id' => $this->user->id,
-            'created_by_name' => $this->user->name
+            'created_by_id' => $this->user->getId(),
+            'created_by_name' => $this->user->getName()
         ]);
 
         CompanyService::setStatusNotActive($merchant->company_id);

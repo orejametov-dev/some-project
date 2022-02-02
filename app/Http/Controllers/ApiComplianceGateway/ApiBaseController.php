@@ -4,8 +4,8 @@
 namespace App\Http\Controllers\ApiComplianceGateway;
 
 
+use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\Http\Controllers\Controller;
-use App\Services\User;
 
 class ApiBaseController extends Controller
 {
@@ -14,7 +14,7 @@ class ApiBaseController extends Controller
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
-            $this->user = app(User::class);
+            $this->user = app(GatewayAuthUser::class);
             return $next($request);
         });
     }

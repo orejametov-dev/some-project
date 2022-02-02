@@ -1,6 +1,8 @@
 <?php
 
+use Alifuz\Utils\Gateway\Middlewares\GatewayAuthMiddleware;
 use App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantsController;
+use App\Http\Middleware\GatewayAccessMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -38,7 +40,7 @@ Route::prefix('merchants/requests')
 
 Route::prefix('merchants/tags')
     ->group(function () {
-        Route::get('/', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantTagsController::class, 'index'])->withoutMiddleware(['gateway-access', 'gateway-auth-user']);
+        Route::get('/', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantTagsController::class, 'index'])->withoutMiddleware([GatewayAccessMiddleware::class, GatewayAuthMiddleware::class]);
     });
 
 Route::prefix('merchants/users')

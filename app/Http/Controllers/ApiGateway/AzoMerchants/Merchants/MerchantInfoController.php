@@ -26,20 +26,7 @@ class MerchantInfoController extends Controller
 
     public function store(StoreMerchantInfo $request, StoreMerchantInfoUseCase $storeMerchantInfoUseCase)
     {
-        $merchantInfo = $storeMerchantInfoUseCase->execute(new StoreMerchantInfoDTO(
-            merchant_id: (int)$request->input('merchant_id'),
-            director_name: (string)$request->input('director_name'),
-            legal_name: (string)$request->input('legal_name'),
-            legal_name_prefix: (string)$request->input('legal_name_prefix'),
-            phone: (string)$request->input('phone'),
-            vat_number: (string)$request->input('vat_number'),
-            mfo: (string)$request->input('mfo'),
-            tin: (string)$request->input('tin'),
-            oked: (string)$request->input('oked'),
-            bank_account: (string)$request->input('bank_account'),
-            bank_name: (string)$request->input('bank_name'),
-            address: (string)$request->input('address')
-        ));
+        $merchantInfo = $storeMerchantInfoUseCase->execute(StoreMerchantInfoDTO::fromArray($request->validated()));
 
         return $merchantInfo;
     }

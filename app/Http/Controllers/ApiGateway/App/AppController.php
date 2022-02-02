@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\ApiGateway\App;
 
 
+use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\CancelReason;
@@ -49,10 +50,10 @@ class AppController extends ApiBaseController
 
 
         $me = [
-            'id' => $authUser->id,
-            'name' => $authUser->name,
-            'phone' => $authUser->phone,
-            'avatar_link' => $authUser->avatar_link
+            'id' => $authUser->getId(),
+            'name' => $authUser->getName(),
+            'phone' => $authUser->getPhone(),
+            'avatar_link' => $authUser->getAvatarLink()
         ];
 
         return response()->json(compact(

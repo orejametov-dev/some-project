@@ -65,87 +65,40 @@ class ApplicationConditionsController extends ApiBaseController
 
     public function store(StoreApplicationConditions $request, StoreApplicationConditionUseCase $storeApplicationConditionUseCase)
     {
-        $conditionDTO = new StoreConditionDTO(
-            merchant_id: (int)$request->input('merchant_id'),
-            store_ids: (array)$request->input('store_ids'),
-            duration: $request->input('duration') ? (int)$request->input('duration') : 0,
-            commission: (int)$request->input('commission'),
-            special_offer: (string)$request->input('special_offer'),
-            event_id: (int)$request->input('event_id'),
-            discount: (int)$request->input('discount'),
-            post_merchant: (bool)$request->input('post_merchant'),
-            post_alifshop: (bool)$request->input('post_alifshop'),
-            started_at: $request->input('started_at') ? Carbon::parse($request->input('started_at')) : null,
-            finished_at: $request->input('finished_at') ? Carbon::parse($request->input('finished_at')) : null,
-            user_id: (int)$this->user->id,
-            user_name: (string)$this->user->name
-        );
+        $conditionDTO = StoreConditionDTO::fromArray($request->validated());
 
         return $storeApplicationConditionUseCase->execute($conditionDTO);
     }
 
     public function massStore(MassStoreApplicationConditionsRequest $request, MassStoreApplicationConditionUseCase $massStoreApplicationConditionUseCase)
     {
-        $massStoreConditionDTO = new MassStoreConditionDTO(
-            merchant_ids: (array)$request->input('merchant_ids'),
-            template_ids: (array)$request->input('template_ids'),
-            special_offer: (string)$request->input('special_offer'),
-            event_id: (int)$request->input('event_id'),
-            post_merchant: (bool)$request->input('post_merchant'),
-            post_alifshop: (bool)$request->input('post_alifshop'),
-            started_at: $request->input('started_at') ? Carbon::parse($request->input('started_at')) : null,
-            finished_at: $request->input('finished_at') ? Carbon::parse($request->input('finished_at')) : null,
-            user_id: (int)$this->user->id,
-            user_name: (string)$this->user->name
-        );
+        $massStoreConditionDTO = MassStoreConditionDTO::fromArray($request->validated());
 
         return $massStoreApplicationConditionUseCase->execute($massStoreConditionDTO);
     }
 
     public function massSpecialStore(MassSpecialStoreApplicationConditionRequest $request, MassSpecialStoreApplicationConditionUseCase $massSpecialStoreApplicationConditionUseCase)
     {
-        $massSpecialStoreConditionDTO = new MassSpecialStoreConditionDTO(
-            merchant_ids: (array)$request->input('merchant_ids'),
-            duration: $request->input('duration') ? (int)$request->input('duration') : 0,
-            commission: (int)$request->input('commission'),
-            special_offer: (string)$request->input('special_offer'),
-            event_id: (int)$request->input('event_id'),
-            discount: (int)$request->input('discount'),
-            post_merchant: (bool)$request->input('post_merchant'),
-            post_alifshop: (bool)$request->input('post_alifshop'),
-            started_at: $request->input('started_at') ? Carbon::parse($request->input('started_at')) : null,
-            finished_at: $request->input('finished_at') ? Carbon::parse($request->input('finished_at')) : null,
-            user_id: (int)$this->user->id,
-            user_name: (string)$this->user->name
-        );
+        $massSpecialStoreConditionDTO = MassSpecialStoreConditionDTO::fromArray($request->validated());
 
         return $massSpecialStoreApplicationConditionUseCase->execute($massSpecialStoreConditionDTO);
     }
 
     public function update($condition_id, UpdateApplicationConditions $request, UpdateApplicationConditionUseCase $updateApplicationConditionUseCase)
     {
-        $updateConditionDTO = new UpdateConditionDTO(
-            store_ids: (array)$request->input('store_ids'),
-            duration: $request->input('duration') ? (int)$request->input('duration') : 0,
-            commission: (int)$request->input('commission'),
-            special_offer: (string)$request->input('special_offer'),
-            event_id: (int)$request->input('event_id'),
-            discount: (int)$request->input('discount'),
-            user_id: (int)$this->user->id,
-            user_name: (string)$this->user->name
-        );
+        $updateConditionDTO = UpdateConditionDTO::fromArray((int)$condition_id,$request->validated());
 
-        return $updateApplicationConditionUseCase->execute((int)$condition_id, $updateConditionDTO);
+        return $updateApplicationConditionUseCase->execute($updateConditionDTO);
     }
 
     public function delete($condition_id, DeleteApplicationConditionUseCase $deleteApplicationConditionUseCase)
     {
-        return $deleteApplicationConditionUseCase->execute((int)$condition_id, $this->user);
+        return $deleteApplicationConditionUseCase->execute((int)$condition_id);
     }
 
     public function toggle($condition_id, ToggleActiveApplicationConditionUseCase $toggleActiveApplicationConditionUseCase)
     {
-        return $toggleActiveApplicationConditionUseCase->execute((int)$condition_id, $this->user);
+        return $toggleActiveApplicationConditionUseCase->execute((int)$condition_id);
     }
 
     public function togglePosts($id, TogglePostsApplicationConditionRequest $request, TogglePostsApplicationConditionUseCase $togglePostsApplicationConditionUseCase)
