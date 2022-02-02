@@ -61,11 +61,6 @@ class StoresController extends ApiBaseController
         return $updateStoresUseCase->execute($updateStoresDTO);
     }
 
-    public function destroy($id, DestroyStoresUseCase $destroyStoresUseCase)
-    {
-        return $destroyStoresUseCase->execute((int)$id);
-    }
-
     public function toggle($id, Request $request , ToggleStoresUseCase $toggleStoresUseCase)
     {
         $this->validate($request, [
