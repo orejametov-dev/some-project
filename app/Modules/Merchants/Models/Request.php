@@ -25,6 +25,9 @@ use Illuminate\Support\Carbon;
  * @property string $user_phone
  * @property string $address
  * @property int $status_id
+ * @property bool $main_completed
+ * @property bool $documents_completed
+ * @property bool $file_completed
  * @property string|null $region
  * @property int|null $engaged_by_id
  * @property string|null $engaged_by_name
