@@ -4,22 +4,16 @@ namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
+use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestStoreDocuments;
+use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestUpdateRequest;
+use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestUploadFile;
 use App\Http\Resources\ApiPrmGateway\Merchants\MerchantRequestsResource;
 use App\HttpServices\Auth\AuthMicroService;
 use App\HttpServices\Company\CompanyService;
-use App\Modules\Merchants\DTO\Merchants\MerchantInfoDTO;
-use App\Modules\Merchants\DTO\Merchants\MerchantsDTO;
 use App\Modules\Merchants\Models\CancelReason;
-use App\Modules\Merchants\Models\File;
-use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Request as MerchantRequest;
-use App\Modules\Merchants\Models\Tag;
-use App\Modules\Merchants\Services\Merchants\MerchantsService;
-use App\Services\Alifshop\AlifshopService;
 use App\UseCases\MerchantRequests\AllowMerchantRequestUseCase;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
 
 class MerchantRequestsController extends ApiBaseController
 {
@@ -47,75 +41,68 @@ class MerchantRequestsController extends ApiBaseController
         return $merchant_request;
     }
 
-    public function update($id, Request $request)
+    public function update($id, MerchantRequestUpdateRequest $request)
     {
-        $validatedRequest = $this->validate($request, [
-            'user_name' => 'required|string',
-            'user_phone' => 'required|digits:12',
-            'name' => 'required|string',
-            'categories' => 'required|array',
-            'stores_count' => 'required|integer',
-            'merchant_users_count' => 'required|integer',
-            'approximate_sales' => 'required|integer',
-            'information' => 'nullable|string',
-            'region' => 'required|string',
-            'district' => 'required|string',
+        $merchant_request = MerchantRequest::query()->find($id);
 
-            'director_name' => 'required|max:255',
-            'legal_name' => 'required|string',
-            'legal_name_prefix' => 'nullable|string',
-            'phone' => 'required|digits:12',
-            'vat_number' => 'required|digits:12',
-            'mfo' => 'required|digits:5',
-            'tin' => 'required|digits:9',
-            'oked' => 'required|digits:5',
-            'bank_account' => 'required|digits:20',
-            'bank_name' => 'required|max:255',
-            'address' => 'required|string'
-        ]);
-
-        $merchant_request = MerchantRequest::findOrFail($id);
+        if ($merchant_request === null) {
+            throw new BusinessException('Запрос не мерчанта не найден', 'merchant_request_not_found', 404);
+        }
 
         if (CompanyService::getCompanyByName($request->input('name'))) {
             return response()->json(['message' => 'Указанное имя компании уже занято'], 400);
         }
 
-        $merchant_request->fill($validatedRequest);
+        $merchant_request->fill($request->validated());
 
         $merchant_request->save();
-        $merchant_request->checkToCompleted();
+        $merchant_request->checkToMainCompleted();
 
         return $merchant_request;
     }
 
-    public function upload($id, Request $request)
+    public function storeDocuments($id, MerchantRequestStoreDocuments $request)
     {
-        $this->validate($request, [
-            'file_type' => [
-                'required',
-                'string',
-                'max:100',
-                Rule::in(array_keys(File::$registration_file_types))
-            ],
-            'file' => 'required|file|mimes:jpeg,bmp,png,svg,jpg,pdf,xlsx,xls',
-        ]);
+        $merchant_request = MerchantRequest::query()->find($id);
 
-        /** @var Merchant $merchant */
-        $merchant_request = MerchantRequest::findOrFail($id);
+        if ($merchant_request === null) {
+            throw new BusinessException('Запрос на мерчанта не найден', 'merchant_request_not_found', 404);
+        }
+
+        $merchant_request->fill($request->validated());
+
+        $merchant_request->save();
+        $merchant_request->checkToDocumentsCompleted();
+
+        return $merchant_request;
+    }
+
+    public function upload($id, MerchantRequestUploadFile $request)
+    {
+        $merchant_request = MerchantRequest::query()->find($id);
+
+        if ($merchant_request === null) {
+            throw new BusinessException('Запрос на мерчанта не найден', 'merchant_request_not_found', 404);
+        }
+
         $merchant_request_file = $merchant_request->uploadFile($request->file('file'), $request->input('file_type'));
-        $merchant_request->checkToCompleted();
+        $merchant_request->checkToFileCompleted();
 
         return $merchant_request_file;
     }
 
     public function deleteFile($id, Request $request)
     {
-        $this->validate($request,[
+        $this->validate($request, [
             'file_id' => 'required|integer'
         ]);
 
-        /** @var Merchant $merchant */
-        $merchant_request = MerchantRequest::query()->findOrFail($id);
+        $merchant_request = MerchantRequest::query()->find($id);
+
+        if ($merchant_request === null) {
+            throw new BusinessException('Запрос не мерчанта не найден', 'merchant_request_not_found', 404);
+        }
+
         $merchant_request->deleteFile($request->input('file_id'));
 
         return response()->json(['message' => 'Файл успешно удалён.']);
@@ -176,7 +163,17 @@ class MerchantRequestsController extends ApiBaseController
     public function setOnBoarding($id)
     {
 
-        $merchant_request = MerchantRequest::findOrFail($id);
+        $merchant_request = MerchantRequest::query()->find($id);
+
+        if ($merchant_request === null)
+        {
+            throw new BusinessException('Запрос не найден' , 'object_not_found', 404);
+        }
+
+        if (($merchant_request->main_completed == true && $merchant_request->documents_completed == true && $merchant_request->file_completed == true) === false) {
+            throw new BusinessException('Не все данные были заполнены для одобрения' , 'data_not_completed', 400);
+        }
+
         $merchant_request->setStatusOnTraining();
         $merchant_request->save();
 

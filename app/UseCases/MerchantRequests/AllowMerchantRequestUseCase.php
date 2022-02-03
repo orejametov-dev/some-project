@@ -25,6 +25,7 @@ class AllowMerchantRequestUseCase
     public function execute(int $id): MerchantRequest
     {
         $merchant_request = MerchantRequest::find($id);
+
         if ($merchant_request === null) {
             throw new BusinessException('Запрос на регистарцию не найден', 'object_not_found', 404);
         }
