@@ -37,7 +37,7 @@ class StoreStoresUseCase
         $merchant_store->region = $storeStoresDTO->region;
         $merchant_store->district = $storeStoresDTO->district;
 
-        if (Store::where('merchant_id', $merchant->id)->count() === null) {
+        if (Store::where('merchant_id', $merchant->id)->count() === 0) {
             $merchant_store->is_main = true;
         }
 
