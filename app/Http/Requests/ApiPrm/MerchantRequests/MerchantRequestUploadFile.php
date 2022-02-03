@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\ApiMerchantsGateway\Merchants;
+namespace App\Http\Requests\ApiPrm\MerchantRequests;
 
 use App\Modules\Merchants\Models\File;
 use Illuminate\Foundation\Http\FormRequest;
@@ -26,7 +26,6 @@ class MerchantRequestUploadFile extends FormRequest
     public function rules()
     {
         return [
-            'token' => 'required|string',
             'file_type' => [
                 'required',
                 'string',

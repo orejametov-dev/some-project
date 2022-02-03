@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\ApiMerchantsGateway\Merchants;
+namespace App\Http\Requests\ApiPrm\MerchantRequests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -24,10 +24,7 @@ class MerchantRequestStoreDocuments extends FormRequest
     public function rules()
     {
         return [
-            'token' => 'required|string',
             'director_name' => 'required|max:255',
-            'legal_name' => 'required|string',
-            'legal_name_prefix' => 'required|string',
             'phone' => 'required|digits:12',
             'vat_number' => 'required|digits:12',
             'mfo' => 'required|digits:5',
