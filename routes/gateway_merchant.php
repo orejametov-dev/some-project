@@ -1,6 +1,7 @@
 <?php
 
 use Alifuz\Utils\Gateway\Middlewares\GatewayAuthMiddleware;
+use Alifuz\Utils\Gateway\Middlewares\GatewayMiddleware;
 use App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantsController;
 use App\Http\Middleware\GatewayAccessMiddleware;
 use Illuminate\Http\Request;
@@ -32,13 +33,10 @@ Route::prefix('merchants/problem-cases')
 
 Route::prefix('merchants/requests')
     ->group(function () {
-        Route::get('/app', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'app'])->withoutMiddleware([GatewayAccessMiddleware::class, GatewayAuthMiddleware::class]);
-        Route::get('/districts', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'getDistricts'])->withoutMiddleware([GatewayAccessMiddleware::class, GatewayAuthMiddleware::class]);
-        Route::get('/{token}', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'show'])->withoutMiddleware([GatewayAccessMiddleware::class, GatewayAuthMiddleware::class]);
-        Route::post('/store-main', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'storeMain'])->withoutMiddleware([GatewayAccessMiddleware::class, GatewayAuthMiddleware::class]);
-        Route::post('/store-documents', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'storeDocuments'])->withoutMiddleware([GatewayAccessMiddleware::class, GatewayAuthMiddleware::class]);
-        Route::post('/upload-files', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'upload'])->withoutMiddleware([GatewayAccessMiddleware::class, GatewayAuthMiddleware::class]);
-        Route::delete('/delete-files/{file_id}', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'deleteFile'])->withoutMiddleware([GatewayAccessMiddleware::class, GatewayAuthMiddleware::class]);
+        Route::get('/app', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'app'])->withoutMiddleware([GatewayMiddleware::class, GatewayAuthMiddleware::class]);
+        Route::get('/districts', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'getDistricts'])->withoutMiddleware([GatewayMiddleware::class, GatewayAuthMiddleware::class]);
+        Route::get('/{token}', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'show'])->withoutMiddleware([GatewayMiddleware::class, GatewayAuthMiddleware::class]);
+        Route::post('/store-main', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'storeMain'])->withoutMiddleware([GatewayMiddleware::class, GatewayAuthMiddleware::class]);
     });
 
 Route::prefix('merchants/tags')

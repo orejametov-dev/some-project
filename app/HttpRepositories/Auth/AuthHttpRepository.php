@@ -4,6 +4,7 @@
 namespace App\HttpRepositories\Auth;
 
 
+use App\HttpRepositories\HttpResponses\Auth\AuthHttpResponse;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 
@@ -44,9 +45,13 @@ class AuthHttpRepository
         return (bool)$result->json();
     }
 
-    public function getUserById($user_id)
+    public function getUserById($user_id): ?AuthHttpResponse
     {
-        return $this->getHttpClient()->get("users/$user_id")->throw()->json();
+        $result = $this->getHttpClient()->get("users/$user_id");
+        if($result->status() === 404){
+            return null;
+        }
+        return AuthHttpResponse::fromArray($result->json());
     }
 
     public function getUserByPhone($phone)
