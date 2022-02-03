@@ -4,18 +4,14 @@
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
 
-use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\MerchantUsers\StoreMerchantUsers;
-use App\HttpServices\Auth\AuthMicroService;
-use App\HttpServices\Company\CompanyService;
-use App\HttpServices\Hooks\DTO\HookData;
-use App\Jobs\SendHook;
-use App\Jobs\ToggleMerchantRoleOfUser;
+use App\Http\Requests\ApiPrm\MerchantUsers\UpdateMerchantUserRequest;
 use App\Modules\Merchants\Models\AzoMerchantAccess;
-use App\Modules\Merchants\Models\Store;
+use App\UseCases\MerchantUsers\DestroyMerchantUserUseCase;
+use App\UseCases\MerchantUsers\StoreMerchantUserUseCase;
+use App\UseCases\MerchantUsers\UpdateMerchantUserUseCase;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 class AzoMerchantAccessesController extends ApiBaseController
 {
@@ -39,142 +35,21 @@ class AzoMerchantAccessesController extends ApiBaseController
         return AzoMerchantAccess::with(['merchant', 'store'])->findOrFail($id);
     }
 
-    public function store(StoreMerchantUsers $request)
+    public function store(StoreMerchantUsers $request, StoreMerchantUserUseCase $storeMerchantUserUseCase)
     {
-        $user = AuthMicroService::getUserById($request->input('user_id'));
+        return $storeMerchantUserUseCase->execute($request->input('store_id'), $request->input('user_id'));
+    }
 
-        if (!$user)
-            throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
-
-        $store = Store::query()->findOrFail($request->input('store_id'));
-
-        $company_user = CompanyService::getCompanyUserByUserId($user['data']['id']);
-
-        if (empty($company_user)) {
-            $company_user = CompanyService::createCompanyUser(
-                user_id: $user['data']['id'],
-                company_id: $store->merchant->company_id,
-                phone: $user['data']['phone'],
-                full_name: $user['data']['name']
-            );
-        }
-
-
-        $azo_merchant_access_exists = AzoMerchantAccess::query()
-            ->where('company_user_id', $company_user['id'])
-            ->exists();
-
-        if ($azo_merchant_access_exists) {
-            return response()->json([
-                'code' => 'user_already_exists',
-                'message' => 'Пользователь является сотрудником другого мерчанта.'
-            ], 400);
-        }
-
-        $merchant = $store->merchant;
-        if ($azo_merchant_access = AzoMerchantAccess::withTrashed()->where('company_user_id', $company_user['id'])->first()) {
-            $azo_merchant_access->restore();
-        } else {
-            $azo_merchant_access = new AzoMerchantAccess();
-        }
-
-        $azo_merchant_access->user_id = $request->input('user_id');
-        $azo_merchant_access->user_name = $user['data']['name'];
-        $azo_merchant_access->phone = $user['data']['phone'];
-        $azo_merchant_access->company_user_id = $company_user['id'];
-        $azo_merchant_access->merchant()->associate($merchant);
-        $azo_merchant_access->store()->associate($store->id);
-
-        $azo_merchant_access->save();
-
-        SendHook::dispatch(new HookData(
-            service: 'merchants',
-            hookable_type: $azo_merchant_access->getTable(),
-            hookable_id: $azo_merchant_access->id,
-            created_from_str: 'PRM',
-            created_by_id: $this->user->id,
-            body: 'Сотрудник создан',
-            keyword: 'Сотрудник добавлен в магазин: (store_id: ' . $store->id . ', store_name: ' . $store->name . ')',
-            action: 'create',
-            class: 'info',
-            action_at: null,
-            created_by_str: $this->user->name,
-        ));
-
-        ToggleMerchantRoleOfUser::dispatch($azo_merchant_access->user_id, AuthMicroService::ACTIVATE_MERCHANT_ROLE);
-
-        Cache::tags('azo_merchants')->forget('azo_merchant_user_id_' . $azo_merchant_access->user_id);
-        Cache::tags($merchant->id)->flush();
-
-        return $azo_merchant_access;
+    public function update($id, UpdateMerchantUserRequest $request, UpdateMerchantUserUseCase $updateMerchantUserUseCase)
+    {
+        return $updateMerchantUserUseCase->execute($id, $request->input('store_id'));
     }
 
 
-    public function destroy($id)
+    public function destroy($id, DestroyMerchantUserUseCase $destroyMerchantUserUseCase)
     {
-        $azo_merchant_access = AzoMerchantAccess::query()->findOrFail($id);
-        $store = $azo_merchant_access->store;
-
-        $azo_merchant_access->delete();
-
-        $merchant = $azo_merchant_access->merchant;
-
-        SendHook::dispatch(new HookData(
-            service: 'merchants',
-            hookable_type: $azo_merchant_access->getTable(),
-            hookable_id: $azo_merchant_access->id,
-            created_from_str: 'PRM',
-            created_by_id: $this->user->id,
-            body: 'Сотрудник удален',
-            keyword: 'Сотрудник удален из магазина: (' . $store->id . ', ' . $azo_merchant_access->store->name . ')',
-            action: 'delete',
-            class: 'danger',
-            action_at: null,
-            created_by_str: $this->user->name,
-        ));
-
-        Cache::tags('azo_merchants')->forget('azo_merchant_user_id_' . $azo_merchant_access->user_id);
-        Cache::tags($merchant->id)->flush();
-
-        ToggleMerchantRoleOfUser::dispatch($azo_merchant_access->user_id, AuthMicroService::DEACTIVATE_MERCHANT_ROLE);
-
+        $destroyMerchantUserUseCase->execute($id);
         return response()->json(['message' => 'Сотрудник удален']);
-    }
-
-    public function update($id, Request $request)
-    {
-        $this->validate($request, [
-            'store_id' => 'required|integer'
-        ]);
-
-        $azo_merchant_access = AzoMerchantAccess::query()->findOrFail($id);
-        $merchant = $azo_merchant_access->merchant;
-        $old_store = $azo_merchant_access->store;
-        $store = $merchant->stores()->where(['id' => $request->input('store_id')])->firstOrFail();
-
-        $azo_merchant_access->store()->associate($store);
-
-        $azo_merchant_access->save();
-
-        SendHook::dispatch(new HookData(
-            service: 'merchants',
-            hookable_type: $azo_merchant_access->getTable(),
-            hookable_id: $azo_merchant_access->id,
-            created_from_str: 'PRM',
-            created_by_id: $this->user->id,
-            body: 'Сотрудник обновлен',
-            keyword: 'Сотруднику поменяли магазин: old_store: (' . $old_store->id . ', ' . $old_store->name . ') -> ' . 'store: (' . $store->id . ', ' . $store->name . ')',
-            action: 'update',
-            class: 'warning',
-            action_at: null,
-            created_by_str: $this->user->name,
-        ));
-
-
-        Cache::tags('azo_merchants')->forget('azo_merchant_user_id_' . $azo_merchant_access->user_id);
-        Cache::tags($merchant->id)->flush();
-
-        return $azo_merchant_access;
     }
 }
 

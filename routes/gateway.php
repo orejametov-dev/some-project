@@ -21,6 +21,7 @@ Route::prefix('merchants/requests')
         Route::get('/', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'index']);
         Route::get('/{id}', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'show']);
         Route::match(['put', 'patch'], '/{id}', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'update']);
+        Route::match(['put', 'patch'], '/{id}/store-documents', [\App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'storeDocuments']);
         Route::post('/{id}/upload', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'upload']);
         Route::delete('/{id}/delete-file', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'deleteFile']);
         Route::post('/{id}/allow', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'allow']);

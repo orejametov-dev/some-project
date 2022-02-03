@@ -22,6 +22,7 @@ class MerchantsResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'token' => $this->token,
+            'company_id' => $this->company_id,
             'main_store' => new StoresResource($this->main_store),
             'conditions' => ConditionsResource::collection($this->whenLoaded('application_active_conditions')),
             'min_application_price' => $this->min_application_price

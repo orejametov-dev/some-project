@@ -4,8 +4,96 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8f643039e1b5f91fcfabc09b5134cff6",
+    "content-hash": "3b6cd6272389eb6b3a39e37bdb0a4aff",
     "packages": [
+        {
+            "name": "alifuz/utils",
+            "version": "0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://gitlab.alifshop.uz/alifuz/backend/backend-utils.git",
+                "reference": "25f69edb1ead9f479059938bd3ff241f19630ed9"
+            },
+            "require": {
+                "myclabs/php-enum": "^1.8",
+                "php": "^7.3|^8.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Alifuz\\Utils\\": "src/"
+                }
+            },
+            "scripts": {
+                "cs-check": [
+                    "./vendor/bin/php-cs-fixer fix -vvv --show-progress=dots"
+                ],
+                "cs-fix": [
+                    "./vendor/bin/php-cs-fixer fix -vvv --show-progress=dots --config=.php-cs-fixer.php --allow-risky=yes"
+                ]
+            },
+            "authors": [
+                {
+                    "name": "Iskandar Rakhimov",
+                    "email": "iiskanr@yandex.com"
+                }
+            ],
+            "description": "Package for all necessary utility tools",
+            "time": "2022-01-28T10:57:21+00:00"
+        },
+        {
+            "name": "alifuz/utils-gateway",
+            "version": "0.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://gitlab.alifshop.uz/alifuz/backend/backend-utils-gateway.git",
+                "reference": "97506131730c04803deb7a8975d4679ec2929a78"
+            },
+            "require": {
+                "alifuz/utils": "0.1.0",
+                "ext-json": "*",
+                "illuminate/contracts": "^7.0|^8.0|^9.0",
+                "illuminate/support": "^7.0|^8.0|^9.0",
+                "myclabs/php-enum": "^1.8",
+                "php": "^7.3|^8.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.5",
+                "orchestra/testbench": "^6.0|^7.0|^8.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Alifuz\\Utils\\Gateway\\GatewayServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Alifuz\\Utils\\Gateway\\": "src/"
+                }
+            },
+            "scripts": {
+                "cs-check": [
+                    "./vendor/bin/php-cs-fixer fix -vvv --show-progress=dots"
+                ],
+                "cs-fix": [
+                    "./vendor/bin/php-cs-fixer fix -vvv --show-progress=dots --config=.php-cs-fixer.php --allow-risky=yes"
+                ]
+            },
+            "authors": [
+                {
+                    "name": "Iskandar Rakhimov",
+                    "email": "iiskanr@yandex.com"
+                }
+            ],
+            "description": "Package for gateway required utility tools",
+            "time": "2022-01-28T12:23:29+00:00"
+        },
         {
             "name": "asm89/stack-cors",
             "version": "v2.0.3",
@@ -2388,6 +2476,66 @@
                 }
             ],
             "time": "2020-12-14T13:15:25+00:00"
+        },
+        {
+            "name": "myclabs/php-enum",
+            "version": "1.8.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/myclabs/php-enum.git",
+                "reference": "b942d263c641ddb5190929ff840c68f78713e937"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/myclabs/php-enum/zipball/b942d263c641ddb5190929ff840c68f78713e937",
+                "reference": "b942d263c641ddb5190929ff840c68f78713e937",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": "^7.3 || ^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.5",
+                "squizlabs/php_codesniffer": "1.*",
+                "vimeo/psalm": "^4.6.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MyCLabs\\Enum\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP Enum contributors",
+                    "homepage": "https://github.com/myclabs/php-enum/graphs/contributors"
+                }
+            ],
+            "description": "PHP Enum implementation",
+            "homepage": "http://github.com/myclabs/php-enum",
+            "keywords": [
+                "enum"
+            ],
+            "support": {
+                "issues": "https://github.com/myclabs/php-enum/issues",
+                "source": "https://github.com/myclabs/php-enum/tree/1.8.3"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/mnapoli",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/myclabs/php-enum",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2021-07-05T08:18:36+00:00"
         },
         {
             "name": "nesbot/carbon",
