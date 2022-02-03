@@ -163,7 +163,17 @@ class MerchantRequestsController extends ApiBaseController
     public function setOnBoarding($id)
     {
 
-        $merchant_request = MerchantRequest::findOrFail($id);
+        $merchant_request = MerchantRequest::query()->find($id);
+
+        if ($merchant_request === null)
+        {
+            throw new BusinessException('Запрос не найден' , 'object_not_found', 404);
+        }
+
+        if (($merchant_request->main_completed == true && $merchant_request->documents_completed == true && $merchant_request->file_completed == true) === false) {
+            throw new BusinessException('Не все данные были заполнены для одобрения' , 'data_not_completed', 400);
+        }
+
         $merchant_request->setStatusOnTraining();
         $merchant_request->save();
 
