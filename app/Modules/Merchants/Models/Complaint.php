@@ -10,10 +10,7 @@ use Illuminate\Http\Request;
 
 /**
  * @property int $id
- * @property int $user_id
- * @property string $name
- * @property string|null $surname
- * @property string|null $patronymic
+ * @property int $merchant_access_id
  * @property string $reason_correction
  * @property $created_at
  * @method static Builder|Complaint filterRequest(Request $request)
@@ -26,28 +23,18 @@ class Complaint extends Model
     use SortableByQueryParams;
 
     protected $fillable = [
-        'name',
-        'surname',
-        'patronymic',
         'reason_correction'
     ];
+
+    public function merchant_access()
+    {
+        return $this->belongsTo(AzoMerchantAccess::class);
+    }
 
     public function scopeFilterRequest(Builder $query, Request $request)
     {
         if ($id = $request->query('id')) {
             $query->where('id', $id);
-        }
-
-        if ($user = $request->query('q')) {
-            collect(explode(' ', $user))->filter()->each(function ($q) use ($query) {
-                $q = '%' . $q . '%';
-
-                $query->where(function ($query) use ($q) {
-                    $query->where('name', 'like', $q)
-                        ->orWhere('surname', 'like', $q)
-                        ->orWhere('patronymic', 'like', $q);
-                });
-            });
         }
     }
 }

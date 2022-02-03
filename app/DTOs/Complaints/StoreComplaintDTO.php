@@ -12,9 +12,6 @@ class StoreComplaintDTO
 
     public function __construct(
         public int $user_id,
-        public string $name,
-        public ?string $surname,
-        public ?string $patronymic,
         public string $reason_correction
     )
     {
@@ -24,9 +21,6 @@ class StoreComplaintDTO
     {
         return new self(
             self::parseInt($data['user_id']),
-            self::parseString($data['name']),
-            self::parseNullableString($data['surname']),
-            self::parseNullableString($data['patronymic']),
             self::parseString($data['reason_correction'])
         );
     }

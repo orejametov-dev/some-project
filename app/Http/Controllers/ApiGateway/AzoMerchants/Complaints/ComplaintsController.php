@@ -11,6 +11,7 @@ class ComplaintsController extends Controller
     public function index(Request $request)
     {
         $complaints = Complaint::query()
+            ->with('merchant_access')
             ->filterRequest($request)
             ->orderRequest($request);
 

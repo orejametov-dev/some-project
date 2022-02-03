@@ -25,9 +25,6 @@ class StoreComplaintRequest extends FormRequest
     {
         return [
             'user_id' => 'required|int',
-            'name' => 'required|string',
-            'surname' => 'nullable|string',
-            'patronymic' => 'nullable|string',
             'reason_correction' => 'required|string'
         ];
     }

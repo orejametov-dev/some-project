@@ -15,10 +15,7 @@ class CreateComplaintsTable extends Migration
     {
         Schema::create('complaints', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->string('name');
-            $table->string('surname')->nullable();
-            $table->string('patronymic')->nullable();
+            $table->foreignId('merchant_access_id')->constrained('azo_merchant_accesses');
             $table->string('reason_correction');
             $table->timestamps();
         });
