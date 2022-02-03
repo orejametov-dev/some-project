@@ -15,7 +15,7 @@ class CreateComplaintsTable extends Migration
     {
         Schema::create('complaints', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('merchant_access_id')->constrained('azo_merchant_accesses');
+            $table->foreignId('azo_merchant_access_id')->constrained('azo_merchant_accesses');
             $table->string('reason_correction');
             $table->timestamps();
         });
