@@ -25,6 +25,8 @@ class ProblemCaseResource extends JsonResource
             'description' => $this->description,
             'merchant_comment' => $this->merchant_comment ?? null,
             'status_id' => $this->status_id,
+            'assigned_to_id' => $this->assigned_to_id,
+            'assigned_to_name' => $this->assigned_to_name,
             'created_at' => $this->created_at,
         ];
     }
