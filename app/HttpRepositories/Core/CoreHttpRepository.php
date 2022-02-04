@@ -2,10 +2,8 @@
 
 namespace App\HttpRepositories\Core;
 
-use App\HttpRepositories\HttpResponses\Core\AbstractApplicationDataResponse;
 use App\HttpRepositories\HttpResponses\Core\ApplicationIdApplicationDataResponse;
 use App\HttpRepositories\HttpResponses\Core\CreditNumberApplicationDataResponse;
-use Carbon\Carbon;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 
@@ -62,6 +60,15 @@ class CoreHttpRepository
         $result = $this->getHttpClient()->get("applications/count", [
             'condition_id' => $condition_id
         ])
+            ->throw()
+            ->json();
+
+        return (bool)$result;
+    }
+
+    public function checkClientToExistsByClientId($client_id): bool
+    {
+        $result = $this->getHttpClient()->get("clients/$client_id")
             ->throw()
             ->json();
 
