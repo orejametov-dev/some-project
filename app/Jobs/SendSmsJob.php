@@ -33,8 +33,8 @@ class SendSmsJob implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
+    public function handle(NotifyHttpRepository $notifyHttpRepository)
     {
-        (new NotifyHttpRepository)->sendSms($this->phone, $this->message , NotifyHttpRepository::PROBLEM_CASE);
+        $notifyHttpRepository->sendSms($this->phone, $this->message , NotifyHttpRepository::PROBLEM_CASE);
     }
 }

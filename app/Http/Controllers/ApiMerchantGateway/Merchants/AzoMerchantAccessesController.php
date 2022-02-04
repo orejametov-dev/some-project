@@ -79,7 +79,7 @@ class AzoMerchantAccessesController extends ApiBaseController
         return $azo_merchant_access;
     }
 
-    public function requestStore(Request $request)
+    public function requestStore(Request $request, NotifyHttpRepository $notifyHttpRepository)
     {
         $this->validate($request, [
             'phone' => 'required|string|digits:12'
@@ -98,7 +98,7 @@ class AzoMerchantAccessesController extends ApiBaseController
         if (config('app.env') == 'production') {
             $code = Randomizr::generateOtp();
             $message = SmsMessages::onAuthentication($code);
-            (new NotifyHttpRepository)->sendSms($request->input('phone'), $message);
+            $notifyHttpRepository->sendSms($request->input('phone'), $message);
         } else {
             $code = 1111;
         }
