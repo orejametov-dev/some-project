@@ -27,9 +27,9 @@ class Complaint extends Model
         'reason_correction'
     ];
 
-    public function merchant_access()
+    public function azo_merchant_access()
     {
-        return $this->belongsTo(AzoMerchantAccess::class);
+        return $this->belongsTo(AzoMerchantAccess::class, 'azo_merchant_access_id');
     }
 
     public function scopeFilterRequest(Builder $query, Request $request)
