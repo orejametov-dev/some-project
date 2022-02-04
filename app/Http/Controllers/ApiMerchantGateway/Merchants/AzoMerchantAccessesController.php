@@ -6,6 +6,7 @@ namespace App\Http\Controllers\ApiMerchantGateway\Merchants;
 
 use App\Exceptions\ApiBusinessException;
 use App\Http\Controllers\ApiMerchantGateway\ApiBaseController;
+use App\HttpRepositories\Notify\NotifyHttpRepository;
 use App\HttpServices\Auth\AuthMicroService;
 use App\HttpServices\Company\CompanyService;
 use App\HttpServices\Hooks\DTO\HookData;
@@ -97,7 +98,7 @@ class AzoMerchantAccessesController extends ApiBaseController
         if (config('app.env') == 'production') {
             $code = Randomizr::generateOtp();
             $message = SmsMessages::onAuthentication($code);
-            NotifyMicroService::sendSms($request->input('phone'), $message);
+            (new NotifyHttpRepository)->sendSms($request->input('phone'), $message);
         } else {
             $code = 1111;
         }
