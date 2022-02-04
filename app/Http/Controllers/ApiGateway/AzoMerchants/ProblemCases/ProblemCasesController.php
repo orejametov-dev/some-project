@@ -6,10 +6,10 @@ namespace App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases;
 
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Comments\StoreCommentRequest;
-use App\Http\Requests\ApiPrm\Merchants\ProblemCases\ProblemCaseAttachTagsRequest;
-use App\Http\Requests\ApiPrm\Merchants\ProblemCases\ProblemCaseSetAssignedRequest;
-use App\Http\Requests\ApiPrm\Merchants\ProblemCases\ProblemCaseSetStatusRequest;
-use App\Http\Requests\ApiPrm\Merchants\ProblemCases\ProblemCaseUpdateRequest;
+use App\Http\Requests\ApiPrm\ProblemCases\ProblemCaseAttachTagsRequest;
+use App\Http\Requests\ApiPrm\ProblemCases\ProblemCaseSetAssignedRequest;
+use App\Http\Requests\ApiPrm\ProblemCases\ProblemCaseSetStatusRequest;
+use App\Http\Requests\ApiPrm\ProblemCases\ProblemCaseUpdateRequest;
 use App\Modules\Merchants\DTO\Comments\CommentDTO;
 use App\Modules\Merchants\Models\Comment;
 use App\Modules\Merchants\Models\ProblemCase;
