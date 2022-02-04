@@ -37,5 +37,17 @@ class Complaint extends Model
         if ($id = $request->query('id')) {
             $query->where('id', $id);
         }
+
+        if ($azo_merchant_access_id = $request->query('user_id')) {
+            $query->where('azo_merchant_access', $azo_merchant_access_id);
+        }
+
+        if ($azo_merchant_access_id = $request->query('azo_merchant_access_id')) {
+            $query->where('azo_merchant_access', $azo_merchant_access_id);
+        }
+
+        if ($reason_correction = $request->query('reason_correction')) {
+            $query->where('reason_correction', 'LIKE', $reason_correction . '%');
+        }
     }
 }
