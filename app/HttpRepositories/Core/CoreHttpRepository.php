@@ -2,10 +2,8 @@
 
 namespace App\HttpRepositories\Core;
 
-use App\HttpRepositories\HttpResponses\Core\AbstractApplicationDataResponse;
 use App\HttpRepositories\HttpResponses\Core\ApplicationIdApplicationDataResponse;
 use App\HttpRepositories\HttpResponses\Core\CreditNumberApplicationDataResponse;
-use Carbon\Carbon;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 
@@ -32,6 +30,9 @@ class CoreHttpRepository
     public function getApplicationDataByContractNumber($contract_number): ?CreditNumberApplicationDataResponse
     {
         $data = $this->getHttpClient()->get("applications/$contract_number")->throw()->json();
+        if ($data == null) {
+            return null;
+        }
 
         return CreditNumberApplicationDataResponse::fromArray($data);
     }
@@ -39,7 +40,9 @@ class CoreHttpRepository
     public function getApplicationDataByApplicationId($application_id): ?ApplicationIdApplicationDataResponse
     {
         $data = $this->getHttpClient()->get("applications/$application_id")->throw()->json();
-
+        if ($data == null) {
+            return null;
+        }
         return ApplicationIdApplicationDataResponse::fromArray($data);
     }
 
