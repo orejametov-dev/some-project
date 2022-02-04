@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 /**
  * @property int $id
  * @property int $azo_merchant_access_id
+ * @property int $client_id
  * @property string $reason_correction
  * @property $created_at
  * @method static Builder|Complaint filterRequest(Request $request)

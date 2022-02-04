@@ -19,6 +19,7 @@ class StoreComplaintUseCase
 
         $complaint = new Complaint();
         $complaint->azo_merchant_access_id = $merchant_access->id;
+        $complaint->client_id = $storeComplaintDTO->client_id;
         $complaint->reason_correction = $storeComplaintDTO->reason_correction;
 
         $complaint->save();
