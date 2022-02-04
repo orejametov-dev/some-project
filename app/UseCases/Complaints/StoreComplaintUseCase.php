@@ -20,7 +20,11 @@ class StoreComplaintUseCase
 
     public function execute(StoreComplaintDTO $storeComplaintDTO): Complaint
     {
-        $this->coreHttpRepository->checkClientToExistsByClientId($storeComplaintDTO->client_id);
+        if ($this->coreHttpRepository->checkClientToExistsByClientId($storeComplaintDTO->client_id) === false)
+        {
+            throw new BusinessException('Клиент не найден' , 'object_not_found', 404);
+        }
+
         $merchant_access = $this->findMerchantUserUseCase->execute($storeComplaintDTO->user_id);
 
         $complaint = new Complaint();
