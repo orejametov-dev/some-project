@@ -1,0 +1,10 @@
+#!/bin/sh
+
+composer analyse
+PHP_STAN_EXIT_CODE=$?
+
+
+if [ $PRETTIER_EXIT_CODE -ne 0 ] || [ $CS_FIXER_EXIT_CODE -ne 0 ] || [ $PHP_STAN_EXIT_CODE -ne 0 ]
+then
+    exit -1
+fi
