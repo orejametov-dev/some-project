@@ -81,5 +81,7 @@ class UpdateCurrentSales extends Command
             ->update(['merchant_additional_agreements.limit_expired_at' => now()]);
 
         Log::channel('command')->info(UpdateCurrentSales::class . '|' . now() . ':' . 'finished');
+
+        return 0;
     }
 }

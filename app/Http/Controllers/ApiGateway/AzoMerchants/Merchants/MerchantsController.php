@@ -37,7 +37,7 @@ class MerchantsController extends ApiBaseController
         if ($request->query('object') == 'true') {
             return $merchants->first();
         }
-        return $merchants->paginate($request->query('per_page'));
+        return $merchants->paginate($request->query('per_page') ?? 15);
     }
 
     public function show($id)

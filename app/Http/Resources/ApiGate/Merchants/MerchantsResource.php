@@ -5,6 +5,7 @@ namespace App\Http\Resources\ApiGate\Merchants;
 use App\Http\Resources\ApiGate\Conditions\ConditionsResource;
 use App\Http\Resources\ApiGate\Stores\StoresResource;
 use App\Modules\Merchants\Models\Merchant;
+use App\Modules\Merchants\Models\Store;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class MerchantsResource extends JsonResource
@@ -23,7 +24,7 @@ class MerchantsResource extends JsonResource
             'name' => $this->name,
             'token' => $this->token,
             'company_id' => $this->company_id,
-            'main_store' => new StoresResource($this->main_store),
+            'main_store' => new StoresResource(Store::where('merchant_id', $this->id)->where('is_main', true)->first() ?? null),
             'conditions' => ConditionsResource::collection($this->whenLoaded('application_active_conditions')),
             'min_application_price' => $this->min_application_price
         ];

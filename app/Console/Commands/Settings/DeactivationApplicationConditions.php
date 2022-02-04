@@ -49,5 +49,7 @@ class DeactivationApplicationConditions extends Command
             })
             ->where('started_at' , $to_date)
             ->update(['active' => false]);
+
+        return 0;
     }
 }

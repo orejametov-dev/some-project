@@ -23,7 +23,7 @@ class AdditionalAgreementsController extends Controller
         if ($request->query('object') == 'true') {
             return $additional_agreements->first();
         }
-        return $additional_agreements->paginate($request->query('per_page'));
+        return $additional_agreements->paginate($request->query('per_page') ?? 15);
     }
 
     public function show($id)

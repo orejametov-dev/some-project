@@ -20,8 +20,8 @@ use Illuminate\Support\Carbon;
  * @property string $title_ru
  * @property string $body_uz
  * @property string $body_ru
- * @property Date $start_schedule
- * @property Date $end_schedule
+ * @property string $start_schedule
+ * @property string $end_schedule
  * @property string $type
  *
  */

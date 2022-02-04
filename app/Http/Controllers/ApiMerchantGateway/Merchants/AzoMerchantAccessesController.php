@@ -30,7 +30,7 @@ class AzoMerchantAccessesController extends ApiBaseController
             ->filterRequest($request)
             ->orderByDesc('updated_at');
 
-        return $merchantUsersQuery->paginate($request->query('per_page'));
+        return $merchantUsersQuery->paginate($request->query('per_page') ?? 15);
     }
 
     public function show($id)

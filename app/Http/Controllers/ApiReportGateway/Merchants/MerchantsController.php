@@ -14,6 +14,6 @@ class MerchantsController extends Controller
     {
         $query = Merchant::query();
 
-        return MerchantsResource::collection($query->paginate($request->query('per_page')));
+        return MerchantsResource::collection($query->paginate($request->query('per_page') ?? 15));
     }
 }

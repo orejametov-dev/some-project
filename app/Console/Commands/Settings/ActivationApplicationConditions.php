@@ -51,5 +51,7 @@ class ActivationApplicationConditions extends Command
             })
             ->where('started_at', $to_date)
             ->update(['active' => true]);
+
+        return 0;
     }
 }

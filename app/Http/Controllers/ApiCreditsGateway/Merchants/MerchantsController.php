@@ -25,7 +25,7 @@ class MerchantsController extends ApiBaseController
             return new MerchantsResource($query->first());
         }
 
-        return MerchantsResource::collection($query->paginate($request->query('per_page')));
+        return MerchantsResource::collection($query->paginate($request->query('per_page') ?? 15));
     }
 
     public function indexSpecial(Request $request)
@@ -44,6 +44,6 @@ class MerchantsController extends ApiBaseController
             return new  SpecialMerchantResourse($query->first());
         }
 
-        return SpecialMerchantResourse::collection($query->paginate($request->query('per_page')));
+        return SpecialMerchantResourse::collection($query->paginate($request->query('per_page') ?? 15));
     }
 }
