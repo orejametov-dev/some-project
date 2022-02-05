@@ -16,7 +16,10 @@ class ProblemCasesController extends ApiBaseController
 {
     public function index(Request $request)
     {
-        $problemCases = ProblemCase::query()->filterRequests($request);
+        $problemCases = ProblemCase::query()
+            ->with('merchant')
+            ->whereIn('created_from_name', ['CALLS', 'LAW'])
+            ->filterRequests($request);
 
         if ($request->query('object') == true) {
             return new ProblemCaseResource($problemCases->first());
