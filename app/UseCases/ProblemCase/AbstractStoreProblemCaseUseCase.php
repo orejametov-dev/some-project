@@ -33,11 +33,6 @@ abstract class AbstractStoreProblemCaseUseCase
         $problemCase->store_id = $data->store_id;
         $problemCase->client_id = $data->client_id;
 
-        $problemCase->search_index = $data->client_name
-            . ' ' . $data->client_surname
-            . ' ' . $data->client_patronymic
-            . ' ' . $data->phone;
-
         $problemCase->client_name = $data->client_name;
         $problemCase->client_surname = $data->client_surname;
         $problemCase->client_patronymic = $data->client_patronymic;

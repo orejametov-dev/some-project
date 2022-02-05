@@ -26,7 +26,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property $credit_contract_date
  * @property $post_or_pre_created_by_id
  * @property $post_or_pre_created_by_name
- * @property $search_index
  * @property $client_name
  * @property $client_surname
  * @property $client_patronymic
