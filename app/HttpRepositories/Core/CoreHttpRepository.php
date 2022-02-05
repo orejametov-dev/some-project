@@ -30,7 +30,8 @@ class CoreHttpRepository
     public function getApplicationDataByContractNumber($contract_number): ?CreditNumberApplicationDataResponse
     {
         $data = $this->getHttpClient()->get("applications/$contract_number")->throw()->json();
-        if ($data == null) {
+
+        if (empty($data)) {
             return null;
         }
 
@@ -40,9 +41,11 @@ class CoreHttpRepository
     public function getApplicationDataByApplicationId($application_id): ?ApplicationIdApplicationDataResponse
     {
         $data = $this->getHttpClient()->get("applications/$application_id")->throw()->json();
-        if ($data == null) {
+
+        if (empty($data)) {
             return null;
         }
+
         return ApplicationIdApplicationDataResponse::fromArray($data);
     }
 
