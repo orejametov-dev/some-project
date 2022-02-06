@@ -20,8 +20,8 @@ use Illuminate\Http\Request;
  * @property string $title_ru
  * @property string $body_uz
  * @property string $body_ru
- * @property string $start_schedule
- * @property string $end_schedule
+ * @property Carbon $start_schedule
+ * @property Carbon $end_schedule
  * @property string $type
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
