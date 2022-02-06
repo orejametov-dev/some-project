@@ -65,7 +65,7 @@ class AzoMerchantAccess extends Model
         }
 
         if ($request->query('date')) {
-            $date = Carbon::parse($request->query('date') ?? today());
+            $date = Carbon::parse($request->query('date'));
             $query->whereDate('created_at', $date);
         }
 

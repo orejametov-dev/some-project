@@ -25,12 +25,8 @@ class TogglePostsApplicationConditionUseCase
 
         $main_store = $merchant->stores()->where('is_main' , true)->exists();
 
-        if ($main_store === null) {
+        if ($main_store === false) {
             throw new BusinessException('У данного мерчанта нет основного магазина ' . $merchant->name, 'main_store_not_exists', 400);
-        }
-
-        if ($post_alifshop and $main_store === false) {
-            return response()->json(['message' => 'Для онлайн заявок надо указать основной магазин'], 400);
         }
 
         $condition->post_merchant = $post_merchant;

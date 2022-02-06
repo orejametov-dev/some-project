@@ -137,13 +137,6 @@ Route::prefix('application-conditions')
         Route::post('/{id}/toggle-posts', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class, 'togglePosts']);
     });
 
-Route::prefix('dashboard')
-    ->group(function () {
-        Route::get('/hot-merchants', [MerchantsController::class, 'hotMerchants']);
-        Route::get('/merchant-trends', [App\Http\Controllers\ApiGateway\AzoMerchants\Dashboard\CreditsController::class, 'index']);
-        Route::get('/merchant-trends/{merchant_id}', [App\Http\Controllers\ApiGateway\AzoMerchants\Dashboard\CreditsController::class, 'show']);
-    });
-
 Route::prefix('merchants')
     ->group(function () {
         Route::get('/', [MerchantsController::class, 'index']);

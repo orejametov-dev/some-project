@@ -3,6 +3,7 @@
 namespace App\Http\Resources\ApiCredtisGateway\Stores;
 
 use App\Http\Resources\ApiCredtisGateway\Merchants\MerchantsResource;
+use App\Modules\Merchants\Models\Store;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class StoresResource extends JsonResource
@@ -15,6 +16,7 @@ class StoresResource extends JsonResource
      */
     public function toArray($request)
     {
+        /** @var Store|StoresResource $this */
         return [
             'id' => $this->id,
             'name' => $this->name,

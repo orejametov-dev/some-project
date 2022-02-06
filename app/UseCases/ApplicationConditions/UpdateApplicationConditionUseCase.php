@@ -32,7 +32,7 @@ class UpdateApplicationConditionUseCase
 
         $merchant = $condition->merchant;
 
-        $store_ids = $conditionDTO->store_ids ?? [];
+        $store_ids = $updateConditionDTO->store_ids ?? [];
 
         $merchant_stores = Store::query()
             ->where('merchant_id', $merchant->id)
@@ -59,7 +59,7 @@ class UpdateApplicationConditionUseCase
         $condition->duration = $updateConditionDTO->duration;
         $condition->commission = $updateConditionDTO->commission;
         $condition->discount = $updateConditionDTO->discount;
-        $condition->is_special = $store_ids != null ?? false;
+        $condition->is_special = empty($store_ids) === false;
         $condition->special_offer = $updateConditionDTO->special_offer;
         $condition->event_id = $updateConditionDTO->event_id;
 

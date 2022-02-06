@@ -8,11 +8,11 @@ trait SimpleStateMachineTrait
     abstract function getSimpleStateMachineMap(): array;
 
     /**
-     * @param string $state_to
+     * @param int $state_to
      * @return bool
      * @throws SimpleStateMachineException
      */
-    private function assertStateSwitchTo(string $state_to): bool
+    private function assertStateSwitchTo(int $state_to): bool
     {
         $attr = $this->getStateAttribute();
         $map = $this->getSimpleStateMachineMap();

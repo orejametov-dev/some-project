@@ -15,7 +15,7 @@ class StoreStoresDTO
         public int     $merchant_id,
         public ?string $address,
         public ?string $responsible_person,
-        public ?int    $responsible_person_phone,
+        public ?string    $responsible_person_phone,
         public string  $region,
         public string  $district
     )
@@ -29,7 +29,7 @@ class StoreStoresDTO
             self::parseInt($data['merchant_id']),
             self::parseNullableString($data['address']),
             self::parseNullableString($data['responsible_person']),
-            self::parseNullableInt($data['responsible_person_phone']),
+            self::parseNullableString($data['responsible_person_phone']),
             self::parseString($data['region']),
             self::parseString($data['district'])
         );

@@ -42,7 +42,7 @@ class MassSpecialStoreApplicationConditionUseCase
         foreach ($merchants as $merchant) {
             $main_store = $merchant->stores()->where('is_main', true)->first();
 
-            if ($main_store === false) {
+            if ($main_store === null) {
                 throw new BusinessException('У данного мерчанта нет основного магазина ' . $merchant->name, 'main_store_not_exists', 400);
             }
 
@@ -55,8 +55,8 @@ class MassSpecialStoreApplicationConditionUseCase
             $condition->event_id = $massSpecialStoreConditionDTO->event_id;
             $condition->merchant_id = $merchant->id;
             $condition->store_id = $main_store->id;
-            $condition->started_at = $massSpecialStoreConditionDTO->started_at ? Carbon::parse($massSpecialStoreConditionDTO->started_at)->format('Y-m-d') : null;
-            $condition->finished_at = $massSpecialStoreConditionDTO->finished_at ? Carbon::parse($massSpecialStoreConditionDTO->finished_at)->format('Y-m-d') : null;
+            $condition->started_at = $massSpecialStoreConditionDTO->started_at ? Carbon::parse($massSpecialStoreConditionDTO->started_at) : null;
+            $condition->finished_at = $massSpecialStoreConditionDTO->finished_at ? Carbon::parse($massSpecialStoreConditionDTO->finished_at) : null;
             $condition->active = $massSpecialStoreConditionDTO->started_at === null;
 
             $condition->save();

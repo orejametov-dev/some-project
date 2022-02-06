@@ -3,8 +3,8 @@
 
 namespace App\Services;
 
-
-use App\Modules\Applications\Models\GoodType;
+use App\Modules\Merchants\Models\AdditionalAgreement;
+use App\Modules\Merchants\Models\MerchantInfo;
 use Carbon\Carbon;
 use NumberFormatter;
 use PhpOffice\PhpWord\Exception\CopyFileException;
@@ -27,12 +27,10 @@ class WordService
             'contract_number' номер договора,
      */
     /**
-     * @param $merchant_info
-     * @param $contract_path
      * @throws CopyFileException
      * @throws CreateTemporaryFileException
      */
-    public function createContract($merchant_info, $contract_path)
+    public function createContract(MerchantInfo $merchant_info, string $contract_path): string
     {
         $contract_file = storage_path($contract_path);
         $contract_template = new TemplateProcessor($contract_file);
@@ -50,7 +48,7 @@ class WordService
             wordwrap(mb_strcut($merchant_info->phone,8),2,'-',true));
         $contract_template->setValue('vat_number', $merchant_info->vat_number);
         $contract_template->setValue('mfo', $merchant_info->mfo);
-        $contract_template->setValue('tin', number_format($merchant_info->tin,0,'',' '));
+        $contract_template->setValue('tin', number_format($merchant_info->tin,0,'',' '));/** @phpstan-ignore-next-line  */
         $contract_template->setValue('oked', wordwrap($merchant_info->oked,2,'.',true));
         $contract_template->setValue('address', $merchant_info->address);
         $contract_template->setValue('bank_account', wordwrap($merchant_info->bank_account,4,' ',true));
@@ -65,14 +63,16 @@ class WordService
         return $contract_file_name;
     }
 
-    /**
-     * @param $additional_agreement
-     * @param $additional_agreement_path
+    /*
      * @return string
      * @throws CopyFileException
      * @throws CreateTemporaryFileException
      */
-    public function createAdditionalAgreement($additional_agreement, $merchant_info, $additional_agreement_path)
+    public function createAdditionalAgreement(
+        AdditionalAgreement $additional_agreement,
+        MerchantInfo $merchant_info,
+        string $additional_agreement_path
+    ): string
     {
         $number_text_formatter = new NumberFormatter('ru', NumberFormatter::SPELLOUT);
 
@@ -100,7 +100,7 @@ class WordService
             wordwrap(mb_strcut($merchant_info->phone,8),2,'-',true));
         $contract_template->setValue('vat_number', $merchant_info->vat_number);
         $contract_template->setValue('mfo', $merchant_info->mfo);
-        $contract_template->setValue('tin', number_format($merchant_info->tin,0,'',' '));
+        $contract_template->setValue('tin', number_format($merchant_info->tin,0,'',' ')); /** @phpstan-ignore-next-line  */
         $contract_template->setValue('oked', wordwrap($merchant_info->oked,2,'.',true));
         $contract_template->setValue('address', $merchant_info->address);
         $contract_template->setValue('bank_account', wordwrap($merchant_info->bank_account,4,' ',true));

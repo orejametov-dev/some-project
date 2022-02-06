@@ -2,8 +2,7 @@
 
 namespace App\Http\Resources\ApiMerchantGateway\Notifications;
 
-use App\Http\Resources\ApiPrmGateway\Merchants\MerchantsResource;
-use App\Http\Resources\ApiPrmGateway\Stores\StoresResource;
+use App\Modules\Merchants\Models\Notification;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class NotificationsResource extends JsonResource
@@ -11,11 +10,12 @@ class NotificationsResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function toArray($request)
     {
+        /** @var Notification|NotificationsResource $this */
         return [
             'id' => $this->id,
             'title_ru' => $this->title_ru,
