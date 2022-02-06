@@ -111,8 +111,8 @@ class NotificationsController extends ApiBaseController
 
         $notification = Notification::query()->findOrFail($id);
         $notification->fill($validatedData);
-        $notification->start_schedule = Carbon::parse($request->input('start_schedule') ?? now())->format('Y-m-d H:i:s');
-        $notification->end_schedule = Carbon::parse($request->input('end_schedule') ?? now()->addDay())->format('Y-m-d H:i:s');
+        $notification->start_schedule = Carbon::parse($request->input('start_schedule') ?? now());
+        $notification->end_schedule = Carbon::parse($request->input('end_schedule') ?? now()->addDay());
 
         $notification->save();
 
