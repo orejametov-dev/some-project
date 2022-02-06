@@ -1,13 +1,13 @@
 <?php
 
+use App\Http\Controllers\ApiGateway\AzoMerchants\Comments\CommentsController;
 use App\Http\Controllers\ApiGateway\AzoMerchants\ExtraServices\MerchantsController as ExtraMerchantsController;
 use App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantsController;
-use App\Http\Controllers\ApiGateway\AzoMerchants\Comments\CommentsController;
 use Illuminate\Support\Facades\Route;
 
 
 Route::prefix('comments')->group(function () {
-    Route::get('/' , [CommentsController::class , 'index']);
+    Route::get('/', [CommentsController::class, 'index']);
 });
 
 //Azo-Merchants
@@ -137,6 +137,11 @@ Route::prefix('application-conditions')
         Route::post('/{id}/toggle-posts', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class, 'togglePosts']);
     });
 
+Route::prefix('dashboard')
+    ->group(function () {
+        Route::get('/hot-merchants', [MerchantsController::class, 'hotMerchants']);
+    });
+
 Route::prefix('merchants')
     ->group(function () {
         Route::get('/', [MerchantsController::class, 'index']);
@@ -150,7 +155,7 @@ Route::prefix('merchants')
         Route::post('/{id}/upload-logo', [MerchantsController::class, 'uploadLogo']);
         Route::post('/{id}/remove-logo', [MerchantsController::class, 'removeLogo']);
         Route::post('/{id}/attach-competitor', [MerchantsController::class, 'attachCompetitor']);
-        Route::match(['put', 'patch'],'/{id}/update-competitor', [MerchantsController::class, 'updateCompetitor']);
+        Route::match(['put', 'patch'], '/{id}/update-competitor', [MerchantsController::class, 'updateCompetitor']);
         Route::delete('/{id}/detach-competitor', [MerchantsController::class, 'detachCompetitor']);
         Route::post('/{id}/set-responsible-user', [MerchantsController::class, 'setResponsibleUser']);
         Route::match(['put', 'patch'], '/{id}/toggle', [MerchantsController::class, 'toggle']);
