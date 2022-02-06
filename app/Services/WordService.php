@@ -48,7 +48,8 @@ class WordService
             wordwrap(mb_strcut($merchant_info->phone,8),2,'-',true));
         $contract_template->setValue('vat_number', $merchant_info->vat_number);
         $contract_template->setValue('mfo', $merchant_info->mfo);
-        $contract_template->setValue('tin', number_format($merchant_info->tin,0,'',' '));/** @phpstan-ignore-next-line  */
+        /** @phpstan-ignore-next-line  */
+        $contract_template->setValue('tin', number_format($merchant_info->tin,0,'',' '));
         $contract_template->setValue('oked', wordwrap($merchant_info->oked,2,'.',true));
         $contract_template->setValue('address', $merchant_info->address);
         $contract_template->setValue('bank_account', wordwrap($merchant_info->bank_account,4,' ',true));
@@ -100,7 +101,8 @@ class WordService
             wordwrap(mb_strcut($merchant_info->phone,8),2,'-',true));
         $contract_template->setValue('vat_number', $merchant_info->vat_number);
         $contract_template->setValue('mfo', $merchant_info->mfo);
-        $contract_template->setValue('tin', number_format($merchant_info->tin,0,'',' ')); /** @phpstan-ignore-next-line  */
+        /** @phpstan-ignore-next-line  */
+        $contract_template->setValue('tin', number_format($merchant_info->tin,0,'',' '));
         $contract_template->setValue('oked', wordwrap($merchant_info->oked,2,'.',true));
         $contract_template->setValue('address', $merchant_info->address);
         $contract_template->setValue('bank_account', wordwrap($merchant_info->bank_account,4,' ',true));
