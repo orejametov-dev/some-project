@@ -5,7 +5,6 @@ namespace App\Modules\Merchants\Models;
 use App\HttpRepositories\HttpResponses\Prm\CompanyHttpResponse;
 use App\Modules\Merchants\Traits\MerchantFileTrait;
 use App\Modules\Merchants\Traits\MerchantRelationshipsTrait;
-use App\Modules\Merchants\Traits\MerchantStatusesTrait;
 use App\Traits\SortableByQueryParams;
 use Carbon\Carbon;
 use Eloquent;
@@ -29,12 +28,12 @@ use Illuminate\Support\Str;
  * @property string|null $telegram_chat_id
  * @property int $has_general_goods
  * @property string|null $logo_url
- * @property $recommend
+ * @property boolean $recommend
  * @property string|null $paymo_terminal
  * @property int|null $maintainer_id
  * @property int|null $current_sales
  * @property int $company_id
- * @property int|null min_application_price
+ * @property int|null $min_application_price
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read Collection|AdditionalAgreement[] $additional_agreements
@@ -62,7 +61,7 @@ class Merchant extends Model
 {
     use HasFactory;
 
-    use MerchantRelationshipsTrait, MerchantStatusesTrait;
+    use MerchantRelationshipsTrait;
     use MerchantFileTrait;
     use SortableByQueryParams;
 

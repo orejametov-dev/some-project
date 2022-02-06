@@ -17,7 +17,7 @@ class MerchantsController extends ApiBaseController
                 ->filterRequest($request)
                 ->orderRequest($request);
 
-            return MerchantsResource::collection($merchantsQuery->paginate($request->query('per_page')) ?? 15);
+            return MerchantsResource::collection($merchantsQuery->paginate($request->query('per_page') ?? 15));
         });
     }
 }

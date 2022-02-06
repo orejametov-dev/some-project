@@ -24,7 +24,7 @@ class MerchantsController extends Controller
             ->orderByDesc('recommend')
             ->orderByDesc('current_sales');
 
-        return MerchantResource::collection($query->paginate($request->query('per_page')));
+        return MerchantResource::collection($query->paginate($request->query('per_page') ?? 15));
     }
 
     public function show($id, Request $request)

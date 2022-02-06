@@ -40,7 +40,7 @@ class StoreProblemCaseNumberCreditUseCase extends AbstractStoreProblemCaseUseCas
         return $this->coreHttpRepository->getApplicationDataByContractNumber($identifier);
     }
 
-    protected function setIdentifierNumberAndDate(ProblemCase $problemCase,$identifier_number , $data)
+    protected function setIdentifierNumberAndDate(ProblemCase $problemCase, $identifier_number, $data)
     {
             $problemCase->credit_number = $identifier_number;
             $problemCase->credit_contract_date = $data->credit_contract_date;

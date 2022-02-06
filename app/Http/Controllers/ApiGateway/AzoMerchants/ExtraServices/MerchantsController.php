@@ -20,7 +20,7 @@ class MerchantsController extends Controller
             return $query->first();
         }
 
-        return $query->paginate($request->query('per_page'));
+        return $query->paginate($request->query('per_page') ?? 15);
     }
 
     public function merchantStoreInfo(Request $request, $merchant_id)

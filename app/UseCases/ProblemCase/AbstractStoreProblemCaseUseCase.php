@@ -47,8 +47,7 @@ abstract class AbstractStoreProblemCaseUseCase
 
         $problemCase->created_by_id = $this->gatewayAuthUser->getId();
         $problemCase->created_by_name = $this->gatewayAuthUser->getName();
-        $problemCase->created_from_name = $this->gatewayApplication->getApplication();
-
+        $problemCase->created_from_name = $this->gatewayApplication->getApplication()->getValue();
         $problemCase->post_or_pre_created_by_id = $data->post_or_pre_created_by_id;
         $problemCase->post_or_pre_created_by_name = $data->post_or_pre_created_by_name;
         $problemCase->description = $problemCaseDTO->description;

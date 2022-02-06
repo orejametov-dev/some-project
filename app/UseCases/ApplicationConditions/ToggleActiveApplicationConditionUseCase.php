@@ -34,7 +34,7 @@ class ToggleActiveApplicationConditionUseCase
             created_from_str: 'PRM',
             created_by_id: $this->gatewayAuthUser->getId(),
             body: 'Изменено условие',
-            keyword: 'id: ' . $condition->id . ' ' . $condition->title . ' на ' . ($condition->active) ? 'активный' : 'не активный',
+            keyword: 'id: ' . $condition->id . ' ' . $condition->title . ' на ' . (($condition->active === true) ? 'активный' : 'не активный'),
             action: 'update',
             class: 'warning',
             action_at: null,

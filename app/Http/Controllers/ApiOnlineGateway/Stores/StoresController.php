@@ -20,6 +20,6 @@ class StoresController extends Controller
             return $stores->first();
         }
 
-        return $stores->paginate($request->query('per_page'));
+        return $stores->paginate($request->query('per_page') ?? 15);
     }
 }

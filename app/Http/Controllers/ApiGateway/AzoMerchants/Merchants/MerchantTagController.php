@@ -14,7 +14,7 @@ class MerchantTagController extends Controller
         if ($request->query('object') == 'true') {
             return $merchant_tag_query->first();
         }
-        return $merchant_tag_query->paginate($request->query('per_page'));
+        return $merchant_tag_query->paginate($request->query('per_page') ?? 15);
 
     }
 

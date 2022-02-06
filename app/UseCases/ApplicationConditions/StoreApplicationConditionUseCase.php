@@ -57,15 +57,15 @@ class StoreApplicationConditionUseCase
         $condition->duration = $conditionDTO->duration;
         $condition->commission = $conditionDTO->commission;
         $condition->discount = $conditionDTO->discount;
-        $condition->is_special = $store_ids != null ?? false;
+        $condition->is_special = empty($store_ids) === false;
         $condition->special_offer = $conditionDTO->special_offer;
         $condition->event_id = $conditionDTO->event_id;
         $condition->post_merchant = $conditionDTO->post_merchant;
         $condition->post_alifshop = $conditionDTO->post_alifshop;
         $condition->merchant_id = $merchant->id;
         $condition->store_id = $main_store->id;
-        $condition->started_at = $conditionDTO->started_at ? Carbon::parse($conditionDTO->started_at)->format('Y-m-d') : null;
-        $condition->finished_at = $conditionDTO->finished_at ? Carbon::parse($conditionDTO->finished_at)->format('Y-m-d') : null;
+        $condition->started_at = $conditionDTO->started_at ? Carbon::parse($conditionDTO->started_at) : null;
+        $condition->finished_at = $conditionDTO->finished_at ? Carbon::parse($conditionDTO->finished_at) : null;
         $condition->active = $conditionDTO->started_at === null;
 
         $condition->save();

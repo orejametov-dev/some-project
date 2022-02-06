@@ -21,7 +21,7 @@ class MerchantFilesController extends Controller
         if ($request->query('object') == 'true') {
             return $filesQuery->first();
         }
-        return $filesQuery->paginate($request->query('per_page'));
+        return $filesQuery->paginate($request->query('per_page') ?? 15);
     }
 
     public function upload(Request $request)

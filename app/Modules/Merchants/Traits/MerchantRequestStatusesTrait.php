@@ -65,28 +65,28 @@ trait MerchantRequestStatusesTrait
 
     public function setStatusInProcess()
     {
-        return $this->setStatus(self::IN_PROCESS);
+        $this->setStatus(self::IN_PROCESS);
     }
 
     public function setStatusOnTraining()
     {
-        return $this->setStatus(self::ON_TRAINING);
+        $this->setStatus(self::ON_TRAINING);
     }
 
     public function setStatusAllowed()
     {
-        return $this->setStatus(self::ALLOWED);
+        $this->setStatus(self::ALLOWED);
     }
 
     public function setStatusTrash()
     {
-        return $this->setStatus(self::TRASH);
+        $this->setStatus(self::TRASH);
     }
 
     public function setStatus(int $status_id)
     {
         $status = self::getOneById($status_id);
-        $this->assertStateSwitchTo($status_id);
+        $this->assertStateSwitchTo($status->id);
         $this->status_updated_at = now();
         $this->status_id = $status_id;
     }

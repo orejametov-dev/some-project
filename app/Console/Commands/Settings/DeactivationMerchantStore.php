@@ -81,5 +81,6 @@ class DeactivationMerchantStore extends Command
             });
         Log::channel('command')->info(DeactivationMerchantStore::class . '|' . now() . ':' . 'finished');
 
+        return 0;
     }
 }

@@ -27,7 +27,7 @@ class AzoMerchantAccessesController extends ApiBaseController
             return $azo_merchant_accesses->first();
         }
 
-        return $azo_merchant_accesses->paginate($request->query('per_page'));
+        return $azo_merchant_accesses->paginate($request->query('per_page') ?? 15);
     }
 
     public function show($id)

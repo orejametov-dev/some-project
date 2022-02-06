@@ -11,8 +11,11 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 
 /**
  * App\Modules\Merchants\Models\Request
@@ -35,6 +38,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property string|null $status_updated_at
+ * @property-read Collection|File[] $files
  * @property-read mixed $status
  * @method static Builder|Request allowed()
  * @method static Builder|Request filterRequest(\Illuminate\Http\Request $request)
@@ -146,8 +150,8 @@ class Request extends Model
         $file_checker = true;
         unset(File::$registration_file_types['store_photo']);
         foreach (File::$registration_file_types as $key => $file_type) {
-            $file_checker = $file_checker && true;
-            if (!in_array($key, $exist_file_type)) {
+//            $file_checker = $file_checker && true;
+            if (in_array($key, $exist_file_type) === false) {
                 $file_checker = false;
             }
 
@@ -203,12 +207,12 @@ class Request extends Model
         ];
     }
 
-    public function files()
+    public function files(): HasMany
     {
         return $this->hasMany(File::class, 'request_id', 'id');
     }
 
-    public function cancel_reason()
+    public function cancel_reason(): BelongsTo
     {
         return $this->belongsTo(CancelReason::class);
     }

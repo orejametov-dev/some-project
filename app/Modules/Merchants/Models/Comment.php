@@ -11,7 +11,9 @@ use Illuminate\Http\Request;
 /**
  * @property string $body
  * @property string $commentable_type
- * @property string $commentable_id
+ * @property int $commentable_id
+ * @property int $created_by_id
+ * @property string $created_by_name
  * @method static Builder|Comment filterRequest(Request $request)
  * @method static Builder|Comment orderRequest(Request $request, string $default_order_str = 'id:desc')
  * @method static Builder|Comment query()

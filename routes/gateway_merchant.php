@@ -12,8 +12,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('merchants/app', [\App\Http\Controllers\ApiMerchantGateway\App\AppController::class, 'index']);
-
 Route::prefix('application-conditions')
     ->group(function () {
         Route::get('/', [App\Http\Controllers\ApiMerchantGateway\Merchants\ApplicationConditionsController::class, 'index']);

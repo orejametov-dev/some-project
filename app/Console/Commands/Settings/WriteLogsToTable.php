@@ -65,7 +65,7 @@ class WriteLogsToTable extends Command
         }
 
         \Log::channel('command')->info(WriteLogsToTable::class . '|' . now() . ':' . 'finished');
+
+        return 0;
     }
-
-
 }
