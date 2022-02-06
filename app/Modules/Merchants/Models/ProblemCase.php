@@ -6,7 +6,6 @@ use App\Modules\Merchants\Traits\ProblemCaseStatuses;
 use App\Services\SimpleStateMachine\SimpleStateMachinable;
 use App\Services\SimpleStateMachine\SimpleStateMachineTrait;
 use Carbon\Carbon;
-use Carbon\Traits\Date;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -27,8 +26,8 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  * @property int $application_id
  * @property int $client_id
  * @property array $application_items
- * @property Date $application_created_at
- * @property Date $credit_contract_date
+ * @property Carbon $application_created_at
+ * @property Carbon $credit_contract_date
  * @property int $post_or_pre_created_by_id
  * @property string $post_or_pre_created_by_name
  * @property string $search_index
