@@ -5,7 +5,6 @@ use App\Http\Controllers\ApiGateway\AzoMerchants\ExtraServices\MerchantsControll
 use App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantsController;
 use Illuminate\Support\Facades\Route;
 
-
 Route::prefix('comments')->group(function () {
     Route::get('/', [CommentsController::class, 'index']);
 });
@@ -122,7 +121,6 @@ Route::prefix('districts')
         Route::get('/', [App\Http\Controllers\ApiGateway\App\AppController::class, 'getDistricts']);
     });
 
-
 Route::prefix('application-conditions')
     ->group(function () {
         Route::get('/', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class, 'index']);
@@ -164,4 +162,3 @@ Route::prefix('merchants')
 
         Route::match(['put', 'patch'], '/{id}/update-modules', [MerchantsController::class, 'updateModules']);
     });
-

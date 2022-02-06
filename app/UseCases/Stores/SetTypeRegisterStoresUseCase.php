@@ -10,8 +10,7 @@ class SetTypeRegisterStoresUseCase
     public function __construct(
         private FindStoresUseCase $findStoresUseCase,
         private FlushCacheUseCase $flushCacheUseCase
-    )
-    {
+    ) {
     }
 
     public function execute(int $id, string $client_type_register)

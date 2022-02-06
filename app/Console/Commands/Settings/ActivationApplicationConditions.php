@@ -3,11 +3,8 @@
 namespace App\Console\Commands\Settings;
 
 use App\Modules\Merchants\Models\Condition;
-use App\Modules\Merchants\Models\Merchant;
-use App\Modules\Merchants\Services\MerchantStatus;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use function Clue\StreamFilter\fun;
 
 class ActivationApplicationConditions extends Command
 {

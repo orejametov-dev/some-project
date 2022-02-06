@@ -18,9 +18,9 @@ class SpecialMerchantResource extends JsonResource
     {
         /** @var Merchant|SpecialMerchantResource $this */
         return [
-            'merchant_ids' => $this->merchant_ids, /** @phpstan-ignore-line */
+            'merchant_ids' => $this->merchant_ids, /* @phpstan-ignore-line */
             'legal_name' => LegalNameService::findNamePrefix($this->legal_name_prefix)['body_ru']['value'] . ' ' . $this->legal_name,
-            'logo_path' => $this->logo_path
+            'logo_path' => $this->logo_path,
         ];
     }
 }

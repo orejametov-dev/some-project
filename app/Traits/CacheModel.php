@@ -8,7 +8,7 @@ trait CacheModel
 {
     public static function cachedKey()
     {
-        return (new self)->getTable().':table';
+        return (new self)->getTable() . ':table';
     }
 
     public static function updateCache()
@@ -19,8 +19,7 @@ trait CacheModel
 
     public static function allCached()
     {
-
-        if (! Cache::has(self::cachedKey())) {
+        if (!Cache::has(self::cachedKey())) {
             self::updateCache();
         }
 

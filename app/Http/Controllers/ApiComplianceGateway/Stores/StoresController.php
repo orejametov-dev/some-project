@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Controllers\ApiComplianceGateway\Stores;
-
 
 use App\Http\Controllers\ApiComplianceGateway\ApiBaseController;
 use App\Http\Resources\ApiComplianceGateway\Stores\StoresResource;

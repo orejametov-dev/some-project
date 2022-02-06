@@ -4,17 +4,15 @@ namespace App\UseCases\ApplicationConditions;
 
 use App\Exceptions\BusinessException;
 use App\HttpRepositories\Alifshop\AlifshopHttpRepository;
-use App\Modules\Merchants\Models\Store;
 use App\UseCases\Cache\FlushCacheUseCase;
 
 class TogglePostsApplicationConditionUseCase
 {
     public function __construct(
         private AlifshopHttpRepository $alifshopHttpRepository,
-        private FindConditionUseCase   $findConditionUseCase,
-        private FlushCacheUseCase      $flushCacheUseCase
-    )
-    {
+        private FindConditionUseCase $findConditionUseCase,
+        private FlushCacheUseCase $flushCacheUseCase
+    ) {
     }
 
     public function execute(int $id, bool $post_merchant, bool $post_alifshop)
@@ -23,7 +21,7 @@ class TogglePostsApplicationConditionUseCase
 
         $merchant = $condition->merchant;
 
-        $main_store = $merchant->stores()->where('is_main' , true)->exists();
+        $main_store = $merchant->stores()->where('is_main', true)->exists();
 
         if ($main_store === false) {
             throw new BusinessException('У данного мерчанта нет основного магазина ' . $merchant->name, 'main_store_not_exists', 400);
@@ -42,7 +40,7 @@ class TogglePostsApplicationConditionUseCase
                 'id' => $item->id,
                 'commission' => $item->commission,
                 'duration' => $item->duration,
-                'event_id' => $item->event_id
+                'event_id' => $item->event_id,
             ];
         });
 

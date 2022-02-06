@@ -25,7 +25,7 @@ class TogglePostsApplicationConditionRequest extends FormRequest
     {
         return [
             'post_alifshop' => 'required|boolean',
-            'post_merchant' => 'required|boolean'
+            'post_merchant' => 'required|boolean',
         ];
     }
 }

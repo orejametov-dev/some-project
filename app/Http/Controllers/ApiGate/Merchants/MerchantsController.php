@@ -1,17 +1,13 @@
 <?php
 
-
 namespace App\Http\Controllers\ApiGate\Merchants;
-
 
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiGate\Merchants\MerchantDetailForCredits;
 use App\Http\Resources\ApiGate\Merchants\MerchantsResource;
 use App\Modules\Merchants\Models\Merchant;
-use App\Modules\Merchants\Models\Store;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 class MerchantsController extends Controller
 {
@@ -43,7 +39,7 @@ class MerchantsController extends Controller
 
         return [
             'name' => $merchant->name,
-            'merchant_id' => $merchant->id
+            'merchant_id' => $merchant->id,
         ];
     }
 
@@ -51,11 +47,10 @@ class MerchantsController extends Controller
     {
         $merchant = Merchant::query()->where('company_id', $companyId)->first(['id', 'name']);
 
-        if($merchant === null) {
+        if ($merchant === null) {
             throw new BusinessException('Мерчант не найден', 'object_not_found', 404);
         }
 
         return $merchant;
     }
-
 }

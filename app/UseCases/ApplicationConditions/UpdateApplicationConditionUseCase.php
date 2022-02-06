@@ -14,12 +14,11 @@ use App\UseCases\Cache\FlushCacheUseCase;
 class UpdateApplicationConditionUseCase
 {
     public function __construct(
-        private CoreHttpRepository   $coreHttpRepository,
+        private CoreHttpRepository $coreHttpRepository,
         private FindConditionUseCase $findConditionUseCase,
-        private FlushCacheUseCase    $flushCacheUseCase,
-        private GatewayAuthUser      $gatewayAuthUser
-    )
-    {
+        private FlushCacheUseCase $flushCacheUseCase,
+        private GatewayAuthUser $gatewayAuthUser
+    ) {
     }
 
     public function execute(UpdateConditionDTO $updateConditionDTO)

@@ -31,7 +31,6 @@ class AddNewCompletedColumnsToMerchantRequestsTable extends Migration
             $table->dropColumn('main_completed');
             $table->dropColumn('documents_completed');
             $table->dropColumn('file_completed');
-
         });
     }
 }

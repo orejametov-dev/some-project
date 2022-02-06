@@ -40,7 +40,7 @@ class UpdateCurrentSales extends Command
      */
     public function handle()
     {
-        Log::channel('command')->info(UpdateCurrentSales::class . '|' . now() . ':' . 'started');
+        Log::channel('command')->info(self::class . '|' . now() . ':' . 'started');
 
         $percentage_of_limit = Merchant::$percentage_of_limit;
 
@@ -68,19 +68,19 @@ class UpdateCurrentSales extends Command
         }
 
         Merchant::query()
-            ->leftJoin("merchant_infos", "merchants.id", "=", "merchant_infos.merchant_id")
+            ->leftJoin('merchant_infos', 'merchants.id', '=', 'merchant_infos.merchant_id')
             ->whereRaw("IFNULL(merchant_infos.limit,0) {$percentage_of_limit} <= merchants.current_sales")
             ->whereNull('merchant_infos.limit_expired_at')
-            ->update(["merchant_infos.limit_expired_at" => now()]);
+            ->update(['merchant_infos.limit_expired_at' => now()]);
 
         Merchant::query()
-            ->leftJoin("merchant_infos", "merchants.id", "=", "merchant_infos.merchant_id")
+            ->leftJoin('merchant_infos', 'merchants.id', '=', 'merchant_infos.merchant_id')
             ->leftJoin('merchant_additional_agreements', 'merchants.id', '=', 'merchant_additional_agreements.merchant_id')
             ->whereRaw("(IFNULL(merchant_infos.limit, 0) + IFNULL(merchant_additional_agreements.limit, 0)) $percentage_of_limit <= merchants.current_sales")
             ->whereNull('merchant_additional_agreements.limit_expired_at')
             ->update(['merchant_additional_agreements.limit_expired_at' => now()]);
 
-        Log::channel('command')->info(UpdateCurrentSales::class . '|' . now() . ':' . 'finished');
+        Log::channel('command')->info(self::class . '|' . now() . ':' . 'finished');
 
         return 0;
     }

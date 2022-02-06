@@ -12,9 +12,9 @@ class HooksMicroService
         $response = Http::baseUrl(config('local_services.service_hook.domain'))
             ->acceptJson()
             ->withHeaders([
-                'Access-Token' => config('local_services.service_hook.access_token')
+                'Access-Token' => config('local_services.service_hook.access_token'),
             ])
-            ->post('hooks', (array)$data)
+            ->post('hooks', (array) $data)
             ->throw();
 
         return $response->json();

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Http\Controllers\ApiOnlineGateway\Merchants;
 
 use App\Http\Controllers\Controller;
@@ -15,8 +14,8 @@ class MerchantsController extends Controller
     public function index(Request $request)
     {
         $query = Merchant::query()
-            ->whereHas('application_conditions' , function ($query) {
-                $query->where('active' , true);
+            ->whereHas('application_conditions', function ($query) {
+                $query->where('active', true);
             })
             ->with('tags')
             ->active()

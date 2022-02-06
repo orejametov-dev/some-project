@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Modules\Merchants\Traits;
 
 trait ProblemCaseStatuses
@@ -76,5 +75,4 @@ trait ProblemCaseStatuses
         $this->status_id = $status_id;
         $this->status_key = $status->name;
     }
-
 }

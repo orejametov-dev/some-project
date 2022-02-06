@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
 /**
- * App\Modules\Merchants\Models\Tag
+ * App\Modules\Merchants\Models\Tag.
  *
  * @property int $id
  * @property string $title
@@ -34,10 +34,9 @@ class Tag extends Model
         return $this->morphedByMany(Merchant::class, 'merchant', 'merchant_tag', 'tag_id', 'merchant_id')->withTimestamps();
     }
 
-
     public function scopeFilterRequests(Builder $query, \Illuminate\Http\Request $request)
     {
-        if($request->query('q')) {
+        if ($request->query('q')) {
             $query->where('title', 'LIKE', '%' . $request->query('q') . '%');
         }
     }

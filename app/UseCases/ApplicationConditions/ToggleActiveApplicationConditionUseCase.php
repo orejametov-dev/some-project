@@ -12,11 +12,10 @@ class ToggleActiveApplicationConditionUseCase
 {
     public function __construct(
         private AlifshopHttpRepository $alifshopHttpRepository,
-        private FindConditionUseCase   $findConditionUseCase,
-        private FlushCacheUseCase      $flushCacheUseCase,
-        private GatewayAuthUser        $gatewayAuthUser
-    )
-    {
+        private FindConditionUseCase $findConditionUseCase,
+        private FlushCacheUseCase $flushCacheUseCase,
+        private GatewayAuthUser $gatewayAuthUser
+    ) {
     }
 
     public function execute(int $condition_id)
@@ -41,7 +40,6 @@ class ToggleActiveApplicationConditionUseCase
             created_by_str: $this->gatewayAuthUser->getName(),
         ));
 
-
         $merchant->load(['application_conditions' => function ($q) {
             $q->active();
         }]);
@@ -51,7 +49,7 @@ class ToggleActiveApplicationConditionUseCase
                 'id' => $item->id,
                 'commission' => $item->commission,
                 'duration' => $item->duration,
-                'event_id' => $item->event_id
+                'event_id' => $item->event_id,
             ];
         });
 

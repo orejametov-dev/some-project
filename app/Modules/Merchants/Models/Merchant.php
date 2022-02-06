@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 /**
- * App\Modules\Merchants\Models\Merchant
+ * App\Modules\Merchants\Models\Merchant.
  *
  * @property int $id
  * @property string $name
@@ -28,7 +28,7 @@ use Illuminate\Support\Str;
  * @property string|null $telegram_chat_id
  * @property int $has_general_goods
  * @property string|null $logo_url
- * @property boolean $recommend
+ * @property bool $recommend
  * @property string|null $paymo_terminal
  * @property int|null $maintainer_id
  * @property int|null $current_sales
@@ -78,11 +78,11 @@ class Merchant extends Model
         'has_general_goods',
         'paymo_terminal_id',
         'min_application_price',
-        'active'
+        'active',
     ];
     protected $appends = ['logo_path'];
     protected $hidden = ['logo_url'];
-    public static $percentage_of_limit = "* 0.95";
+    public static $percentage_of_limit = '* 0.95';
     /*Поля моделей используется в model_hooks*/
     public static $attributeLabels = [
         'name' => 'Название партнёра',
@@ -97,9 +97,9 @@ class Merchant extends Model
         if (!$this->logo_url) {
             return null;
         }
+
         return config('local_services.services_storage.domain') . $this->logo_url;
     }
-
 
     public function scopeFilterRequest(Builder $query, Request $request)
     {
@@ -113,7 +113,6 @@ class Merchant extends Model
                 $query->where('legal_name', 'like', '%' . $q . '%')
                     ->orWhere('name', 'like', '%' . $q . '%');
             });
-
 
             if (is_numeric($q)) {
                 $query->orWhereHas('merchant_info', function (Builder $query) use ($q) {
@@ -192,7 +191,7 @@ class Merchant extends Model
 
     public static function fromDto(CompanyHttpResponse $company, int $user_id)
     {
-        $merchant = new Merchant();
+        $merchant = new self();
         $merchant->id = $company->id;
         $merchant->name = $company->name;
         $merchant->legal_name = $company->legal_name;

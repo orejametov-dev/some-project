@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
-
 
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\Controller;
@@ -23,6 +21,7 @@ class AdditionalAgreementsController extends Controller
         if ($request->query('object') == 'true') {
             return $additional_agreements->first();
         }
+
         return $additional_agreements->paginate($request->query('per_page') ?? 15);
     }
 
@@ -37,7 +36,7 @@ class AdditionalAgreementsController extends Controller
             'merchant_id' => 'required|integer',
         ]);
 
-        if(!MerchantInfo::query()->where('merchant_id', $request->input('merchant_id'))->exists()) {
+        if (!MerchantInfo::query()->where('merchant_id', $request->input('merchant_id'))->exists()) {
             throw new BusinessException('Нет основного договора');
         }
 
@@ -76,5 +75,4 @@ class AdditionalAgreementsController extends Controller
 
         return response()->json(['message' => 'Успешно удалено']);
     }
-
 }

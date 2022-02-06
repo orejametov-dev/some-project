@@ -23,9 +23,9 @@ class MerchantRequestsResource extends JsonResource
             'created_at' => $this->created_at,
             'engaged_by' => [
                 'engaged_by_id' => $this->engaged_by_id,
-                'engaged_by_name' => $this->engaged_by_name
+                'engaged_by_name' => $this->engaged_by_name,
             ],
-            'status' => $this->status
+            'status' => $this->status,
         ];
     }
 }

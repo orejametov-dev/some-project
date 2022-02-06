@@ -31,7 +31,7 @@ class Comment extends Model
     protected $fillable = [
         'body',
         'commentable_type',
-        'created_by_name'
+        'created_by_name',
     ];
 
     public function commentable()

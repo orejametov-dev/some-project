@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Controllers\ApiCallsGateway\ProblemCases;
-
 
 use App\DTOs\ProblemCases\ProblemCaseDTO;
 use App\Http\Controllers\ApiCallsGateway\ApiBaseController;
@@ -35,10 +33,8 @@ class ProblemCasesController extends ApiBaseController
         return $storeProblemCasesUseCase->execute($problemCaseDTO);
     }
 
-
     public function getStatusList()
     {
         return array_values(ProblemCase::$statuses);
     }
-
 }

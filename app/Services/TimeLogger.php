@@ -1,14 +1,12 @@
 <?php
 
-
 namespace App\Services;
-
 
 use Illuminate\Support\Facades\Cache;
 
 class TimeLogger
 {
-    public const CACHE_KEY = "logs_";
+    public const CACHE_KEY = 'logs_';
     public const CACHE_TTL = 24 * 60;
     public $name;
     public $started_at;
@@ -34,7 +32,6 @@ class TimeLogger
 
     private function save()
     {
-
         if (config('local_services.time_logger')) {
             $cached_info = Cache::get(self::CACHE_KEY);
 
@@ -45,7 +42,7 @@ class TimeLogger
                         'started_at' => $this->started_at,
                         'finished_at' => $this->finished_at,
                         'diff' => $this->diff,
-                    ]
+                    ],
                 ], self::CACHE_TTL);
             } else {
                 Cache::put(self::CACHE_KEY, array_merge($cached_info, [
@@ -54,7 +51,7 @@ class TimeLogger
                         'started_at' => $this->started_at,
                         'finished_at' => $this->finished_at,
                         'diff' => $this->diff,
-                    ]
+                    ],
                 ]), self::CACHE_TTL);
             }
         }

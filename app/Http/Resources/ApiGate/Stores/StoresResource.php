@@ -21,7 +21,7 @@ class StoresResource extends JsonResource
             'name' => $this->name,
             'merchant_id' => $this->merchant_id,
             'phone' => $this->phone,
-            'region' => $this->region
+            'region' => $this->region,
         ];
     }
 }

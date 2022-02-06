@@ -23,7 +23,7 @@ class ConditionsResource extends JsonResource
             'event_id' => $this->event_id,
             'commission' => $this->commission,
             'duration' => $this->duration,
-            'discount' => $this->discount
+            'discount' => $this->discount,
         ];
     }
 }

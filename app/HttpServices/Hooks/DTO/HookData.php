@@ -16,7 +16,6 @@ class HookData
         public ?string $class = null,
         public ?string $action_at = null,
         public ?string $created_by_str = '',
-    )
-    {
+    ) {
     }
 }

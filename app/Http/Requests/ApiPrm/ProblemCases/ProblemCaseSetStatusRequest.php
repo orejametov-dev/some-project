@@ -29,7 +29,7 @@ class ProblemCaseSetStatusRequest extends FormRequest
                 . ProblemCase::NEW . ','
                 . ProblemCase::IN_PROCESS . ','
                 . ProblemCase::DONE . ','
-                . ProblemCase::FINISHED
+                . ProblemCase::FINISHED,
         ];
     }
 }

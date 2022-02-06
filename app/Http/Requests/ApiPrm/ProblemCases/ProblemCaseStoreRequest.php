@@ -26,7 +26,7 @@ class ProblemCaseStoreRequest extends FormRequest
         return [
             'credit_number' => 'required_without:application_id|string',
             'application_id' => 'required_without:credit_number|integer',
-            'description' => 'required'
+            'description' => 'required',
         ];
     }
 }

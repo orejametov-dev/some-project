@@ -15,7 +15,6 @@ class Log extends Eloquent
         'name',
         'started_at',
         'finished_at',
-        'diff'
+        'diff',
     ];
-
 }

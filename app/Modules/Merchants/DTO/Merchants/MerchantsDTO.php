@@ -1,11 +1,9 @@
 <?php
 
-
 namespace App\Modules\Merchants\DTO\Merchants;
 
-
-use Illuminate\Http\Request;
 use App\Modules\Merchants\Models\Request as MerchantRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class MerchantsDTO
@@ -29,8 +27,7 @@ class MerchantsDTO
         ?string $information,
         int $maintainer_id,
         int $company_id
-    )
-    {
+    ) {
         $this->id = $id;
         $this->name = $name;
         $this->legal_name = $legal_name;
@@ -44,11 +41,9 @@ class MerchantsDTO
 
     public function getDataByRequest(Request $request)
     {
-
     }
 
     public function getDataByMerchantRequest(MerchantRequest $merchantRequest)
     {
-
     }
 }

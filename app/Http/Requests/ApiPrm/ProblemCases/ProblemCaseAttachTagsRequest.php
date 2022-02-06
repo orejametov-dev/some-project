@@ -27,7 +27,7 @@ class ProblemCaseAttachTagsRequest extends FormRequest
         return [
             'tags' => 'required|array',
             'tags.*.name' => 'required|string',
-            'tags.*.type_id' => 'required|integer|in:' . ProblemCaseTag::BEFORE_TYPE . ', ' . ProblemCaseTag::AFTER_TYPE
+            'tags.*.type_id' => 'required|integer|in:' . ProblemCaseTag::BEFORE_TYPE . ', ' . ProblemCaseTag::AFTER_TYPE,
         ];
     }
 }

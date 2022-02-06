@@ -14,11 +14,10 @@ class SetStatusProblemCaseUseCase
 {
     public function __construct(
         private GatewayAuthUser $gatewayAuthUser
-    )
-    {
+    ) {
     }
 
-    public function execute(int $id , int $status_id): ProblemCase
+    public function execute(int $id, int $status_id): ProblemCase
     {
         $problemCase = ProblemCase::query()->find($id);
 

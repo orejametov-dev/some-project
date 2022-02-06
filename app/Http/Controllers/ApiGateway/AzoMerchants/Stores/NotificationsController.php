@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Stores;
-
 
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
@@ -36,6 +34,7 @@ class NotificationsController extends ApiBaseController
     public function show($id)
     {
         $notification = Notification::query()->with('stores')->findOrFail($id);
+
         return $notification;
     }
 
@@ -51,7 +50,7 @@ class NotificationsController extends ApiBaseController
             'all_merchants' => 'required_without:recipients|boolean',
             'recipients' => 'required_without:all_merchants|array',
             'recipients.*.merchant_id' => 'required|integer',
-            'recipients.*.store_ids' => 'nullable|array'
+            'recipients.*.store_ids' => 'nullable|array',
         ]);
 
         $notification = new Notification();
@@ -68,14 +67,12 @@ class NotificationsController extends ApiBaseController
                 $stores = Store::get();
                 $notification->stores()->attach($stores);
             });
-
         } elseif ($request->missing('all_merchants')) {
             DB::transaction(function () use ($notification, $request) {
                 $notification->setCertainType();
                 $notification->save();
 
                 foreach ($request->input('recipients') as $recipient) {
-
                     $merchant = Merchant::findOrFail($recipient['merchant_id']);
                     if (array_key_exists('store_ids', $recipient) and !empty($recipient['store_ids'])) {
                         $all_store_ids = $merchant->stores()->pluck('id');
@@ -95,6 +92,7 @@ class NotificationsController extends ApiBaseController
         }
 
         Cache::tags('notifications')->flush();
+
         return $notification;
     }
 

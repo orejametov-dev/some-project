@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Services\SimpleStateMachine;
 
 use Throwable;
@@ -13,8 +12,8 @@ class SimpleStateMachineException extends \Exception
         $message = 'Невозможно переключиться с текущего статуса на указанный.',
         $error_code = 'STATE_MACHINE_ASSERTION_FAILED',
         $code = 400,
-        Throwable $previous = null)
-    {
+        Throwable $previous = null
+    ) {
         parent::__construct($message, $code, $previous);
         $this->error_code = $error_code;
     }

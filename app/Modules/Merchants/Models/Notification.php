@@ -4,7 +4,6 @@ namespace App\Modules\Merchants\Models;
 
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use Carbon\Carbon;
-use Carbon\Traits\Date;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,9 +11,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Http\Request;
 
 /**
- * Class Notification
+ * Class Notification.
  *
- * @package App\Modules\Partners\Models
  * @property int $id
  * @property string $title_uz
  * @property string $title_ru
@@ -25,7 +23,6 @@ use Illuminate\Http\Request;
  * @property string $type
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- *
  */
 class Notification extends Model
 {
@@ -41,7 +38,7 @@ class Notification extends Model
         'body_uz',
         'start_schedule',
         'end_schedule',
-        'type'
+        'type',
     ];
 
     public function setAllType()

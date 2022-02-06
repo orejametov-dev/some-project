@@ -51,7 +51,7 @@ class StoresController extends ApiBaseController
 
     public function update($store_id, UpdateStoresRequest $request, UpdateStoresUseCase $updateStoresUseCase)
     {
-        $updateStoresDTO = UpdateStoresDTO::fromArray((int)$store_id, $request->validated());
+        $updateStoresDTO = UpdateStoresDTO::fromArray((int) $store_id, $request->validated());
 
         return $updateStoresUseCase->execute($updateStoresDTO);
     }
@@ -59,19 +59,19 @@ class StoresController extends ApiBaseController
     public function toggle($id, Request $request, ToggleStoresUseCase $toggleStoresUseCase)
     {
         $this->validate($request, [
-            'activity_reason_id' => 'integer|required'
+            'activity_reason_id' => 'integer|required',
         ]);
 
-        return $toggleStoresUseCase->execute((int)$id, (int)$request->input('activity_reason_id'));
+        return $toggleStoresUseCase->execute((int) $id, (int) $request->input('activity_reason_id'));
     }
 
     public function setTypeRegister($id, Request $request, SetTypeRegisterStoresUseCase $setTypeRegisterStoresUseCase)
     {
         $request->validate([
-            'client_type_register' => 'required|string'
+            'client_type_register' => 'required|string',
         ]);
 
-        return $setTypeRegisterStoresUseCase->execute((int)$id, (string)$request->input('client_type_register'));
+        return $setTypeRegisterStoresUseCase->execute((int) $id, (string) $request->input('client_type_register'));
     }
 
     public function getConditions($id, Request $request)
@@ -88,5 +88,4 @@ class StoresController extends ApiBaseController
 
         return $conditionQuery->merge($special_conditions)->sortByDesc('updated_at');
     }
-
 }

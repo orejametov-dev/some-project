@@ -3,7 +3,6 @@
 namespace App\Modules\Merchants\Models;
 
 use App\DTOs\MerchantInfos\StoreMerchantInfoDTO;
-use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,9 +10,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
 /**
- * Class MerchantInfo
+ * Class MerchantInfo.
  *
- * @package App\Modules\Partners\Models
  * @property int $id
  * @property string $legal_name
  * @property string $legal_name_prefix
@@ -60,7 +58,7 @@ class MerchantInfo extends Model
         'contract_number',
         'limit',
         'contract_date',
-        'legal_name_prefix'
+        'legal_name_prefix',
     ];
 
     public $timestamps = false;
@@ -79,12 +77,12 @@ class MerchantInfo extends Model
 
     public static function getMaxContractNumber()
     {
-        return MerchantInfo::max('contract_number');
+        return self::max('contract_number');
     }
 
     public static function fromDTO(StoreMerchantInfoDTO $storeMerchantInfoDTO)
     {
-        $merchantInfo = new MerchantInfo();
+        $merchantInfo = new self();
 
         $merchantInfo->merchant_id = $storeMerchantInfoDTO->merchant_id;
         $merchantInfo->legal_name = $storeMerchantInfoDTO->legal_name;
@@ -98,9 +96,9 @@ class MerchantInfo extends Model
         $merchantInfo->bank_account = $storeMerchantInfoDTO->bank_account;
         $merchantInfo->bank_name = $storeMerchantInfoDTO->bank_name;
         $merchantInfo->address = $storeMerchantInfoDTO->address;
-        $merchantInfo->contract_number = MerchantInfo::getMaxContractNumber() + 1;
+        $merchantInfo->contract_number = self::getMaxContractNumber() + 1;
         $merchantInfo->contract_date = now();
-        $merchantInfo->limit = MerchantInfo::LIMIT;
+        $merchantInfo->limit = self::LIMIT;
 
         return $merchantInfo;
     }

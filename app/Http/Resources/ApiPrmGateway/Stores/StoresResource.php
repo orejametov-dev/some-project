@@ -18,7 +18,7 @@ class StoresResource extends JsonResource
         /** @var Store|StoresResource $this */
         return [
             'id' => $this->id,
-            'name' => $this->name
+            'name' => $this->name,
         ];
     }
 }

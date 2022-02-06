@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\DTOs\Merchants;
 
-
 use Alifuz\Utils\Parser\ParseDataTrait;
 
 class UpdateMerchantDTO
@@ -12,16 +11,15 @@ class UpdateMerchantDTO
     use ParseDataTrait;
 
     public function __construct(
-        public int     $id,
-        public string  $name,
+        public int $id,
+        public string $name,
         public ?string $legal_name,
         public ?string $legal_name_prefix,
-        public string  $token,
-        public string  $alifshop_slug,
+        public string $token,
+        public string $alifshop_slug,
         public ?string $information,
-        public int     $min_application_price
-    )
-    {
+        public int $min_application_price
+    ) {
     }
 
     public static function fromArray(int $id, array $data): self

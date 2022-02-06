@@ -2,7 +2,6 @@
 
 namespace App\Modules\Merchants\Models;
 
-
 use App\Traits\SortableByQueryParams;
 use Carbon\Carbon;
 use Eloquent;
@@ -13,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 
 /**
- * App\Modules\Merchants\Models\MerchantUser
+ * App\Modules\Merchants\Models\MerchantUser.
  *
  * @property int $id
  * @property int $merchant_id
@@ -44,7 +43,7 @@ class AzoMerchantAccess extends Model
     protected $table = 'azo_merchant_accesses';
     protected $fillable = [
         'user_name',
-        'phone'
+        'phone',
     ];
 
     public function store()

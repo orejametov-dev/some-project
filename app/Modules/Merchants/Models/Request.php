@@ -2,7 +2,6 @@
 
 namespace App\Modules\Merchants\Models;
 
-
 use App\HttpServices\Storage\StorageMicroService;
 use App\Modules\Merchants\Traits\MerchantRequestStatusesTrait;
 use App\Services\SimpleStateMachine\SimpleStateMachineTrait;
@@ -18,7 +17,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
 /**
- * App\Modules\Merchants\Models\Request
+ * App\Modules\Merchants\Models\Request.
  *
  * @property int $id
  * @property string $name
@@ -119,7 +118,7 @@ class Request extends Model
         self::ON_TRAINING => [
             'id' => self::ON_TRAINING,
             'name' => 'На обучении',
-        ]
+        ],
     ];
 
     public function checkToMainCompleted()
@@ -154,7 +153,6 @@ class Request extends Model
             if (in_array($key, $exist_file_type) === false) {
                 $file_checker = false;
             }
-
         }
 
         if ($file_checker === true) {
@@ -182,28 +180,28 @@ class Request extends Model
     {
         return [
             self::NEW => [
-                self::IN_PROCESS
+                self::IN_PROCESS,
             ],
             self::IN_PROCESS => [
                 self::ON_TRAINING,
-                self::TRASH
+                self::TRASH,
             ],
             self::ON_TRAINING => [
-                self::ALLOWED
+                self::ALLOWED,
             ],
             self::ALLOWED => [],
-            self::TRASH => []
+            self::TRASH => [],
         ];
     }
 
     public static function statusLists(): array
     {
         return [
-            array('id' => self::NEW, 'name' => 'Новый'),
-            array('id' => self::IN_PROCESS, 'name' => 'На переговорах'),
-            array('id' => self::ON_TRAINING, 'name' => 'На обучении'),
-            array('id' => self::ALLOWED, 'name' => 'Одобрено'),
-            array('id' => self::TRASH, 'name' => 'В корзине')
+            ['id' => self::NEW, 'name' => 'Новый'],
+            ['id' => self::IN_PROCESS, 'name' => 'На переговорах'],
+            ['id' => self::ON_TRAINING, 'name' => 'На обучении'],
+            ['id' => self::ALLOWED, 'name' => 'Одобрено'],
+            ['id' => self::TRASH, 'name' => 'В корзине'],
         ];
     }
 
@@ -260,6 +258,7 @@ class Request extends Model
         $merchant_request_file->url = $storage_file['url'];
         $merchant_request_file->request_id = $this->id;
         $merchant_request_file->save();
+
         return $merchant_request_file;
     }
 

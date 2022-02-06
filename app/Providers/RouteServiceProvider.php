@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use Alifuz\Utils\Gateway\Entities\GatewayApplication;
 use Alifuz\Utils\Gateway\Middlewares\GatewayAuthMiddleware;
 use Alifuz\Utils\Gateway\Middlewares\GatewayMiddleware;
 use Illuminate\Cache\RateLimiting\Limit;

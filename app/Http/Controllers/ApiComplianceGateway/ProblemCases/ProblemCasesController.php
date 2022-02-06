@@ -15,5 +15,4 @@ class ProblemCasesController extends ApiBaseController
 
         return $storeProblemCaseUseCase->execute($problemCaseDTO);
     }
-
 }

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Controllers\ApiOnlineGateway\Stores;
-
 
 use App\Http\Controllers\Controller;
 use App\Modules\Merchants\Models\Store;
@@ -16,7 +14,7 @@ class StoresController extends Controller
             ->active()
             ->filterRequest($request);
 
-        if($request->has('object') and $request->query('object') == true) {
+        if ($request->has('object') and $request->query('object') == true) {
             return $stores->first();
         }
 

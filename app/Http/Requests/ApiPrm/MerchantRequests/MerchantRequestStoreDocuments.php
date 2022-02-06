@@ -32,7 +32,7 @@ class MerchantRequestStoreDocuments extends FormRequest
             'oked' => 'required|digits:5',
             'bank_account' => 'required|digits:20',
             'bank_name' => 'required|max:255',
-            'address' => 'required|string'
+            'address' => 'required|string',
         ];
     }
 }

@@ -18,7 +18,7 @@ class MerchantResource extends JsonResource
         /** @var Merchant|MerchantResource $this */
         return [
             'id' => $this->id,
-            'name' => $this->name
+            'name' => $this->name,
         ];
     }
 }

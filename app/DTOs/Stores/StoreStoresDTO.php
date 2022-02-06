@@ -11,15 +11,14 @@ class StoreStoresDTO
     use ParseDataTrait;
 
     public function __construct(
-        public string  $name,
-        public int     $merchant_id,
+        public string $name,
+        public int $merchant_id,
         public ?string $address,
         public ?string $responsible_person,
-        public ?string    $responsible_person_phone,
-        public string  $region,
-        public string  $district
-    )
-    {
+        public ?string $responsible_person_phone,
+        public string $region,
+        public string $district
+    ) {
     }
 
     public static function fromArray(array $data): self
