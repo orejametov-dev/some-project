@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Modules\Merchants\Traits;
 
 trait MerchantRequestStatusesTrait
@@ -44,7 +43,6 @@ trait MerchantRequestStatusesTrait
     {
         return $builder->where('status_id', self::ON_TRAINING);
     }
-
 
     public function scopeAllowed($builder)
     {
@@ -90,6 +88,4 @@ trait MerchantRequestStatusesTrait
         $this->status_updated_at = now();
         $this->status_id = $status_id;
     }
-
-
 }

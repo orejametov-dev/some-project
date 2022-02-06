@@ -16,7 +16,7 @@ class ProblemCaseResource extends JsonResource
      */
     public function toArray($request)
     {
-        /** @var ProblemCase|ProblemCaseResource $this */
+        /* @var ProblemCase|ProblemCaseResource $this */
         return [
             'id' => $this->id,
             'merchant_id' => $this->merchant_id,
@@ -39,7 +39,7 @@ class ProblemCaseResource extends JsonResource
             'engaged_by_id' => $this->engaged_by_id,
             'engaged_by_name' => $this->engaged_by_name,
             'deadline' => $this->deadline,
-            'comment_from_merchant' => $this->comment_from_merchant
+            'comment_from_merchant' => $this->comment_from_merchant,
         ];
     }
 }

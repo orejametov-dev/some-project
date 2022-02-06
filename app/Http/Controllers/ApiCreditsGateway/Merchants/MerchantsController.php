@@ -1,13 +1,10 @@
 <?php
 
-
 namespace App\Http\Controllers\ApiCreditsGateway\Merchants;
-
 
 use App\Http\Controllers\ApiCreditsGateway\ApiBaseController;
 use App\Http\Resources\ApiCredtisGateway\Merchants\MerchantsResource;
 use App\Http\Resources\ApiCredtisGateway\Merchants\SpecialMerchantResource;
-use App\Http\Resources\ApiMerchantGateway\ProblemCases\ProblemCaseResource;
 use App\Modules\Merchants\Models\Merchant;
 use DB;
 use Illuminate\Http\Request;
@@ -35,7 +32,7 @@ class MerchantsController extends ApiBaseController
             ->select([
                 DB::raw('group_concat(id) as merchant_ids'),
                 'legal_name',
-                'legal_name_prefix'
+                'legal_name_prefix',
             ])
             ->filterRequest($request)
             ->groupBy('legal_name', 'legal_name_prefix');

@@ -11,9 +11,8 @@ class StoreStoresUseCase
 {
     public function __construct(
         private FindMerchantUseCase $findMerchantUseCase,
-        private FlushCacheUseCase   $flushCacheUseCase
-    )
-    {
+        private FlushCacheUseCase $flushCacheUseCase
+    ) {
     }
 
     public function execute(StoreStoresDTO $storeStoresDTO)

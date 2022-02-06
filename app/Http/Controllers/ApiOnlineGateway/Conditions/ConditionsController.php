@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Controllers\ApiOnlineGateway\Conditions;
-
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiOnlineGateway\ConditionsResource;

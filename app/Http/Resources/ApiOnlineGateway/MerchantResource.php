@@ -16,14 +16,14 @@ class MerchantResource extends JsonResource
      */
     public function toArray($request)
     {
-        /** @var Merchant|MerchantResource $this */
+        /* @var Merchant|MerchantResource $this */
         return [
             'id' => $this->id,
             'name' => $this->name,
             'tags' => $this->whenLoaded('tags'),
             'information' => $this->information,
             'logo_path' => $this->logo_path,
-            'recommend' => $this->recommend
+            'recommend' => $this->recommend,
         ];
     }
 }

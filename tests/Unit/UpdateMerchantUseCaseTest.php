@@ -1,13 +1,10 @@
 <?php
 
-
 namespace Tests\Unit;
-
 
 use App\DTOs\Merchants\UpdateMerchantDTO;
 use App\Exceptions\BusinessException;
 use App\Modules\Merchants\Models\Merchant;
-use App\UseCases\Cache\FlushCacheUseCase;
 use App\UseCases\Merchants\UpdateMerchantUseCase;
 use PHPUnit\Framework\TestCase;
 

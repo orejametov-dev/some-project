@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
-
 
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\MerchantUsers\StoreMerchantUsers;
@@ -21,7 +19,6 @@ class AzoMerchantAccessesController extends ApiBaseController
             ->with(['merchant', 'store'])
             ->filterRequest($request)
             ->orderRequest($request);
-
 
         if ($request->query('object') == true) {
             return $azo_merchant_accesses->first();
@@ -45,11 +42,10 @@ class AzoMerchantAccessesController extends ApiBaseController
         return $updateMerchantUserUseCase->execute($id, $request->input('store_id'));
     }
 
-
     public function destroy($id, DestroyMerchantUserUseCase $destroyMerchantUserUseCase)
     {
         $destroyMerchantUserUseCase->execute($id);
+
         return response()->json(['message' => 'Сотрудник удален']);
     }
 }
-

@@ -15,7 +15,7 @@ class MerchantsResource extends JsonResource
      */
     public function toArray($request)
     {
-        /** @var Merchant|MerchantsResource $this */
+        /* @var Merchant|MerchantsResource $this */
         return parent::toArray($request);
 //        return [
 //            'id' => $this->id,

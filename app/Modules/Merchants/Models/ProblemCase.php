@@ -66,33 +66,33 @@ class ProblemCase extends Model implements SimpleStateMachinable
             'name' => 'Новый',
             'lang' => [
                 'uz' => 'Yangi',
-                'ru' => 'Новый'
-            ]
+                'ru' => 'Новый',
+            ],
         ],
         self::IN_PROCESS => [
             'id' => self::IN_PROCESS,
             'name' => 'В процессе',
             'lang' => [
                 'uz' => 'Ko\'rib chiqilmoqda',
-                'ru' => 'В процессе'
-            ]
+                'ru' => 'В процессе',
+            ],
         ],
         self::DONE => [
             'id' => self::DONE,
             'name' => 'Выполнено',
             'lang' => [
                 'uz' => 'Bajarildi',
-                'ru' => 'Выполнено'
-            ]
+                'ru' => 'Выполнено',
+            ],
         ],
         self::FINISHED => [
             'id' => self::FINISHED,
             'name' => 'Завершен',
             'lang' => [
                 'uz' => 'Tugatildi',
-                'ru' => 'Завершен'
-            ]
-        ]
+                'ru' => 'Завершен',
+            ],
+        ],
     ];
 
     public static function getOneById(int $id)
@@ -109,16 +109,16 @@ class ProblemCase extends Model implements SimpleStateMachinable
     {
         return [
             self::NEW => [
-                self::IN_PROCESS
+                self::IN_PROCESS,
             ],
             self::IN_PROCESS => [
                 self::DONE,
             ],
             self::DONE => [
                 self::IN_PROCESS,
-                self::FINISHED
+                self::FINISHED,
             ],
-            self::FINISHED => []
+            self::FINISHED => [],
         ];
     }
 
@@ -135,11 +135,11 @@ class ProblemCase extends Model implements SimpleStateMachinable
         'application_created_at',
         'credit_contract_date',
         'post_or_pre_created_by_id',
-        'post_or_pre_created_by_name'
+        'post_or_pre_created_by_name',
     ];
 
     protected $casts = [
-        'application_items' => 'array'
+        'application_items' => 'array',
     ];
 
     public function merchant(): BelongsTo

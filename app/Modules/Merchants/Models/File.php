@@ -8,9 +8,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class MerchantFile
+ * Class MerchantFile.
  *
- * @package App\Modules\Partners\Models
  * @property int $id
  * @property string $file_type
  * @property string $mime_type
@@ -51,51 +50,51 @@ class File extends Model
             'name' => 'Скан паспорта директора',
             'lang' => [
                 'uz' => 'Rahbar passportining skan varianti',
-                'ru' => 'Скан паспорта директора'
-            ]
+                'ru' => 'Скан паспорта директора',
+            ],
         ],
         'certificate' => [
             'name' => 'Гувохнома',
             'lang' => [
                 'uz' => 'Guvohnoma',
-                'ru' => 'Гувохнома'
-            ]
+                'ru' => 'Гувохнома',
+            ],
         ],
         'vat_certificate' => [
             'name' => 'НДС Гувохнома',
             'lang' => [
                 'uz' => 'NDS Guvohnoma',
-                'ru' => 'НДС Гувохнома'
-            ]
+                'ru' => 'НДС Гувохнома',
+            ],
         ],
         'directors_order_copy' => [
             'name' => 'Копия приказа директора',
             'lang' => [
                 'uz' => 'Rahbar qarorining nusxasi',
-                'ru' => 'Копия приказа директора'
-            ]
+                'ru' => 'Копия приказа директора',
+            ],
         ],
         'product_conformity_certificate' => [
             'name' => 'Копия приказа директора',
             'lang' => [
                 'uz' => 'Mahsulotning muvofiqligi sertifikati',
-                'ru' => 'Сертификат соответствия товара'
-            ]
+                'ru' => 'Сертификат соответствия товара',
+            ],
         ],
         'good_prices' => [
             'name' => 'Копия приказа директора',
             'lang' => [
                 'uz' => 'Mahsulotlarning narxlari .xlsx (Excel) formatda',
-                'ru' => 'Цены на товары в формате .xlsx (Экзель)'
-            ]
+                'ru' => 'Цены на товары в формате .xlsx (Экзель)',
+            ],
         ],
         'store_photo' => [
             'name' => 'Фото магазина',
             'lang' => [
                 'uz' => 'Do\'kon fotosuratlari',
-                'ru' => 'Фото магазина'
-            ]
-        ]
+                'ru' => 'Фото магазина',
+            ],
+        ],
     ];
 
     protected $appends = ['link'];

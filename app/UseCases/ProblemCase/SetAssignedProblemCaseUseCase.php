@@ -7,7 +7,7 @@ use App\Modules\Merchants\Models\ProblemCase;
 
 class SetAssignedProblemCaseUseCase
 {
-    public function execute(int $id , int $assigned_to_id , string $assigned_to_name): ProblemCase
+    public function execute(int $id, int $assigned_to_id, string $assigned_to_name): ProblemCase
     {
         $problemCase = ProblemCase::query()->find($id);
 

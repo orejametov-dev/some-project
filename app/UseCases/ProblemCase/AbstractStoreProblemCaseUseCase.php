@@ -17,9 +17,8 @@ abstract class AbstractStoreProblemCaseUseCase
 {
     public function __construct(
         private GatewayApplication $gatewayApplication,
-        private GatewayAuthUser    $gatewayAuthUser
-    )
-    {
+        private GatewayAuthUser $gatewayAuthUser
+    ) {
     }
 
     public function execute(ProblemCaseDTO $problemCaseDTO): ?ProblemCase

@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Modules\Merchants\Models\AdditionalAgreement;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -23,7 +22,7 @@ class MerchantAdditionalAgreementsSeeder extends Seeder
             'limit' => 1000000000,
             'document_type' => 'old',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
         $additional_agreement_2 = [
@@ -33,7 +32,7 @@ class MerchantAdditionalAgreementsSeeder extends Seeder
             'limit' => 500000000,
             'document_type' => 'old',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
         $additional_agreement_3 = [
@@ -43,13 +42,13 @@ class MerchantAdditionalAgreementsSeeder extends Seeder
             'limit' => 6000000000,
             'document_type' => 'new',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
         DB::table('merchant_additional_agreements')->insert([
             $additional_agreement_1,
             $additional_agreement_2,
-            $additional_agreement_3
+            $additional_agreement_3,
         ]);
     }
 }

@@ -8,12 +8,12 @@ use Carbon\Carbon;
 
 class UpdateProblemCaseUseCase
 {
-    public function execute(int $id , Carbon $deadline): ProblemCase
+    public function execute(int $id, Carbon $deadline): ProblemCase
     {
         $problemCase = ProblemCase::query()->find($id);
 
         if ($problemCase === null) {
-            throw new BusinessException('Проблемный кейс не найден' , 'problem_case_not_exists' , 404);
+            throw new BusinessException('Проблемный кейс не найден', 'problem_case_not_exists', 404);
         }
 
         $problemCase->deadline = $deadline;

@@ -1,12 +1,10 @@
 <?php
 
-
 namespace App\Http\Requests\ApiPrm\Stores;
 
 use App\Services\RegionService;
-use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
-
+use Illuminate\Validation\Rule;
 
 class UpdateStoresRequest extends FormRequest
 {
@@ -39,7 +37,7 @@ class UpdateStoresRequest extends FormRequest
             'lat' => 'nullable|numeric',
             'long' => 'nullable|numeric',
             'responsible_person' => 'required_with:responsible_person_phone|nullable|string',
-            'responsible_person_phone' => 'required_with:responsible_person|nullable|digits:12'
+            'responsible_person_phone' => 'required_with:responsible_person|nullable|digits:12',
         ];
     }
 }

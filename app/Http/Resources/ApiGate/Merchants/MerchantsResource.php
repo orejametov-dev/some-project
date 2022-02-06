@@ -18,7 +18,7 @@ class MerchantsResource extends JsonResource
      */
     public function toArray($request)
     {
-        /** @var Merchant|\App\Http\Resources\ApiComplianceGateway\Merchants\MerchantsResource $this */
+        /* @var Merchant|\App\Http\Resources\ApiComplianceGateway\Merchants\MerchantsResource $this */
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -26,7 +26,7 @@ class MerchantsResource extends JsonResource
             'company_id' => $this->company_id,
             'main_store' => new StoresResource(Store::where('merchant_id', $this->id)->where('is_main', true)->first() ?? null),
             'conditions' => ConditionsResource::collection($this->whenLoaded('application_active_conditions')),
-            'min_application_price' => $this->min_application_price
+            'min_application_price' => $this->min_application_price,
         ];
     }
 }

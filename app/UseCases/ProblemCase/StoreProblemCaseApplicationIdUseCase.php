@@ -12,10 +12,9 @@ class StoreProblemCaseApplicationIdUseCase extends AbstractStoreProblemCaseUseCa
 {
     public function __construct(
         private CoreHttpRepository $coreHttpRepository,
-        private GatewayAuthUser    $gatewayAuthUser,
+        private GatewayAuthUser $gatewayAuthUser,
         private GatewayApplication $gatewayApplication
-    )
-    {
+    ) {
         parent::__construct(
             $this->gatewayApplication,
             $this->gatewayAuthUser
@@ -29,7 +28,7 @@ class StoreProblemCaseApplicationIdUseCase extends AbstractStoreProblemCaseUseCa
             ->orderByDesc('id')->exists()) {
             throw new ApiBusinessException('На данную заявку был уже создан проблемный кейс', 'problem_case_exist', [
                 'ru' => 'На данную заявку был уже создан проблемный кейс',
-                'uz' => 'Bu arizaga tegishli muammoli keys avval yuborilgan.'
+                'uz' => 'Bu arizaga tegishli muammoli keys avval yuborilgan.',
             ], 400);
         }
     }

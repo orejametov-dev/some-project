@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\UseCases\MerchantRequests;
 
-
 use App\DTOs\MerchantInfos\StoreMerchantInfoDTO;
 use App\Exceptions\BusinessException;
 use App\HttpRepositories\Prm\CompanyHttpRepository;
@@ -18,8 +17,7 @@ class AllowMerchantRequestUseCase
 {
     public function __construct(
         private CompanyHttpRepository $companyHttpRepository,
-    )
-    {
+    ) {
     }
 
     public function execute(int $id): MerchantRequest
@@ -48,7 +46,6 @@ class AllowMerchantRequestUseCase
             legal_name_prefix: $merchant_request->legal_name_prefix
         );
 
-
         $merchant = Merchant::fromDto($company, $merchant_request->engaged_by_id);
 
         $merchantInfo = MerchantInfo::fromDTO(new StoreMerchantInfoDTO(
@@ -66,7 +63,6 @@ class AllowMerchantRequestUseCase
             address: $merchant_request->address
         ));
 
-
         \DB::transaction(function () use ($merchantInfo, $merchant, $merchant_request) {
             $merchant->save();
 
@@ -80,7 +76,6 @@ class AllowMerchantRequestUseCase
             $merchant_request->setStatusAllowed();
             $merchant_request->save();
         });
-
 
         return $merchant_request;
     }

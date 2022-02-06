@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Controllers\ApiMerchantGateway\Merchants;
-
 
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\Controller;
@@ -23,7 +21,7 @@ class MerchantRequestsController extends Controller
 
         return [
             'regions' => $regions,
-            'legal_name_prefixes' => $legal_name_prefixes
+            'legal_name_prefixes' => $legal_name_prefixes,
         ];
     }
 
@@ -46,7 +44,7 @@ class MerchantRequestsController extends Controller
 
         if ($merchant_request) {
             throw new BusinessException('Запрос с таким номером телефона уже существует, статус запроса '
-                . MerchantRequest::getOneById((int)$merchant_request->status_id)->name);
+                . MerchantRequest::getOneById((int) $merchant_request->status_id)->name);
         }
 
         if (CompanyService::getCompanyByName($request->input('name'))) {
@@ -66,8 +64,8 @@ class MerchantRequestsController extends Controller
     {
         if ($request->query('region')) {
             return DistrictService::getDistrictsByRegion($request->query('region'));
-
         }
+
         return DistrictService::getDistricts();
     }
 }

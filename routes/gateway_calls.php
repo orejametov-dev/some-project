@@ -13,5 +13,4 @@ Route::prefix('merchants/problem-cases')
         Route::get('/', [ProblemCasesController::class, 'index']);
         Route::get('/statuses', [ProblemCasesController::class, 'getStatusList']);
         Route::post('/', [ProblemCasesController::class, 'store']);
-
     });

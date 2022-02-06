@@ -15,7 +15,7 @@ class NotificationsResource extends JsonResource
      */
     public function toArray($request)
     {
-        /** @var Notification|NotificationsResource $this */
+        /* @var Notification|NotificationsResource $this */
         return [
             'id' => $this->id,
             'title_ru' => $this->title_ru,
@@ -24,7 +24,7 @@ class NotificationsResource extends JsonResource
             'body_ru' => $this->body_ru,
             'start_schedule' => $this->start_schedule,
             'end_schedule' => $this->end_schedule,
-            'created_at' => $this->created_at
+            'created_at' => $this->created_at,
         ];
     }
 }

@@ -23,7 +23,7 @@ class MerchantUsersSeeder extends Seeder
             'phone' => '+998906554411',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'company_user_id' => 1
+            'company_user_id' => 1,
         ];
         $merchant_2_users = [
             'merchant_id' => 1,
@@ -33,7 +33,7 @@ class MerchantUsersSeeder extends Seeder
             'phone' => '+998906554478',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'company_user_id' => 1
+            'company_user_id' => 1,
 
         ];
 
@@ -45,7 +45,7 @@ class MerchantUsersSeeder extends Seeder
             'phone' => '+998999895512',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'company_user_id' => 2
+            'company_user_id' => 2,
         ];
         $merchant_4_users = [
             'merchant_id' => 2,
@@ -55,7 +55,7 @@ class MerchantUsersSeeder extends Seeder
             'phone' => '+998917884545',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'company_user_id' => 2
+            'company_user_id' => 2,
         ];
 
         $merchant_5_users = [
@@ -66,7 +66,7 @@ class MerchantUsersSeeder extends Seeder
             'phone' => '+998914455445',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'company_user_id' => 3
+            'company_user_id' => 3,
         ];
 
         $merchant_6_users = [
@@ -77,7 +77,7 @@ class MerchantUsersSeeder extends Seeder
             'phone' => '+998906554422',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'company_user_id' => 3
+            'company_user_id' => 3,
         ];
 
         $merchant_7_users = [
@@ -88,7 +88,7 @@ class MerchantUsersSeeder extends Seeder
             'phone' => '+998906553333',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'company_user_id' => 5
+            'company_user_id' => 5,
         ];
 
         $merchant_8_users = [
@@ -99,7 +99,7 @@ class MerchantUsersSeeder extends Seeder
             'phone' => '+8898656521',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'company_user_id' => 5
+            'company_user_id' => 5,
         ];
 
         $merchant_9_users = [
@@ -110,7 +110,7 @@ class MerchantUsersSeeder extends Seeder
             'phone' => '+8898656523',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'company_user_id' => 6
+            'company_user_id' => 6,
         ];
 
         $merchant_10_users = [
@@ -121,7 +121,7 @@ class MerchantUsersSeeder extends Seeder
             'phone' => '+8898902221447',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'company_user_id' => 6
+            'company_user_id' => 6,
         ];
 
         $merchant_11_users = [
@@ -132,7 +132,7 @@ class MerchantUsersSeeder extends Seeder
             'phone' => '+88986567781',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'company_user_id' => 7
+            'company_user_id' => 7,
         ];
 
         $merchant_12_users = [
@@ -143,7 +143,7 @@ class MerchantUsersSeeder extends Seeder
             'phone' => '+8898656524',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'company_user_id' => 7
+            'company_user_id' => 7,
         ];
 
         $merchant_13_users = [
@@ -154,7 +154,7 @@ class MerchantUsersSeeder extends Seeder
             'phone' => '+8898656525',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'company_user_id' => 8
+            'company_user_id' => 8,
         ];
 
         $merchant_14_users = [
@@ -165,7 +165,7 @@ class MerchantUsersSeeder extends Seeder
             'phone' => '+8898656526',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'company_user_id' => 8
+            'company_user_id' => 8,
         ];
 
         $merchant_15_users = [
@@ -176,7 +176,7 @@ class MerchantUsersSeeder extends Seeder
             'phone' => '+8898656527',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'company_user_id' => 9
+            'company_user_id' => 9,
         ];
 
         $merchant_16_users = [
@@ -187,7 +187,7 @@ class MerchantUsersSeeder extends Seeder
             'phone' => '+8898656528',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'company_user_id' => 9
+            'company_user_id' => 9,
         ];
 
         $merchant_17_users = [
@@ -198,7 +198,7 @@ class MerchantUsersSeeder extends Seeder
             'phone' => '+8898656529',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'company_user_id' => 10
+            'company_user_id' => 10,
         ];
 
         $merchant_18_users = [
@@ -209,7 +209,7 @@ class MerchantUsersSeeder extends Seeder
             'phone' => '+8898656600',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'company_user_id' => 10
+            'company_user_id' => 10,
         ];
 
         $merchant_19_users = [
@@ -220,7 +220,7 @@ class MerchantUsersSeeder extends Seeder
             'phone' => '+889865661',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'company_user_id' => 4
+            'company_user_id' => 4,
         ];
 
         $merchant_20_users = [
@@ -231,7 +231,7 @@ class MerchantUsersSeeder extends Seeder
             'phone' => '+8898656666',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'company_user_id' => 4
+            'company_user_id' => 4,
         ];
 
         DB::table('azo_merchant_accesses')->insert([

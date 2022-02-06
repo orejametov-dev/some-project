@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Controllers\ApiGate\Merchants;
-
 
 use App\Http\Controllers\Controller;
 use App\Modules\Merchants\Models\AzoMerchantAccess;
@@ -17,6 +15,7 @@ class AzoMerchantAccesses extends Controller
                 ->byActiveMerchant()
                 ->byActiveStore()
                 ->byUserId($user_id)->first();
+
             return $azo_merchant_access;
         });
     }

@@ -19,8 +19,7 @@ class UpdateMerchantUserUseCase
         private FindMerchantUseCase $findMerchantUseCase,
         private FlushMerchantUserCacheUseCase $flushMerchantUserCacheUseCase,
         private GatewayAuthUser $authUser
-    )
-    {
+    ) {
     }
 
     public function execute(int $merchant_user_id, int $store_id): AzoMerchantAccess
@@ -58,6 +57,7 @@ class UpdateMerchantUserUseCase
         ));
 
         $this->flushMerchantUserCacheUseCase->execute($azo_merchant_access->user_id, $merchant->id);
+
         return $azo_merchant_access;
     }
 }

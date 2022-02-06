@@ -33,7 +33,7 @@ class RemoveIsAzoAndIsAlifshopColumnsToStoresTable extends Migration
         });
 
         DB::table('stores')->update([
-            'is_azo' => true
+            'is_azo' => true,
         ]);
     }
 }

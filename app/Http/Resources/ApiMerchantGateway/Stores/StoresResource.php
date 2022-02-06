@@ -15,11 +15,11 @@ class StoresResource extends JsonResource
      */
     public function toArray($request)
     {
-        /** @var Store|StoresResource $this */
+        /* @var Store|StoresResource $this */
 
         return [
             'id' => $this->id,
-            'name' => $this->name
+            'name' => $this->name,
         ];
     }
 }

@@ -23,8 +23,7 @@ class StoreConditionDTO
         public bool $post_alifshop,
         public ?Carbon $started_at,
         public ?Carbon $finished_at,
-    )
-    {
+    ) {
     }
 
     public static function fromArray(array $data): self
@@ -32,7 +31,7 @@ class StoreConditionDTO
         return new self(
             self::parseNullableInt($data['merchant_id']),
             self::parseNullableArray($data['store_ids']),
-            array_key_exists('duration',$data) ? self::parseNullableInt($data['duration']) : 0,
+            array_key_exists('duration', $data) ? self::parseNullableInt($data['duration']) : 0,
             self::parseInt($data['commission']),
             self::parseNullableString($data['special_offer']),
             self::parseNullableInt($data['event_id']),

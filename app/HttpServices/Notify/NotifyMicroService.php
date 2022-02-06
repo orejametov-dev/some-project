@@ -1,6 +1,7 @@
 <?php
 
 namespace App\HttpServices\Notify;
+
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 
@@ -16,6 +17,7 @@ class NotifyMicroService
     public static function sendSms($phone, $body, $tag = self::COMMON): array
     {
         $http = self::http();
+
         return $http->post('api/notification-by-sms', compact('phone', 'body', 'tag'))
             ->throw()
             ->json();
@@ -24,6 +26,7 @@ class NotifyMicroService
     public static function sendDistribution($phone, $body, $tag = self::COMMON): array
     {
         $http = self::http();
+
         return $http->post('/api/notification-by-distribution', compact('phone', 'body', 'tag'))
             ->throw()
             ->json();
@@ -32,6 +35,7 @@ class NotifyMicroService
     public static function call($phone, $body, $tag = self::COMMON): array
     {
         $http = self::http();
+
         return $http->post('api/notification-by-call', compact('phone', 'body', 'tag'))
             ->throw()
             ->json();
@@ -42,7 +46,7 @@ class NotifyMicroService
         return Http::baseUrl(config('local_services.service_notify.domain'))
             ->acceptJson()
             ->withHeaders([
-                'Access-Token' => config('local_services.service_notify.access_token')
+                'Access-Token' => config('local_services.service_notify.access_token'),
             ]);
     }
 }

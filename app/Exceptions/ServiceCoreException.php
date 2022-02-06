@@ -7,11 +7,10 @@ use Throwable;
 
 class ServiceCoreException extends Exception
 {
-
     private $status_code = 'unhandled_error';
     private $responseCode;
 
-    public function __construct($message = "", $code = 0, Throwable $previous = null)
+    public function __construct($message = '', $code = 0, Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
         $this->responseCode = $code;
@@ -36,10 +35,10 @@ class ServiceCoreException extends Exception
     public function render()
     {
         $merged = json_decode($this->message, true) ?? [];
+
         return response()->json(
             array_merge(['status' => $this->code, 'code' => $this->status_code], $merged),
             $this->responseCode
         );
     }
-
 }

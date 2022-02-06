@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Http\Controllers\ApiReportGateway\Merchants;
 
 use App\Http\Controllers\Controller;

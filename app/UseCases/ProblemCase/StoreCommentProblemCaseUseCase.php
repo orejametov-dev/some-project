@@ -10,8 +10,7 @@ class StoreCommentProblemCaseUseCase
 {
     public function __construct(
         private GatewayAuthUser $gatewayAuthUser
-    )
-    {
+    ) {
     }
 
     public function execute(CommentDTO $commentDTO): Comment

@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Modules\Merchants\Models\Condition;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -16,14 +15,13 @@ class ApplicationConditionsSeeder extends Seeder
      */
     public function run()
     {
-
         $condition_1_month = [
             'duration' => 1,
             'commission' => 7,
             'discount' => 0,
             'active' => 1,
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
         $condition_3_month = [
@@ -32,7 +30,7 @@ class ApplicationConditionsSeeder extends Seeder
             'discount' => 0,
             'active' => 1,
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
         $condition_6_month = [
@@ -41,7 +39,7 @@ class ApplicationConditionsSeeder extends Seeder
             'discount' => 0,
             'active' => 1,
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
         $condition_9_month = [
@@ -50,7 +48,7 @@ class ApplicationConditionsSeeder extends Seeder
             'discount' => 0,
             'active' => 1,
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
         $condition_12_month = [
@@ -59,7 +57,7 @@ class ApplicationConditionsSeeder extends Seeder
             'discount' => 0,
             'active' => 1,
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
         $condition_15_month = [
@@ -68,7 +66,7 @@ class ApplicationConditionsSeeder extends Seeder
             'discount' => 0,
             'active' => 1,
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
         $merchant_1_conditions = [
@@ -89,7 +87,7 @@ class ApplicationConditionsSeeder extends Seeder
                 'commission' => 0,
                 'active' => 1,
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-                'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+                'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
             [
                 'merchant_id' => 2,
@@ -99,7 +97,7 @@ class ApplicationConditionsSeeder extends Seeder
                 'commission' => 35,
                 'active' => 1,
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-                'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+                'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
         ];
 
@@ -115,7 +113,7 @@ class ApplicationConditionsSeeder extends Seeder
                 'commission' => 34,
                 'active' => 1,
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-                'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+                'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
             [
                 'merchant_id' => 3,
@@ -125,7 +123,7 @@ class ApplicationConditionsSeeder extends Seeder
                 'commission' => 39,
                 'active' => 1,
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-                'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+                'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
             [
                 'merchant_id' => 3,
@@ -135,7 +133,7 @@ class ApplicationConditionsSeeder extends Seeder
                 'commission' => 0,
                 'active' => 1,
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-                'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+                'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
         ];
 
