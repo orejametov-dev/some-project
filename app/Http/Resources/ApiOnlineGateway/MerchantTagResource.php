@@ -16,7 +16,7 @@ class MerchantTagResource extends JsonResource
      */
     public function toArray($request)
     {
-        /* @var Tag|MerchantTagResource $this */
+        /** @var Tag|MerchantTagResource $this */
         return [
             'id' => $this->id,
             'name' => $this->title,

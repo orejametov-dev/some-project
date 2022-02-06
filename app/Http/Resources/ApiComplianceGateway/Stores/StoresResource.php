@@ -16,7 +16,7 @@ class StoresResource extends JsonResource
      */
     public function toArray($request)
     {
-        /* @var ProblemCase|ProblemCaseResource $this */
+        /** @var ProblemCase|ProblemCaseResource $this */
         return parent::toArray($request);
 //        return [
 //            'id' => $this->id,

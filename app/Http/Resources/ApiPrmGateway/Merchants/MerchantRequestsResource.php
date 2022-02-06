@@ -15,7 +15,7 @@ class MerchantRequestsResource extends JsonResource
      */
     public function toArray($request)
     {
-        /* @var Request|MerchantRequestsResource $this */
+        /** @var Request|MerchantRequestsResource $this */
         return [
             'id' => $this->id,
             'name' => $this->name,

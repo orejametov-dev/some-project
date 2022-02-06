@@ -16,7 +16,7 @@ class ProblemCaseResource extends JsonResource
      */
     public function toArray($request)
     {
-        /* @var ProblemCase|ProblemCaseResource $this */
+        /** @var ProblemCase|ProblemCaseResource $this */
         return [
             'id' => $this->id,
             'credit_number' => $this->credit_number ?? null,

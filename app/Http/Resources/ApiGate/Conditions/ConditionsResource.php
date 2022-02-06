@@ -15,7 +15,7 @@ class ConditionsResource extends JsonResource
      */
     public function toArray($request)
     {
-        /* @var Condition|ConditionsResource $this */
+        /** @var Condition|ConditionsResource $this */
         return [
             'id' => $this->id,
             'merchant_id' => $this->merchant_id,

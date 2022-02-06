@@ -15,7 +15,7 @@ class NotificationsResource extends JsonResource
      */
     public function toArray($request)
     {
-        /* @var Notification|NotificationsResource $this */
+        /** @var Notification|NotificationsResource $this */
         return [
             'id' => $this->id,
             'title_ru' => $this->title_ru,

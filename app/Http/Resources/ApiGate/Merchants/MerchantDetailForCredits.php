@@ -15,7 +15,7 @@ class MerchantDetailForCredits extends JsonResource
      */
     public function toArray($request)
     {
-        /* @var Merchant|\App\Http\Resources\ApiComplianceGateway\Merchants\MerchantsResource $this */
+        /** @var Merchant|\App\Http\Resources\ApiComplianceGateway\Merchants\MerchantsResource $this */
         return [
             'id' => $this->id,
             'legal_name' => $this->name,

@@ -13,8 +13,7 @@ class SimpleStateMachineException extends \Exception
         $error_code = 'STATE_MACHINE_ASSERTION_FAILED',
         $code = 400,
         Throwable $previous = null
-    )
-    {
+    ) {
         parent::__construct($message, $code, $previous);
         $this->error_code = $error_code;
     }
