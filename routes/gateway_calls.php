@@ -11,7 +11,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::prefix('merchants/problem-cases')
     ->group(function () {
         Route::get('/', [ProblemCasesController::class, 'index']);
-        Route::get('/{id}', [ProblemCasesController::class, 'show']);
         Route::get('/statuses', [ProblemCasesController::class, 'getStatusList']);
+        Route::get('/{id}', [ProblemCasesController::class, 'show']);
         Route::post('/', [ProblemCasesController::class, 'store']);
     });
