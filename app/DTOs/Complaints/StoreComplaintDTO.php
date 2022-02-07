@@ -11,11 +11,10 @@ class StoreComplaintDTO
     use ParseDataTrait;
 
     public function __construct(
-        public int    $user_id,
+        public int $user_id,
         public string $reason_correction,
-        public array  $meta
-    )
-    {
+        public array $meta
+    ) {
     }
 
     public static function fromArray(array $data): self
@@ -25,18 +24,6 @@ class StoreComplaintDTO
             self::parseString($data['reason_correction']),
             self::parseMeta($data['meta'])
         );
-
-
-
-
-
-
-
-
-
-
-
-
     }
 
     private static function parseMeta(array $meta): array

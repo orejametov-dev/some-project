@@ -72,7 +72,7 @@ class CoreHttpRepository
             ->throw()
             ->json();
 
-        return (bool)$result;
+        return (bool) $result;
     }
 
     protected function getHttpClient(): PendingRequest

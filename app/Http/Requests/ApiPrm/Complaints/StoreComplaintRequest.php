@@ -30,7 +30,7 @@ class StoreComplaintRequest extends FormRequest
             'meta*.client_id' => 'required|int',
             'meta*.name' => 'required|string',
             'meta*.surname' => 'required|string',
-            'meta*.patronymic' => 'required|string'
+            'meta*.patronymic' => 'required|string',
 
         ];
     }

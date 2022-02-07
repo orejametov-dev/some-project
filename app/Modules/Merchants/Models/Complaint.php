@@ -3,6 +3,7 @@
 namespace App\Modules\Merchants\Models;
 
 use App\Traits\SortableByQueryParams;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +14,7 @@ use Illuminate\Http\Request;
  * @property int $azo_merchant_access_id
  * @property array $meta
  * @property string $reason_correction
- * @property $created_at
+ * @property Carbon $created_at
  * @method static Builder|Complaint filterRequest(Request $request)
  * @method static Builder|Complaint orderRequest(Request $request, string $default_order_str = 'id:desc')
  * @method static Builder|Complaint query()
@@ -25,11 +26,11 @@ class Complaint extends Model
 
     protected $fillable = [
         'reason_correction',
-        'meta'
+        'meta',
     ];
 
     protected $casts = [
-      'meta' => 'json'
+      'meta' => 'json',
     ];
 
     public function azo_merchant_access()

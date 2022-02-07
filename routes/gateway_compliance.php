@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\ApiComplianceGateway\ProblemCases\ProblemCasesController;
 use App\Http\Controllers\ApiComplianceGateway\Complaints\ComplaintsController;
+use App\Http\Controllers\ApiComplianceGateway\ProblemCases\ProblemCasesController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('merchants/problem-cases')
@@ -23,4 +23,3 @@ Route::prefix('complaints')
     ->group(function () {
         Route::post('/', [ComplaintsController::class, 'store']);
     });
-
