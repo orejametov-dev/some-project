@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases;
-
 
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Comments\StoreCommentRequest;
@@ -36,6 +34,7 @@ class ProblemCasesController extends ApiBaseController
         if ($request->has('paginate') and $request->query('paginate') == false) {
             return $problemCases->get();
         }
+
         return $problemCases->paginate($request->query('per_page') ?? 15);
     }
 
@@ -48,7 +47,7 @@ class ProblemCasesController extends ApiBaseController
 
     public function update($id, ProblemCaseUpdateRequest $request, UpdateProblemCaseUseCase $updateProblemCaseUseCase)
     {
-        return $updateProblemCaseUseCase->execute((int)$id, Carbon::parse($request->input('deadline')));
+        return $updateProblemCaseUseCase->execute((int) $id, Carbon::parse($request->input('deadline')));
     }
 
     public function setManagerComment($id, StoreCommentRequest $request, StoreCommentProblemCaseUseCase $storeCommentProblemCaseUseCase)
@@ -67,17 +66,17 @@ class ProblemCasesController extends ApiBaseController
 
     public function attachTags($id, ProblemCaseAttachTagsRequest $request, AttachTagsProblemCaseUseCase $attachTagsProblemCaseUseCase)
     {
-        return $attachTagsProblemCaseUseCase->execute((int)$id, (array)$request->input('tags'));
+        return $attachTagsProblemCaseUseCase->execute((int) $id, (array) $request->input('tags'));
     }
 
     public function setStatus($id, ProblemCaseSetStatusRequest $request, SetStatusProblemCaseUseCase $setStatusProblemCaseUseCase)
     {
-        return $setStatusProblemCaseUseCase->execute((int)$id, (int)$request->input('status_id'));
+        return $setStatusProblemCaseUseCase->execute((int) $id, (int) $request->input('status_id'));
     }
 
     public function setAssigned($id, ProblemCaseSetAssignedRequest $request, SetAssignedProblemCaseUseCase $setAssignedProblemCaseUseCase)
     {
-        return $setAssignedProblemCaseUseCase->execute((int)$id, (int)$request->input('assigned_to_id'), (string)$request->input('assigned_to_name'));
+        return $setAssignedProblemCaseUseCase->execute((int) $id, (int) $request->input('assigned_to_id'), (string) $request->input('assigned_to_name'));
     }
 
     public function getProblemCasesOfMerchantUser($user_id, Request $request)
@@ -89,5 +88,4 @@ class ProblemCasesController extends ApiBaseController
 
         return $problemCases->paginate($request->query('per_page') ?? 15);
     }
-
 }

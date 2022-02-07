@@ -20,7 +20,7 @@ class ConditionsResource extends JsonResource
         return [
             'id' => $this->id,
             'duration' => $this->duration,
-            'commission' => $this->commission
+            'commission' => $this->commission,
         ];
     }
 }

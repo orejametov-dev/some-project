@@ -7,60 +7,60 @@ class RegionService
     private static $regions = [
         'tashkent_city' => [
             'body_ru' => 'Ташкент',
-            'body_uz' => 'Toshkent'
+            'body_uz' => 'Toshkent',
         ],
         'andijan' => [
             'body_ru' => 'Андижанская область',
-            'body_uz' => 'Andijon viloyati'
+            'body_uz' => 'Andijon viloyati',
         ],
         'bukhara' => [
             'body_ru' => 'Бухарская область',
-            'body_uz' => 'Buxoro viloyati'
+            'body_uz' => 'Buxoro viloyati',
         ],
         'jizzakh' => [
             'body_ru' => 'Джизакская область',
-            'body_uz' => 'Jizzax viloyati'
+            'body_uz' => 'Jizzax viloyati',
         ],
         'qashqadaryo' => [
             'body_ru' => 'Кашкадарьинская область',
-            'body_uz' => 'Qashqadaryo viloyati'
+            'body_uz' => 'Qashqadaryo viloyati',
         ],
         'navoiy' => [
             'body_ru' => 'Навоийская область',
-            'body_uz' => 'Navoiy viloyati'
+            'body_uz' => 'Navoiy viloyati',
         ],
         'namangan' => [
             'body_ru' => 'Наманганская область',
-            'body_uz' => 'Namangan viloyati'
+            'body_uz' => 'Namangan viloyati',
         ],
         'samarkand' => [
             'body_ru' => 'Самаркандская область',
-            'body_uz' => 'Samarqand viloyati'
+            'body_uz' => 'Samarqand viloyati',
         ],
         'surxondaryo' => [
             'body_ru' => 'Сурхандарьинская область',
-            'body_uz' => 'Surxondaryo viloyati'
+            'body_uz' => 'Surxondaryo viloyati',
         ],
         'sirdarya' => [
             'body_ru' => 'Сырдарьинская область',
-            'body_uz' => 'Sirdaryo viloyati'
+            'body_uz' => 'Sirdaryo viloyati',
         ],
         'tashkent' => [
             'body_ru' => 'Ташкентская область',
-            'body_uz' => 'Toshkent viloyati'
+            'body_uz' => 'Toshkent viloyati',
         ],
         'fergana' => [
             'body_ru' => 'Ферганская область',
-            'body_uz' => 'Fargʻona viloyati'
+            'body_uz' => 'Fargʻona viloyati',
         ],
         'xorazm' => [
             'body_ru' => 'Хорезмская область',
-            'body_uz' => 'Xorazm viloyati'
+            'body_uz' => 'Xorazm viloyati',
         ],
         'karakalpakstan' => [
             'body_ru' => 'Республика Каракалпакстан',
-            'body_uz' => 'Qoraqalpogʻiston Respublikasi'
-        ]
+            'body_uz' => 'Qoraqalpogʻiston Respublikasi',
+        ],
     ];
 
     public static function getRegions(): array

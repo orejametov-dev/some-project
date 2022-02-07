@@ -1,13 +1,10 @@
 <?php
 
-
 namespace App\Http\Controllers\ApiMerchantGateway;
-
 
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\Http\Controllers\Controller;
 use App\Modules\Merchants\Models\AzoMerchantAccess;
-use App\UseCases\ApplicationConditions\TogglePostsApplicationConditionUseCase;
 use Illuminate\Support\Facades\Cache;
 
 class ApiBaseController extends Controller
@@ -26,6 +23,7 @@ class ApiBaseController extends Controller
                     ->byActiveMerchant()
                     ->byActiveStore()
                     ->byUserId($this->user->getId())->first();
+
                 return $azo_merchant_access;
             });
             if (!$this->azo_merchant_access) {
@@ -33,6 +31,7 @@ class ApiBaseController extends Controller
             }
             $this->merchant_id = $this->azo_merchant_access->merchant_id;
             $this->store_id = $this->azo_merchant_access->store_id;
+
             return $next($request);
         });
     }

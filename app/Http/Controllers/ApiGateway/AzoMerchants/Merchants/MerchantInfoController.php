@@ -21,7 +21,7 @@ class MerchantInfoController extends Controller
             return $merchantInfoQuery->first();
         }
 
-        return $merchantInfoQuery->paginate($request->query('per_page'));
+        return $merchantInfoQuery->paginate($request->query('per_page') ?? 15);
     }
 
     public function store(StoreMerchantInfo $request, StoreMerchantInfoUseCase $storeMerchantInfoUseCase)

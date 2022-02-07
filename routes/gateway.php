@@ -1,18 +1,19 @@
 <?php
 
+use App\Http\Controllers\ApiGateway\AzoMerchants\Comments\CommentsController;
 use App\Http\Controllers\ApiGateway\AzoMerchants\ExtraServices\MerchantsController as ExtraMerchantsController;
 use App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantsController;
 use App\Http\Controllers\ApiGateway\AzoMerchants\Comments\CommentsController;
 use App\Http\Controllers\ApiGateway\AzoMerchants\Complaints\ComplaintsController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('complaints')
-    ->group(function () {
+
+Route::prefix('complaints')->group(function () {
         Route::get('/' , [ComplaintsController::class, 'index']);
     });
 
 Route::prefix('comments')->group(function () {
-    Route::get('/' , [CommentsController::class , 'index']);
+    Route::get('/', [CommentsController::class, 'index']);
 });
 
 //Azo-Merchants
@@ -127,7 +128,6 @@ Route::prefix('districts')
         Route::get('/', [App\Http\Controllers\ApiGateway\App\AppController::class, 'getDistricts']);
     });
 
-
 Route::prefix('application-conditions')
     ->group(function () {
         Route::get('/', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class, 'index']);
@@ -145,8 +145,6 @@ Route::prefix('application-conditions')
 Route::prefix('dashboard')
     ->group(function () {
         Route::get('/hot-merchants', [MerchantsController::class, 'hotMerchants']);
-        Route::get('/merchant-trends', [App\Http\Controllers\ApiGateway\AzoMerchants\Dashboard\CreditsController::class, 'index']);
-        Route::get('/merchant-trends/{merchant_id}', [App\Http\Controllers\ApiGateway\AzoMerchants\Dashboard\CreditsController::class, 'show']);
     });
 
 Route::prefix('merchants')
@@ -162,7 +160,7 @@ Route::prefix('merchants')
         Route::post('/{id}/upload-logo', [MerchantsController::class, 'uploadLogo']);
         Route::post('/{id}/remove-logo', [MerchantsController::class, 'removeLogo']);
         Route::post('/{id}/attach-competitor', [MerchantsController::class, 'attachCompetitor']);
-        Route::match(['put', 'patch'],'/{id}/update-competitor', [MerchantsController::class, 'updateCompetitor']);
+        Route::match(['put', 'patch'], '/{id}/update-competitor', [MerchantsController::class, 'updateCompetitor']);
         Route::delete('/{id}/detach-competitor', [MerchantsController::class, 'detachCompetitor']);
         Route::post('/{id}/set-responsible-user', [MerchantsController::class, 'setResponsibleUser']);
         Route::match(['put', 'patch'], '/{id}/toggle', [MerchantsController::class, 'toggle']);
@@ -171,4 +169,3 @@ Route::prefix('merchants')
 
         Route::match(['put', 'patch'], '/{id}/update-modules', [MerchantsController::class, 'updateModules']);
     });
-

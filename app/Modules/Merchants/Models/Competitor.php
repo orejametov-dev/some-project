@@ -11,6 +11,6 @@ class Competitor extends Model
 
     public function merchants()
     {
-        return $this->belongsToMany(Merchant::class , 'merchant_competitor')->withPivot('volume_sales', 'percentage_approve' , 'partnership_at')->withTimestamps();
+        return $this->belongsToMany(Merchant::class, 'merchant_competitor')->withPivot('volume_sales', 'percentage_approve', 'partnership_at')->withTimestamps();
     }
 }

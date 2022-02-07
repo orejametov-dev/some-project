@@ -12,11 +12,10 @@ class ToggleActiveApplicationConditionUseCase
 {
     public function __construct(
         private AlifshopHttpRepository $alifshopHttpRepository,
-        private FindConditionUseCase   $findConditionUseCase,
-        private FlushCacheUseCase      $flushCacheUseCase,
-        private GatewayAuthUser        $gatewayAuthUser
-    )
-    {
+        private FindConditionUseCase $findConditionUseCase,
+        private FlushCacheUseCase $flushCacheUseCase,
+        private GatewayAuthUser $gatewayAuthUser
+    ) {
     }
 
     public function execute(int $condition_id)
@@ -34,13 +33,12 @@ class ToggleActiveApplicationConditionUseCase
             created_from_str: 'PRM',
             created_by_id: $this->gatewayAuthUser->getId(),
             body: 'Изменено условие',
-            keyword: 'id: ' . $condition->id . ' ' . $condition->title . ' на ' . ($condition->active) ? 'активный' : 'не активный',
+            keyword: 'id: ' . $condition->id . ' ' . $condition->title . ' на ' . (($condition->active === true) ? 'активный' : 'не активный'),
             action: 'update',
             class: 'warning',
             action_at: null,
             created_by_str: $this->gatewayAuthUser->getName(),
         ));
-
 
         $merchant->load(['application_conditions' => function ($q) {
             $q->active();
@@ -51,7 +49,7 @@ class ToggleActiveApplicationConditionUseCase
                 'id' => $item->id,
                 'commission' => $item->commission,
                 'duration' => $item->duration,
-                'event_id' => $item->event_id
+                'event_id' => $item->event_id,
             ];
         });
 

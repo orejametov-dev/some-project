@@ -11,11 +11,11 @@ class CreateLogsTable extends Migration
      *
      * @return void
      */
-    protected $connection = 'mongodb';
+    //protected $connection = 'mongodb';
 
     public function up()
     {
-        if(config('app.env') == 'production') {
+        if (config('app.env') == 'production') {
             Schema::connection($this->connection)->create('logs', function (Blueprint $table) {
                 $table->id();
                 $table->string('name');

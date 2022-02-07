@@ -3,14 +3,11 @@
 namespace App\Jobs;
 
 use App\HttpServices\Auth\AuthMicroService;
-use App\HttpServices\Hooks\DTO\HookData;
-use App\HttpServices\Hooks\HooksMicroService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
 class ToggleMerchantRoleOfUser implements ShouldQueue
 {
@@ -39,9 +36,9 @@ class ToggleMerchantRoleOfUser implements ShouldQueue
      */
     public function handle(AuthMicroService $authMicroService)
     {
-        if($this->type === AuthMicroService::ACTIVATE_MERCHANT_ROLE) {
+        if ($this->type === AuthMicroService::ACTIVATE_MERCHANT_ROLE) {
             $authMicroService->store($this->user_id);
-        } else if($this->type === AuthMicroService::DEACTIVATE_MERCHANT_ROLE) {
+        } elseif ($this->type === AuthMicroService::DEACTIVATE_MERCHANT_ROLE) {
             $authMicroService->remove($this->user_id);
         }
     }

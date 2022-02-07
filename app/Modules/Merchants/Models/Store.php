@@ -13,21 +13,20 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
 /**
- * Class Store
+ * Class Store.
  *
- * @package App\Modules\Partners\Models
- * @property $id
- * @property $name
- * @property $is_main
- * @property $phone
- * @property $address
- * @property $region
- * @property $lat
- * @property $long
- * @property $responsible_person
- * @property $responsible_person_phone
- * @property $merchant_id
- * @property $client_type_register
+ * @property int $id
+ * @property string $name
+ * @property bool $is_main
+ * @property string $phone
+ * @property string $address
+ * @property string $region
+ * @property float $lat
+ * @property float $long
+ * @property string $responsible_person
+ * @property string $responsible_person_phone
+ * @property int $merchant_id
+ * @property string $client_type_register
  * @property Merchant $merchant
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -60,7 +59,7 @@ class Store extends Model
         'responsible_person_phone',
         'active',
         'district',
-        'client_type_register'
+        'client_type_register',
     ];
 
     public function scopeFilterRequest(Builder $query, Request $request)

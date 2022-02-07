@@ -26,10 +26,10 @@ class CoreService
 
     public static function getApplicationDataByContractNumber($contract_number)
     {
-        return static::http()->get( "applications/$contract_number")->throw()->json();
+        return static::http()->get("applications/$contract_number")->throw()->json();
     }
 
-    public static function  getApplicationDataByApplicationId($application_id)
+    public static function getApplicationDataByApplicationId($application_id)
     {
         return static::http()->get("applications/$application_id")->throw()->json();
     }
@@ -41,8 +41,8 @@ class CoreService
 
     public static function getApplicationConditionId($condition_id)
     {
-        return static::http()->get("applications/count", [
-            'condition_id' => $condition_id
+        return static::http()->get('applications/count', [
+            'condition_id' => $condition_id,
         ])
             ->throw()
             ->json();
@@ -54,7 +54,7 @@ class CoreService
             ->withHeaders([
                 'Accept' => 'application/json',
                 'Access-Token' => config('local_services.service_core.service_token'),
-                'Content-Type' => 'application/json'
+                'Content-Type' => 'application/json',
             ]);
     }
 }

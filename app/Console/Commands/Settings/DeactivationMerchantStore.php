@@ -2,15 +2,13 @@
 
 namespace App\Console\Commands\Settings;
 
+use App\HttpServices\Core\CoreService;
 use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\Merchant;
-use App\Modules\Merchants\Models\Store;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use App\HttpServices\Core\CoreService;
 use Illuminate\Support\Facades\Cache;
 use Log;
-use function Clue\StreamFilter\fun;
 
 class DeactivationMerchantStore extends Command
 {
@@ -45,16 +43,15 @@ class DeactivationMerchantStore extends Command
      */
     public function handle(CoreService $coreService)
     {
-        Log::channel('command')->info(DeactivationMerchantStore::class . '|' . now() . ':' . 'started');
+        Log::channel('command')->info(self::class . '|' . now() . ':' . 'started');
 
-        $from_date = Carbon::now()->subWeeks(2)->format('Y-m-d');;
+        $from_date = Carbon::now()->subWeeks(2)->format('Y-m-d');
         $to_date = Carbon::now()->format('Y-m-d');
 
         Merchant::where('active', true)
             ->where('created_at', '<', $from_date)
             ->chunkById(100, function ($merchants) use ($coreService, $from_date, $to_date) {
                 foreach ($merchants as $merchant) {
-
                     if (\DB::table('merchant_activities')
                         ->where('merchant_id', $merchant->id)
                         ->where('active', true)
@@ -79,7 +76,8 @@ class DeactivationMerchantStore extends Command
                     }
                 }
             });
-        Log::channel('command')->info(DeactivationMerchantStore::class . '|' . now() . ':' . 'finished');
+        Log::channel('command')->info(self::class . '|' . now() . ':' . 'finished');
 
+        return 0;
     }
 }

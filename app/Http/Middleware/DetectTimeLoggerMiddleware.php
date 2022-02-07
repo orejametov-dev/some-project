@@ -25,6 +25,7 @@ class DetectTimeLoggerMiddleware
         $response = $next($request);
 
         $timeLogger->end();
+
         return $response;
     }
 }

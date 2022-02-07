@@ -11,9 +11,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Http\Request;
 
 /**
- * Class MerchantAdditionalAgreement
+ * Class MerchantAdditionalAgreement.
  *
- * @package App\Modules\Partners\Models
  * @property int $id
  * @property int $merchant_id
  * @property int $limit
@@ -38,7 +37,7 @@ class AdditionalAgreement extends Model
     protected $fillable = [
         'limit',
         'registration_date',
-        'number'
+        'number',
     ];
 
     /**

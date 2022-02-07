@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Modules\Merchants\Models\Store;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -16,8 +15,7 @@ class StoresSeeder extends Seeder
      */
     public function run()
     {
-
-        $store_1 =  [
+        $store_1 = [
             'name' => 'Idea - Nurafshon',
             'merchant_id' => 1,
             'is_main' => 1,
@@ -29,10 +27,10 @@ class StoresSeeder extends Seeder
             'responsible_person' => 'Shokhrukh',
             'responsible_person_phone' => '998901112233',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
-        $store_2 =  [
+        $store_2 = [
             'name' => 'Idea - Oqtepa',
             'merchant_id' => 1,
             'is_main' => 0,
@@ -44,10 +42,10 @@ class StoresSeeder extends Seeder
             'responsible_person' => 'Iskandar',
             'responsible_person_phone' => '998901112233',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
-        $store_3 =  [
+        $store_3 = [
             'name' => 'Arena Markaz - Compas',
             'merchant_id' => 2,
             'is_main' => 1,
@@ -59,10 +57,10 @@ class StoresSeeder extends Seeder
             'responsible_person' => 'Bekhzod',
             'responsible_person_phone' => '998912223344',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
-        $store_4 =  [
+        $store_4 = [
             'name' => 'Arena Markaz - Malika',
             'merchant_id' => 2,
             'is_main' => 0,
@@ -74,10 +72,10 @@ class StoresSeeder extends Seeder
             'responsible_person' => 'Vera',
             'responsible_person_phone' => '998912223344',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
-        $store_5 =  [
+        $store_5 = [
             'name' => 'Mobilezone - Oybek',
             'merchant_id' => 3,
             'is_main' => 1,
@@ -89,10 +87,10 @@ class StoresSeeder extends Seeder
             'responsible_person' => 'Sabokhat',
             'responsible_person_phone' => '998923334455',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
-        $store_6 =  [
+        $store_6 = [
             'name' => 'DEADSHOT - Chirchik',
             'merchant_id' => 5,
             'is_main' => 1,
@@ -104,10 +102,10 @@ class StoresSeeder extends Seeder
             'responsible_person' => 'Dima',
             'responsible_person_phone' => '998902937777',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
-        $store_7 =  [
+        $store_7 = [
             'name' => 'Mega-shop - TTZ-1',
             'merchant_id' => 6,
             'is_main' => 0,
@@ -119,10 +117,10 @@ class StoresSeeder extends Seeder
             'responsible_person' => 'Dima',
             'responsible_person_phone' => '998903334178',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
-        $store_8 =  [
+        $store_8 = [
             'name' => 'Rolton - Kibray',
             'merchant_id' => 7,
             'is_main' => 1,
@@ -134,10 +132,10 @@ class StoresSeeder extends Seeder
             'responsible_person' => 'Artyom',
             'responsible_person_phone' => '998911555363',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
-        $store_9 =  [
+        $store_9 = [
             'name' => 'Rolton - oqtepa',
             'merchant_id' => 7,
             'is_main' => 1,
@@ -149,10 +147,10 @@ class StoresSeeder extends Seeder
             'responsible_person' => 'Artyom',
             'responsible_person_phone' => '998985444114',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
-        $store_10 =  [
+        $store_10 = [
             'name' => 'Rolton - TTZ-2',
             'merchant_id' => 7,
             'is_main' => 1,
@@ -164,10 +162,10 @@ class StoresSeeder extends Seeder
             'responsible_person' => 'Artyom',
             'responsible_person_phone' => '998985444554',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
-        $store_11 =  [
+        $store_11 = [
             'name' => 'Korzinka.uz - Chilonzor',
             'merchant_id' => 8,
             'is_main' => 0,
@@ -179,10 +177,10 @@ class StoresSeeder extends Seeder
             'responsible_person' => 'Artyom',
             'responsible_person_phone' => '998977894562',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
-        $store_12 =  [
+        $store_12 = [
             'name' => 'Korzinka.uz - TTZ-2',
             'merchant_id' => 8,
             'is_main' => 1,
@@ -194,10 +192,10 @@ class StoresSeeder extends Seeder
             'responsible_person' => 'Artyom',
             'responsible_person_phone' => '998911466712',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
-        $store_13  =  [
+        $store_13 = [
             'name' => 'Korzinka.uz - Nukus',
             'merchant_id' => 8,
             'is_main' => 1,
@@ -209,10 +207,10 @@ class StoresSeeder extends Seeder
             'responsible_person' => 'Artyom',
             'responsible_person_phone' => '998985444554',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
-        $store_14  =  [
+        $store_14 = [
             'name' => 'Korzinka.uz - Samarkand',
             'merchant_id' => 8,
             'is_main' => 0,
@@ -224,10 +222,10 @@ class StoresSeeder extends Seeder
             'responsible_person' => 'Artyom',
             'responsible_person_phone' => '998901457896',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
-        $store_15  =  [
+        $store_15 = [
             'name' => 'Huawei Store - Buyuk Ipak yoli',
             'merchant_id' => 9,
             'is_main' => 1,
@@ -239,10 +237,10 @@ class StoresSeeder extends Seeder
             'responsible_person' => 'Artyom',
             'responsible_person_phone' => '998968881212',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
-        $store_16  =  [
+        $store_16 = [
             'name' => 'Huawei Store - Kushbegi',
             'merchant_id' => 9,
             'is_main' => 0,
@@ -254,10 +252,10 @@ class StoresSeeder extends Seeder
             'responsible_person' => 'Artyom',
             'responsible_person_phone' => '998901114554',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
-        $store_17  =  [
+        $store_17 = [
             'name' => 'Huawei Store - Chirchik',
             'merchant_id' => 9,
             'is_main' => 0,
@@ -269,10 +267,10 @@ class StoresSeeder extends Seeder
             'responsible_person' => 'Artyom',
             'responsible_person_phone' => '998968881200',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
-        $store_18  =  [
+        $store_18 = [
             'name' => 'Oppo - Malika',
             'merchant_id' => 10,
             'is_main' => 1,
@@ -284,10 +282,10 @@ class StoresSeeder extends Seeder
             'responsible_person' => 'Artyom',
             'responsible_person_phone' => '998944588998',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
-        $store_19  =  [
+        $store_19 = [
             'name' => 'Oppo - TTZ-4',
             'merchant_id' => 10,
             'is_main' => 1,
@@ -299,10 +297,10 @@ class StoresSeeder extends Seeder
             'responsible_person' => 'Artyom',
             'responsible_person_phone' => '998901477895',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
-        $store_20  =  [
+        $store_20 = [
             'name' => 'Oppo - Buyuk Ipak yoli',
             'merchant_id' => 10,
             'is_main' => 1,
@@ -314,10 +312,10 @@ class StoresSeeder extends Seeder
             'responsible_person' => 'Artyom',
             'responsible_person_phone' => '998912525471',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
-        $store_21  =  [
+        $store_21 = [
             'name' => 'GSHOP - Buyuk Ipak yoli',
             'merchant_id' => 4,
             'is_main' => 1,
@@ -329,7 +327,7 @@ class StoresSeeder extends Seeder
             'responsible_person' => 'Artyom',
             'responsible_person_phone' => '998912524478',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
         DB::table('stores')->insert([

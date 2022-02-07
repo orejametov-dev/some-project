@@ -5,9 +5,7 @@ namespace App\UseCases\Stores;
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\Exceptions\BusinessException;
 use App\Modules\Merchants\Models\ActivityReason;
-use App\Modules\Merchants\Models\Store;
 use App\UseCases\Cache\FlushCacheUseCase;
-use Illuminate\Support\Facades\Cache;
 
 class ToggleStoresUseCase
 {
@@ -15,8 +13,7 @@ class ToggleStoresUseCase
         private GatewayAuthUser $gatewayAuthUser,
         private FindStoresUseCase $findStoresUseCase,
         private FlushCacheUseCase $flushCacheUseCase
-    )
-    {
+    ) {
     }
 
     public function execute(int $id, int $activity_reason_id)
@@ -34,7 +31,7 @@ class ToggleStoresUseCase
         $store->activity_reasons()->attach($active_reason, [
             'active' => $store->active,
             'created_by_id' => $this->gatewayAuthUser->getId(),
-            'created_by_name' => $this->gatewayAuthUser->getName()
+            'created_by_name' => $this->gatewayAuthUser->getName(),
         ]);
 
         $this->flushCacheUseCase->execute($store->merchant_id);

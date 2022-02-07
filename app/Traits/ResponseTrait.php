@@ -8,7 +8,7 @@ trait ResponseTrait
     {
         return response()->json(['error' => [
             'message' => $message,
-            'code' => $code
+            'code' => $code,
         ]], $code);
     }
 }

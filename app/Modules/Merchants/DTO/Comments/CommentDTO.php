@@ -11,12 +11,10 @@ class CommentDTO
     use ParseDataTrait;
 
     public function __construct(
-        public int    $commentable_id,
+        public int $commentable_id,
         public string $commentable_type,
         public string $body
-
-    )
-    {
+    ) {
     }
 
     public static function fromArray(int $id, array $data, string $commentable_type)

@@ -1,9 +1,9 @@
 <?php
 
+use App\Modules\Merchants\Services\MerchantStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Modules\Merchants\Services\MerchantStatus;
 
 class RemoveStatusIdAndStatusKeyColumnsToMerchantsTable extends Migration
 {

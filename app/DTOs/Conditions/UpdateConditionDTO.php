@@ -18,16 +18,15 @@ class UpdateConditionDTO
         public ?string $special_offer,
         public ?int $event_id,
         public int $discount,
-    )
-    {
+    ) {
     }
 
-    public static function fromArray(int $condition_id , array $data): self
+    public static function fromArray(int $condition_id, array $data): self
     {
         return new self(
             self::parseInt($condition_id),
             self::parseNullableArray($data['store_ids']),
-            array_key_exists('duration',$data) ? self::parseNullableInt($data['duration']) : 0,
+            array_key_exists('duration', $data) ? self::parseNullableInt($data['duration']) : 0,
             self::parseInt($data['commission']),
             self::parseNullableString($data['special_offer']),
             self::parseNullableInt($data['event_id']),

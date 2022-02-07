@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 /**
  * @property int $id
  * @property int $azo_merchant_access_id
- * @property int $client_id
+ * @property array $meta
  * @property string $reason_correction
  * @property $created_at
  * @method static Builder|Complaint filterRequest(Request $request)
@@ -24,7 +24,12 @@ class Complaint extends Model
     use SortableByQueryParams;
 
     protected $fillable = [
-        'reason_correction'
+        'reason_correction',
+        'meta'
+    ];
+
+    protected $casts = [
+      'meta' => 'json'
     ];
 
     public function azo_merchant_access()

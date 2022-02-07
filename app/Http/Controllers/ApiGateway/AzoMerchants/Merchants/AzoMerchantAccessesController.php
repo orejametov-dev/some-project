@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
-
 
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\MerchantUsers\StoreMerchantUsers;
@@ -22,12 +20,11 @@ class AzoMerchantAccessesController extends ApiBaseController
             ->filterRequest($request)
             ->orderRequest($request);
 
-
         if ($request->query('object') == true) {
             return $azo_merchant_accesses->first();
         }
 
-        return $azo_merchant_accesses->paginate($request->query('per_page'));
+        return $azo_merchant_accesses->paginate($request->query('per_page') ?? 15);
     }
 
     public function show($id)
@@ -45,11 +42,10 @@ class AzoMerchantAccessesController extends ApiBaseController
         return $updateMerchantUserUseCase->execute($id, $request->input('store_id'));
     }
 
-
     public function destroy($id, DestroyMerchantUserUseCase $destroyMerchantUserUseCase)
     {
         $destroyMerchantUserUseCase->execute($id);
+
         return response()->json(['message' => 'Сотрудник удален']);
     }
 }
-

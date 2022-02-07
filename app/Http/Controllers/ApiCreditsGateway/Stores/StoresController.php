@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Controllers\ApiCreditsGateway\Stores;
-
 
 use App\Http\Controllers\ApiCreditsGateway\ApiBaseController;
 use App\Http\Resources\ApiCredtisGateway\Stores\StoresResource;

@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\ApiPrm\Files;
 
-use App\Modules\Clients\Services\FileTypeService;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -29,8 +28,8 @@ class StoreFileRequest extends FormRequest
             'file' => 'required|file|mimes:jpeg,bmp,png,svg,jpg,pdf',
             'type' => [
                 'required',
-                Rule::in(['COMMON'])
-            ]
+                Rule::in(['COMMON']),
+            ],
         ];
     }
 }

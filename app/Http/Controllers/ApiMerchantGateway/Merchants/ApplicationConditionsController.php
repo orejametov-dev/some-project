@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Controllers\ApiMerchantGateway\Merchants;
-
 
 use App\Http\Controllers\ApiMerchantGateway\ApiBaseController;
 use App\Modules\Merchants\Models\Condition;
@@ -15,10 +13,9 @@ class ApplicationConditionsController extends ApiBaseController
     public function index(Request $request)
     {
         return Cache::tags($this->merchant_id)->remember($request->fullUrl() . $this->store_id, 24 * 60, function () use ($request) {
-
             $store = Store::findOrFail($this->store_id);
 
-            if ($request->has('post_alifshop') AND $request->query('post_alifshop') == true) {
+            if ($request->has('post_alifshop') and $request->query('post_alifshop') == true) {
                 $special_conditions = $store->conditions()
                     ->where('post_alifshop', true)
                     ->active()

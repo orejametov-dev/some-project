@@ -13,23 +13,17 @@ class StoreComplaintUseCase
 {
     public function __construct(
         private FindMerchantUserUseCase $findMerchantUserUseCase,
-        private CoreHttpRepository $coreHttpRepository
     )
     {
     }
 
     public function execute(StoreComplaintDTO $storeComplaintDTO): Complaint
     {
-        if ($this->coreHttpRepository->checkClientToExistsByClientId($storeComplaintDTO->client_id) === false)
-        {
-            throw new BusinessException('Клиент не найден' , 'object_not_found', 404);
-        }
-
         $merchant_access = $this->findMerchantUserUseCase->execute($storeComplaintDTO->user_id);
 
         $complaint = new Complaint();
         $complaint->azo_merchant_access_id = $merchant_access->id;
-        $complaint->client_id = $storeComplaintDTO->client_id;
+        $complaint->meta = $storeComplaintDTO->meta;
         $complaint->reason_correction = $storeComplaintDTO->reason_correction;
 
         $complaint->save();

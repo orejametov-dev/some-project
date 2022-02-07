@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Controllers\ApiCallsGateway\ProblemCases;
-
 
 use App\DTOs\ProblemCases\ProblemCaseDTO;
 use App\Http\Controllers\ApiCallsGateway\ApiBaseController;
@@ -16,7 +14,10 @@ class ProblemCasesController extends ApiBaseController
 {
     public function index(Request $request)
     {
-        $problemCases = ProblemCase::query()->filterRequests($request);
+        $problemCases = ProblemCase::query()
+            ->with('merchant')
+            ->whereIn('created_from_name', ['CALLS', 'LAW'])
+            ->filterRequests($request);
 
         if ($request->query('object') == true) {
             return new ProblemCaseResource($problemCases->first());
@@ -32,10 +33,8 @@ class ProblemCasesController extends ApiBaseController
         return $storeProblemCasesUseCase->execute($problemCaseDTO);
     }
 
-
     public function getStatusList()
     {
         return array_values(ProblemCase::$statuses);
     }
-
 }

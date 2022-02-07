@@ -48,8 +48,8 @@ class CoreHttpRepository
 
     public function getApplicationConditionId($condition_id)
     {
-        return $this->getHttpClient()->get("applications/count", [
-            'condition_id' => $condition_id
+        return $this->getHttpClient()->get('applications/count', [
+            'condition_id' => $condition_id,
         ])
             ->throw()
             ->json();
@@ -57,13 +57,13 @@ class CoreHttpRepository
 
     public function checkApplicationToExistByConditionId($condition_id): bool
     {
-        $result = $this->getHttpClient()->get("applications/count", [
-            'condition_id' => $condition_id
+        $result = $this->getHttpClient()->get('applications/count', [
+            'condition_id' => $condition_id,
         ])
             ->throw()
             ->json();
 
-        return (bool)$result;
+        return (bool) $result;
     }
 
     public function checkClientToExistsByClientId($client_id): bool
@@ -81,7 +81,7 @@ class CoreHttpRepository
             ->withHeaders([
                 'Accept' => 'application/json',
                 'Access-Token' => config('local_services.service_core.service_token'),
-                'Content-Type' => 'application/json'
+                'Content-Type' => 'application/json',
             ]);
     }
 }

@@ -1,11 +1,10 @@
 <?php
 
+use Alifuz\Utils\Gateway\Middlewares\GatewayAuthMiddleware;
 use App\Http\Controllers\ApiOnlineGateway\Conditions\ConditionsController;
 use App\Http\Controllers\ApiOnlineGateway\Merchants\MerchantsController as OnlineMerchantsController;
 use App\Http\Controllers\ApiOnlineGateway\Stores\StoresController;
 use Illuminate\Support\Facades\Route;
-use Alifuz\Utils\Gateway\Middlewares\GatewayAuthMiddleware;
-
 
 Route::prefix('merchants')
     ->group(function () {
@@ -39,4 +38,3 @@ Route::prefix('public')
                     ->withoutMiddleware([GatewayAuthMiddleware::class]);
             });
     });
-

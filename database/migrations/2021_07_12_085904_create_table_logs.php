@@ -13,7 +13,7 @@ class CreateTableLogs extends Migration
      */
     public function up()
     {
-        if(config('app.env') == 'production') {
+        if (config('app.env') == 'production') {
             Schema::connection('logs')->create('logs', function (Blueprint $table) {
                 $table->id();
                 $table->string('name');

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Modules\Merchants\Services\Merchants;
-
 
 use App\Modules\Merchants\DTO\Merchants\MerchantInfoDTO;
 use App\Modules\Merchants\DTO\Merchants\MerchantsDTO;

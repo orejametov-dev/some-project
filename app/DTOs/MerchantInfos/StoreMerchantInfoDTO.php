@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\DTOs\MerchantInfos;
 
-
 use Alifuz\Utils\Parser\ParseDataTrait;
 
 class StoreMerchantInfoDTO
@@ -12,7 +11,7 @@ class StoreMerchantInfoDTO
     use ParseDataTrait;
 
     public function __construct(
-        public int    $merchant_id,
+        public int $merchant_id,
         public string $director_name,
         public string $legal_name,
         public string $legal_name_prefix,
@@ -24,8 +23,7 @@ class StoreMerchantInfoDTO
         public string $bank_account,
         public string $bank_name,
         public string $address,
-    )
-    {
+    ) {
     }
 
     public static function fromArray(array $data): self

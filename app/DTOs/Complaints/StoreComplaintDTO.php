@@ -11,9 +11,9 @@ class StoreComplaintDTO
     use ParseDataTrait;
 
     public function __construct(
-        public int $user_id,
-        public int $client_id,
-        public string $reason_correction
+        public int    $user_id,
+        public string $reason_correction,
+        public array  $meta
     )
     {
     }
@@ -22,8 +22,19 @@ class StoreComplaintDTO
     {
         return new self(
             self::parseInt($data['user_id']),
-            self::parseInt($data['client_id']),
-            self::parseString($data['reason_correction'])
+            self::parseString($data['reason_correction']),
+            self::parseMeta($data['meta'])
         );
+    }
+
+    private static function parseMeta(array $meta): array
+    {
+        $parse_meta = [];
+        $parse_meta['id'] = self::parseInt($meta['id']);
+        $parse_meta['name'] = self::parseString($meta['name']);
+        $parse_meta['surname'] = self::parseString($meta['surname']);
+        $parse_meta['patronymic'] = self::parseString($meta['patronymic']);
+
+        return $parse_meta;
     }
 }

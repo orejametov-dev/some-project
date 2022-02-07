@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\UseCases\Merchants;
 
-
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\Exceptions\BusinessException;
 use App\HttpRepositories\Prm\CompanyHttpRepository;
@@ -17,8 +16,7 @@ class StoreMerchantUseCase
         private CompanyHttpRepository $companyHttpRepository,
         private FlushCacheUseCase $flushCacheUseCase,
         private GatewayAuthUser $gatewayAuthUser
-    )
-    {
+    ) {
     }
 
     public function execute(int $company_id): Merchant
