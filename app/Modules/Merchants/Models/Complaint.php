@@ -13,7 +13,6 @@ use Illuminate\Http\Request;
  * @property int $id
  * @property int $azo_merchant_access_id
  * @property array $meta
- * @property string $reason_correction
  * @property Carbon $created_at
  * @method static Builder|Complaint filterRequest(Request $request)
  * @method static Builder|Complaint orderRequest(Request $request, string $default_order_str = 'id:desc')

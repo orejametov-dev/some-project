@@ -12,7 +12,6 @@ class StoreComplaintDTO
 
     public function __construct(
         public int $user_id,
-        public string $reason_correction,
         public array $meta
     ) {
     }
@@ -21,7 +20,6 @@ class StoreComplaintDTO
     {
         return new self(
             self::parseInt($data['user_id']),
-            self::parseString($data['reason_correction']),
             self::parseMeta($data['meta'])
         );
     }
@@ -29,10 +27,11 @@ class StoreComplaintDTO
     private static function parseMeta(array $meta): array
     {
         $parse_meta = [];
-        $parse_meta['id'] = self::parseInt($meta['id']);
-        $parse_meta['name'] = self::parseString($meta['name']);
-        $parse_meta['surname'] = self::parseString($meta['surname']);
-        $parse_meta['patronymic'] = self::parseString($meta['patronymic']);
+        $parse_meta['client_id'] = self::parseInt($meta['client_id']);
+        $parse_meta['client_name'] = self::parseString($meta['client_name']);
+        $parse_meta['client_surname'] = self::parseString($meta['client_surname']);
+        $parse_meta['client_patronymic'] = self::parseString($meta['client_patronymic']);
+        $parse_meta['reason_correction'] = self::parseString($meta['reason_correction']);
 
         return $parse_meta;
     }
