@@ -154,7 +154,7 @@ class ComplaintSeeder extends Seeder
             $complaint_7,
             $complaint_8,
             $complaint_9,
-            $complaint_10
+            $complaint_10,
             ]);
     }
 }
