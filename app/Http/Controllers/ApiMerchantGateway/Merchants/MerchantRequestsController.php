@@ -56,6 +56,7 @@ class MerchantRequestsController extends Controller
         $merchant_request->setStatusNew();
 
         $merchant_request->save();
+        $merchant_request->checkToMainCompleted();
 
         return $merchant_request;
     }

@@ -124,7 +124,7 @@ class Request extends Model
     public function checkToMainCompleted()
     {
         $main = $this->user_name && $this->legal_name && $this->legal_name_prefix && $this->user_phone && $this->name && $this->region
-            && $this->categories && $this->stores_count && $this->merchant_users_count && $this->approximate_sales;
+            && $this->categories && $this->approximate_sales;
 
         if ($main === true) {
             $this->main_completed = true;
