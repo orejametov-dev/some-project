@@ -44,7 +44,7 @@ class Complaint extends Model
         }
 
         if ($azo_merchant_access_id = $request->query('user_id')) {
-            $query->where('azo_merchant_access', $azo_merchant_access_id);
+            $query->where('azo_merchant_access_id', $azo_merchant_access_id);
         }
 
         if ($azo_merchant_access_id = $request->query('azo_merchant_access_id')) {
