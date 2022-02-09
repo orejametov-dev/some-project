@@ -25,6 +25,7 @@ class ProblemCaseResource extends JsonResource
             'title' => $this->search_index,
             'description' => $this->description,
             'merchant' => new MerchantResource($this->whenLoaded('merchant')),
+            'tags' => $this->whenLoaded('tags'),
             'merchant_comment' => $this->merchant_comment ?? null,
             'status_id' => $this->status_id,
             'assigned_to_id' => $this->assigned_to_id,

@@ -18,7 +18,8 @@ class ProblemCasesController extends ApiBaseController
         $problemCases = ProblemCase::query()
             ->with(['merchant', 'before_tags'])
             ->whereIn('created_from_name', ['CALLS', 'LAW'])
-            ->filterRequests($request);
+            ->filterRequests($request)
+            ->orderByDesc('id');
 
         if ($request->query('object') == true) {
             return new ProblemCaseResource($problemCases->first());
