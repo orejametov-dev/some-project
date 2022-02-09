@@ -2,6 +2,7 @@
 
 namespace App\Modules\Merchants\Models;
 
+use App\Filters\ProblemCase\ProblemCaseFilter;
 use App\Modules\Merchants\Traits\ProblemCaseStatuses;
 use App\Services\SimpleStateMachine\SimpleStateMachinable;
 use App\Services\SimpleStateMachine\SimpleStateMachineTrait;
@@ -244,5 +245,10 @@ class ProblemCase extends Model implements SimpleStateMachinable
     public function scopeByStore(Builder $query, $store_id)
     {
         $query->where('store_id', $store_id);
+    }
+
+    public function scopeFilters(Builder $builder, \Illuminate\Http\Request $request, array $filter = [])
+    {
+        return (new ProblemCaseFilter($request))->filter($builder);
     }
 }
