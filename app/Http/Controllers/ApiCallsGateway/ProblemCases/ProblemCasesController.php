@@ -16,7 +16,7 @@ class ProblemCasesController extends ApiBaseController
     public function index(Request $request)
     {
         $problemCases = ProblemCase::query()
-            ->with('merchant')
+            ->with(['merchant', 'before_tags'])
             ->whereIn('created_from_name', ['CALLS', 'LAW'])
             ->filterRequests($request);
 
