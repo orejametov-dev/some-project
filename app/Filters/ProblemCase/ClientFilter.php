@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class ClientFilter extends AbstractExactFilter
 {
-    public function filter(Builder $builder, $value)
+    public function filter(Builder $builder, mixed $value) : void
     {
         collect(explode(' ', $value))->filter()->each(function ($value) use ($builder) {
             $value = '%' . $value . '%';
@@ -19,5 +19,10 @@ class ClientFilter extends AbstractExactFilter
                         ->orWhere('phone', 'like', $value);
             });
         });
+    }
+
+    public function getBindingName(): string
+    {
+        return 'q';
     }
 }

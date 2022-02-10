@@ -5,15 +5,15 @@ namespace App\Filters\CommonFilters;
 use App\Filters\AbstractExactFilter;
 use Illuminate\Database\Eloquent\Builder;
 
-class IdFilter extends AbstractExactFilter
+class StatusIdFilter extends AbstractExactFilter
 {
     public function filter(Builder $builder, mixed $value): void
     {
-        $builder->where('id', $value);
+        $builder->where('status_id', $value);
     }
 
     public function getBindingName(): string
     {
-        return 'id';
+        return 'status_id';
     }
 }

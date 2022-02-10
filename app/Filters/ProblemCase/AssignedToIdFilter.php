@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Filters\CommonFilters;
+namespace App\Filters\ProblemCase;
 
 use App\Filters\AbstractExactFilter;
 use Illuminate\Database\Eloquent\Builder;
 
-class IdFilter extends AbstractExactFilter
+class AssignedToIdFilter extends AbstractExactFilter
 {
     public function filter(Builder $builder, mixed $value): void
     {
-        $builder->where('id', $value);
+        $builder->where('assigned_to_id', $value);
     }
 
     public function getBindingName(): string
     {
-        return 'id';
+        return 'assigned_to_id';
     }
 }
