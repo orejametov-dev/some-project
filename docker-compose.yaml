@@ -6,6 +6,9 @@ services:
         user: docker
         uid: 1000
       context: .
-      dockerfile: php.Dockerfile
-    working_dir: /var/www/
+      dockerfile: docker/local/php/Dockerfile
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+
 
