@@ -2,52 +2,55 @@
 
 namespace App\Filters;
 
-use App\Exceptions\BusinessException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
+/**
+ * @property string[] $filters
+ */
 abstract class AbstractFilters
 {
-    protected Request $request;
     protected array $filters = [];
 
-    public function __construct(Request $request)
-    {
-        $this->request = $request;
+    public function __construct(
+        protected Request $request,
+        protected Builder $builder
+    ) {
     }
 
-    public function filter(Builder $builder, $orderFilters = [])
+    abstract protected function getRequestBindings(): array;
+
+    public function execute($filters = [])
     {
-        if (!empty(array_diff($orderFilters, array_keys($this->filters)))) {
-            throw new BusinessException('Фильтер не найден', 'object_not_found', 404);
+        $drainedFilters = $this->drainPassedFilters($filters);
+
+        foreach ($drainedFilters as $filterName => $value) {
+            (new $filterName)->filter($this->builder, $value);
         }
 
-        foreach ($this->getOrderFilter($orderFilters) as $orderFilter => $value) {
-            $this->resolveFilter($orderFilter)->filter($builder, $value);
+        return $this->builder;
+    }
+
+    /**
+     * @property string[] $filters
+     * @return string[]
+     */
+    private function drainPassedFilters(array $filters) : array
+    {
+        $intersected = array_intersect($this->filters, $filters);
+
+        $bindingNames = array_map(fn ($filterName) => (new $filterName)->getBindingName(), $intersected);
+
+        $request = $this->request->only($bindingNames);
+
+        $result = [];
+
+        foreach ($request as $key => $value) {
+            $filterName = $this->getRequestBindings()[$key];
+
+            $result[$filterName] = $value;
         }
 
-        return $builder;
-    }
-
-    public function add(array $filters)
-    {
-        $this->filters = array_merge($this->filters, $filters);
-
-        return $this;
-    }
-
-    private function getOrderFilter($order)
-    {
-        return array_filter($this->request->only($order));
-    }
-
-//    private function getFilter()
-//    {
-//        return array_filter($this->request->only(array_keys($this->filters)));
-//    }
-
-    private function resolveFilter($filter)
-    {
-        return new $this->filters[$filter];
+        return $result;
     }
 }

@@ -6,20 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 abstract class AbstractExactFilter
 {
-    /**
-     * @param Builder $builder
-     * @param mixed $value
-     * @return mixed
-     */
-    abstract public function filter(Builder $builder, $value);
+    abstract public function filter(Builder $builder, mixed $value): void;
 
-    public function mappings()
-    {
-        return [];
-    }
-
-    protected function resolveFilterValue($key)
-    {
-        return array_search($key, $this->mappings());
-    }
+    abstract public function getBindingName(): string;
 }
