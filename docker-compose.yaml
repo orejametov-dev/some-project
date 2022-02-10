@@ -1,14 +1,16 @@
 version: '3'
 services:
-  app:
+  php-fpm:
     build:
-      args:
-        user: docker
-        uid: 1000
-      context: .
-      dockerfile: docker/local/php/Dockerfile
-    working_dir: /var/www
-    volumes:
-      - ./:/var/www
+      context: ./
+      dockerfile: ./docker/local/php/Dockerfile
+    environment:
+      - "ENV_SUBSTITUTION_ENABLE=true"
+      - "PHP_MEMORY_LIMIT=512M"
+      - "PHP_FPM_LISTEN=9090"
+      - "PHP_SESSION_GC_MAXLIFETIME=7200"
+    expose:
+      - "9090"
+    working_dir: /var/www/
 
 
