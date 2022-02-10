@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\ApiComplianceGateway\Complaints;
+namespace App\Http\Controllers\ApiGate\Complaints;
 
 use App\DTOs\Complaints\StoreComplaintDTO;
 use App\Http\Controllers\Controller;
