@@ -2,8 +2,8 @@ version: '3'
 services:
   php-fpm:
     build:
-      context: ./
-      dockerfile: ./docker/local/php/Dockerfile
+      context: ..
+      dockerfile: local/php/Dockerfile
     environment:
       - "ENV_SUBSTITUTION_ENABLE=true"
       - "PHP_MEMORY_LIMIT=512M"
