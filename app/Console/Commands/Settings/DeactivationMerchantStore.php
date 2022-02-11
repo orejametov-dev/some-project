@@ -52,12 +52,12 @@ class DeactivationMerchantStore extends Command
             ->where('created_at', '<', $from_date)
             ->chunkById(100, function ($merchants) use ($coreService, $from_date, $to_date) {
                 foreach ($merchants as $merchant) {
-                    if (\DB::table('merchant_activities')
+                    $activity_reasons = \DB::table('merchant_activities')
                         ->where('merchant_id', $merchant->id)
-                        ->where('active', true)
-                        ->where('created_at', '<', $from_date)
                         ->orderByDesc('id')
-                        ->first() === null) {
+                        ->first();
+
+                    if ($activity_reasons !== null && $activity_reasons->active === 1 && $activity_reasons->created_at > $from_date) {
                         continue;
                     }
 
