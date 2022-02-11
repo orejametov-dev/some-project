@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Jenssegers\Mongodb\Schema\Blueprint;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,5 +13,11 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/', function () {
+    Schema::connection('mongodb')->create('logs', function (Blueprint $table) {
+        $table->id();
+    });
+});
 
 Route::get('monitoring/status/health', [\App\Http\Controllers\Monitoring\MonitoringController::class, 'general']);

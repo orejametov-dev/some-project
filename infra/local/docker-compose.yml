@@ -8,6 +8,9 @@ services:
       context: ./php/
     volumes:
       - ../../:/app
+      - ~/.composer-docker/cache:/root/.composer/cache:delegated
+    ports:
+      - 127.0.4.1:9000:9000
     depends_on:
       - redis
       - mongodb
@@ -30,7 +33,24 @@ services:
     container_name: alif-service-merchant-mongodb
     image: $IMAGE_MONGODB
     environment:
-      MONGO_INITDB_ROOT_USERNAME: $MONGO_USERNAME
-      MONGO_INITDB_ROOT_PASSWORD: $MONGO_PASSWORD
+      MONGO_INITDB_ROOT_USERNAME: $MONGO_INITDB_ROOT_USERNAME
+      MONGO_INITDB_ROOT_PASSWORD: $MONGO_INITDB_ROOT_PASSWORD
     ports:
       - 127.0.4.1:27017:27017
+    volumes:
+      - alif_mongodb:/data/db
+  mysql:
+    container_name: alif-service-merchant-mysql
+    image: $IMAGE_MYSQL
+    ports:
+      - 127.0.4.1:3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: $MYSQL_DATABASE
+    volumes:
+      - alif_mysql:/var/lib/mysql
+
+volumes:
+  alif_mongodb:
+  alif_mysql:
+
