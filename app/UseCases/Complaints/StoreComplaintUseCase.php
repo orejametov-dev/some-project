@@ -6,8 +6,6 @@ use App\DTOs\Complaints\StoreComplaintDTO;
 use App\Exceptions\BusinessException;
 use App\Modules\Merchants\Models\AzoMerchantAccess;
 use App\Modules\Merchants\Models\Complaint;
-use App\Modules\Merchants\Models\Merchant;
-use App\UseCases\MerchantUsers\FindMerchantUserUseCase;
 
 class StoreComplaintUseCase
 {
