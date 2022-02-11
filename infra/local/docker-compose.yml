@@ -14,6 +14,7 @@ services:
     depends_on:
       - redis
       - mongodb
+      - mysql
   nginx:
     container_name: alif-service-merchant-nginx
     image: $IMAGE_NGINX

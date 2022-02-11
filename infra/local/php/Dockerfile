@@ -26,8 +26,7 @@ COPY ./composer-installer /usr/local/bin/composer-installer
 RUN chmod +x /usr/local/bin/composer-installer \
     && /usr/local/bin/composer-installer \
     && mv composer.phar /usr/local/bin/composer \
-    && chmod +x /usr/local/bin/composer \
-    && composer --version
+    && chmod +x /usr/local/bin/composer
 
 # install phpunit
 
