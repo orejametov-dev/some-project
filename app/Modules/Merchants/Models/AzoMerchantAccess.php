@@ -59,8 +59,10 @@ class AzoMerchantAccess extends Model
     public function scopeFilterRequest(Builder $query, Request $request)
     {
         if ($q = $request->query('q')) {
-            $query->where('user_name', 'LIKE', '%' . $q . '%')
-                ->orWhere('phone', 'LIKE', '%' . $q . '%');
+            $query->where(function ($query) use ($q) {
+                $query->where('user_name', 'LIKE', '%' . $q . '%')
+                    ->orWhere('phone', 'LIKE', '%' . $q . '%');
+            });
         }
 
         if ($request->query('date')) {
