@@ -31,7 +31,7 @@ class StoreComplaintDTO
         $parse_meta['client_name'] = self::parseString($meta['client_name']);
         $parse_meta['client_surname'] = self::parseString($meta['client_surname']);
         $parse_meta['client_patronymic'] = self::parseString($meta['client_patronymic']);
-        $parse_meta['reason_correction'] = self::parseString($meta['reason_correction']);
+        $parse_meta['reason_correction'] = self::parseArray($meta['reason_correction']);
 
         return $parse_meta;
     }
