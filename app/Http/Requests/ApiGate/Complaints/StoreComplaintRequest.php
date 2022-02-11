@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\ApiPrm\Complaints;
+namespace App\Http\Requests\ApiGate\Complaints;
 
 use Illuminate\Foundation\Http\FormRequest;
 
