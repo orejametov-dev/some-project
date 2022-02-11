@@ -1,0 +1,16 @@
+version: '3'
+services:
+  php-fpm:
+    build:
+      context: ..
+      dockerfile: local/php/Dockerfile
+    environment:
+      - "ENV_SUBSTITUTION_ENABLE=true"
+      - "PHP_MEMORY_LIMIT=512M"
+      - "PHP_FPM_LISTEN=9090"
+      - "PHP_SESSION_GC_MAXLIFETIME=7200"
+    expose:
+      - "9090"
+    working_dir: /var/www/
+
+

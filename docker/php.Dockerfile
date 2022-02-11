@@ -3,7 +3,7 @@ FROM php:8.0-fpm
 ARG user
 ARG uid
 
-COPY . /var/www
+COPY .. /var/www
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
