@@ -10,4 +10,11 @@ RUN pecl install redis-5.3.6 \
         redis \
         mongodb
 
+# set group and user permission on folder
+# set timezone
+# install composer
+# install phpunit
+
+
+
 WORKDIR /app
