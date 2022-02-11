@@ -14,7 +14,7 @@ use App\Filters\CommonFilters\StoreIdFilter;
 class ProblemCaseFilters extends AbstractFilters
 {
     protected array $filters = [
-        ClientFilter::class,
+        GProblemCaseFilter::class,
         IdFilter::class,
         MerchantIdFilter::class,
         ClientIdFilter::class,
