@@ -1,16 +1,52 @@
 version: '3'
 services:
-  php-fpm:
+  app:
     build:
       context: ./
       dockerfile: ./docker/local/php/Dockerfile
+    working_dir: /var/www/html
+    links:
+      - mysql
+      - redis
+      - mongodb
+
+  mysql:
+    image: mysql:5.7
+    restart: unless-stopped
+    ports:
+      - "33061:3306"
+    volumes:
+      - ./docker/local/mysql:/var/lib/mysql
     environment:
-      - "ENV_SUBSTITUTION_ENABLE=true"
-      - "PHP_MEMORY_LIMIT=512M"
-      - "PHP_FPM_LISTEN=9090"
-      - "PHP_SESSION_GC_MAXLIFETIME=7200"
-    expose:
-      - "9090"
-    working_dir: /var/www/
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+
+  nginx:
+    build:
+      context: ./
+      dockerfile: ./docker/local/nginx/Dockerfile
+    restart: unless-stopped
+    ports:
+      - 8080:443
+    links:
+      - app
+    volumes:
+      - ./:/var/www/html
+      - ./docker/public/nginx/ssl:/etc/nginx/ssl
+
+  redis:
+    image: redis:latest
+    ports:
+      - 6379:6379
+
+  mongodb:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_LOGS_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_LOGS_PASSWORD}
+      MONGO_INITDB_DATABASE: ${DB_LOGS_DATABASE}
+
+
+
 
 
