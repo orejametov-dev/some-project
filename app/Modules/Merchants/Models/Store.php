@@ -2,6 +2,7 @@
 
 namespace App\Modules\Merchants\Models;
 
+use App\Filters\Store\StoreFilters;
 use App\Modules\Merchants\Traits\StoreRelationshipsTrait;
 use App\Traits\SortableByQueryParams;
 use Eloquent;
@@ -32,7 +33,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read Collection|Condition[] $application_conditions
  * @property-read int|null $application_conditions_count
- * @method static Builder|Store filterRequest(Request $request)
+ * @method static Builder|Store filterRequests(Request $request)
  * @method static Builder|Store main()
  * @method static Builder|Store newModelQuery()
  * @method static Builder|Store newQuery()
@@ -62,7 +63,7 @@ class Store extends Model
         'client_type_register',
     ];
 
-    public function scopeFilterRequest(Builder $query, Request $request)
+    public function scopeFilterRequests(Builder $query, Request $request)
     {
         $searchIndex = $request->q;
         if ($merchant_id = $request->query('merchant_id')) {
@@ -117,5 +118,10 @@ class Store extends Model
     public function scopeActive(Builder $query)
     {
         $query->where('active', true);
+    }
+
+    public function scopeFilterRequest(Builder $builder, Request $request, array $filters = [])
+    {
+        return (new StoreFilters($request, $builder))->execute($filters);
     }
 }
