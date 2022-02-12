@@ -13,7 +13,7 @@ class NotificationsController extends ApiBaseController
     public function index(Request $request)
     {
         $notifications = Notification::query()
-            ->filterRequest($request)->latest()
+            ->filterRequests($request)->latest()
             ->onlyByStore($this->store_id)
             ->OnlyMoreThanStartSchedule()
             ->latest();

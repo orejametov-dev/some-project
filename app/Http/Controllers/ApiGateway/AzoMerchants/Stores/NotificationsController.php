@@ -17,7 +17,7 @@ class NotificationsController extends ApiBaseController
     public function index(Request $request)
     {
         $notifications = Notification::query()
-            ->filterRequest($request)
+            ->filterRequests($request)
             ->latest();
 
         if ($request->query('object') == true) {
