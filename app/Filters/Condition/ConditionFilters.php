@@ -3,14 +3,22 @@
 namespace App\Filters\Condition;
 
 use App\Filters\AbstractFilters;
-use App\Filters\CommonFilters\MerchantIdFilter;
-use App\Filters\CommonFilters\StoreIdFilter;
+use App\Filters\CommonFilters\ActiveFilter;
+use App\Filters\CommonFilters\MerchantIdsFilter;
+use App\Filters\CommonFilters\StoreIdsFilter;
+use App\Filters\CommonFilters\UpdatedAtFilter;
 
 class ConditionFilters extends AbstractFilters
 {
     protected array $filters = [
-        MerchantIdFilter::class,
-        StoreIdFilter::class,
+        ConditionIdsFilter::class,
+        MerchantIdsFilter::class,
+        StoreIdsFilter::class,
+        UpdatedAtFilter::class,
+        DiscountFilter::class,
+        CommissionFilter::class,
+        DurationFilter::class,
+        ActiveFilter::class,
     ];
 
     protected function getRequestBindings(): array
