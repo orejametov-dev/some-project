@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases;
 
 use App\Filters\CommonFilters\DateFilter;
-use App\Filters\CommonFilters\MerchantIdFilter;
+use App\Filters\CommonFilters\MerchantIdsFilter;
 use App\Filters\CommonFilters\StatusIdFilter;
 use App\Filters\ProblemCase\AssignedToIdFilter;
 use App\Filters\ProblemCase\CreatedFromNameFilter;
@@ -35,7 +35,7 @@ class ProblemCasesController extends ApiBaseController
             ->filterRequest($request, [
                 GProblemCaseFilter::class,
                 StatusIdFilter::class,
-                MerchantIdFilter::class,
+                MerchantIdsFilter::class,
                 AssignedToIdFilter::class,
                 DateFilter::class,
                 ProblemCaseTagIdFilter::class,

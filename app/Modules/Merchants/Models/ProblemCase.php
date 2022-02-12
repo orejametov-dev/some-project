@@ -247,7 +247,7 @@ class ProblemCase extends Model implements SimpleStateMachinable
         $query->where('store_id', $store_id);
     }
 
-    public function scopeFilterRequest(Builder $builder, \Illuminate\Http\Request $request, array $filters = [])
+    public function scopeFilterRequest(Builder $builder, \Illuminate\Http\Request $request, array $filters = []): Builder
     {
         return (new ProblemCaseFilters($request, $builder))->execute($filters);
     }
