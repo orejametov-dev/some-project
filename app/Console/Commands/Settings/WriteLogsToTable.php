@@ -14,7 +14,7 @@ class WriteLogsToTable extends Command
 //     *
 //     * @var string
 //     */
-//    protected $signature = 'logs:writing';
+    protected $signature = 'logs:writing';
 //
 //    /**
 //     * The console command description.

@@ -15,9 +15,7 @@ use Jenssegers\Mongodb\Schema\Blueprint;
 */
 
 Route::get('/', function () {
-    Schema::connection('mongodb')->create('logs', function (Blueprint $table) {
-        $table->id();
-    });
+    return 'hello world';
 });
 
 Route::get('monitoring/status/health', [\App\Http\Controllers\Monitoring\MonitoringController::class, 'general']);

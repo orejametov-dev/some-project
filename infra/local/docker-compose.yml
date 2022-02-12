@@ -13,8 +13,6 @@ services:
       - 127.0.4.1:9000:9000
     depends_on:
       - redis
-      - mongodb
-      - mysql
   nginx:
     container_name: alif-service-merchant-nginx
     image: $IMAGE_NGINX
@@ -30,28 +28,8 @@ services:
     image: $IMAGE_REDIS
     ports:
       - 127.0.4.1:6379:6379
-  mongodb:
-    container_name: alif-service-merchant-mongodb
-    image: $IMAGE_MONGODB
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: $MONGO_INITDB_ROOT_USERNAME
-      MONGO_INITDB_ROOT_PASSWORD: $MONGO_INITDB_ROOT_PASSWORD
-    ports:
-      - 127.0.4.1:27017:27017
-    volumes:
-      - alif_mongodb:/data/db
-  mysql:
-    container_name: alif-service-merchant-mysql
-    image: $IMAGE_MYSQL
-    ports:
-      - 127.0.4.1:3306:3306
-    environment:
-      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
-      MYSQL_DATABASE: $MYSQL_DATABASE
-    volumes:
-      - alif_mysql:/var/lib/mysql
 
-volumes:
-  alif_mongodb:
-  alif_mysql:
-
+networks:
+  default:
+    external:
+      name: alif-infra

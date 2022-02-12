@@ -20,14 +20,10 @@ RUN pecl install redis-5.3.6 \
 
 # set group and user permission on folder
 # set timezone
-# install composer
 
 COPY ./composer-installer /usr/local/bin/composer-installer
-RUN chmod +x /usr/local/bin/composer-installer \
+RUN chmod +x /usr/local/bin/ \
     && /usr/local/bin/composer-installer \
-    && mv composer.phar /usr/local/bin/composer \
-    && chmod +x /usr/local/bin/composer
-
-# install phpunit
+    && mv composer.phar /usr/local/bin/composer
 
 WORKDIR /app

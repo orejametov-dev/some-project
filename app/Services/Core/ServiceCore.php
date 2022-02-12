@@ -3,7 +3,6 @@
 namespace App\Services\Core;
 
 use App\Exceptions\ServiceCoreException;
-use App\Modules\Core\Models\WebService;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
@@ -27,13 +26,11 @@ class ServiceCore
 
     public static function request($method, $route, $params, $should_return_response = false)
     {
-        $token = app(WebService::class)->token;
         $client = self::createRequest();
         $key = $method == 'GET' ? 'query' : 'json';
         try {
             $response = $client->request($method, $route, [
                 'headers' => [
-                    'Service-Token' => $token,
                     'Access-Token' => config('local_services.service_core.service_token'),
                 ],
                 $key => $params,

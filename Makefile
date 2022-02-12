@@ -1,12 +1,14 @@
 #init:
 up:
+	docker network create alif-infra || true
 	make docker-compose COMMAND="up -d"
 build:
+	docker network create alif-infra || true
 	make docker-compose COMMAND="up --build -d"
 down:
 	make docker-compose COMMAND="down"
 docker-compose:
-	docker-compose -f ./infra/local/docker-compose.yml --env-file infra/local/.env --project-name alif-merchant-service ${COMMAND}
+	docker-compose -f ./infra/local/docker-compose.yml --env-file infra/local/.env --project-name alif-service-merchant ${COMMAND}
 
 #composer
 install:
@@ -28,4 +30,4 @@ run-inside-container:
 	docker exec -it alif-service-merchant-app ${COMMAND}
 
 run-on-image:
-	docker run --rm -v "${PWD}"/:/app alif-merchant-service_app ${COMMAND}
+	docker run --rm -v "${PWD}"/:/app alif-service-merchant_app ${COMMAND}
