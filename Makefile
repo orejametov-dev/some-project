@@ -18,11 +18,11 @@ require:
 
 # linters
 cs-check:
-	make run-inside-container COMMAND="./vendor/bin/php-cs-fixer fix -vvv --dry-run --show-progress=dots --config=.php-cs-fixer.php --allow-risky=yes"
+	make run-on-image COMMAND="./vendor/bin/php-cs-fixer fix -vvv --dry-run --show-progress=dots --config=.php-cs-fixer.php --allow-risky=yes"
 cs-fix:
-	make run-inside-container COMMAND="./vendor/bin/php-cs-fixer fix -vvv --show-progress=dots --config=.php-cs-fixer.php --allow-risky=yes"
+	make run-on-image COMMAND="./vendor/bin/php-cs-fixer fix -vvv --show-progress=dots --config=.php-cs-fixer.php --allow-risky=yes"
 analyse:
-	make run-inside-container COMMAND="./vendor/bin/phpstan analyse --memory-limit=-1G"
+	make run-on-image COMMAND="./vendor/bin/phpstan analyse --memory-limit=2G"
 
 run-inside-container:
 	docker exec -it alif-service-merchant-app ${COMMAND}
