@@ -2,7 +2,7 @@
 
 namespace App\Modules\Merchants\Models;
 
-use App\Filters\AzoMerchantAccess\AzoMerchantAccessFiltres;
+use App\Filters\AzoMerchantAccess\AzoMerchantAccessFilters;
 use App\Traits\SortableByQueryParams;
 use Carbon\Carbon;
 use Eloquent;
@@ -118,6 +118,6 @@ class AzoMerchantAccess extends Model
 
     public function scopeFilerRequest(Builder $builder, Request $request, array $filters = [])
     {
-        return (new AzoMerchantAccessFiltres($request, $builder))->execute($filters);
+        return (new AzoMerchantAccessFilters($request, $builder))->execute($filters);
     }
 }

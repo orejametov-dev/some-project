@@ -4,17 +4,17 @@ namespace App\Filters\AzoMerchantAccess;
 
 use App\Filters\AbstractFilters;
 use App\Filters\CommonFilters\DateFilter;
-use App\Filters\CommonFilters\MerchantIdFilter;
-use App\Filters\CommonFilters\StoreIdFilter;
+use App\Filters\CommonFilters\MerchantIdsFilter;
+use App\Filters\CommonFilters\StoreIdsFilter;
 use App\Filters\CommonFilters\UserIdsFilter;
 
-class AzoMerchantAccessFiltres extends AbstractFilters
+class AzoMerchantAccessFilters extends AbstractFilters
 {
     protected array $filters = [
         GAzoMerchantAccessFilter::class,
         DateFilter::class,
-        MerchantIdFilter::class,
-        StoreIdFilter::class,
+        MerchantIdsFilter::class,
+        StoreIdsFilter::class,
         UserIdsFilter::class,
     ];
 
