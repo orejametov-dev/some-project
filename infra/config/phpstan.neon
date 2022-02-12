@@ -1,0 +1,17 @@
+includes:
+    - /app/vendor/nunomaduro/larastan/extension.neon
+
+parameters:
+
+    paths:
+        - /app/app
+        - /app/config
+        - /app/database
+        - /app/routes
+        - /app/tests
+
+    level: 5
+
+    checkMissingIterableValueType: false
+
+

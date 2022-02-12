@@ -17,3 +17,5 @@ then
     exit -1
 fi
 
+
+make pre-commit-hook
