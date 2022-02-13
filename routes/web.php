@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Jenssegers\Mongodb\Schema\Blueprint;
 
 /*
 |--------------------------------------------------------------------------
