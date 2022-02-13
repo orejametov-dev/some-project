@@ -1,21 +1,2 @@
 #!/bin/sh
-
-composer analyse
-PHP_STAN_EXIT_CODE=$?
-
-
-if [ $PHP_STAN_EXIT_CODE -ne 0 ]
-then
-    exit -1
-fi
-
-composer cs-check
-CS_FIXER_EXIT_CODE=$?
-
-if [ $CS_FIXER_EXIT_CODE -ne 0 ]
-then
-    exit -1
-fi
-
-
 make pre-commit-hook
