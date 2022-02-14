@@ -19,6 +19,7 @@ class ProblemCasesController extends ApiBaseController
     {
         $problemCases = ProblemCase::query()
             ->with('merchant')
+            ->whereIn('created_from_name', ['CALLS', 'LAW'])
             ->filterRequest($request, [GProblemCaseFilter::class, StatusIdFilter::class]);
 
 //        $problemCases = ProblemCase::query()

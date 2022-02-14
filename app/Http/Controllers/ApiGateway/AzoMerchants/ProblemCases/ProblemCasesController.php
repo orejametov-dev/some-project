@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases;
 
 use App\Filters\CommonFilters\DateFilter;
+use App\Filters\CommonFilters\MerchantIdFilter;
 use App\Filters\CommonFilters\MerchantIdsFilter;
 use App\Filters\CommonFilters\StatusIdFilter;
 use App\Filters\ProblemCase\AssignedToIdFilter;
@@ -40,6 +41,7 @@ class ProblemCasesController extends ApiBaseController
                 DateFilter::class,
                 ProblemCaseTagIdFilter::class,
                 CreatedFromNameFilter::class,
+                MerchantIdFilter::class,
                 ])->orderBy('created_at', 'DESC');
 
 //        $problemCases = ProblemCase::with('tags')
