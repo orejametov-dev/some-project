@@ -43,7 +43,7 @@ cs-check:
 cs-fix:
 	make run-on-image COMMAND="./vendor/bin/php-cs-fixer fix -vvv --show-progress=dots --config=./infra/config/.php-cs-fixer.php --allow-risky=yes"
 analyze:
-	docker run --rm -v "${PWD}"/:/app -v "${PWD}"/infra/config/phpstan:/tmp/phpstan  alif-merchant-service_app ./vendor/bin/phpstan analyse --memory-limit=2G --configuration='infra/config/phpstan.neon'
+	docker run --rm -v "${PWD}"/:/app -v "${PWD}"/storage/framework/cache/phpstan:/tmp/phpstan ${APP_NAME}_app ./vendor/bin/phpstan analyse --memory-limit=2G --configuration='infra/config/phpstan.neon'
 
 run-inside-container:
 	docker exec -it ${APP_CONTAINER_NAME} ${COMMAND}

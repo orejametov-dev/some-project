@@ -144,4 +144,5 @@ $config = new Config();
 return $config->setFinder($finder)
     ->setRules($rules)
     ->setRiskyAllowed(true)
-    ->setUsingCache(true);
+    ->setUsingCache(true)
+    ->setCacheFile('/app/storage/framework/cache/.php_cs.cache');
