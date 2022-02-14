@@ -47,6 +47,13 @@ class CompanyHttpRepository
         ])->throw()->json();
     }
 
+    public function setStatusNotActive(int $id, string $company_module = null)
+    {
+        return $this->getHttpClient()->post('companies/' . $id . '/status-not-active', [
+            'company_module' => is_null($company_module) ? 'azo' : $company_module,
+        ])->throw()->json();
+    }
+
     private function getHttpClient(): PendingRequest
     {
         return Http::baseUrl(config('local_services.service_prm.domain') . '/api/gate/')
