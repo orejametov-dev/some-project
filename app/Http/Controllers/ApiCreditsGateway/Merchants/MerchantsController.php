@@ -15,7 +15,7 @@ class MerchantsController extends ApiBaseController
     {
         $query = Merchant::query()
             ->with('merchant_info')
-            ->filterRequest($request)
+            ->filterRequests($request)
             ->latest();
 
         if ($request->query('object') == true) {
@@ -34,7 +34,7 @@ class MerchantsController extends ApiBaseController
                 'legal_name',
                 'legal_name_prefix',
             ])
-            ->filterRequest($request)
+            ->filterRequests($request)
             ->groupBy('legal_name', 'legal_name_prefix');
 
         if ($request->query('object') == true) {

@@ -2,6 +2,7 @@
 
 namespace App\Modules\Merchants\Models;
 
+use App\Filters\MerchantRequest\MerchantRequestFilters;
 use App\HttpServices\Storage\StorageMicroService;
 use App\Modules\Merchants\Traits\MerchantRequestStatusesTrait;
 use App\Services\SimpleStateMachine\SimpleStateMachineTrait;
@@ -40,7 +41,7 @@ use Illuminate\Support\Collection;
  * @property-read Collection|File[] $files
  * @property-read mixed $status
  * @method static Builder|Request allowed()
- * @method static Builder|Request filterRequest(\Illuminate\Http\Request $request)
+ * @method static Builder|Request filterRequests(\Illuminate\Http\Request $request)
  * @method static Builder|Request onlyCompletedRequests(\Illuminate\Http\Request $request)
  * @method static Builder|Request inProcess()
  * @method static Builder|Request onTraining()
@@ -215,7 +216,7 @@ class Request extends Model
         return $this->belongsTo(CancelReason::class);
     }
 
-    public function scopeFilterRequest(Builder $query, \Illuminate\Http\Request $request)
+    public function scopeFilterRequests(Builder $query, \Illuminate\Http\Request $request)
     {
         if ($q = $request->query('q')) {
             $query->where('name', 'like', '%' . $q . '%')
@@ -278,5 +279,10 @@ class Request extends Model
         $this->engaged_by_id = $user['data']['id'];
         $this->engaged_by_name = $user['data']['name'];
         $this->engaged_at = now();
+    }
+
+    public function scopeFilterRequest(Builder $builder, \Illuminate\Http\Request $request, array $filters = [])
+    {
+        return (new MerchantRequestFilters($request, $builder))->execute($filters);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Modules\Merchants\Models;
 
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
+use App\Filters\Notification\NotificationFilters;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -23,6 +24,7 @@ use Illuminate\Http\Request;
  * @property string $type
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @method static Builder|Notification filterRequests(Request $request)
  */
 class Notification extends Model
 {
@@ -76,7 +78,7 @@ class Notification extends Model
         });
     }
 
-    public function scopeFilterRequest(Builder $query, Request $request)
+    public function scopeFilterRequests(Builder $query, Request $request)
     {
         if ($request->query('q')) {
             $query->where('title_uz', 'LIKE', '%' . $request->query('q') . '%')
@@ -110,5 +112,10 @@ class Notification extends Model
     public function scopeOnlyMoreThanStartSchedule(Builder $query)
     {
         $query->where('start_schedule', '<=', now());
+    }
+
+    public function scopeFilterRequest(Builder $builder, Request $request, array $filters = [])
+    {
+        return (new NotificationFilters($request, $builder))->execute($request);
     }
 }

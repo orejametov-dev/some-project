@@ -17,7 +17,7 @@ class AzoMerchantAccessesController extends ApiBaseController
     {
         $azo_merchant_accesses = AzoMerchantAccess::query()
             ->with(['merchant', 'store'])
-            ->filterRequest($request)
+            ->filterRequests($request)
             ->orderRequest($request);
 
         if ($request->query('object') == true) {

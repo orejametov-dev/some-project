@@ -28,7 +28,7 @@ class ApplicationConditionsController extends ApiBaseController
     {
         $conditionQuery = Condition::query()
             ->with('stores')
-            ->filterRequest($request)
+            ->filterRequests($request)
             ->orderRequest($request);
 
         if ($request->query('object') == true) {
@@ -46,7 +46,7 @@ class ApplicationConditionsController extends ApiBaseController
     {
         $conditionQuery = Condition::query()
             ->active()
-            ->filterRequest($request)
+            ->filterRequests($request)
             ->orderRequest($request);
 
         if ($request->query('object') == true) {

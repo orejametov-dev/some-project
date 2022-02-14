@@ -2,6 +2,7 @@
 
 namespace App\Modules\Merchants\Models;
 
+use App\Filters\Tag\TagFilters;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -39,5 +40,10 @@ class Tag extends Model
         if ($request->query('q')) {
             $query->where('title', 'LIKE', '%' . $request->query('q') . '%');
         }
+    }
+
+    public function scopeFilterRequest(Builder $builder, \Illuminate\Http\Request $request, array $filters = [])
+    {
+        return (new TagFilters($request, $builder))->execute($filters);
     }
 }
