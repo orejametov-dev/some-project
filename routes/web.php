@@ -14,7 +14,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return 'hello world';
+    $client =  Http::baseUrl('alif-service-prm:80')
+        ->withHeaders([
+            'Accept' => 'application/json',
+            'Access-Token' => 123,
+            'Content-Type' => 'application/json',
+        ]);
+
+    $client->get('/');
 });
 
 Route::get('monitoring/status/health', [\App\Http\Controllers\Monitoring\MonitoringController::class, 'general']);

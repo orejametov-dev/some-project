@@ -1,4 +1,5 @@
-include .env
+include infra/local/.env
+
 #init:
 first-run:
 	make build
@@ -13,7 +14,7 @@ build:
 down:
 	make docker-compose COMMAND="down"
 docker-compose:
-	docker-compose -f ./infra/local/docker-compose.yml --env-file infra/local/.env --project-name alif-service-merchant ${COMMAND}
+	docker-compose -f ./infra/local/docker-compose.yml --env-file infra/local/.env --project-name ${APP_NAME} ${COMMAND}
 
 
 #mysql
@@ -45,7 +46,7 @@ analyze:
 	make run-on-image COMMAND="./vendor/bin/phpstan analyse --memory-limit=2G --configuration='infra/config/phpstan.neon'"
 
 run-inside-container:
-	docker exec -it alif-service-merchant-app ${COMMAND}
+	docker exec -it ${APP_CONTAINER_NAME} ${COMMAND}
 
 run-on-image:
-	docker run --rm -v "${PWD}"/:/app alif-service-merchant_app ${COMMAND}
+	docker run --rm -v "${PWD}"/:/app ${APP_NAME}_app ${COMMAND}
