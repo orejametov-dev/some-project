@@ -18,7 +18,7 @@ class ProblemCasesController extends ApiBaseController
     public function index(Request $request)
     {
         $problemCases = ProblemCase::query()
-            ->with('merchant')
+            ->with(['merchant', 'before_tags'])
             ->whereIn('created_from_name', ['CALLS', 'LAW'])
             ->filterRequest($request, [GProblemCaseFilter::class, StatusIdFilter::class]);
 
@@ -37,7 +37,7 @@ class ProblemCasesController extends ApiBaseController
     public function show($id)
     {
         $problemCases = ProblemCase::query()
-            ->with('merchant')
+            ->with(['merchant', 'before_tags'])
             ->whereIn('created_from_name', ['CALLS', 'LAW'])
             ->find($id);
 

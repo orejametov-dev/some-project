@@ -77,6 +77,8 @@ class AllowMerchantRequestUseCase
             $merchant_request->save();
         });
 
+        $this->companyHttpRepository->setStatusExist($company->id);
+
         return $merchant_request;
     }
 }
