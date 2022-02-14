@@ -1,5 +1,7 @@
+include .env
 #init:
 first-run:
+	make build
 	make create-mysql-database
 	make setup-hooks
 up:
@@ -16,7 +18,7 @@ docker-compose:
 
 #mysql
 create-mysql-database:
-	docker exec alif-infra-mysql mysql -u root -p123 -e "CREATE DATABASE service_merchant"
+	./infra/local/mysql/create-mysql-database.sh
 
 #composer
 install:
