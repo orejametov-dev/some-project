@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    $client =  Http::baseUrl('alif-service-prm:80')
+    $client =  Http::baseUrl('alif-service-prm-nginx')
         ->withHeaders([
             'Accept' => 'application/json',
             'Access-Token' => 123,
