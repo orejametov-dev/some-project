@@ -1,12 +1,10 @@
 <?php
 
-
 namespace App\Http\Requests\ApiPrm\Stores;
 
 use App\Services\RegionService;
-use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
-
+use Illuminate\Validation\Rule;
 
 class StoreStoresRequest extends FormRequest
 {
@@ -37,7 +35,7 @@ class StoreStoresRequest extends FormRequest
                 'required',
                 Rule::in(RegionService::getKeys()),
             ],
-            'district' => 'required|string'
+            'district' => 'required|string',
         ];
     }
 }

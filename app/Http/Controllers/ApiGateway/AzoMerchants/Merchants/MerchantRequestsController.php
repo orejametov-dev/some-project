@@ -20,9 +20,8 @@ class MerchantRequestsController extends ApiBaseController
     public function index(Request $request)
     {
         $merchantRequests = MerchantRequest::query()
-            ->filterRequest($request)
+            ->filterRequests($request)
             ->orderRequest($request);
-
 
         if ($request->query('object') == true) {
             return $merchantRequests->first();
@@ -38,6 +37,7 @@ class MerchantRequestsController extends ApiBaseController
     public function show($id)
     {
         $merchant_request = MerchantRequest::query()->with('files')->findOrFail($id);
+
         return $merchant_request;
     }
 
@@ -94,7 +94,7 @@ class MerchantRequestsController extends ApiBaseController
     public function deleteFile($id, Request $request)
     {
         $this->validate($request, [
-            'file_id' => 'required|integer'
+            'file_id' => 'required|integer',
         ]);
 
         $merchant_request = MerchantRequest::query()->find($id);
@@ -111,13 +111,14 @@ class MerchantRequestsController extends ApiBaseController
     public function setEngage(Request $request, $id)
     {
         $this->validate($request, [
-            'engaged_by_id' => 'required|integer'
+            'engaged_by_id' => 'required|integer',
         ]);
 
         $user = AuthMicroService::getUserById($request->input('engaged_by_id'));
 
-        if (!$user)
+        if (!$user) {
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
+        }
 
         $merchant_request = MerchantRequest::findOrFail($id);
 
@@ -125,8 +126,6 @@ class MerchantRequestsController extends ApiBaseController
             $merchant_request->setEngage($user);
             $merchant_request->setStatusInProcess();
             $merchant_request->save();
-
-            $merchant_request->engaged_by = $user['data'];
 
             return $merchant_request;
         }
@@ -137,6 +136,7 @@ class MerchantRequestsController extends ApiBaseController
     public function allow($id, AllowMerchantRequestUseCase $allowMerchantRequestUseCase)
     {
         $merchant_request = $allowMerchantRequestUseCase->execute($id);
+
         return $merchant_request;
     }
 
@@ -162,16 +162,14 @@ class MerchantRequestsController extends ApiBaseController
 
     public function setOnBoarding($id)
     {
-
         $merchant_request = MerchantRequest::query()->find($id);
 
-        if ($merchant_request === null)
-        {
-            throw new BusinessException('Запрос не найден' , 'object_not_found', 404);
+        if ($merchant_request === null) {
+            throw new BusinessException('Запрос не найден', 'object_not_found', 404);
         }
 
         if (($merchant_request->main_completed == true && $merchant_request->documents_completed == true && $merchant_request->file_completed == true) === false) {
-            throw new BusinessException('Не все данные были заполнены для одобрения' , 'data_not_completed', 400);
+            throw new BusinessException('Не все данные были заполнены для одобрения', 'data_not_completed', 400);
         }
 
         $merchant_request->setStatusOnTraining();

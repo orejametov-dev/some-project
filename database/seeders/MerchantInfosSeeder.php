@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Modules\Merchants\Models\MerchantInfo;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -72,7 +71,7 @@ class MerchantInfosSeeder extends Seeder
         DB::table('merchant_infos')->insert([
             $merchant_info_1,
             $merchant_info_2,
-            $merchant_info_3
+            $merchant_info_3,
         ]);
     }
 }

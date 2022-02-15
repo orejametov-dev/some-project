@@ -1,13 +1,11 @@
 <?php
 
-
 namespace App\Http\Controllers\ApiMerchantGateway\Merchants;
 
-
 use App\Http\Controllers\ApiMerchantGateway\ApiBaseController;
+use App\Modules\Merchants\Models\AzoMerchantAccess;
 use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\Merchant;
-use App\Modules\Merchants\Models\AzoMerchantAccess;
 use App\Modules\Merchants\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -36,8 +34,9 @@ class MerchantsController extends ApiBaseController
 
         $azo_merchant_access = $this->azo_merchant_access;
 
-        $store = Cache::tags($this->merchant_id)->remember($azo_merchant_access->id.'detail_cache_of_merchant_stores', 60 * 60, function () {
+        $store = Cache::tags($this->merchant_id)->remember($azo_merchant_access->id . 'detail_cache_of_merchant_stores', 60 * 60, function () {
             $azo_merchant_access = AzoMerchantAccess::query()->byUserId($this->user->getId())->firstOrFail();
+
             return Store::query()
                 ->findOrFail($azo_merchant_access->store_id);
         });

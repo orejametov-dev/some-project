@@ -9,7 +9,7 @@ class BusinessException extends Exception
 {
     protected $string_code;
 
-    public function __construct($message = "", $string_code = '', $code = 400, Throwable $previous = null)
+    public function __construct($message = '', $string_code = '', $code = 400, Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
         $this->string_code = $string_code;

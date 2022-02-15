@@ -30,7 +30,7 @@ class MerchantRequestUploadFile extends FormRequest
                 'required',
                 'string',
                 'max:100',
-                Rule::in(array_keys(File::$registration_file_types))
+                Rule::in(array_keys(File::$registration_file_types)),
             ],
             'file' => 'required|file|mimes:jpeg,bmp,png,svg,jpg,pdf,xlsx,xls',
         ];

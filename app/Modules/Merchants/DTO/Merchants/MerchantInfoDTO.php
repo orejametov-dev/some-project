@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Modules\Merchants\DTO\Merchants;
-
 
 use App\Modules\Merchants\Models\Request;
 
@@ -45,8 +43,7 @@ class MerchantInfoDTO
         string $bank_account,
         string $bank_name,
         string $address
-    )
-    {
+    ) {
         $this->director_name = $director_name;
         $this->legal_name = $legal_name;
         $this->legal_name_prefix = $legal_name_prefix;
@@ -95,5 +92,4 @@ class MerchantInfoDTO
 
         return $this;
     }
-
 }

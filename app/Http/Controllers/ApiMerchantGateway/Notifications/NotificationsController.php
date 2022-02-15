@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Controllers\ApiMerchantGateway\Notifications;
-
 
 use App\Http\Controllers\ApiMerchantGateway\ApiBaseController;
 use App\Http\Resources\ApiMerchantGateway\Notifications\NotificationsResource;
@@ -15,7 +13,8 @@ class NotificationsController extends ApiBaseController
     public function index(Request $request)
     {
         $notifications = Notification::query()
-            ->filterRequest($request)->latest()
+            ->filterRequests($request)
+            ->latest()
             ->onlyByStore($this->store_id)
             ->OnlyMoreThanStartSchedule()
             ->latest();
@@ -24,7 +23,7 @@ class NotificationsController extends ApiBaseController
             return new NotificationsResource($notifications->first());
         }
 
-        if($request->query('fresh') == true) {
+        if ($request->query('fresh') == true) {
             $notifications->where('start_schedule', '<=', now())
                 ->where('end_schedule', '>=', now());
         }
@@ -42,7 +41,7 @@ class NotificationsController extends ApiBaseController
         });
 
         return [
-            'count' => $notifications
+            'count' => $notifications,
         ];
     }
 }

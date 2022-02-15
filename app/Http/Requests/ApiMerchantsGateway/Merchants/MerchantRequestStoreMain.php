@@ -32,7 +32,7 @@ class MerchantRequestStoreMain extends FormRequest
             'categories' => 'required|array',
             'approximate_sales' => 'required|integer',
             'region' => 'required|string',
-            'district' => 'required|string'
+            'district' => 'required|string',
         ];
     }
 }

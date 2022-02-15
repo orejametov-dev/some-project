@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Controllers\ApiCreditsGateway\Stores;
-
 
 use App\Http\Controllers\ApiCreditsGateway\ApiBaseController;
 use App\Http\Resources\ApiCredtisGateway\Stores\StoresResource;
@@ -14,7 +12,7 @@ class StoresController extends ApiBaseController
     public function index(Request $request)
     {
         $stores = Store::query()->with(['merchant'])
-            ->filterRequest($request);
+            ->filterRequests($request);
 
         if ($request->query('object') == true) {
             return new StoresResource($stores->first());

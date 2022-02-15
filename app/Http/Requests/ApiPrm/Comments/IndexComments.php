@@ -25,7 +25,7 @@ class IndexComments extends FormRequest
     {
         return [
             'commentable_type' => 'string|in:problem_case_for_prm,problem_case_for_merchant',
-            'commentable_id' => 'integer'
+            'commentable_id' => 'integer',
         ];
     }
 }

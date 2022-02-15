@@ -3,7 +3,6 @@
 namespace App\Services\SMS;
 
 use App\Exceptions\ApiBusinessException;
-use App\Exceptions\BusinessException;
 use App\Services\CacheService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -30,7 +29,7 @@ class OtpProtector
             $generated_time = Carbon::now();
             Cache::tags(CacheService::OTP)->put($this->key, [
                 'otps' => [$otp],
-                'generated_time' => $generated_time->toDateTimeString()
+                'generated_time' => $generated_time->toDateTimeString(),
             ], $ttl);
         } else {
             $otps = $this->cached_info['otps'];
@@ -43,7 +42,7 @@ class OtpProtector
             $merged_codes = array_merge([$otp], $otps);
             Cache::tags(CacheService::OTP)->put($this->key, [
                 'otps' => $merged_codes,
-                'generated_time' => $generated_time->toDateTimeString()
+                'generated_time' => $generated_time->toDateTimeString(),
             ], $ttl);
         }
     }
@@ -54,15 +53,15 @@ class OtpProtector
         if (!$this->cached_info) {
             throw new ApiBusinessException('СМС код не был отправлен', 'otp_not_sent', [
                 'ru' => 'СМС код не был отправлен',
-                'uz' => ' SMS kodi yuborilmadi'
-            ],400);
+                'uz' => ' SMS kodi yuborilmadi',
+            ], 400);
         }
 
         if (!in_array($otp, $this->cached_info['otps'])) {
             throw new ApiBusinessException('Неверный код подтверждения', 'wrong_otp', [
                 'ru' => 'Неверный код подтверждения',
-                'uz' => 'Tasdiqlash kodi noto\'g\'ri'
-            ] ,400);
+                'uz' => 'Tasdiqlash kodi noto\'g\'ri',
+            ], 400);
         }
 
         if ($forget) {
@@ -75,9 +74,8 @@ class OtpProtector
         if (!empty($this->cached_info['otps']) and count($this->cached_info['otps']) >= 3) {
             throw new ApiBusinessException('Лимит исчерпан', 'limit_exceeded', [
                 'ru' => 'Лимит исчерпан',
-                'uz' => ' limit tugadi'
-            ] , 400);
+                'uz' => ' limit tugadi',
+            ], 400);
         }
     }
 }
-

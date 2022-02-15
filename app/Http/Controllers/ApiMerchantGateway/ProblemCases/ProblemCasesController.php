@@ -1,19 +1,17 @@
 <?php
 
-
 namespace App\Http\Controllers\ApiMerchantGateway\ProblemCases;
 
-
+use App\Exceptions\BusinessException;
+use App\Filters\CommonFilters\StatusIdFilter;
 use App\Http\Controllers\ApiMerchantGateway\ApiBaseController;
 use App\Http\Resources\ApiMerchantGateway\ProblemCases\ProblemCaseResource;
 use App\HttpServices\Hooks\DTO\HookData;
-use App\HttpServices\Notify\NotifyMicroService;
 use App\Jobs\SendHook;
 use App\Jobs\SendSmsJob;
 use App\Modules\Merchants\Models\ProblemCase;
 use App\Services\SMS\SmsMessages;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Cache;
 
 class ProblemCasesController extends ApiBaseController
@@ -22,7 +20,9 @@ class ProblemCasesController extends ApiBaseController
     {
         $problemCases = ProblemCase::query()->with('before_tags')
             ->byMerchant($this->merchant_id)
-            ->filterRequests($request);
+            ->filterRequest($request, [
+                StatusIdFilter::class,
+            ]);
 
         if ($request->query('object') == true) {
             $problemCases->first();
@@ -34,8 +34,11 @@ class ProblemCasesController extends ApiBaseController
     public function show($id, Request $request)
     {
         $problemCase = ProblemCase::with('before_tags')
-            ->filterRequests($request)
-            ->findOrFail($id);
+            ->find($id);
+
+        if ($problemCase === null) {
+            throw new BusinessException('Проблемный кейс не найден', 'object_not_found', 404);
+        }
 
         return new ProblemCaseResource($problemCase);
     }
@@ -43,7 +46,7 @@ class ProblemCasesController extends ApiBaseController
     public function setCommentFromMerchant($id, Request $request)
     {
         $this->validate($request, [
-            'body' => 'string|required'
+            'body' => 'string|required',
         ]);
 
         $problemCase = ProblemCase::findOrFail($id);
@@ -56,7 +59,7 @@ class ProblemCasesController extends ApiBaseController
     public function setStatus($id, Request $request)
     {
         $this->validate($request, [
-            'status_id' => 'required|integer'
+            'status_id' => 'required|integer',
         ]);
 
         $problemCase = ProblemCase::findOrFail($id);
@@ -64,7 +67,7 @@ class ProblemCasesController extends ApiBaseController
         $problemCase->save();
 
         if ($problemCase->status_id === ProblemCase::FINISHED) {
-            preg_match("/" . preg_quote("9989") . "(.*)/", $problemCase->search_index, $phone);
+            preg_match('/' . preg_quote('9989') . '(.*)/', $problemCase->search_index, $phone);
 
             if (!empty($phone)) {
                 $message = SmsMessages::onFinishedProblemCases($problemCase->client_name . ' ' . $problemCase->client_surname, $problemCase->id);
@@ -85,7 +88,6 @@ class ProblemCasesController extends ApiBaseController
             action_at: null,
             created_by_str: $this->user->getName(),
         ));
-
 
         return new ProblemCaseResource($problemCase);
     }
@@ -110,7 +112,7 @@ class ProblemCasesController extends ApiBaseController
 
     public function getNewProblemCasesCounter(Request $request)
     {
-        $counter =  Cache::remember('new-problem-cases-counter_' . $this->merchant_id, 10 * 60, function () use ($request) {
+        $counter = Cache::remember('new-problem-cases-counter_' . $this->merchant_id, 10 * 60, function () use ($request) {
             return ProblemCase::query()
                 ->whereNull('engaged_by_id')
                 ->whereNull('engaged_by_name')
@@ -118,8 +120,6 @@ class ProblemCasesController extends ApiBaseController
                 ->filterRequests($request)->onlyNew()->count();
         });
 
-
         return response()->json(['count' =>  (int) $counter]);
     }
-
 }

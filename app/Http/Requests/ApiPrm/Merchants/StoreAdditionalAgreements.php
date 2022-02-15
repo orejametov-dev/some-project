@@ -4,7 +4,6 @@ namespace App\Http\Requests\ApiPrm\Merchants;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-
 class StoreAdditionalAgreements extends FormRequest
 {
     /**

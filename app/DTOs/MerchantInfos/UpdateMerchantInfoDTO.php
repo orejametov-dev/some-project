@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace App\DTOs\MerchantInfos;
 
-
 use Alifuz\Utils\Parser\ParseDataTrait;
 
 class UpdateMerchantInfoDTO
 {
-
     use ParseDataTrait;
 
     public function __construct(
@@ -22,8 +20,7 @@ class UpdateMerchantInfoDTO
         public string $bank_account,
         public string $bank_name,
         public string $address,
-    )
-    {
+    ) {
     }
 
     public static function fromArray(array $data): self

@@ -18,12 +18,11 @@ use Carbon\Carbon;
 class MassStoreApplicationConditionUseCase
 {
     public function __construct(
-        private AlifshopHttpRepository                      $alifshopHttpRepository,
+        private AlifshopHttpRepository $alifshopHttpRepository,
         private CheckStartedAtAndFinishedAtConditionUseCase $checkStartedAtAndFinishedAtConditionUseCase,
-        private FlushCacheUseCase                           $flushCacheUseCase,
-        private GatewayAuthUser                             $gatewayAuthUser
-    )
-    {
+        private FlushCacheUseCase $flushCacheUseCase,
+        private GatewayAuthUser $gatewayAuthUser
+    ) {
     }
 
     public function execute(MassStoreConditionDTO $massStoreConditionDTO)
@@ -34,7 +33,7 @@ class MassStoreApplicationConditionUseCase
 
         if (array_diff($massStoreConditionDTO->merchant_ids, $merchants->pluck('id')->toArray()) != null) {
             throw new ApiBusinessException('Мерчант не существует', 'merchant_not_exists', [
-                'ru' => 'Мерчант не существует'
+                'ru' => 'Мерчант не существует',
             ], 400);
         }
 
@@ -44,7 +43,7 @@ class MassStoreApplicationConditionUseCase
 
         if (array_diff($massStoreConditionDTO->template_ids, $templates->pluck('id')->toArray()) != null) {
             throw new ApiBusinessException('Условие не существует', 'merchant_not_exists', [
-                'ru' => 'Условие не существует'
+                'ru' => 'Условие не существует',
             ], 400);
         }
 
@@ -58,9 +57,12 @@ class MassStoreApplicationConditionUseCase
                     ->exists();
 
                 if ($condition) {
-                    throw new BusinessException('Данное условие существует для этого мерчанта '
+                    throw new BusinessException(
+                        'Данное условие существует для этого мерчанта '
                         . $merchant->name . ' ' . $template->duration . '|' . $template->commission . '%',
-                        'condition_exists', 400);
+                        'condition_exists',
+                        400
+                    );
                 }
             }
         }
@@ -68,11 +70,10 @@ class MassStoreApplicationConditionUseCase
         foreach ($merchants as $merchant) {
             $main_store = $merchant->stores()->where('is_main', true)->first();
 
-            if ($main_store === false) {
+            if ($main_store === null) {
                 throw new BusinessException('У данного мерчанта нет основного магазина ' . $merchant->name, 'main_store_not_exists', 400);
             }
             foreach ($templates as $template) {
-
                 $condition = new Condition();
                 $condition->duration = $template->duration;
                 $condition->commission = $template->commission;
@@ -81,8 +82,8 @@ class MassStoreApplicationConditionUseCase
                 $condition->event_id = $massStoreConditionDTO->event_id;
                 $condition->merchant_id = $merchant->id;
                 $condition->store_id = $main_store->id;
-                $condition->started_at = $massStoreConditionDTO->started_at ? Carbon::parse($massStoreConditionDTO->started_at)->format('Y-m-d') : null;
-                $condition->finished_at = $massStoreConditionDTO->finished_at ? Carbon::parse($massStoreConditionDTO->finished_at)->format('Y-m-d') : null;
+                $condition->started_at = $massStoreConditionDTO->started_at ? Carbon::parse($massStoreConditionDTO->started_at) : null;
+                $condition->finished_at = $massStoreConditionDTO->finished_at ? Carbon::parse($massStoreConditionDTO->finished_at) : null;
                 $condition->active = $massStoreConditionDTO->started_at === null;
 
                 $condition->save();
@@ -111,10 +112,9 @@ class MassStoreApplicationConditionUseCase
                     'id' => $item->id,
                     'commission' => $item->commission,
                     'duration' => $item->duration,
-                    'event_id' => $item->event_id
+                    'event_id' => $item->event_id,
                 ];
             });
-
 
             $this->alifshopHttpRepository->storeOrUpdateConditions($merchant->company_id, $conditions);
             $this->flushCacheUseCase->execute($merchant->id);

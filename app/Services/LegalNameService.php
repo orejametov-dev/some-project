@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Exceptions\ApiBusinessException;
-use App\Exceptions\BusinessException;
 
 class LegalNameService
 {
@@ -11,32 +10,32 @@ class LegalNameService
         'LLC' => [
             'body_uz' => [
                 'value' => 'MCHJ',
-                'description' => 'Masuliyati Cheklangan Jamiyat'
+                'description' => 'Masuliyati Cheklangan Jamiyat',
            ],
             'body_ru' => [
                 'value' => 'ООО',
-                'description' => 'Общество с Ограниченной Ответственностью'
-            ]
+                'description' => 'Общество с Ограниченной Ответственностью',
+            ],
         ],
         'IE' => [
             'body_uz' => [
                 'value' => 'YaTT',
-                'description' => 'Yakka Tartibdagi Tadbirkor'
+                'description' => 'Yakka Tartibdagi Tadbirkor',
             ],
             'body_ru' => [
                 'value' => 'ИП',
-                'description' => 'Индивидуальный Предприниматель'
-            ]
+                'description' => 'Индивидуальный Предприниматель',
+            ],
         ],
         'FE' => [
             'body_uz' => [
                 'value' => 'XK',
-                'description' => 'Xorijiy Korxona'
+                'description' => 'Xorijiy Korxona',
             ],
             'body_ru' => [
                 'value' => 'ИП',
-                'description' => 'Иностранное Преприятие'
-            ]
+                'description' => 'Иностранное Преприятие',
+            ],
         ],
         'UE' => [
             'body_uz' => [
@@ -45,39 +44,39 @@ class LegalNameService
             ],
             'body_ru' => [
                 'value' => 'УП',
-                'description' => 'Унитарная Предприятия'
-            ]
+                'description' => 'Унитарная Предприятия',
+            ],
         ],
         'GUE' => [
             'body_uz' => [
                 'value' => 'DUK',
-                'description' => 'Davlat Unitar Korxonasi'
+                'description' => 'Davlat Unitar Korxonasi',
             ],
             'body_ru' => [
                 'value' => 'ГУП',
-                'description' => 'Государственное Унитарное Предприятие'
-            ]
+                'description' => 'Государственное Унитарное Предприятие',
+            ],
         ],
         'SP' => [
             'body_uz' => [
                 'value' => 'XK',
-                'description' => 'Xususiy Korxona'
+                'description' => 'Xususiy Korxona',
             ],
             'body_ru' => [
                 'value' => 'ЧП',
-                'description' => 'Частное Предприятие'
-            ]
+                'description' => 'Частное Предприятие',
+            ],
         ],
         'FP' => [
             'body_uz' => [
                 'value' => 'OK',
-                'description' => 'Oilaviy Korxona'
+                'description' => 'Oilaviy Korxona',
             ],
             'body_ru' => [
                 'value' => 'СП',
-                'description' => 'Семейное предприятие'
-            ]
-        ]
+                'description' => 'Семейное предприятие',
+            ],
+        ],
 
     ];
 
@@ -88,12 +87,13 @@ class LegalNameService
 
     public static function findNamePrefix($prefix): array
     {
-        if(!array_key_exists($prefix, self::$legal_name_prefixes)) {
-            throw new ApiBusinessException("Такого юр.имени нету $prefix", 'prefix_not_have' , [
+        if (!array_key_exists($prefix, self::$legal_name_prefixes)) {
+            throw new ApiBusinessException("Такого юр.имени нету $prefix", 'prefix_not_have', [
                 'ru'  => 'Такого юридического лица не существует',
-                'uz' => 'Bunday yuridik shaxs mavjud emas'
-            ],400);
+                'uz' => 'Bunday yuridik shaxs mavjud emas',
+            ], 400);
         }
+
         return self::$legal_name_prefixes[$prefix];
     }
 }

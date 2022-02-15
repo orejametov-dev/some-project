@@ -31,13 +31,14 @@ class MerchantsController extends ApiBaseController
     public function index(Request $request)
     {
         $merchants = Merchant::query()->with(['stores', 'tags'])
-            ->filterRequest($request)
+            ->filterRequests($request)
             ->orderRequest($request);
 
         if ($request->query('object') == 'true') {
             return $merchants->first();
         }
-        return $merchants->paginate($request->query('per_page'));
+
+        return $merchants->paginate($request->query('per_page') ?? 15);
     }
 
     public function show($id)
@@ -48,7 +49,7 @@ class MerchantsController extends ApiBaseController
     public function store(StoreMerchantRequest $request, StoreMerchantUseCase $storeMerchantUseCase)
     {
         $merchant = $storeMerchantUseCase->execute(
-            company_id: (int)$request->input('company_id')
+            company_id: (int) $request->input('company_id')
         );
 
         return $merchant;
@@ -56,8 +57,9 @@ class MerchantsController extends ApiBaseController
 
     public function update($id, UpdateMerchantRequest $request, UpdateMerchantUseCase $updateMerchantUseCase)
     {
-        $updateMerchantDTO = UpdateMerchantDTO::fromArray((int)$id , $request->validated());
+        $updateMerchantDTO = UpdateMerchantDTO::fromArray((int) $id, $request->validated());
         $merchant = $updateMerchantUseCase->execute($updateMerchantDTO);
+
         return $merchant;
     }
 
@@ -90,7 +92,7 @@ class MerchantsController extends ApiBaseController
     public function setTags($id, Request $request)
     {
         $this->validate($request, [
-            'tags' => 'required|array'
+            'tags' => 'required|array',
         ]);
         $merchant = Merchant::query()->findOrFail($id);
         $tags = $request->input('tags');
@@ -119,7 +121,7 @@ class MerchantsController extends ApiBaseController
                 'merchants.name',
                 DB::raw('sum(merchant_additional_agreements.limit) as agreement_sum'),
                 'merchants.current_sales',
-                'merchant_infos.limit'
+                'merchant_infos.limit',
             ])
             ->leftJoin('merchant_infos', 'merchants.id', '=', 'merchant_infos.merchant_id')
             ->leftJoin('merchant_additional_agreements', 'merchants.id', '=', 'merchant_additional_agreements.merchant_id')
@@ -133,14 +135,14 @@ class MerchantsController extends ApiBaseController
         return DB::table(DB::raw("({$merchant_query->toSql()}) as sub_query"))
             ->select([
                 'sub_query.id',
-                'sub_query.name'
+                'sub_query.name',
             ])->whereRaw("(IFNULL(sub_query.limit, 0) + IFNULL(sub_query.agreement_sum, 0)) $percentage_of_limit <= sub_query.current_sales")->get();
     }
 
     public function toggle($id, Request $request)
     {
         $this->validate($request, [
-            'activity_reason_id' => 'integer|required'
+            'activity_reason_id' => 'integer|required',
         ]);
 
         $activity_reason = ActivityReason::where('type', 'MERCHANT')
@@ -153,13 +155,14 @@ class MerchantsController extends ApiBaseController
         $merchant->activity_reasons()->attach($activity_reason->id, [
             'active' => $merchant->active,
             'created_by_id' => $this->user->getId(),
-            'created_by_name' => $this->user->getName()
+            'created_by_name' => $this->user->getName(),
         ]);
 
         CompanyService::setStatusNotActive($merchant->company_id);
 
         Cache::tags($merchant->id)->flush();
         Cache::tags('merchants')->flush();
+
         return $merchant;
     }
 
@@ -175,6 +178,7 @@ class MerchantsController extends ApiBaseController
         Cache::tags($merchant->id)->flush();
         Cache::tags('azo_merchants')->flush();
         Cache::tags('company')->flush();
+
         return $merchant;
     }
 
@@ -198,7 +202,7 @@ class MerchantsController extends ApiBaseController
         if ($merchant->competitors()->find($competitor->id)) {
             throw new ApiBusinessException('Информация о данном конкуренте на этого мерчанта уже была создана', 'merchant_competitor_exists', [
                 'ru' => 'Информация о данном конкуренте на этого мерчанта уже была создана',
-                'uz' => 'Merchantdagi bu konkurent haqidagi ma\'lumot qo\'shib bo\'lingan ekan'
+                'uz' => 'Merchantdagi bu konkurent haqidagi ma\'lumot qo\'shib bo\'lingan ekan',
             ], 400);
         }
 
@@ -224,7 +228,6 @@ class MerchantsController extends ApiBaseController
             'partnership_at' => Carbon::parse($request->input('partnership_at'))->format('Y-m-d H:i:s'),
         ]);
 
-
         return $merchant->load('competitors');
     }
 
@@ -240,4 +243,3 @@ class MerchantsController extends ApiBaseController
         return response()->json(['message' => 'Данные о конкуренте были удалены у этого мерчанта']);
     }
 }
-

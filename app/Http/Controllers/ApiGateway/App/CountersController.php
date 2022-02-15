@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Controllers\ApiGateway\App;
-
 
 use App\Http\Controllers\Controller;
 use App\Modules\Merchants\Models\Request;
@@ -19,5 +17,4 @@ class CountersController extends Controller
 
         return response()->json(compact('count'));
     }
-
 }

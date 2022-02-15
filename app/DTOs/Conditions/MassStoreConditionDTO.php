@@ -20,8 +20,7 @@ class MassStoreConditionDTO
         public bool $post_alifshop,
         public ?Carbon $started_at,
         public ?Carbon $finished_at,
-    )
-    {
+    ) {
     }
 
     public static function fromArray(array $data): self

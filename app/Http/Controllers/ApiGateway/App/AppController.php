@@ -1,10 +1,7 @@
 <?php
 
-
 namespace App\Http\Controllers\ApiGateway\App;
 
-
-use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\CancelReason;
@@ -48,12 +45,11 @@ class AppController extends ApiBaseController
 
         $client_type_register = ClientTypeRegisterService::getClientTypeRegister();
 
-
         $me = [
             'id' => $authUser->getId(),
             'name' => $authUser->getName(),
             'phone' => $authUser->getPhone(),
-            'avatar_link' => $authUser->getAvatarLink()
+            'avatar_link' => $authUser->getAvatarLink(),
         ];
 
         return response()->json(compact(
@@ -82,8 +78,8 @@ class AppController extends ApiBaseController
     {
         if ($request->query('region')) {
             return DistrictService::getDistrictsByRegion($request->query('region'));
-
         }
+
         return DistrictService::getDistricts();
     }
 }

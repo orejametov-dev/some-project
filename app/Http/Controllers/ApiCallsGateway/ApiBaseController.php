@@ -13,6 +13,7 @@ class ApiBaseController extends Controller
     {
         $this->middleware(function ($request, $next) {
             $this->user = app(GatewayAuthUser::class);
+
             return $next($request);
         });
     }

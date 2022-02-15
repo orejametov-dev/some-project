@@ -14,14 +14,14 @@ class MerchantTagController extends Controller
         if ($request->query('object') == 'true') {
             return $merchant_tag_query->first();
         }
-        return $merchant_tag_query->paginate($request->query('per_page'));
 
+        return $merchant_tag_query->paginate($request->query('per_page') ?? 15);
     }
 
     public function store(Request $request)
     {
         $this->validate($request, [
-            'title' => 'required|unique:merchant_tags,title|min:5|max:255'
+            'title' => 'required|unique:merchant_tags,title|min:5|max:255',
         ]);
 
         $merchant_tag = new Tag();
@@ -34,6 +34,7 @@ class MerchantTagController extends Controller
     public function show($tag_id)
     {
         $tag = Tag::query()->findOrFail($tag_id);
+
         return $tag->merchants;
     }
 
@@ -45,8 +46,8 @@ class MerchantTagController extends Controller
             return response()->json(['message' => 'Тег невозможно удалить.']);
         }
 
-
         $tag->delete();
+
         return response()->json(['message' => 'Тэг успешно удалён.']);
     }
 }

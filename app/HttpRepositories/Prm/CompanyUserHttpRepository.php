@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\HttpRepositories\Prm;
-
 
 use App\HttpRepositories\HttpResponses\Prm\CompanyUserHttpResponse;
 use Illuminate\Http\Client\PendingRequest;
@@ -16,7 +14,7 @@ class CompanyUserHttpRepository
             'user_id' => $user_id,
             'company_id' => $company_id,
             'phone' => $phone,
-            'full_name' => $full_name
+            'full_name' => $full_name,
         ])->throw()->json();
 
         return CompanyUserHttpResponse::fromArray($result);
@@ -25,10 +23,10 @@ class CompanyUserHttpRepository
     public function getCompanyUserByUserId($user_id): ?CompanyUserHttpResponse
     {
         $result = $this->getHttpClient()->get('companies/users/get-user-id', [
-            'user_id' => $user_id
+            'user_id' => $user_id,
         ])->throw()->json();
 
-        if($result === null) {
+        if ($result === null) {
             return null;
         }
 
@@ -38,7 +36,7 @@ class CompanyUserHttpRepository
     public function checkCompanyUserToExistByUserId($user_id): bool
     {
         $result = $this->getHttpClient()->get('companies/users/get-user-id', [
-            'user_id' => $user_id
+            'user_id' => $user_id,
         ])->throw()->json();
 
         return $result !== null;
@@ -50,8 +48,7 @@ class CompanyUserHttpRepository
             ->withHeaders([
                 'Accept' => 'application/json',
                 'Access-Token' => config('local_services.service_prm.service_token'),
-                'Content-Type' => 'application/json'
+                'Content-Type' => 'application/json',
             ]);
     }
-
 }

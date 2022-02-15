@@ -21,7 +21,7 @@ class MerchantTag extends Seeder
             'merchant_type' => Merchant::class,
             'tag_id' => 2,
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
         $merchant_1_tag_3 = [
@@ -29,25 +29,23 @@ class MerchantTag extends Seeder
             'merchant_type' => Merchant::class,
             'tag_id' => 3,
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
-
 
         $merchant_2_tag_4 = [
             'merchant_id' => 2,
             'merchant_type' => Merchant::class,
             'tag_id' => 4,
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
-
 
         $merchant_4_tag_1 = [
             'merchant_id' => 4,
             'merchant_type' => Merchant::class,
             'tag_id' => 1,
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
         DB::table('merchant_tag')->insert([

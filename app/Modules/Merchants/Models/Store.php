@@ -2,6 +2,7 @@
 
 namespace App\Modules\Merchants\Models;
 
+use App\Filters\Store\StoreFilters;
 use App\Modules\Merchants\Traits\StoreRelationshipsTrait;
 use App\Traits\SortableByQueryParams;
 use Eloquent;
@@ -13,27 +14,26 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
 /**
- * Class Store
+ * Class Store.
  *
- * @package App\Modules\Partners\Models
- * @property $id
- * @property $name
- * @property $is_main
- * @property $phone
- * @property $address
- * @property $region
- * @property $lat
- * @property $long
- * @property $responsible_person
- * @property $responsible_person_phone
- * @property $merchant_id
- * @property $client_type_register
+ * @property int $id
+ * @property string $name
+ * @property bool $is_main
+ * @property string $phone
+ * @property string $address
+ * @property string $region
+ * @property float $lat
+ * @property float $long
+ * @property string $responsible_person
+ * @property string $responsible_person_phone
+ * @property int $merchant_id
+ * @property string $client_type_register
  * @property Merchant $merchant
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Collection|Condition[] $application_conditions
  * @property-read int|null $application_conditions_count
- * @method static Builder|Store filterRequest(Request $request)
+ * @method static Builder|Store filterRequests(Request $request)
  * @method static Builder|Store main()
  * @method static Builder|Store newModelQuery()
  * @method static Builder|Store newQuery()
@@ -60,10 +60,10 @@ class Store extends Model
         'responsible_person_phone',
         'active',
         'district',
-        'client_type_register'
+        'client_type_register',
     ];
 
-    public function scopeFilterRequest(Builder $query, Request $request)
+    public function scopeFilterRequests(Builder $query, Request $request)
     {
         $searchIndex = $request->q;
         if ($merchant_id = $request->query('merchant_id')) {
@@ -118,5 +118,10 @@ class Store extends Model
     public function scopeActive(Builder $query)
     {
         $query->where('active', true);
+    }
+
+    public function scopeFilterRequest(Builder $builder, Request $request, array $filters = [])
+    {
+        return (new StoreFilters($request, $builder))->execute($filters);
     }
 }

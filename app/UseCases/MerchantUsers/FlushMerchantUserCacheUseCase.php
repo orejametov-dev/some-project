@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\UseCases\MerchantUsers;
-
 
 use Illuminate\Cache\Repository as CacheRepository;
 
@@ -10,8 +8,7 @@ class FlushMerchantUserCacheUseCase
 {
     public function __construct(
         private CacheRepository $cacheRepository,
-    )
-    {
+    ) {
     }
 
     public function execute(int $user_id, int $merchant_id)

@@ -24,7 +24,7 @@ class SetResponsibleUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'maintainer_id' => 'required|integer'
+            'maintainer_id' => 'required|integer',
         ];
     }
 }

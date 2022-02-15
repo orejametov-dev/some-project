@@ -27,7 +27,7 @@ class CompetitorsRequest extends FormRequest
             'competitor_id' => 'required|integer',
             'volume_sales' => 'required|integer',
             'percentage_approve' => 'required|integer',
-            'partnership_at' => 'required|date'
+            'partnership_at' => 'required|date',
         ];
     }
 }

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Http\Controllers\ApiOnlineGateway\Merchants;
 
 use App\Http\Controllers\Controller;
@@ -15,8 +14,8 @@ class MerchantsController extends Controller
     public function index(Request $request)
     {
         $query = Merchant::query()
-            ->whereHas('application_conditions' , function ($query) {
-                $query->where('active' , true);
+            ->whereHas('application_conditions', function ($query) {
+                $query->where('active', true);
             })
             ->with('tags')
             ->active()
@@ -24,7 +23,7 @@ class MerchantsController extends Controller
             ->orderByDesc('recommend')
             ->orderByDesc('current_sales');
 
-        return MerchantResource::collection($query->paginate($request->query('per_page')));
+        return MerchantResource::collection($query->paginate($request->query('per_page') ?? 15));
     }
 
     public function show($id, Request $request)

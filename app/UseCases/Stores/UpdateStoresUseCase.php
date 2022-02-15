@@ -2,20 +2,15 @@
 
 namespace App\UseCases\Stores;
 
-use App\DTOs\Conditions\UpdateConditionDTO;
 use App\DTOs\Stores\UpdateStoresDTO;
-use App\Modules\Merchants\Models\Store;
 use App\UseCases\Cache\FlushCacheUseCase;
-use App\UseCases\Merchants\FindMerchantUseCase;
-use Illuminate\Support\Facades\Cache;
 
 class UpdateStoresUseCase
 {
     public function __construct(
         private FindStoresUseCase $findStoresUseCase,
         private FlushCacheUseCase $flushCacheUseCase
-    )
-    {
+    ) {
     }
 
     public function execute(UpdateStoresDTO $updateStoresDTO)

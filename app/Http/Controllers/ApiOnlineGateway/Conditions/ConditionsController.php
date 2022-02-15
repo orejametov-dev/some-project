@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Controllers\ApiOnlineGateway\Conditions;
-
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiOnlineGateway\ConditionsResource;
@@ -16,7 +14,7 @@ class ConditionsController extends Controller
         $conditionQuery = Condition::query()
             ->active()
             ->postMerchant()
-            ->filterRequest($request)
+            ->filterRequests($request)
             ->orderRequest($request);
 
         return ConditionsResource::collection($conditionQuery->paginate($request->query('per_page') ?? 15));

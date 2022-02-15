@@ -10,8 +10,9 @@ class AlifshopService
     {
         $client = self::createRequest();
         $response = $client->request('POST', '/gate/service-merchants/companies/' . $company_id . '/conditions', [
-            'json' => compact('conditions')
+            'json' => compact('conditions'),
         ]);
+
         return self::parseResponse($response);
     }
 
@@ -21,7 +22,7 @@ class AlifshopService
             'base_uri' => config('local_services.alifshop.domain'),
             'headers' => [
                 'Access-Token' => config('local_services.alifshop.token'),
-                'Accept' => 'application/json'
+                'Accept' => 'application/json',
             ],
         ]);
     }

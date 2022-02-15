@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Controllers\ApiMerchantGateway\Stores;
-
 
 use App\Http\Controllers\ApiMerchantGateway\ApiBaseController;
 use App\Modules\Merchants\Models\Store;

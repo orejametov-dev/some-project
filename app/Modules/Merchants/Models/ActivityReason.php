@@ -16,11 +16,8 @@ class ActivityReason extends Model
         return $this->belongsToMany(Store::class, 'store_activities');
     }
 
-
     public function merchants()
     {
         return $this->belongsToMany(Merchant::class, 'merchant_activities', 'activity_reason_id', 'merchant_id');
     }
-
-
 }

@@ -10,20 +10,19 @@ class CreditNumberApplicationDataResponse
     use ParseDataTrait;
 
     public function __construct(
-        public int     $id,
-        public int     $merchant_id,
-        public int     $store_id,
-        public int     $client_id,
-        public string  $client_name,
-        public string  $client_surname,
-        public string  $client_patronymic,
-        public string  $phone,
-        public ?array  $application_items,
-        public int     $post_or_pre_created_by_id,
-        public string  $post_or_pre_created_by_name,
+        public int $id,
+        public int $merchant_id,
+        public int $store_id,
+        public int $client_id,
+        public string $client_name,
+        public string $client_surname,
+        public string $client_patronymic,
+        public string $phone,
+        public ?array $application_items,
+        public int $post_or_pre_created_by_id,
+        public string $post_or_pre_created_by_name,
         public ?Carbon $credit_contract_date,
-    )
-    {
+    ) {
     }
 
     public static function fromArray(array $data): self
@@ -38,8 +37,8 @@ class CreditNumberApplicationDataResponse
             self::parseString($data['client']['patronymic']),
             self::parseString($data['client']['phone']),
             self::parseNullableArray($data['application_items']),
-            self::parseInt($data['merchant_engaged_by']['id']),
-            self::parseString($data['merchant_engaged_by']['name']),
+            self::parseNullableInt($data['merchant_engaged_by']['id']),
+            self::parseNullableString($data['merchant_engaged_by']['name']),
             Carbon::parse($data['contract_date'])
         );
     }

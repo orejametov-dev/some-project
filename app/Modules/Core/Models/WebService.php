@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Modules\Core\Models\WebService
+ * App\Modules\Core\Models\WebService.
  *
  * @property int $id
  * @property string $name
@@ -27,6 +27,6 @@ class WebService extends Model
     use CacheModel;
 
     protected $hidden = [
-        'token', 'note', 'created_at', 'updated_at'
+        'token', 'note', 'created_at', 'updated_at',
     ];
 }

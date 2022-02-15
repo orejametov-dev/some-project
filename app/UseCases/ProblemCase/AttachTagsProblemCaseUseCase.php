@@ -25,7 +25,6 @@ class AttachTagsProblemCaseUseCase
         }
         $problemCase->tags()->attach($tags);
 
-
         return response()->json($problemCase->load('tags'));
     }
 }

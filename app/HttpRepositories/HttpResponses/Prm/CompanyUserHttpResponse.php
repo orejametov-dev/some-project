@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\HttpRepositories\HttpResponses\Prm;
-
 
 use Alifuz\Utils\Parser\ParseDataTrait;
 use App\HttpRepositories\HttpResponses\AbstractHttpResponse;
@@ -17,8 +15,7 @@ class CompanyUserHttpResponse extends AbstractHttpResponse
         public int $company_id,
         public string $name,
         public string $phone
-    )
-    {
+    ) {
     }
 
     public static function fromArray(array $data): self
