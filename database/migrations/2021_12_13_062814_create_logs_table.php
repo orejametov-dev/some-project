@@ -11,7 +11,7 @@ class CreateLogsTable extends Migration
      *
      * @return void
      */
-    protected $connection = 'mongodb';
+    //protected $connection = 'mongodb';
 
     public function up()
     {

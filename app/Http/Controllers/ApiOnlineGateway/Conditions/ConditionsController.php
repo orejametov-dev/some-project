@@ -14,7 +14,7 @@ class ConditionsController extends Controller
         $conditionQuery = Condition::query()
             ->active()
             ->postMerchant()
-            ->filterRequest($request)
+            ->filterRequests($request)
             ->orderRequest($request);
 
         return ConditionsResource::collection($conditionQuery->paginate($request->query('per_page') ?? 15));

@@ -1,10 +1,14 @@
 <?php
 
+use App\Http\Controllers\ApiGate\Complaints\ComplaintsController;
 use App\Http\Controllers\ApiGate\Conditions\ConditionsController;
 use App\Http\Controllers\ApiGate\Merchants\AzoMerchantAccesses;
 use App\Http\Controllers\ApiGate\Merchants\MerchantsController;
 use App\Http\Controllers\ApiGate\Stores\StoresController;
 use Illuminate\Support\Facades\Route;
+
+//Core
+Route::post('/complaints', [ComplaintsController::class, 'store']);
 
 //Core
 Route::get('/merchants/{merchant_id}/conditions/{condition_id}', [ConditionsController::class, 'getConditionByMerchantId']);
