@@ -8,7 +8,7 @@ services:
       context: ./php/
     volumes:
       - ../../:/app
-      - ~/.composer-docker/cache:/root/.composer/cache:delegated
+      - alif-infra-composer-cache:/root/.composer/cache:delegated
       - ./php/php-fpm.conf:/usr/local/etc/php-fpm.d/www.override.conf:ro
       - ./php/php.ini:/usr/local/etc/php/conf.d/php-override.ini:ro
     ports:
@@ -32,6 +32,9 @@ services:
     image: $IMAGE_REDIS
     ports:
       - 127.0.4.1:6379:6379
+
+volumes:
+  alif-infra-composer-cache:
 
 networks:
   default:
