@@ -12,6 +12,8 @@ parameters:
 
     level: 5
 
+    tmpDir: /app/storage/framework/cache/phpstan
+
     checkMissingIterableValueType: false
 
 
