@@ -37,8 +37,8 @@ class CreditNumberApplicationDataResponse
             self::parseString($data['client']['patronymic']),
             self::parseString($data['client']['phone']),
             self::parseNullableArray($data['application_items']),
-            self::parseInt($data['merchant_engaged_by']['id']),
-            self::parseString($data['merchant_engaged_by']['name']),
+            self::parseNullableInt($data['merchant_engaged_by']['id']),
+            self::parseNullableString($data['merchant_engaged_by']['name']),
             Carbon::parse($data['contract_date'])
         );
     }
