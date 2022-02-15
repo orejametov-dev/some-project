@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\ApiMerchantGateway\Merchants;
 
-use Alifuz\Utils\Gateway\Entities\GatewayApplication;
+use App\DTOs\MerchantRequest\StoreMerchantRequestDTO;
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiMerchantsGateway\Merchants\MerchantRequestStoreMain;
-use App\HttpServices\Company\CompanyService;
 use App\Modules\Merchants\Models\Request as MerchantRequest;
 use App\Services\DistrictService;
 use App\Services\LegalNameService;
 use App\Services\RegionService;
+use App\UseCases\MerchantRequests\StoreMainMerchantRequestUseCase;
 use Illuminate\Http\Request;
 
 class MerchantRequestsController extends Controller
@@ -37,31 +37,9 @@ class MerchantRequestsController extends Controller
         return $merchant_request;
     }
 
-    public function storeMain(MerchantRequestStoreMain $request, GatewayApplication $gatewayApplication)
+    public function storeMain(MerchantRequestStoreMain $request, StoreMainMerchantRequestUseCase $storeMainMerchantRequestUseCase)
     {
-        $merchant_request = MerchantRequest::query()
-            ->where('user_phone', $request->user_phone)
-            ->orderByDesc('id')
-            ->first();
-
-        if ($merchant_request && $merchant_request->status_id !== MerchantRequest::TRASH) {
-            throw new BusinessException('Запрос с таким номером телефона уже существует, статус запроса '
-                . MerchantRequest::getOneById((int) $merchant_request->status_id)->name);
-        }
-
-        if (CompanyService::getCompanyByName($request->input('name'))) {
-            return response()->json(['message' => 'Указанное имя компании уже занято'], 400);
-        }
-
-        $merchant_request = new MerchantRequest();
-        $merchant_request->fill($request->validated());
-        $merchant_request->created_from_name = $gatewayApplication->getApplication()->getValue();
-        $merchant_request->setStatusNew();
-
-        $merchant_request->save();
-        $merchant_request->checkToMainCompleted();
-
-        return $merchant_request;
+        return $storeMainMerchantRequestUseCase->execute(StoreMerchantRequestDTO::fromArray($request->validated()));
     }
 
     public function getDistricts(Request $request)
