@@ -38,6 +38,7 @@ use Illuminate\Support\Collection;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property string|null $status_updated_at
+ * @property  string $created_from_name
  * @property-read Collection|File[] $files
  * @property-read mixed $status
  * @method static Builder|Request allowed()
