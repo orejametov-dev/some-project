@@ -23,6 +23,7 @@ Route::prefix('extra-services')->group(function () {
 Route::prefix('merchants/requests')
     ->group(function () {
         Route::get('/', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'index']);
+        Route::post('/', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'store']);
         Route::get('/{id}', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'show']);
         Route::match(['put', 'patch'], '/{id}', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'update']);
         Route::match(['put', 'patch'], '/{id}/store-documents', [\App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'storeDocuments']);

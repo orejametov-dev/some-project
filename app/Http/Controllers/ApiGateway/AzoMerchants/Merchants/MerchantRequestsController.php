@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
+use Alifuz\Utils\Gateway\Entities\GatewayApplication;
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
+use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestStore;
 use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestStoreDocuments;
 use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestUpdateRequest;
 use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestUploadFile;
@@ -37,6 +39,33 @@ class MerchantRequestsController extends ApiBaseController
     public function show($id)
     {
         $merchant_request = MerchantRequest::query()->with('files')->findOrFail($id);
+
+        return $merchant_request;
+    }
+
+    public function store(MerchantRequestStore $request, GatewayApplication $gatewayApplication)
+    {
+        $merchant_request = MerchantRequest::query()
+            ->where('user_phone', $request->user_phone)
+            ->orderByDesc('id')
+            ->first();
+
+        if ($merchant_request && $merchant_request->status_id !== MerchantRequest::TRASH) {
+            throw new BusinessException('Запрос с таким номером телефона уже существует, статус запроса '
+                . MerchantRequest::getOneById((int) $merchant_request->status_id)->name);
+        }
+
+        if (CompanyService::getCompanyByName($request->input('name'))) {
+            return response()->json(['message' => 'Указанное имя компании уже занято'], 400);
+        }
+
+        $merchant_request = new MerchantRequest();
+        $merchant_request->fill($request->validated());
+        $merchant_request->created_from_name = $gatewayApplication->getApplication()->getValue();
+        $merchant_request->setStatusNew();
+
+        $merchant_request->save();
+        $merchant_request->checkToMainCompleted();
 
         return $merchant_request;
     }
