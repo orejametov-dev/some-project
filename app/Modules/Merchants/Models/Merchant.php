@@ -2,6 +2,7 @@
 
 namespace App\Modules\Merchants\Models;
 
+use App\Filters\Merchant\MerchantFilters;
 use App\HttpRepositories\HttpResponses\Prm\CompanyHttpResponse;
 use App\Modules\Merchants\Traits\MerchantFileTrait;
 use App\Modules\Merchants\Traits\MerchantRelationshipsTrait;
@@ -50,7 +51,7 @@ use Illuminate\Support\Str;
  * @property-read int|null $stores_count
  * @property-read Collection|Tag[] $tags
  * @property-read int|null $tags_count
- * @method static Builder|Merchant filterRequest(Request $request)
+ * @method static Builder|Merchant filterRequests(Request $request)
  * @method static Builder|Merchant newModelQuery()
  * @method static Builder|Merchant newQuery()
  * @method static Builder|Merchant orderRequest(Request $request, string $default_order_str = 'id:desc')
@@ -101,7 +102,7 @@ class Merchant extends Model
         return config('local_services.services_storage.domain') . $this->logo_url;
     }
 
-    public function scopeFilterRequest(Builder $query, Request $request)
+    public function scopeFilterRequests(Builder $query, Request $request)
     {
         if ($merchant_ids = $request->query('merchant_ids')) {
             $merchant_ids = explode(';', $merchant_ids);
@@ -202,5 +203,10 @@ class Merchant extends Model
         $merchant->company_id = $company->id;
 
         return $merchant;
+    }
+
+    public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder
+    {
+        return (new MerchantFilters($request, $builder))->execute($filters);
     }
 }

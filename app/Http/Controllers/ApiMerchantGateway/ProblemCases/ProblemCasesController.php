@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\ApiMerchantGateway\ProblemCases;
 
+use App\Exceptions\BusinessException;
+use App\Filters\CommonFilters\StatusIdFilter;
 use App\Http\Controllers\ApiMerchantGateway\ApiBaseController;
 use App\Http\Resources\ApiMerchantGateway\ProblemCases\ProblemCaseResource;
 use App\HttpServices\Hooks\DTO\HookData;
@@ -18,7 +20,9 @@ class ProblemCasesController extends ApiBaseController
     {
         $problemCases = ProblemCase::query()->with('before_tags')
             ->byMerchant($this->merchant_id)
-            ->filterRequests($request);
+            ->filterRequest($request, [
+                StatusIdFilter::class,
+            ]);
 
         if ($request->query('object') == true) {
             $problemCases->first();
@@ -30,8 +34,11 @@ class ProblemCasesController extends ApiBaseController
     public function show($id, Request $request)
     {
         $problemCase = ProblemCase::with('before_tags')
-            ->filterRequests($request)
-            ->findOrFail($id);
+            ->find($id);
+
+        if ($problemCase === null) {
+            throw new BusinessException('Проблемный кейс не найден', 'object_not_found', 404);
+        }
 
         return new ProblemCaseResource($problemCase);
     }

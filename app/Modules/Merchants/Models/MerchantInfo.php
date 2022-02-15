@@ -3,6 +3,7 @@
 namespace App\Modules\Merchants\Models;
 
 use App\DTOs\MerchantInfos\StoreMerchantInfoDTO;
+use App\Filters\MerchantInfo\MerchantInfoFilters;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -31,7 +32,7 @@ use Illuminate\Http\Request;
  * @property string|null $contract_date
  * @property int|null $rest_limit
  * @property-read Merchant $merchant
- * @method static Builder|MerchantInfo filterRequest(Request $request)
+ * @method static Builder|MerchantInfo filterRequests(Request $request)
  * @method static Builder|MerchantInfo newModelQuery()
  * @method static Builder|MerchantInfo newQuery()
  * @method static Builder|MerchantInfo query()
@@ -68,7 +69,7 @@ class MerchantInfo extends Model
         return $this->belongsTo(Merchant::class);
     }
 
-    public function scopeFilterRequest(Builder $query, Request $request)
+    public function scopeFilterRequests(Builder $query, Request $request)
     {
         if ($request->query('merchant_id')) {
             $query->where('merchant_id', $request->query('merchant_id'));
@@ -101,5 +102,10 @@ class MerchantInfo extends Model
         $merchantInfo->limit = self::LIMIT;
 
         return $merchantInfo;
+    }
+
+    public function scopeFiltersRequest(Builder $builder, Request $request, array $filters = [])
+    {
+        return (new MerchantInfoFilters($request, $builder))->execute($filters);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Modules\Merchants\Models;
 
+use App\Filters\Condition\ConditionFilters;
 use App\Traits\SortableByQueryParams;
 use Carbon\Carbon;
 use Eloquent;
@@ -37,7 +38,7 @@ use Illuminate\Http\Request;
  * @property-read mixed $title
  * @method static Builder|Condition active()
  * @method static Builder|Condition postMerchant()
- * @method static Builder|Condition filterRequest(Request $request)
+ * @method static Builder|Condition filterRequests(Request $request)
  * @method static Builder|Condition newModelQuery()
  * @method static Builder|Condition newQuery()
  * @method static Builder|Condition orderRequest(Request $request, string $default_order_str = 'id:desc')
@@ -90,7 +91,7 @@ class Condition extends Model
         return $builder->where('post_merchant', true);
     }
 
-    public function scopeFilterRequest(Builder $query, Request $request)
+    public function scopeFilterRequests(Builder $query, Request $request)
     {
         if ($condition_ids = $request->query('condition_ids')) {
             $condition_ids = explode(';', $condition_ids);
@@ -133,5 +134,10 @@ class Condition extends Model
     public function scopeByMerchant(Builder $query, $merchant_id)
     {
         return $query->where('merchant_id', $merchant_id);
+    }
+
+    public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder
+    {
+        return (new ConditionFilters($request, $builder))->execute($filters);
     }
 }
