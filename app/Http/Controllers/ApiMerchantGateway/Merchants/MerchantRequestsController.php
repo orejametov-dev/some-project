@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\ApiMerchantGateway\Merchants;
 
+use Alifuz\Utils\Gateway\Entities\GatewayApplication;
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiMerchantsGateway\Merchants\MerchantRequestStoreMain;
@@ -36,7 +37,7 @@ class MerchantRequestsController extends Controller
         return $merchant_request;
     }
 
-    public function storeMain(MerchantRequestStoreMain $request)
+    public function storeMain(MerchantRequestStoreMain $request, GatewayApplication $gatewayApplication)
     {
         $merchant_request = MerchantRequest::query()
             ->where('user_phone', $request->user_phone)
@@ -54,6 +55,7 @@ class MerchantRequestsController extends Controller
 
         $merchant_request = new MerchantRequest();
         $merchant_request->fill($request->validated());
+        $merchant_request->created_from_name = $gatewayApplication->getApplication()->getValue();
         $merchant_request->setStatusNew();
 
         $merchant_request->save();
