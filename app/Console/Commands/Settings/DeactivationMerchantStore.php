@@ -72,7 +72,7 @@ class DeactivationMerchantStore extends Command
                             'active' => $merchant->active,
                         ]);
 
-                        $companyHttpRepository->setStatusNotActive($merchant->id, 'azo');
+                        $companyHttpRepository->setStatusNotActive($merchant->id);
 
                         Cache::tags($merchant->id)->flush();
                         Cache::tags('merchants')->flush();
