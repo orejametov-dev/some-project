@@ -4,6 +4,10 @@ namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
 use App\DTOs\Merchants\UpdateMerchantDTO;
 use App\Exceptions\ApiBusinessException;
+use App\Filters\CommonFilters\ActiveFilter;
+use App\Filters\CommonFilters\TagsFilter;
+use App\Filters\Merchant\GMerchantFilter;
+use App\Filters\Merchant\MaintainerIdFilter;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Competitors\CompetitorsRequest;
 use App\Http\Requests\ApiPrm\Files\StoreFileRequest;
@@ -31,7 +35,12 @@ class MerchantsController extends ApiBaseController
     public function index(Request $request)
     {
         $merchants = Merchant::query()->with(['stores', 'tags'])
-            ->filterRequests($request)
+            ->filterRequest($request, [
+                GMerchantFilter::class,
+                ActiveFilter::class,
+                MaintainerIdFilter::class,
+                TagsFilter::class,
+            ])
             ->orderRequest($request);
 
         if ($request->query('object') == 'true') {

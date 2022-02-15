@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\ApiOnlineGateway\Merchants;
 
+use App\Filters\CommonFilters\TagsFilter;
+use App\Filters\Merchant\GMerchantFilter;
+use App\Filters\Merchant\RegionMerchantFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiOnlineGateway\MerchantResource;
 use App\Http\Resources\ApiOnlineGateway\MerchantTagResource;
@@ -19,7 +22,11 @@ class MerchantsController extends Controller
             })
             ->with('tags')
             ->active()
-            ->filterRequest($request)
+            ->filterRequest($request, [
+                GMerchantFilter::class,
+                RegionMerchantFilter::class,
+                TagsFilter::class,
+            ])
             ->orderByDesc('recommend')
             ->orderByDesc('current_sales');
 
