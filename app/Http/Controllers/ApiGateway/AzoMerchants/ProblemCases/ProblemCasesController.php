@@ -104,7 +104,7 @@ class ProblemCasesController extends ApiBaseController
     {
         $problemCases = ProblemCase::query()->with('tags', function ($query) {
             $query->where('type_id', 2);
-        })->where('created_by_id', $user_id)
+        })->where('post_or_pre_created_by_id', $user_id)
             ->orderByDesc('id');
 
         return $problemCases->paginate($request->query('per_page') ?? 15);
