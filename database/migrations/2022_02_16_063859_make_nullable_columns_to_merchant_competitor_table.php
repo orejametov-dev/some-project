@@ -16,7 +16,6 @@ class MakeNullableColumnsToMerchantCompetitorTable extends Migration
         Schema::table('merchant_competitor', function (Blueprint $table) {
             $table->integer('volume_sales')->nullable()->change();
             $table->integer('percentage_approve')->nullable()->change();
-            $table->dateTime('partnership_at')->nullable()->change();
         });
     }
 
@@ -30,7 +29,6 @@ class MakeNullableColumnsToMerchantCompetitorTable extends Migration
         Schema::table('merchant_competitor', function (Blueprint $table) {
             $table->bigInteger('volume_sales');
             $table->integer('percentage_approve');
-            $table->timestamp('partnership_at');
         });
     }
 }
