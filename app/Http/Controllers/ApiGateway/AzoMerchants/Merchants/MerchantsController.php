@@ -210,7 +210,7 @@ class MerchantsController extends ApiBaseController
         $merchant->competitors()->attach($competitor->id, [
             'volume_sales' => $request->input('volume_sales'),
             'percentage_approve' => $request->input('percentage_approve'),
-            'partnership_at' => $request->input('partnership_at') !== null ? Carbon::parse($request->input('partnership_at'))->format('Y-m-d H:i:s') : null,
+            'partnership_at' => $request->input('partnership_at') !== null ? Carbon::parse($request->input('partnership_at')) : null,
         ]);
 
         return $merchant->load('competitors');
@@ -224,9 +224,9 @@ class MerchantsController extends ApiBaseController
         $merchant->competitors()->findOrFail($competitor->id);
         $merchant->competitors()->detach($competitor->id);
         $merchant->competitors()->attach($competitor->id, [
-            'volume_sales' => $request->input('volume_sales'),
-            'percentage_approve' => $request->input('percentage_approve'),
-            'partnership_at' => $request->input('partnership_at') !== null ? Carbon::parse($request->input('partnership_at'))->format('Y-m-d H:i:s') : null,
+            'volume_sales' => (int) $request->input('volume_sales'),
+            'percentage_approve' => (int) $request->input('percentage_approve'),
+            'partnership_at' => $request->input('partnership_at') !== null ? Carbon::parse($request->input('partnership_at')) : null,
         ]);
 
         return $merchant->load('competitors');
