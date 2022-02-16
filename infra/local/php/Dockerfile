@@ -26,6 +26,4 @@ RUN chmod +x /usr/local/bin/ \
     && /usr/local/bin/composer-installer \
     && mv composer.phar /usr/local/bin/composer
 
-COPY ./composer/auth.json /root/.composer/
-
 WORKDIR /app

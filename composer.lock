@@ -11,14 +11,8 @@
             "version": "0.1.0",
             "source": {
                 "type": "git",
-                "url": "git@gitlab.alifshop.uz:alifuz/backend/backend-utils.git",
+                "url": "https://gitlab.alifshop.uz/alifuz/backend/backend-utils.git",
                 "reference": "25f69edb1ead9f479059938bd3ff241f19630ed9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://gitlab.alifshop.uz/api/v4/projects/alifuz%2Fbackend%2Fbackend-utils/repository/archive.zip?sha=25f69edb1ead9f479059938bd3ff241f19630ed9",
-                "reference": "25f69edb1ead9f479059938bd3ff241f19630ed9",
-                "shasum": ""
             },
             "require": {
                 "myclabs/php-enum": "^1.8",
@@ -48,25 +42,15 @@
                 }
             ],
             "description": "Package for all necessary utility tools",
-            "support": {
-                "source": "https://gitlab.alifshop.uz/alifuz/backend/backend-utils/-/tree/0.1.0",
-                "issues": "https://gitlab.alifshop.uz/alifuz/backend/backend-utils/-/issues"
-            },
-            "time": "2022-01-28T15:57:21+05:00"
+            "time": "2022-01-28T10:57:21+00:00"
         },
         {
             "name": "alifuz/utils-gateway",
             "version": "0.2.1",
             "source": {
                 "type": "git",
-                "url": "git@gitlab.alifshop.uz:alifuz/backend/backend-utils-gateway.git",
+                "url": "https://gitlab.alifshop.uz/alifuz/backend/backend-utils-gateway.git",
                 "reference": "97506131730c04803deb7a8975d4679ec2929a78"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://gitlab.alifshop.uz/api/v4/projects/alifuz%2Fbackend%2Fbackend-utils-gateway/repository/archive.zip?sha=97506131730c04803deb7a8975d4679ec2929a78",
-                "reference": "97506131730c04803deb7a8975d4679ec2929a78",
-                "shasum": ""
             },
             "require": {
                 "alifuz/utils": "0.1.0",
@@ -108,11 +92,7 @@
                 }
             ],
             "description": "Package for gateway required utility tools",
-            "support": {
-                "source": "https://gitlab.alifshop.uz/alifuz/backend/backend-utils-gateway/-/tree/0.2.1",
-                "issues": "https://gitlab.alifshop.uz/alifuz/backend/backend-utils-gateway/-/issues"
-            },
-            "time": "2022-01-28T17:23:29+05:00"
+            "time": "2022-01-28T12:23:29+00:00"
         },
         {
             "name": "asm89/stack-cors",
@@ -1974,16 +1954,16 @@
         },
         {
             "name": "laravel/horizon",
-            "version": "v5.9.0",
+            "version": "v5.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/horizon.git",
-                "reference": "33316c3008a72dc38842c2105b7e2d8249a177ef"
+                "reference": "fbe7e80a0aacb596984c66415afcae357f0231f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/horizon/zipball/33316c3008a72dc38842c2105b7e2d8249a177ef",
-                "reference": "33316c3008a72dc38842c2105b7e2d8249a177ef",
+                "url": "https://api.github.com/repos/laravel/horizon/zipball/fbe7e80a0aacb596984c66415afcae357f0231f2",
+                "reference": "fbe7e80a0aacb596984c66415afcae357f0231f2",
                 "shasum": ""
             },
             "require": {
@@ -2045,22 +2025,22 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel/horizon/issues",
-                "source": "https://github.com/laravel/horizon/tree/v5.9.0"
+                "source": "https://github.com/laravel/horizon/tree/v5.9.1"
             },
-            "time": "2022-02-08T19:20:55+00:00"
+            "time": "2022-02-14T17:22:27+00:00"
         },
         {
             "name": "laravel/serializable-closure",
-            "version": "v1.1.0",
+            "version": "v1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/serializable-closure.git",
-                "reference": "65c9faf50d567b65d81764a44526545689e3fe63"
+                "reference": "9e4b005daa20b0c161f3845040046dc9ddc1d74e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/serializable-closure/zipball/65c9faf50d567b65d81764a44526545689e3fe63",
-                "reference": "65c9faf50d567b65d81764a44526545689e3fe63",
+                "url": "https://api.github.com/repos/laravel/serializable-closure/zipball/9e4b005daa20b0c161f3845040046dc9ddc1d74e",
+                "reference": "9e4b005daa20b0c161f3845040046dc9ddc1d74e",
                 "shasum": ""
             },
             "require": {
@@ -2106,7 +2086,7 @@
                 "issues": "https://github.com/laravel/serializable-closure/issues",
                 "source": "https://github.com/laravel/serializable-closure"
             },
-            "time": "2022-02-01T16:29:39+00:00"
+            "time": "2022-02-11T19:23:53+00:00"
         },
         {
             "name": "laravel/tinker",

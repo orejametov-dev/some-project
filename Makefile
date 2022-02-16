@@ -49,4 +49,4 @@ run-inside-container:
 	docker exec -it ${APP_CONTAINER_NAME} ${COMMAND}
 
 run-on-image:
-	docker run --rm -v "${PWD}"/:/app ${APP_NAME}_app ${COMMAND}
+	docker run --rm -it -v "${PWD}"/:/app ${APP_NAME}_app ${COMMAND}

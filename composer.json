@@ -48,8 +48,7 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true,
-        "gitlab-domains" : ["gitlab.alifshop.uz"]
+        "sort-packages": true
     },
     "extra": {
         "laravel": {
