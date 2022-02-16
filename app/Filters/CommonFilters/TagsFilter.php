@@ -18,6 +18,6 @@ class TagsFilter extends AbstractExactFilter
 
     public function getBindingName(): string
     {
-        return 'tags';
+        return 'tags_id';
     }
 }
