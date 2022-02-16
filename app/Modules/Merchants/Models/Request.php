@@ -235,6 +235,10 @@ class Request extends Model
             $query->where('status_id', $status);
         }
 
+        if ($created_from_name = $request->query('created_from_name')) {
+            $query->where('created_from_name', $created_from_name);
+        }
+
         if ($request->has('completed') && $request->query('completed') == true) {
             $query->where('completed', true);
         }
