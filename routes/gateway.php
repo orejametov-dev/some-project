@@ -61,6 +61,7 @@ Route::prefix('merchants/info')
         Route::post('/', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantInfoController::class, 'store']);
         Route::post('/{id}', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantInfoController::class, 'update']);
         Route::post('/{id}/contract-trust', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantInfoController::class, 'getContractTrust']);
+        Route::post('/{id}/contract-procuration', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantInfoController::class, 'getContractProcuration']);
         Route::post('/{id}/contract', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantInfoController::class, 'getContract']);
     });
 
