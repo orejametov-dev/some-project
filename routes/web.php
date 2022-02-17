@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return "hello";
+    \Illuminate\Support\Facades\Log::info("sadasdasd");
+    return "hello2";
 });
 
 Route::get('monitoring/status/health', [\App\Http\Controllers\Monitoring\MonitoringController::class, 'general']);
