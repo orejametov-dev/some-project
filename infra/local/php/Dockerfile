@@ -1,5 +1,9 @@
 FROM php:8.0-fpm
 
+ARG user=docker
+ARG uid=1000
+
+
 RUN apt-get update && apt-get install -y \
     pkg-config \
     libssl-dev \
@@ -26,4 +30,9 @@ RUN chmod +x /usr/local/bin/ \
     && /usr/local/bin/composer-installer \
     && mv composer.phar /usr/local/bin/composer
 
+RUN useradd -G www-data,root -u $uid -d /home/$user $user
+RUN chown -R $user:$user /home/$user
+
 WORKDIR /app
+
+USER $user
