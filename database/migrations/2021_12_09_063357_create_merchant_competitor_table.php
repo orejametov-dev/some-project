@@ -19,7 +19,7 @@ class CreateMerchantCompetitorTable extends Migration
             $table->foreignId('competitor_id')->constrained('competitors');
             $table->bigInteger('volume_sales');
             $table->integer('percentage_approve');
-            $table->timestamp('partnership_at');
+            $table->timestamp('partnership_at')->nullable();
             $table->timestamps();
         });
     }
