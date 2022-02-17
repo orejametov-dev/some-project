@@ -15,9 +15,9 @@ class StoreMerchantRequestDTO
         public string $legal_name,
         public string $legal_name_prefix,
         public array $categories,
-        public int $approximate_sales,
         public string $region,
         public string $district,
+        public ?int $approximate_sales = null,
         public ?string $address = null,
     ) {
     }
@@ -31,9 +31,9 @@ class StoreMerchantRequestDTO
             self::parseString($data['legal_name']),
             self::parseString($data['legal_name_prefix']),
             self::parseArray($data['categories']),
-            self::parseInt($data['approximate_sales']),
             self::parseString($data['region']),
             self::parseString($data['district']),
+            self::parseNullableInt($data['approximate_sales']),
             isset($data['address']) ? self::parseString($data['address']) : null
         );
     }

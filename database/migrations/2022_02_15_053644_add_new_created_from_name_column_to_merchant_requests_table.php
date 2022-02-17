@@ -15,6 +15,7 @@ class AddNewCreatedFromNameColumnToMerchantRequestsTable extends Migration
     {
         Schema::table('merchant_requests', function (Blueprint $table) {
             $table->string('created_from_name')->after('legal_name_prefix');
+            $table->unsignedBigInteger('approximate_sales')->nullable()->change();
         });
     }
 
