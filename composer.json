@@ -10,6 +10,9 @@
     "require": {
         "php": "^8.0",
         "ext-json": "*",
+        "ext-pdo": "*",
+        "alifuz/utils": "0.1.0",
+        "alifuz/utils-gateway": "0.2.1",
         "doctrine/dbal": "^3.1",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
@@ -19,10 +22,7 @@
         "laravel/horizon": "^5.7",
         "laravel/tinker": "^2.5",
         "phpoffice/phpword": "^0.18.1",
-        "sentry/sentry-laravel": "^2.7",
-        "alifuz/utils-gateway": "0.2.1",
-        "alifuz/utils": "0.1.0",
-        "ext-pdo": "*"
+        "sentry/sentry-laravel": "^2.7"
     },
     "repositories": [
         {

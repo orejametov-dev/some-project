@@ -3,6 +3,7 @@ include infra/local/.env
 #init:
 first-run:
 	make build
+	chmod o+rw storage bootstrap/
 	make create-mysql-database
 	make setup-hooks
 up:
@@ -45,8 +46,9 @@ cs-fix:
 analyze:
 	make run-on-image COMMAND="./vendor/bin/phpstan analyse --memory-limit=2G --configuration='infra/config/phpstan.neon'"
 
+# когда нам нужны зависимости от базы, других сервисов или запуск команд которые связаны с сетью, то используем run-inside-container
 run-inside-container:
 	docker exec -it ${APP_CONTAINER_NAME} ${COMMAND}
-
+# когда нам нужно запускать команды без зависимостей и без необходимости в контексте приложения, одноразовые команды
 run-on-image:
-	docker run --rm -it -v "${PWD}"/:/app ${APP_NAME}_app ${COMMAND}
+	docker run --rm -it -v "${PWD}"/:/app ${APP_IMAGE_NAME} ${COMMAND}
