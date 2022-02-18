@@ -26,7 +26,7 @@ class ApplicationConditionsController extends ApiBaseController
                     ->where('post_alifshop', true)
                     ->where('is_special', false)
                     ->byMerchant($this->merchant_id)
-                    ->filterRequest($request)
+                    ->filterRequests($request)
                     ->orderRequest($request);
             } else {
                 $special_conditions = $store->conditions()
@@ -39,7 +39,7 @@ class ApplicationConditionsController extends ApiBaseController
                     ->where('post_merchant', true)
                     ->where('is_special', false)
                     ->byMerchant($this->merchant_id)
-                    ->filterRequest($request)
+                    ->filterRequests($request)
                     ->orderRequest($request);
             }
 
