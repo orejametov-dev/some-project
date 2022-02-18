@@ -38,7 +38,7 @@ class MerchantsController extends Controller
         $merchant = Merchant::query()
             ->with('tags')
             ->active()
-            ->filterRequest($request)
+            ->filterRequests($request)
             ->findOrFail($id);
 
         return new MerchantResource($merchant);

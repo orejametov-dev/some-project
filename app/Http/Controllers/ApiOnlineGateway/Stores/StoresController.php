@@ -12,7 +12,7 @@ class StoresController extends Controller
     {
         $stores = Store::query()
             ->active()
-            ->filterRequest($request);
+            ->filterRequests($request);
 
         if ($request->has('object') and $request->query('object') == true) {
             return $stores->first();
