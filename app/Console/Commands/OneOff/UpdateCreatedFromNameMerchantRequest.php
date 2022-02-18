@@ -39,5 +39,7 @@ class UpdateCreatedFromNameMerchantRequest extends Command
     public function handle()
     {
         Request::query()->update(['created_from_name' => 'MERCHANT']);
+
+        return 0;
     }
 }
