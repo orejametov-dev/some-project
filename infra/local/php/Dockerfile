@@ -1,6 +1,6 @@
 FROM php:8.0-fpm
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y supervisor\
     pkg-config \
     libssl-dev \
     git \
@@ -19,8 +19,12 @@ RUN pecl install redis-5.3.6 \
         redis \
         mongodb
 
+
 COPY ./composer-installer /usr/local/bin/composer-installer
+COPY ./docker-entrypoint /usr/local/bin/docker-entrypoint
+
 RUN chmod +x /usr/local/bin/ \
+    && chmod +x /usr/local/bin/docker-entrypoint \
     && /usr/local/bin/composer-installer \
     && mv composer.phar /usr/local/bin/composer
 
@@ -28,4 +32,5 @@ WORKDIR /app
 
 RUN chown -R www-data:www-data /app
 
-USER www-data
+CMD ["/usr/local/bin/docker-entrypoint"]
+
