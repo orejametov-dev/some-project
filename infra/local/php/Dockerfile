@@ -32,5 +32,5 @@ WORKDIR /app
 
 RUN chown -R www-data:www-data /app
 
-CMD ["/usr/local/bin/docker-entrypoint"]
+#CMD ["/usr/local/bin/docker-entrypoint"]
 
