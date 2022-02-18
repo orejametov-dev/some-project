@@ -25,7 +25,9 @@ abstract class AbstractFilters
         $drainedFilters = $this->drainPassedFilters($filters);
 
         foreach ($drainedFilters as $filterName => $value) {
-            (new $filterName)->filter($this->builder, $value);
+            if ($value !== null) {
+                (new $filterName)->filter($this->builder, $value);
+            }
         }
 
         return $this->builder;

@@ -5,19 +5,15 @@ namespace App\Filters\Merchant;
 use App\Filters\AbstractExactFilter;
 use Illuminate\Database\Eloquent\Builder;
 
-class RegionMerchantFilter extends AbstractExactFilter
+class SpecialMerchantIdFilter extends AbstractExactFilter
 {
     public function filter(Builder $builder, mixed $value): void
     {
-        $value = explode(';', $value);
-
-        $builder->whereHas('stores', function ($builder) use ($value) {
-            $builder->whereIn('region', $value);
-        });
+        $builder->where('id', $value);
     }
 
     public function getBindingName(): string
     {
-        return 'region';
+        return 'merchant_id';
     }
 }
