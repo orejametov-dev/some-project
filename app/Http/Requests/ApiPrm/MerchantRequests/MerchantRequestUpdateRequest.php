@@ -24,8 +24,8 @@ class MerchantRequestUpdateRequest extends MerchantRequestStoreMain
     public function rules()
     {
         return parent::rules() + [
-            'stores_count' => 'required|integer',
-            'merchant_users_count' => 'required|integer',
+            'stores_count' => 'nullable|integer',
+            'merchant_users_count' => 'nullable|integer',
             'information' => 'nullable|string',
         ];
     }

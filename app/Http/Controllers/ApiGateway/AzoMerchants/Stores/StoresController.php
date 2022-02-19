@@ -20,7 +20,7 @@ class StoresController extends ApiBaseController
     public function index(Request $request)
     {
         $stores = Store::query()->with(['merchant'])
-            ->filterRequest($request);
+            ->filterRequests($request);
 
         if ($request->query('object') == 'true') {
             return $stores->first();
@@ -83,7 +83,7 @@ class StoresController extends ApiBaseController
             ->active()
             ->where('is_special', false)
             ->byMerchant($store->merchant_id)
-            ->filterRequest($request)
+            ->filterRequests($request)
             ->orderRequest($request)->get();
 
         return $conditionQuery->merge($special_conditions)->sortByDesc('updated_at');

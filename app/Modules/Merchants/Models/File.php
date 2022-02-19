@@ -46,35 +46,35 @@ class File extends Model
     ];
 
     public static $registration_file_types = [
-        'scan_director_passport' => [
+        'passport' => [
             'name' => 'Скан паспорта директора',
             'lang' => [
                 'uz' => 'Rahbar passportining skan varianti',
                 'ru' => 'Скан паспорта директора',
             ],
         ],
-        'certificate' => [
+        'law_registration_doc' => [
             'name' => 'Гувохнома',
             'lang' => [
                 'uz' => 'Guvohnoma',
                 'ru' => 'Гувохнома',
             ],
         ],
-        'vat_certificate' => [
+        'vat_registration' => [
             'name' => 'НДС Гувохнома',
             'lang' => [
                 'uz' => 'NDS Guvohnoma',
                 'ru' => 'НДС Гувохнома',
             ],
         ],
-        'directors_order_copy' => [
+        'director_order' => [
             'name' => 'Копия приказа директора',
             'lang' => [
                 'uz' => 'Rahbar qarorining nusxasi',
                 'ru' => 'Копия приказа директора',
             ],
         ],
-        'product_conformity_certificate' => [
+        'certificate_file' => [
             'name' => 'Копия приказа директора',
             'lang' => [
                 'uz' => 'Mahsulotning muvofiqligi sertifikati',

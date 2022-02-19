@@ -66,6 +66,15 @@ class CoreHttpRepository
         return (bool) $result;
     }
 
+    public function checkClientToExistsByClientId($client_id): bool
+    {
+        $result = $this->getHttpClient()->get("clients/$client_id")
+            ->throw()
+            ->json();
+
+        return (bool) $result;
+    }
+
     protected function getHttpClient(): PendingRequest
     {
         return Http::baseUrl(config('local_services.service_core.domain') . '/')

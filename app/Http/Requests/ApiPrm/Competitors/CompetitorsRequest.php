@@ -25,9 +25,9 @@ class CompetitorsRequest extends FormRequest
     {
         return [
             'competitor_id' => 'required|integer',
-            'volume_sales' => 'required|integer',
-            'percentage_approve' => 'required|integer',
-            'partnership_at' => 'required|date',
+            'volume_sales' => 'nullable|integer|max:100',
+            'percentage_approve' => 'nullable|integer|max:100',
+            'partnership_at' => 'nullable|date',
         ];
     }
 }

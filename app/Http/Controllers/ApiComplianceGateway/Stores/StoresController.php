@@ -14,7 +14,7 @@ class StoresController extends ApiBaseController
     {
         return Cache::tags('store_index')->remember($request->fullUrl(), 600, function () use ($request) {
             $storesQuery = Store::query()
-                ->filterRequest($request);
+                ->filterRequests($request);
 
             return StoresResource::collection($storesQuery->paginate($request->query('per_page') ?? 15));
         });

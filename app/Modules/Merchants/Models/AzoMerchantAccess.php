@@ -2,6 +2,7 @@
 
 namespace App\Modules\Merchants\Models;
 
+use App\Filters\AzoMerchantAccess\AzoMerchantAccessFilters;
 use App\Traits\SortableByQueryParams;
 use Carbon\Carbon;
 use Eloquent;
@@ -27,7 +28,7 @@ use Illuminate\Http\Request;
  * @method static Builder|AzoMerchantAccess byMerchant($merchant_id)
  * @method static Builder|AzoMerchantAccess byStore($store_id)
  * @method static Builder|AzoMerchantAccess byUserId($user_id)
- * @method static Builder|AzoMerchantAccess filterRequest(Request $request)
+ * @method static Builder|AzoMerchantAccess filterRequests(Request $request)
  * @method static Builder|AzoMerchantAccess newModelQuery()
  * @method static Builder|AzoMerchantAccess newQuery()
  * @method static Builder|AzoMerchantAccess orderRequest(Request $request, string $default_order_str = 'id:desc')
@@ -56,11 +57,13 @@ class AzoMerchantAccess extends Model
         return $this->belongsTo(Merchant::class);
     }
 
-    public function scopeFilterRequest(Builder $query, Request $request)
+    public function scopeFilterRequests(Builder $query, Request $request)
     {
         if ($q = $request->query('q')) {
-            $query->where('user_name', 'LIKE', '%' . $q . '%')
-                ->orWhere('phone', 'LIKE', '%' . $q . '%');
+            $query->where(function ($query) use ($q) {
+                $query->where('user_name', 'LIKE', '%' . $q . '%')
+                    ->orWhere('phone', 'LIKE', '%' . $q . '%');
+            });
         }
 
         if ($request->query('date')) {
@@ -113,5 +116,10 @@ class AzoMerchantAccess extends Model
     public function scopeByUserId(Builder $query, $user_id)
     {
         $query->where('user_id', $user_id);
+    }
+
+    public function scopeFilerRequest(Builder $builder, Request $request, array $filters = [])
+    {
+        return (new AzoMerchantAccessFilters($request, $builder))->execute($filters);
     }
 }

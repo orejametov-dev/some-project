@@ -1,9 +1,14 @@
 <?php
 
 use App\Http\Controllers\ApiGateway\AzoMerchants\Comments\CommentsController;
+use App\Http\Controllers\ApiGateway\AzoMerchants\Complaints\ComplaintsController;
 use App\Http\Controllers\ApiGateway\AzoMerchants\ExtraServices\MerchantsController as ExtraMerchantsController;
 use App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantsController;
 use Illuminate\Support\Facades\Route;
+
+Route::prefix('complaints')->group(function () {
+    Route::get('/', [ComplaintsController::class, 'index']);
+});
 
 Route::prefix('comments')->group(function () {
     Route::get('/', [CommentsController::class, 'index']);
@@ -55,6 +60,7 @@ Route::prefix('merchants/info')
         Route::post('/', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantInfoController::class, 'store']);
         Route::post('/{id}', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantInfoController::class, 'update']);
         Route::post('/{id}/contract-trust', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantInfoController::class, 'getContractTrust']);
+        Route::post('/{id}/contract-procuration', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantInfoController::class, 'getContractProcuration']);
         Route::post('/{id}/contract', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantInfoController::class, 'getContract']);
     });
 

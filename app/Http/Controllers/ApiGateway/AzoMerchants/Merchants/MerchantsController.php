@@ -4,6 +4,10 @@ namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
 use App\DTOs\Merchants\UpdateMerchantDTO;
 use App\Exceptions\ApiBusinessException;
+use App\Filters\CommonFilters\ActiveFilter;
+use App\Filters\CommonFilters\TagsFilter;
+use App\Filters\Merchant\GMerchantFilter;
+use App\Filters\Merchant\MaintainerIdFilter;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Competitors\CompetitorsRequest;
 use App\Http\Requests\ApiPrm\Files\StoreFileRequest;
@@ -17,6 +21,7 @@ use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\Competitor;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Tag;
+use App\UseCases\Merchants\FindMerchantUseCase;
 use App\UseCases\Merchants\SetMainStoreUseCase;
 use App\UseCases\Merchants\SetResponsibleUserUseCase;
 use App\UseCases\Merchants\StoreMerchantUseCase;
@@ -31,7 +36,12 @@ class MerchantsController extends ApiBaseController
     public function index(Request $request)
     {
         $merchants = Merchant::query()->with(['stores', 'tags'])
-            ->filterRequest($request)
+            ->filterRequest($request, [
+                GMerchantFilter::class,
+                ActiveFilter::class,
+                MaintainerIdFilter::class,
+                TagsFilter::class,
+            ])
             ->orderRequest($request);
 
         if ($request->query('object') == 'true') {
@@ -194,9 +204,9 @@ class MerchantsController extends ApiBaseController
         return $merchant;
     }
 
-    public function attachCompetitor($id, CompetitorsRequest $request)
+    public function attachCompetitor($id, CompetitorsRequest $request, FindMerchantUseCase $findMerchantUseCase)
     {
-        $merchant = Merchant::query()->findOrFail($id);
+        $merchant = $findMerchantUseCase->execute($id);
         $competitor = Competitor::query()->findOrFail($request->input('competitor_id'));
 
         if ($merchant->competitors()->find($competitor->id)) {
@@ -207,33 +217,33 @@ class MerchantsController extends ApiBaseController
         }
 
         $merchant->competitors()->attach($competitor->id, [
-            'volume_sales' => $request->input('volume_sales') * 100,
+            'volume_sales' => $request->input('volume_sales'),
             'percentage_approve' => $request->input('percentage_approve'),
-            'partnership_at' => Carbon::parse($request->input('partnership_at'))->format('Y-m-d H:i:s'),
+            'partnership_at' => $request->input('partnership_at') !== null ? Carbon::parse($request->input('partnership_at')) : null,
         ]);
 
         return $merchant->load('competitors');
     }
 
-    public function updateCompetitor($id, CompetitorsRequest $request)
+    public function updateCompetitor($id, CompetitorsRequest $request, FindMerchantUseCase $findMerchantUseCase)
     {
-        $merchant = Merchant::query()->findOrFail($id);
+        $merchant = $findMerchantUseCase->execute($id);
         $competitor = Competitor::query()->findOrFail($request->input('competitor_id'));
 
         $merchant->competitors()->findOrFail($competitor->id);
         $merchant->competitors()->detach($competitor->id);
         $merchant->competitors()->attach($competitor->id, [
-            'volume_sales' => $request->input('volume_sales') * 100,
-            'percentage_approve' => $request->input('percentage_approve'),
-            'partnership_at' => Carbon::parse($request->input('partnership_at'))->format('Y-m-d H:i:s'),
+            'volume_sales' => (int) $request->input('volume_sales'),
+            'percentage_approve' => (int) $request->input('percentage_approve'),
+            'partnership_at' => $request->input('partnership_at') !== null ? Carbon::parse($request->input('partnership_at')) : null,
         ]);
 
         return $merchant->load('competitors');
     }
 
-    public function detachCompetitor($id, Request $request)
+    public function detachCompetitor($id, Request $request, FindMerchantUseCase $findMerchantUseCase)
     {
-        $merchant = Merchant::query()->findOrFail($id);
+        $merchant = $findMerchantUseCase->execute($id);
         $competitor = Competitor::query()->findOrFail($request->input('competitor_id'));
 
         $merchant->competitors()->findOrFail($competitor->id);

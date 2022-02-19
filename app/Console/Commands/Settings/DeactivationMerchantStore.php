@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\Settings;
 
+use App\HttpRepositories\Prm\CompanyHttpRepository;
 use App\HttpServices\Core\CoreService;
 use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\Merchant;
@@ -41,7 +42,7 @@ class DeactivationMerchantStore extends Command
      *
      * @return int
      */
-    public function handle(CoreService $coreService)
+    public function handle(CoreService $coreService, CompanyHttpRepository $companyHttpRepository)
     {
         Log::channel('command')->info(self::class . '|' . now() . ':' . 'started');
 
@@ -50,14 +51,14 @@ class DeactivationMerchantStore extends Command
 
         Merchant::where('active', true)
             ->where('created_at', '<', $from_date)
-            ->chunkById(100, function ($merchants) use ($coreService, $from_date, $to_date) {
+            ->chunkById(100, function ($merchants) use ($companyHttpRepository, $coreService, $from_date, $to_date) {
                 foreach ($merchants as $merchant) {
-                    if (\DB::table('merchant_activities')
+                    $activity_reasons = \DB::table('merchant_activities')
                         ->where('merchant_id', $merchant->id)
-                        ->where('active', true)
-                        ->where('created_at', '<', $from_date)
                         ->orderByDesc('id')
-                        ->first() === null) {
+                        ->first();
+
+                    if ($activity_reasons !== null && $activity_reasons->active === 1 && $activity_reasons->created_at > $from_date) {
                         continue;
                     }
 
@@ -70,6 +71,8 @@ class DeactivationMerchantStore extends Command
                         $merchant->activity_reasons()->attach(ActivityReason::MERCHANT_AUTO_DEACTIVATION_REASON_ID, [
                             'active' => $merchant->active,
                         ]);
+
+                        $companyHttpRepository->setStatusNotActive($merchant->id);
 
                         Cache::tags($merchant->id)->flush();
                         Cache::tags('merchants')->flush();

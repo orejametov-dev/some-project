@@ -60,7 +60,8 @@ trait MerchantRelationshipsTrait
 
     public function activity_reasons(): BelongsToMany
     {
-        return $this->belongsToMany(ActivityReason::class, 'merchant_activities', 'merchant_id', 'activity_reason_id')->withTimestamps();
+        return $this->belongsToMany(ActivityReason::class, 'merchant_activities', 'merchant_id', 'activity_reason_id')->withTimestamps()
+            ->withPivot(['id', 'merchant_id', 'activity_reason_id', 'active', 'created_by_id', 'created_by_name', 'created_at', 'updated_at']);
     }
 
     public function competitors(): BelongsToMany
