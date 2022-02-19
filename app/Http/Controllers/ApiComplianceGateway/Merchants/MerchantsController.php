@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\ApiComplianceGateway\Merchants;
 
+use App\Filters\Merchant\GMerchantFilter;
 use App\Filters\Merchant\SpecialMerchantIdFilter;
 use App\Http\Controllers\ApiComplianceGateway\ApiBaseController;
 use App\Http\Resources\ApiComplianceGateway\Merchants\MerchantsResource;
@@ -16,6 +17,7 @@ class MerchantsController extends ApiBaseController
         return Cache::tags('merchant_index')->remember($request->fullUrl(), 600, function () use ($request) {
             $merchantsQuery = Merchant::query()
                 ->filterRequest($request, [
+                    GMerchantFilter::class,
                     SpecialMerchantIdFilter::class,
                 ])
                 ->orderRequest($request);
