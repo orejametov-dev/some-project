@@ -17,6 +17,7 @@ services:
       - 127.0.4.1:9000:9000
     environment:
       - DEV_UID=$DEV_UID
+    entrypoint: ["/usr/local/bin/docker-entrypoint"]
     depends_on:
       - redis
 
@@ -32,11 +33,10 @@ services:
       - ./php/php-fpm.conf:/usr/local/etc/php-fpm.d/www.override.conf:ro
       - ./php/php.ini:/usr/local/etc/php/conf.d/php-override.ini:ro
       - ./supervisor/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
-    environment:
-      - DEV_UID=$DEV_UID
     entrypoint: ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
     depends_on:
       - redis
+
   nginx:
     container_name: $NGINX_CONTAINER_NAME
     image: $IMAGE_NGINX
