@@ -15,6 +15,8 @@ services:
       - ./supervisor/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
     ports:
       - 127.0.4.1:9000:9000
+    environment:
+      - DEV_UID=$DEV_UID
     depends_on:
       - redis
   nginx:
