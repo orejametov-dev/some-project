@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [ "$env" == "local" ] && [ ! -z "$DEV_UID" ]; then
+if [ ! -z "$DEV_UID" ]; then
     echo "Changing www-data UID to $DEV_UID"
     echo "The UID should only be changed in development environments."
     usermod -u $DEV_UID www-data
