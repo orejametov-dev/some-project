@@ -4,6 +4,10 @@ namespace App\Http\Controllers\ApiGateway\AzoMerchants\Stores;
 
 use App\DTOs\Stores\StoreStoresDTO;
 use App\DTOs\Stores\UpdateStoresDTO;
+use App\Filters\CommonFilters\ActiveFilter;
+use App\Filters\CommonFilters\MerchantIdFilter;
+use App\Filters\Store\GStoreFilter;
+use App\Filters\Store\RegionFilter;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Stores\StoreStoresRequest;
 use App\Http\Requests\ApiPrm\Stores\UpdateStoresRequest;
@@ -20,7 +24,12 @@ class StoresController extends ApiBaseController
     public function index(Request $request)
     {
         $stores = Store::query()->with(['merchant'])
-            ->filterRequests($request);
+            ->filterRequest($request, [
+                GStoreFilter::class,
+                MerchantIdFilter::class,
+                RegionFilter::class,
+                ActiveFilter::class,
+            ]);
 
         if ($request->query('object') == 'true') {
             return $stores->first();
