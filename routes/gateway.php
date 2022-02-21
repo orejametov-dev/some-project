@@ -23,6 +23,7 @@ Route::prefix('extra-services')->group(function () {
 Route::prefix('merchants/requests')
     ->group(function () {
         Route::get('/', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'index']);
+        Route::post('/', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'store']);
         Route::get('/{id}', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'show']);
         Route::match(['put', 'patch'], '/{id}', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'update']);
         Route::match(['put', 'patch'], '/{id}/store-documents', [\App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'storeDocuments']);
@@ -31,7 +32,6 @@ Route::prefix('merchants/requests')
         Route::post('/{id}/allow', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'allow']);
         Route::post('/{id}/reject', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'reject']);
         Route::match(['put', 'patch'], '/{id}/on-boarding', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'setOnBoarding']);
-        Route::post('/', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'store']);
         Route::post('/set-engage/{id}', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantRequestsController::class, 'setEngage']);
         Route::get('counters/new', [App\Http\Controllers\ApiGateway\App\CountersController::class, 'merchantRequests']);
     });

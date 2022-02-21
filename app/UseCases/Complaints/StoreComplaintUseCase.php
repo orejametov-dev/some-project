@@ -12,6 +12,7 @@ class StoreComplaintUseCase
     public function execute(StoreComplaintDTO $storeComplaintDTO): Complaint
     {
         $merchant_access = AzoMerchantAccess::query()
+            ->withTrashed()
             ->where('user_id', $storeComplaintDTO->user_id)
             ->first();
 
