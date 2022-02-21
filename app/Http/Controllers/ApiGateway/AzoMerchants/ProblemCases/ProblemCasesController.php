@@ -32,7 +32,7 @@ class ProblemCasesController extends ApiBaseController
     public function index(Request $request)
     {
         $problemCases = ProblemCase::query()
-            ->with('tags')
+            ->with(['tags', 'merchant', 'store'])
             ->filterRequest($request, [
                 GProblemCaseFilter::class,
                 StatusIdFilter::class,
@@ -61,7 +61,7 @@ class ProblemCasesController extends ApiBaseController
 
     public function show($id)
     {
-        $problemCase = ProblemCase::with('tags')->findOrFail($id);
+        $problemCase = ProblemCase::with(['tags', 'merchant', 'store'])->findOrFail($id);
 
         return $problemCase;
     }
