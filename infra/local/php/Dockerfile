@@ -28,6 +28,13 @@ RUN chmod +x /usr/local/bin/ \
     && /usr/local/bin/composer-installer \
     && mv composer.phar /usr/local/bin/composer
 
+
 WORKDIR /app
+
+RUN groupadd -g 1000 www
+RUN useradd -u 1000 -ms /bin/bash -g www www
+RUN chown -R www:www /app
+
+USER www
 
 

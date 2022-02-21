@@ -36,18 +36,18 @@ services:
     depends_on:
       - redis
 
-#  nginx:
-#    container_name: $NGINX_CONTAINER_NAME
-#    image: $IMAGE_NGINX
-#    volumes:
-#      - ../../:/app
-#      - ./nginx/templates:/etc/nginx/templates
-#    ports:
-#      - 127.0.4.1:80:80
-#    environment:
-#      - APP_CONTAINER_NAME=$APP_CONTAINER_NAME
-#    depends_on:
-#      - app
+  nginx:
+    container_name: $NGINX_CONTAINER_NAME
+    image: $IMAGE_NGINX
+    volumes:
+      - ../../:/app
+      - ./nginx/templates:/etc/nginx/templates
+    ports:
+      - 127.0.4.1:80:80
+    environment:
+      - APP_CONTAINER_NAME=$APP_CONTAINER_NAME
+    depends_on:
+      - app
   redis:
     container_name: $REDIS_CONTAINER_NAME
     image: $IMAGE_REDIS
