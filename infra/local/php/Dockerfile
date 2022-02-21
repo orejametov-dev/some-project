@@ -31,7 +31,7 @@ RUN chmod +x /usr/local/bin/ \
 
 WORKDIR /app
 
-RUN useradd -G www-data,root -u 1000 -d /home/www www
+RUN useradd -G www-data -u 1000 www
 RUN chown -R www:www /app
 RUN chown -R www:www /var/log/supervisor
 
