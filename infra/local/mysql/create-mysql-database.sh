@@ -1,10 +1,8 @@
 #!/bin/sh
 
-SOURCE=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-
-if [ -f $SOURCE"/../.env" ]; then
+if [ -f "infra/local/.env" ]; then
     # Load Environment Variables
-    export $(cat $SOURCE"/../.env" | grep -v '#' | sed 's/\r$//' | awk '/=/ {print $1}' )
+    export $(cat "infra/local/.env" | grep -v '#' | sed 's/\r$//' | awk '/=/ {print $1}' )
 fi
 
 if [ ! "$(docker ps -q -f name=${ALIF_INFRA_DB})"  ]; then
