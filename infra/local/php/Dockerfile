@@ -31,9 +31,9 @@ RUN chmod +x /usr/local/bin/ \
 
 WORKDIR /app
 
-RUN groupadd -g 1000 www
-RUN useradd -u 1000 -ms /bin/bash -g www www
+RUN useradd -G www-data,root -u 1000 -d /home/www www
 RUN chown -R www:www /app
+RUN chown -R www:www /var/log/supervisor
 
 USER www
 
