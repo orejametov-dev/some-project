@@ -24,6 +24,7 @@ use Illuminate\Support\Collection;
  * @property string $name
  * @property string $information
  * @property string|null $legal_name
+ * @property string|null $legal_name_prefix
  * @property string $user_name
  * @property string $user_phone
  * @property string $address
@@ -32,12 +33,16 @@ use Illuminate\Support\Collection;
  * @property bool $documents_completed
  * @property bool $file_completed
  * @property string|null $region
+ * @property string|null $district
  * @property int|null $engaged_by_id
  * @property string|null $engaged_by_name
+ * @property array $categories
+ * @property int $approximate_sales
  * @property string|null $engaged_at
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property string|null $status_updated_at
+ * @property  string $created_from_name
  * @property-read Collection|File[] $files
  * @property-read mixed $status
  * @method static Builder|Request allowed()
@@ -228,6 +233,10 @@ class Request extends Model
 
         if ($status = $request->query('status_id')) {
             $query->where('status_id', $status);
+        }
+
+        if ($created_from_name = $request->query('created_from_name')) {
+            $query->where('created_from_name', $created_from_name);
         }
 
         if ($request->has('completed') && $request->query('completed') == true) {

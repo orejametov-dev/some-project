@@ -30,7 +30,7 @@ class MerchantRequestStoreMain extends FormRequest
             'legal_name' => 'required|string',
             'legal_name_prefix' => 'required|string',
             'categories' => 'required|array',
-            'approximate_sales' => 'required|integer',
+            'approximate_sales' => 'nullable|integer',
             'region' => 'required|string',
             'district' => 'required|string',
         ];

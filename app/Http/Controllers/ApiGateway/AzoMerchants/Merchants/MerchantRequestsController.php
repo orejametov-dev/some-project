@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
+use App\DTOs\MerchantRequest\StoreMerchantRequestDTO;
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
+use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestStore;
 use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestStoreDocuments;
 use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestUpdateRequest;
 use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestUploadFile;
@@ -13,6 +15,7 @@ use App\HttpServices\Company\CompanyService;
 use App\Modules\Merchants\Models\CancelReason;
 use App\Modules\Merchants\Models\Request as MerchantRequest;
 use App\UseCases\MerchantRequests\AllowMerchantRequestUseCase;
+use App\UseCases\MerchantRequests\StoreMerchantRequestUseCase;
 use Illuminate\Http\Request;
 
 class MerchantRequestsController extends ApiBaseController
@@ -39,6 +42,11 @@ class MerchantRequestsController extends ApiBaseController
         $merchant_request = MerchantRequest::query()->with('files')->findOrFail($id);
 
         return $merchant_request;
+    }
+
+    public function store(MerchantRequestStore $request, StoreMerchantRequestUseCase $storeMerchantRequestUseCase)
+    {
+        return $storeMerchantRequestUseCase->execute(StoreMerchantRequestDTO::fromArray($request->validated()));
     }
 
     public function update($id, MerchantRequestUpdateRequest $request)
