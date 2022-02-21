@@ -5,3 +5,5 @@ if [ ! -z "$DEV_UID" ]; then
     echo "The UID should only be changed in development environments."
     usermod -u $DEV_UID www-data
 fi
+
+/bin/bash
