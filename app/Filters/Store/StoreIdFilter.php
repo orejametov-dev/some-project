@@ -1,20 +1,19 @@
 <?php
 
-namespace App\Filters\CommonFilters;
+namespace App\Filters\Store;
 
 use App\Filters\AbstractExactFilter;
 use Illuminate\Database\Eloquent\Builder;
 
-class MerchantIdsFilter extends AbstractExactFilter
+class StoreIdFilter extends AbstractExactFilter
 {
     public function filter(Builder $builder, mixed $value): void
     {
-        $merchant_ids = explode(';', $value);
-        $builder->whereIn('id', $merchant_ids);
+        $builder->where('id', $value);
     }
 
     public function getBindingName(): string
     {
-        return 'merchant_ids';
+        return 'store_id';
     }
 }

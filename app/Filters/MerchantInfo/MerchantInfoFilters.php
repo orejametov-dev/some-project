@@ -3,7 +3,7 @@
 namespace App\Filters\MerchantInfo;
 
 use App\Filters\AbstractFilters;
-use App\Filters\CommonFilters\MerchantIdsFilter;
+use App\Filters\Merchant\MerchantIdsFilter;
 
 class MerchantInfoFilters extends AbstractFilters
 {

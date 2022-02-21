@@ -5,7 +5,7 @@ namespace App\Http\Controllers\ApiGateway\AzoMerchants\Stores;
 use App\DTOs\Stores\StoreStoresDTO;
 use App\DTOs\Stores\UpdateStoresDTO;
 use App\Filters\CommonFilters\ActiveFilter;
-use App\Filters\CommonFilters\MerchantIdFilter;
+use App\Filters\Merchant\MerchantIdFilter;
 use App\Filters\Store\GStoreFilter;
 use App\Filters\Store\RegionFilter;
 use App\Http\Controllers\ApiGateway\ApiBaseController;

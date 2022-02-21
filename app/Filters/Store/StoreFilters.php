@@ -5,10 +5,8 @@ namespace App\Filters\Store;
 use App\Filters\AbstractFilters;
 use App\Filters\CommonFilters\ActiveFilter;
 use App\Filters\CommonFilters\IdFilter;
-use App\Filters\CommonFilters\MerchantIdFilter;
-use App\Filters\CommonFilters\MerchantIdsFilter;
-use App\Filters\CommonFilters\StoreIdFilter;
-use App\Filters\CommonFilters\StoreIdsFilter;
+use App\Filters\Merchant\MerchantIdFilter;
+use App\Filters\Merchant\MerchantIdsFilter;
 
 class StoreFilters extends AbstractFilters
 {

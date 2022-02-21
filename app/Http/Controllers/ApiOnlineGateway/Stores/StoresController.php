@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\ApiOnlineGateway\Stores;
 
-use App\Filters\CommonFilters\MerchantIdFilter;
-use App\Filters\CommonFilters\StoreIdFilter;
-use App\Filters\CommonFilters\StoreIdsFilter;
+use App\Filters\Merchant\MerchantIdFilter;
 use App\Filters\Store\GStoreFilter;
 use App\Filters\Store\RegionFilter;
+use App\Filters\Store\StoreIdFilter;
+use App\Filters\Store\StoreIdsFilter;
 use App\Http\Controllers\Controller;
 use App\Modules\Merchants\Models\Store;
 use Illuminate\Http\Request;

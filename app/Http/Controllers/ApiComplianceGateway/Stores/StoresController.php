@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\ApiComplianceGateway\Stores;
 
+use App\Filters\Store\StoreIdsFilter;
 use App\Http\Controllers\ApiComplianceGateway\ApiBaseController;
 use App\Http\Resources\ApiComplianceGateway\Stores\StoresResource;
 use App\Modules\Merchants\Models\Store;
@@ -14,7 +15,7 @@ class StoresController extends ApiBaseController
     {
         return Cache::tags('store_index')->remember($request->fullUrl(), 600, function () use ($request) {
             $storesQuery = Store::query()
-                ->filterRequests($request);
+                ->filterRequest($request, [StoreIdsFilter::class]);
 
             return StoresResource::collection($storesQuery->paginate($request->query('per_page') ?? 15));
         });

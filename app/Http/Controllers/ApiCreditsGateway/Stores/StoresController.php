@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\ApiCreditsGateway\Stores;
 
-use App\Filters\CommonFilters\StoreIdFilter;
-use App\Filters\CommonFilters\StoreIdsFilter;
 use App\Filters\Store\GStoreFilter;
+use App\Filters\Store\StoreIdFilter;
+use App\Filters\Store\StoreIdsFilter;
 use App\Http\Controllers\ApiCreditsGateway\ApiBaseController;
 use App\Http\Resources\ApiCredtisGateway\Stores\StoresResource;
 use App\Modules\Merchants\Models\Store;
