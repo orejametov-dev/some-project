@@ -25,8 +25,8 @@ class UpdateMerchantRequest extends FormRequest
     {
         return [
             'name' => 'required|max:255',
-            'legal_name' => 'nullable|max:255',
-            'legal_name_prefix' => 'nullable|string',
+            'legal_name' => 'required|max:255',
+            'legal_name_prefix' => 'required|string',
             'token' => 'required|max:255',
             'alifshop_slug' => 'required|max:255',
             'information' => 'nullable|string',
