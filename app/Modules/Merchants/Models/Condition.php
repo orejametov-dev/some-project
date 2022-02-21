@@ -39,6 +39,7 @@ use Illuminate\Http\Request;
  * @method static Builder|Condition active()
  * @method static Builder|Condition postMerchant()
  * @method static Builder|Condition filterRequests(Request $request)
+ * @method static Builder|Condition filterRequest(Request $request, array $filters = [])
  * @method static Builder|Condition newModelQuery()
  * @method static Builder|Condition newQuery()
  * @method static Builder|Condition orderRequest(Request $request, string $default_order_str = 'id:desc')

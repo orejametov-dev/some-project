@@ -34,6 +34,7 @@ use Illuminate\Support\Carbon;
  * @property-read Collection|Condition[] $application_conditions
  * @property-read int|null $application_conditions_count
  * @method static Builder|Store filterRequests(Request $request)
+ * @method static Builder|Store filterRequest(Request $request, array $filters = [])
  * @method static Builder|Store main()
  * @method static Builder|Store newModelQuery()
  * @method static Builder|Store newQuery()
