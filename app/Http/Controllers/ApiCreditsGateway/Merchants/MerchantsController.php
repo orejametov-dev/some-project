@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\ApiCreditsGateway\Merchants;
 
+use App\Filters\Merchant\GMerchantFilter;
 use App\Http\Controllers\ApiCreditsGateway\ApiBaseController;
 use App\Http\Resources\ApiCredtisGateway\Merchants\MerchantsResource;
 use App\Http\Resources\ApiCredtisGateway\Merchants\SpecialMerchantResource;
@@ -15,7 +16,7 @@ class MerchantsController extends ApiBaseController
     {
         $query = Merchant::query()
             ->with('merchant_info')
-            ->filterRequests($request)
+            ->filterRequest($request, [GMerchantFilter::class])
             ->latest();
 
         if ($request->query('object') == true) {
@@ -34,7 +35,7 @@ class MerchantsController extends ApiBaseController
                 'legal_name',
                 'legal_name_prefix',
             ])
-            ->filterRequests($request)
+            ->filterRequest($request, [GMerchantFilter::class])
             ->groupBy('legal_name', 'legal_name_prefix');
 
         if ($request->query('object') == true) {
