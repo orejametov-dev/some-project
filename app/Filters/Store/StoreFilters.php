@@ -6,7 +6,6 @@ use App\Filters\AbstractFilters;
 use App\Filters\CommonFilters\ActiveFilter;
 use App\Filters\CommonFilters\IdFilter;
 use App\Filters\CommonFilters\MerchantIdsFilter;
-use App\Filters\CommonFilters\StoreIdsFilter;
 
 class StoreFilters extends AbstractFilters
 {

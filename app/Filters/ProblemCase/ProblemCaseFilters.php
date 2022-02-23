@@ -10,7 +10,7 @@ use App\Filters\CommonFilters\IdFilter;
 use App\Filters\CommonFilters\MerchantIdFilter;
 use App\Filters\CommonFilters\MerchantIdsFilter;
 use App\Filters\CommonFilters\StatusIdFilter;
-use App\Filters\CommonFilters\StoreIdsFilter;
+use App\Filters\Store\StoreIdsFilter;
 
 class ProblemCaseFilters extends AbstractFilters
 {
