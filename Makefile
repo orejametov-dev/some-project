@@ -46,6 +46,9 @@ cs-fix:
 analyze:
 	make run-on-image COMMAND="./vendor/bin/phpstan analyse --memory-limit=2G --configuration='infra/config/phpstan.neon'"
 
+laravel:
+	make run-inside-container COMMAND="php artisan ${name}"
+
 # когда нам нужны зависимости от базы, других сервисов или запуск команд которые связаны с сетью, то используем run-inside-container
 run-inside-container:
 	docker exec -it ${APP_CONTAINER_NAME} ${COMMAND}
