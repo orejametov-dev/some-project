@@ -8,8 +8,11 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.3|^8.0",
+        "php": "^8.0",
         "ext-json": "*",
+        "ext-pdo": "*",
+        "alifuz/utils": "0.1.0",
+        "alifuz/utils-gateway": "0.2.1",
         "doctrine/dbal": "^3.1",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
@@ -19,10 +22,7 @@
         "laravel/horizon": "^5.7",
         "laravel/tinker": "^2.5",
         "phpoffice/phpword": "^0.18.1",
-        "predis/predis": "^1.1",
-        "sentry/sentry-laravel": "^2.7",
-        "alifuz/utils-gateway": "0.2.1",
-        "alifuz/utils": "0.1.0"
+        "sentry/sentry-laravel": "^2.7"
     },
     "repositories": [
         {
@@ -38,7 +38,6 @@
         "barryvdh/laravel-ide-helper": "^2.10",
         "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
-        "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.2",
         "nunomaduro/collision": "^5.0",
         "phpunit/phpunit": "^9.3.3",
@@ -70,9 +69,6 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
-        "cs-check" :  ["./vendor/bin/php-cs-fixer fix -vvv --dry-run --show-progress=dots --config=.php-cs-fixer.php --allow-risky=yes"],
-        "cs-fix" : ["./vendor/bin/php-cs-fixer fix -vvv --show-progress=dots --config=.php-cs-fixer.php --allow-risky=yes"],
-        "analyse": "./vendor/bin/phpstan analyse --memory-limit=2G",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
