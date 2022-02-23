@@ -5,7 +5,7 @@ namespace App\Filters\AzoMerchantAccess;
 use App\Filters\AbstractFilters;
 use App\Filters\CommonFilters\DateFilter;
 use App\Filters\CommonFilters\MerchantIdsFilter;
-use App\Filters\CommonFilters\StoreIdsFilter;
+use App\Filters\CommonFilters\StoreIdFilter;
 use App\Filters\CommonFilters\UserIdsFilter;
 
 class AzoMerchantAccessFilters extends AbstractFilters
@@ -14,7 +14,7 @@ class AzoMerchantAccessFilters extends AbstractFilters
         GAzoMerchantAccessFilter::class,
         DateFilter::class,
         MerchantIdsFilter::class,
-        StoreIdsFilter::class,
+        StoreIdFilter::class,
         UserIdsFilter::class,
     ];
 
