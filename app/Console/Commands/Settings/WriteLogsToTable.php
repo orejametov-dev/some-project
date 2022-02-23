@@ -33,7 +33,6 @@ class WriteLogsToTable extends Command
     public function __construct()
     {
         parent::__construct();
-        $this->logs = Cache::get(TimeLogger::CACHE_KEY);
     }
 
     /**
@@ -43,6 +42,7 @@ class WriteLogsToTable extends Command
      */
     public function handle()
     {
+        $this->logs = Cache::get(TimeLogger::CACHE_KEY);
         \Log::channel('command')->info(self::class . '|' . now() . ':' . 'started');
 
         try {
