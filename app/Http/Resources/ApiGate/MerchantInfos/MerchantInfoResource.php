@@ -18,6 +18,7 @@ class MerchantInfoResource extends JsonResource
         /** @var MerchantInfo|MerchantInfoResource $this */
         return [
             'merchant_id' => $this->merchant_id,
+            'director_name' =>  $this->director_name,
             'contract_number' => $this->contract_number,
             'contract_date' => $this->contract_date,
             'tin' => $this->tin,
