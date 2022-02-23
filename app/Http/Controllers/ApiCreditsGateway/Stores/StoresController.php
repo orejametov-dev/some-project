@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\ApiCreditsGateway\Stores;
 
+use App\Filters\Store\GStoreFilter;
+use App\Filters\Store\StoreIdFilter;
+use App\Filters\Store\StoreIdsFilter;
 use App\Http\Controllers\ApiCreditsGateway\ApiBaseController;
 use App\Http\Resources\ApiCredtisGateway\Stores\StoresResource;
 use App\Modules\Merchants\Models\Store;
@@ -12,7 +15,11 @@ class StoresController extends ApiBaseController
     public function index(Request $request)
     {
         $stores = Store::query()->with(['merchant'])
-            ->filterRequests($request);
+            ->filterRequest($request, [
+                GStoreFilter::class,
+                StoreIdFilter::class,
+                StoreIdsFilter::class,
+            ]);
 
         if ($request->query('object') == true) {
             return new StoresResource($stores->first());

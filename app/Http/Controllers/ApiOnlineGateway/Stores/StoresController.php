@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers\ApiOnlineGateway\Stores;
 
+use App\Filters\Merchant\MerchantIdFilter;
+use App\Filters\Store\GStoreFilter;
+use App\Filters\Store\RegionFilter;
+use App\Filters\Store\StoreIdFilter;
+use App\Filters\Store\StoreIdsFilter;
 use App\Http\Controllers\Controller;
 use App\Modules\Merchants\Models\Store;
 use Illuminate\Http\Request;
@@ -12,7 +17,13 @@ class StoresController extends Controller
     {
         $stores = Store::query()
             ->active()
-            ->filterRequests($request);
+            ->filterRequest($request, [
+                GStoreFilter::class,
+                StoreIdsFilter::class,
+                StoreIdFilter::class,
+                RegionFilter::class,
+                MerchantIdFilter::class,
+            ]);
 
         if ($request->has('object') and $request->query('object') == true) {
             return $stores->first();
