@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\ApiOnlineGateway\Conditions;
 
-use App\Filters\CommonFilters\MerchantIdFilter;
+use App\Filters\Merchant\MerchantIdFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiOnlineGateway\ConditionsResource;
 use App\Modules\Merchants\Models\Condition;
