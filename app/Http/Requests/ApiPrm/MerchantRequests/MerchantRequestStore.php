@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\ApiPrm\MerchantRequests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\ApiMerchantsGateway\Merchants\MerchantRequestStoreMain;
 
-class MerchantRequestStore extends FormRequest
+class MerchantRequestStore extends MerchantRequestStoreMain
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,13 +23,8 @@ class MerchantRequestStore extends FormRequest
      */
     public function rules()
     {
-        return [
-            'user_name' => 'required|string',
-            'user_phone' => 'required|digits:12',
-            'region' => 'required|string',
-            'merchant_name' => 'required|string',
-            'merchant_information' => 'nullable|string',
-            'merchant_legal_name' => 'nullable|string',
+        return parent::rules() + [
+            'address' => 'required|string',
         ];
     }
 }

@@ -27,8 +27,8 @@ class UpdateMerchantDTO
         return new self(
             self::parseInt($id),
             self::parseString($data['name']),
-            self::parseNullableString($data['legal_name']),
-            self::parseNullableString($data['legal_name_prefix']),
+            self::parseString($data['legal_name']),
+            self::parseString($data['legal_name_prefix']),
             self::parseString($data['token']),
             self::parseString($data['alifshop_slug']),
             self::parseNullableString($data['information']),
