@@ -6,7 +6,7 @@ use App\DTOs\Conditions\MassSpecialStoreConditionDTO;
 use App\DTOs\Conditions\MassStoreConditionDTO;
 use App\DTOs\Conditions\StoreConditionDTO;
 use App\DTOs\Conditions\UpdateConditionDTO;
-use App\Filters\CommonFilters\MerchantIdFilter;
+use App\Filters\Merchant\MerchantIdFilter;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Applications\MassSpecialStoreApplicationConditionRequest;
 use App\Http\Requests\ApiPrm\Applications\MassStoreApplicationConditionsRequest;
