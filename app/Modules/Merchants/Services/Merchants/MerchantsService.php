@@ -17,8 +17,6 @@ class MerchantsService
         $merchant->legal_name = $merchantsDTO->legal_name;
         $merchant->legal_name_prefix = $merchantsDTO->legal_name_prefix;
         $merchant->token = $merchantsDTO->token;
-        $merchant->alifshop_slug = $merchantsDTO->alifshop_slug;
-        $merchant->information = $merchantsDTO->information;
         $merchant->maintainer_id = $merchantsDTO->maintainer_id;
         $merchant->company_id = $merchantsDTO->company_id;
         $merchant->save();
