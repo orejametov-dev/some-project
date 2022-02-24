@@ -91,7 +91,7 @@ return [
             'username' => env('DB_LOGS_USERNAME', 'local_service_merchant_log'),
             'password' => env('DB_LOGS_PASSWORD', ''),
             'options' => [
-                'authSource' => env('DB_LOGS_DATABASE', 'sv_merchant_logs'),
+                'authSource' => env('DB_AUTHENTICATION_DATABASE', 'admin'),
                 'authMechanism' => 'SCRAM-SHA-1',
             ],
         ],

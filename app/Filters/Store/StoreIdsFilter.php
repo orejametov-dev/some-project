@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filters\CommonFilters;
+namespace App\Filters\Store;
 
 use App\Filters\AbstractExactFilter;
 use Illuminate\Database\Eloquent\Builder;

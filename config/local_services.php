@@ -3,11 +3,6 @@
 return [
     'gateway_access_secret' => env('GATEWAY_ACCESS_SECRET'),
     'access_token' => env('ACCESS_TOKEN'),
-    'services_tickets' => [
-        'domain' => env('SERVICES_TICKETS'),
-        'access_token' => env('SERVICES_TICKETS_ACCESS_TOKEN'),
-        'problem_subject_id' => env('SERVICES_TICKETS_PROBLEM_SUBJECT_ID'),
-    ],
     'services_storage' => [
         'domain' => env('SERVICES_STORAGE'),
         'access_token' => env('STORAGE_ACCESS_TOKEN'),

@@ -5,8 +5,8 @@ namespace App\Filters\Store;
 use App\Filters\AbstractFilters;
 use App\Filters\CommonFilters\ActiveFilter;
 use App\Filters\CommonFilters\IdFilter;
-use App\Filters\CommonFilters\MerchantIdsFilter;
-use App\Filters\CommonFilters\StoreIdsFilter;
+use App\Filters\Merchant\MerchantIdFilter;
+use App\Filters\Merchant\MerchantIdsFilter;
 
 class StoreFilters extends AbstractFilters
 {
@@ -17,6 +17,9 @@ class StoreFilters extends AbstractFilters
         IsMainFilter::class,
         RegionFilter::class,
         ActiveFilter::class,
+        GStoreFilter::class,
+        StoreIdFilter::class,
+        MerchantIdFilter::class,
     ];
 
     protected function getRequestBindings(): array

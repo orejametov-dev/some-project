@@ -4,9 +4,9 @@ namespace App\Filters\Condition;
 
 use App\Filters\AbstractFilters;
 use App\Filters\CommonFilters\ActiveFilter;
-use App\Filters\CommonFilters\MerchantIdsFilter;
-use App\Filters\CommonFilters\StoreIdsFilter;
 use App\Filters\CommonFilters\UpdatedAtFilter;
+use App\Filters\Merchant\MerchantIdsFilter;
+use App\Filters\Store\StoreIdsFilter;
 
 class ConditionFilters extends AbstractFilters
 {
