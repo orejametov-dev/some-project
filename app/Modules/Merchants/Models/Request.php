@@ -22,7 +22,6 @@ use Illuminate\Support\Collection;
  *
  * @property int $id
  * @property string $name
- * @property string $information
  * @property string|null $legal_name
  * @property string|null $legal_name_prefix
  * @property string $user_name
@@ -47,7 +46,6 @@ use Illuminate\Support\Collection;
  * @property-read mixed $status
  * @method static Builder|Request allowed()
  * @method static Builder|Request filterRequests(\Illuminate\Http\Request $request)
- * @method static Builder|Request onlyCompletedRequests(\Illuminate\Http\Request $request)
  * @method static Builder|Request inProcess()
  * @method static Builder|Request onTraining()
  * @method static Builder|Request new()
@@ -78,7 +76,6 @@ class Request extends Model
         'name',
         'user_name',
         'user_phone',
-        'information',
         'region',
         'district',
         'stores_count',
@@ -225,7 +222,6 @@ class Request extends Model
     {
         if ($q = $request->query('q')) {
             $query->where('name', 'like', '%' . $q . '%')
-                ->orWhere('information', 'like', '%' . $q . '%')
                 ->orWhere('legal_name', 'like', '%' . $q . '%')
                 ->orWhere('user_name', 'like', '%' . $q . '%')
                 ->orWhere('user_phone', 'like', '%' . $q . '%');
@@ -238,24 +234,11 @@ class Request extends Model
         if ($created_from_name = $request->query('created_from_name')) {
             $query->where('created_from_name', $created_from_name);
         }
-
-        if ($request->has('completed') && $request->query('completed') == true) {
-            $query->where('completed', true);
-        }
-
-        if ($request->has('completed') && $request->query('completed') == false) {
-            $query->where('completed', false);
-        }
     }
 
     public function scopeOnlyByToken(Builder $query, $token)
     {
         $query->where('token', $token);
-    }
-
-    public function scopeOnlyCompletedRequests(Builder $query, \Illuminate\Http\Request $request)
-    {
-        $query->where('completed', true);
     }
 
     public function uploadFile(UploadedFile $uploadedFile, $type)

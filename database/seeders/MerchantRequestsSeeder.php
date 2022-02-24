@@ -18,7 +18,6 @@ class MerchantRequestsSeeder extends Seeder
         $merchant_request_1 = [
             'id' => 1,
             'name' => 'Mediapark',
-            'information' => 'some info',
             'legal_name' => 'OOO Mediapark',
             'user_name' => 'Jhon Artikkhuja',
             'user_phone' => '998901234050',
@@ -35,7 +34,6 @@ class MerchantRequestsSeeder extends Seeder
         $merchant_request_2 = [
             'id' => 2,
             'name' => 'Artel',
-            'information' => 'some info',
             'legal_name' => 'OAO Artel',
             'user_name' => 'Jakhongir Artikkhujaev',
             'user_phone' => '998912345060',
@@ -52,7 +50,6 @@ class MerchantRequestsSeeder extends Seeder
         $merchant_request_3 = [
             'id' => 3,
             'name' => 'Miniso',
-            'information' => 'some info',
             'legal_name' => 'OOO Miniso',
             'user_name' => 'Artikkhuja Jahongirov',
             'user_phone' => '998923456070',
@@ -69,7 +66,6 @@ class MerchantRequestsSeeder extends Seeder
         $merchant_request_4 = [
             'id' => 4,
             'name' => 'GSHOP',
-            'information' => 'some info',
             'legal_name' => 'OOO GSHOP',
             'user_name' => 'Vasya Pupkin',
             'user_phone' => '998934440010',
