@@ -1,6 +1,10 @@
 stages:
   - build-docker
 
+variables:
+  DOCKER_TLS_CERTDIR: "/certs"
+  DOCKER_TLS_VERIFY: 1
+
 cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
