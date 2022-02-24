@@ -20,7 +20,7 @@ Route::get('/merchants/users/{user_id}/by-user', [AzoMerchantAccesses::class, 'g
 Route::get('/merchants/{id}', [MerchantsController::class, 'show']);
 
 //service-docs
-Route::get('/service-docs/{merchant_id}', [MerchantInfoController::class, 'getMerchantInfoByMerchantId']);
+Route::get('/service-docs/merchants/{merchant_id}', [MerchantInfoController::class, 'getMerchantInfoByMerchantId']);
 
 //Telegram BOT
 Route::post('/merchants/verify', [MerchantsController::class, 'verifyToken']);
