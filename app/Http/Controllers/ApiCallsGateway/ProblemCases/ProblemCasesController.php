@@ -22,15 +22,6 @@ class ProblemCasesController extends ApiBaseController
             ->whereIn('created_from_name', ['CALLS', 'LAW'])
             ->filterRequest($request, [GProblemCaseFilter::class, StatusIdFilter::class]);
 
-//        $problemCases = ProblemCase::query()
-//            ->with('merchant')
-//            ->whereIn('created_from_name', ['CALLS', 'LAW'])
-//            ->filterRequests($request);
-//
-//        if ($request->query('object') == true) {
-//            return new ProblemCaseResource($problemCases->first());
-//        }
-//
         return ProblemCaseResource::collection($problemCases->paginate($request->query('per_page') ?? 15));
     }
 
