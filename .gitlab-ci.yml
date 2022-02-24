@@ -4,6 +4,7 @@ stages:
 variables:
   DOCKER_TLS_CERTDIR: "/certs"
   DOCKER_TLS_VERIFY: 1
+  DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
 
 cache:
   key: ${CI_COMMIT_REF_SLUG}
@@ -18,6 +19,5 @@ build-master-docker:
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - echo 123
-#    - docker build --pull -t "$CI_REGISTERY_IMAGE" .
-#    - docker push "$CI_REGISTERY_IMAGE"
+    - docker build --pull -t "$CI_REGISTERY_IMAGE" .
+    - docker push "$CI_REGISTERY_IMAGE"
