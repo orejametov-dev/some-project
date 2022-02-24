@@ -18,5 +18,6 @@ build-master-docker:
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - docker build --pull -t "$CI_REGISTERY_IMAGE" .
-    - docker push "$CI_REGISTERY_IMAGE"
+    - echo 123
+#    - docker build --pull -t "$CI_REGISTERY_IMAGE" .
+#    - docker push "$CI_REGISTERY_IMAGE"
