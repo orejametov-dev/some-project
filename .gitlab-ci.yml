@@ -1,0 +1,18 @@
+stages:
+  - build-docker
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - vendor/
+
+build-master-docker:
+  stage: build-docker
+  image: docker:stable
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTERY_USER" -p "$CI_REGISTER_PASSWORD" $CI_REGISTERY
+  script:
+    - docker build --pull -t "$CI_REGISTERY_IMAGE" .
+    - docker push "$CI_REGISTERY_IMAGE"
