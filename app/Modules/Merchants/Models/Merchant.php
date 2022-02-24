@@ -23,14 +23,10 @@ use Illuminate\Support\Str;
  * @property string $name
  * @property string|null $legal_name
  * @property string|null $legal_name_prefix
- * @property string|null $information
  * @property string|null $token
- * @property string $alifshop_slug
- * @property string|null $telegram_chat_id
  * @property int $has_general_goods
  * @property string|null $logo_url
  * @property bool $recommend
- * @property string|null $paymo_terminal
  * @property int|null $maintainer_id
  * @property int|null $current_sales
  * @property int $company_id
@@ -72,12 +68,8 @@ class Merchant extends Model
         'legal_name',
         'legal_name_prefix',
         'token',
-        'alifshop_slug',
-        'information',
         'logo_url',
-        'telegram_chat_id',
         'has_general_goods',
-        'paymo_terminal_id',
         'min_application_price',
         'active',
     ];
@@ -89,8 +81,6 @@ class Merchant extends Model
         'name' => 'Название партнёра',
         'legal_name' => 'Юридическое имя',
         'token' => 'Токен алифшопа',
-        'alifshop_slug' => 'Алифшоп слаг',
-        'information' => 'Информация',
     ];
 
     public function getLogoPathAttribute()
@@ -133,14 +123,6 @@ class Merchant extends Model
 
         if ($legal_name = $request->query('legal_name')) {
             $query->where('legal_name', $legal_name);
-        }
-
-        if ($alifshop_items = $request->query('alifshop_items')) {
-            $query->where('alifshop_items', $alifshop_items);
-        }
-
-        if ($telegram_chat_id = $request->query('telegram_chat_id')) {
-            $query->where('telegram_chat_id', $telegram_chat_id);
         }
 
         if ($request->query('date')) {
@@ -198,7 +180,6 @@ class Merchant extends Model
         $merchant->legal_name = $company->legal_name;
         $merchant->legal_name_prefix = $company->legal_name_prefix;
         $merchant->token = $company->token;
-        $merchant->alifshop_slug = Str::slug($company->name);
         $merchant->maintainer_id = $user_id;
         $merchant->company_id = $company->id;
 
