@@ -44,7 +44,13 @@ class MerchantInfoController extends Controller
 
     public function getContractTrust(WordService $wordService, $id)
     {
-        $merchant_info = MerchantInfo::query()->findOrFail($id);
+        $merchant_info = MerchantInfo::query()
+            ->with('merchant:id,legal_name,legal_name_prefix')
+            ->find($id);
+
+        if ($merchant_info === null) {
+            throw new BusinessException('Информация про мерчант не найдена', 'object_not_found', 404);
+        }
 
         $contract_path = 'app/prm_merchant_contract_trust.docx';
         $contract_file = $wordService->createContract($merchant_info, $contract_path);
@@ -54,7 +60,9 @@ class MerchantInfoController extends Controller
 
     public function getContractProcuration($id, WordService $wordService)
     {
-        $merchant_info = MerchantInfo::query()->find($id);
+        $merchant_info = MerchantInfo::query()
+            ->with('merchant:id,legal_name,legal_name_prefix')
+            ->find($id);
 
         if ($merchant_info === null) {
             throw new BusinessException('Информация про мерчант не найдена', 'object_not_found', 404);
@@ -68,7 +76,13 @@ class MerchantInfoController extends Controller
 
     public function getContract(WordService $wordService, $id)
     {
-        $merchant_info = MerchantInfo::query()->findOrFail($id);
+        $merchant_info = MerchantInfo::query()
+            ->with('merchant:id,legal_name,legal_name_prefix')
+            ->find($id);
+
+        if ($merchant_info === null) {
+            throw new BusinessException('Информация про мерчант не найдена', 'object_not_found', 404);
+        }
 
         $contract_path = 'app/prm_merchant_contract.docx';
         $contract_file = $wordService->createContract($merchant_info, $contract_path);
