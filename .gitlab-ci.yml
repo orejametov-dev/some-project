@@ -10,7 +10,7 @@ Composer Install:
   stage: build
   image: $PHP_IMAGE
   script:
-    - composer config gitlab-token.gitlab.alifshop.uz hW9j8RNxW9W6LsXkSGEZ
+    - composer config gitlab-token.gitlab.alifshop.uz RyfNGSWVXYsN4u_qHE1_
     - composer i
   tags:
     - cicd
