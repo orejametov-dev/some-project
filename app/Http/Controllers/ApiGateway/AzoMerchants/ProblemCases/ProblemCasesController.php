@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases;
 
 use App\Filters\CommonFilters\DateFilter;
-use App\Filters\CommonFilters\MerchantIdFilter;
-use App\Filters\CommonFilters\MerchantIdsFilter;
 use App\Filters\CommonFilters\StatusIdFilter;
+use App\Filters\Merchant\MerchantIdFilter;
+use App\Filters\Merchant\MerchantIdsFilter;
 use App\Filters\ProblemCase\AssignedToIdFilter;
 use App\Filters\ProblemCase\CreatedFromNameFilter;
 use App\Filters\ProblemCase\GProblemCaseFilter;
