@@ -22,7 +22,7 @@ Build:
   stage: build
   image: docker:dind
   script:
-    - docker build --pull -t ${CI_REGISTRY_IMAGE}:latest -f infra/local/php .
+    - docker build --pull -t ${CI_REGISTRY_IMAGE}:latest .
     - docker push ${CI_REGISTRY_IMAGE}:latest
   tags:
     - cicd
