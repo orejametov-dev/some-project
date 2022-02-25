@@ -6,20 +6,18 @@ stages:
 variables:
   PHP_IMAGE: $CI_REGISTRY/images/php:8.0-fpm-infra
 
-before_script:
-  - git config --global gitlab.accesstoken $CI_JOB_TOKEN
-  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-
 Composer Install:
   stage: build
   image: $PHP_IMAGE
   script:
+    - git config --global gitlab.accesstoken $CI_JOB_TOKEN
     - composer config gitlab-domains $CI_SERVER_HOST
     - composer config gitlab-token.$CI_SERVER_HOST $CI_JOB_TOKEN
     - composer i
   tags:
     - cicd
     - shell
+
   artifacts:
     paths:
       - vendor
