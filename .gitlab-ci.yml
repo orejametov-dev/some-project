@@ -15,8 +15,9 @@ build-master-docker:
   stage: build-docker
   image: docker:19.03.13
   services:
-    - docker:dind
+    - docker:19.03.12-dind
   before_script:
+    - echo $DOCKER_HOST
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
 
   script:
