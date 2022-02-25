@@ -27,11 +27,11 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://gitlab.alifshop.uz/alifuz/backend/backend-utils-gateway.git"
+            "url": "https://gitlab.alifshop.uz/packages/backend/backend-utils-gateway"
         },
         {
             "type": "vcs",
-            "url": "https://gitlab.alifshop.uz/alifuz/backend/backend-utils.git"
+            "url": "https://gitlab.alifshop.uz/packages/backend/backend-utils"
         }
     ],
     "require-dev": {
