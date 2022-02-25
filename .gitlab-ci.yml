@@ -6,36 +6,45 @@ stages:
 variables:
   PHP_IMAGE: ginger.alifshop.uz:443/images/php:8.0-fpm-infra
 
+before_script:
+  - git config --global gitlab.accesstoken $CI_JOB_TOKEN
+  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+
 Composer Install:
   stage: build
   image: $PHP_IMAGE
   script:
-    - composer config gitlab-token.gitlab.alifshop.uz RyfNGSWVXYsN4u_qHE1_
+    - composer config gitlab-token.gitlab.alifshop.uz $CI_JOB_TOKEN
     - composer i
   tags:
     - cicd
     - shell
+  artifacts:
+    paths:
+      - vendor
+    expire_in: 1 day
 
-Build:
-  stage: build
-  image: docker:dind
-  before_script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-  script:
-    - docker build --pull -t ${CI_REGISTRY_IMAGE}:latest -f infra/local/php/Dockerfile .
-    - docker push ${CI_REGISTRY_IMAGE}:latest
-  tags:
-    - cicd
-    - shell
 
-Test with Stan:
-  stage: test
-  image: ${CI_REGISTRY_IMAGE}:latest
-  script:
-    - make analyze
-  tags:
-    - cicd
-    - shell
+#Build:
+#  stage: build
+#  image: docker:dind
+#  before_script:
+#    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+#  script:
+#    - docker build --pull -t ${CI_REGISTRY_IMAGE}:latest -f infra/local/php/Dockerfile .
+#    - docker push ${CI_REGISTRY_IMAGE}:latest
+#  tags:
+#    - cicd
+#    - shell
+
+#Test with Stan:
+#  stage: test
+#  image: ${CI_REGISTRY_IMAGE}:latest
+#  script:
+#    - make analyze
+#  tags:
+#    - cicd
+#    - shell
 
 #stages:
 #  - build
