@@ -1,4 +1,33 @@
----
+#---
+#stages:
+#  - build
+#  - test
+#
+#variables:
+#  PHP_IMAGE: ginger.alifshop.uz:443/images/php:8.0-fpm-infra
+#
+#before_script:
+#  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+#
+#Composer Install:
+#  stage: build
+#  image: $PHP_IMAGE
+#  script:
+#    - composer i
+#
+#Build:
+#  stage: build
+#  image: docker:dind
+#  script:
+#    - docker build --pull -t ${CI_REGISTRY_IMAGE}:latest .
+#    - docker push ${CI_REGISTRY_IMAGE}:latest
+#
+#Test with Stan:
+#  stage: test
+#  image: ${CI_REGISTRY_IMAGE}:latest
+#  script:
+#    - make analyze
+
 stages:
   - build
   - test
@@ -6,45 +35,32 @@ stages:
 variables:
   PHP_IMAGE: ginger.alifshop.uz:443/images/php:8.0-fpm-infra
 
-before_script:
-  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+build-docker:
+  stage: build
+  image: docker:19.03.12
+  services:
+    - docker:19.03.12-dind
+  before_script:
+    - echo $DOCKER_HOST
+    - echo $CI_REGISTRY_IMAGE
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
 
-Composer Install:
+  script:
+    - docker build --pull -t ${CI_REGISTRY_IMAGE}:latest .
+    - docker push ${CI_REGISTRY_IMAGE}:latest
+
+build-php:
   stage: build
   image: $PHP_IMAGE
   script:
     - composer i
 
-Build:
-  stage: build
-  image: docker:dind
-  script:
-    - docker build --pull -t ${CI_REGISTRY_IMAGE}:latest .
-    - docker push ${CI_REGISTRY_IMAGE}:latest
+  artifacts:
+    paths:
+      - vendor/
 
-Test with Stan:
+make-analyze:
   stage: test
-  image: ${CI_REGISTRY_IMAGE}:latest
+  image: $PHP_IMAGE
   script:
     - make analyze
-
-#stages:
-#  - build-docker
-#
-#variables:
-#  PHP_IMAGE: ginger.alifshop.uz:443/images/php:8.0-fpm-infra
-#
-#build-master-docker:
-#  stage: build-docker
-#  image: docker:19.03.12
-#  services:
-#    - docker:19.03.12-dind
-#  before_script:
-#    - echo $DOCKER_HOST
-#    - echo $CI_REGISTRY_IMAGE
-#    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-#
-#  script:
-#    - docker build --pull -t $PHP_IMAGE -f infra/local/php .
-#    - docker push $PHP_IMAGE
-#    - composer i
