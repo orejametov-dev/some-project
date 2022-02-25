@@ -15,6 +15,6 @@ build-master-docker:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
 
   script:
-    - docker build --pull -t $PHP_IMAGE .
+    - docker build --pull -t $PHP_IMAGE -f infra/local/php .
     - docker push $PHP_IMAGE
     - composer i
