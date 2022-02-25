@@ -2,12 +2,11 @@ stages:
   - build-docker
 
 variables:
-  DOCKER_TLS_CERTDIR: ""
-  DOCKER_HOST: tcp://docker:2376
+#  DOCKER_TLS_CERTDIR: ""
   PHP_IMAGE: ginger.alifshop.uz:443/images/php:8.0-fpm-infra
-#  DOCKER_TLS_CERTDIR: "/certs"
-#  DOCKER_TLS_VERIFY: 0
-#  DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
+  DOCKER_TLS_CERTDIR: "/certs"
+  DOCKER_TLS_VERIFY: 1
+  DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
 
 
 cache:
