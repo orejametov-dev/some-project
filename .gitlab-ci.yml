@@ -2,12 +2,12 @@ stages:
   - build-docker
 
 variables:
-  DOCKER_TLS_CERTDIR: ""
+#  DOCKER_TLS_CERTDIR: ""
   PHP_IMAGE: ginger.alifshop.uz:443/images/php:8.0-fpm-infra
 
 build-master-docker:
   stage: build-docker
-  image: docker:19.03.13
+  image: docker:19.03.12
   services:
     - docker:19.03.12-dind
   before_script:
@@ -17,6 +17,6 @@ build-master-docker:
 
   script:
     echo 123
-#    - docker build --pull -t $PHP_IMAGE .
-#    - docker push $PHP_IMAGE
+#    - docker build --pull -t here_need_to_point_php_image .
+#    - docker push here_need_to_point_php_image
 #    - composer i
