@@ -1,33 +1,4 @@
-#---
-#stages:
-#  - build
-#  - test
-#
-#variables:
-#  PHP_IMAGE: ginger.alifshop.uz:443/images/php:8.0-fpm-infra
-#
-#before_script:
-#  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-#
-#Composer Install:
-#  stage: build
-#  image: $PHP_IMAGE
-#  script:
-#    - composer i
-#
-#Build:
-#  stage: build
-#  image: docker:dind
-#  script:
-#    - docker build --pull -t ${CI_REGISTRY_IMAGE}:latest .
-#    - docker push ${CI_REGISTRY_IMAGE}:latest
-#
-#Test with Stan:
-#  stage: test
-#  image: ${CI_REGISTRY_IMAGE}:latest
-#  script:
-#    - make analyze
-
+---
 stages:
   - build
   - test
@@ -35,32 +6,73 @@ stages:
 variables:
   PHP_IMAGE: ginger.alifshop.uz:443/images/php:8.0-fpm-infra
 
-build-docker:
-  stage: build
-  image: docker:19.03.12
-  services:
-    - docker:19.03.12-dind
-  before_script:
-    - echo $DOCKER_HOST
-    - echo $CI_REGISTRY_IMAGE
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+before_script:
+  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
 
-  script:
-    - docker build --pull -t ${CI_REGISTRY_IMAGE}:latest .
-    - docker push ${CI_REGISTRY_IMAGE}:latest
-
-build-php:
-  stage: build
+Composer Install:
+  stage: prepare
   image: $PHP_IMAGE
   script:
     - composer i
+  tags:
+    - cicd
+    - shell
 
-  artifacts:
-    paths:
-      - vendor/
+Build:
+  stage: build
+  image: docker:dind
+  script:
+    - docker build --pull -t ${CI_REGISTRY_IMAGE}:latest -f infra/local/php .
+    - docker push ${CI_REGISTRY_IMAGE}:latest
+  tags:
+    - cicd
+    - shell
 
-make-analyze:
+Test with Stan:
   stage: test
-  image: $PHP_IMAGE
+  image: ${CI_REGISTRY_IMAGE}:latest
   script:
     - make analyze
+  tags:
+    - cicd
+    - shell
+
+#stages:
+#  - build
+#  - test
+#
+#variables:
+#  DOCKER_TLS_CERTDIR: "/certs"
+#  DOCKER_TLS_VERIFY: 1
+#  DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
+#  PHP_IMAGE: ginger.alifshop.uz:443/images/php:8.0-fpm-infra
+#
+#build-docker:
+#  stage: build
+#  image: docker:19.03.12
+#  services:
+#    - docker:19.03.12-dind
+#  before_script:
+#    - echo $DOCKER_HOST
+#    - echo $CI_REGISTRY_IMAGE
+#    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+#
+#  script:
+#    - docker build --pull -t ${CI_REGISTRY_IMAGE}:latest .
+#    - docker push ${CI_REGISTRY_IMAGE}:latest
+#
+#build-php:
+#  stage: build
+#  image: $PHP_IMAGE
+#  script:
+#    - composer i
+#
+#  artifacts:
+#    paths:
+#      - vendor/
+#
+#make-analyze:
+#  stage: test
+#  image: $PHP_IMAGE
+#  script:
+#    - make analyze
