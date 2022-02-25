@@ -2,14 +2,15 @@ stages:
   - build-docker
 
 variables:
+  DOCKER_HOST: tcp://docker:2376
   DOCKER_TLS_CERTDIR: ""
   PHP_IMAGE: ginger.alifshop.uz:443/images/php:8.0-fpm-infra
 
 
-cache:
-  key: ${CI_COMMIT_REF_SLUG}
-  paths:
-    - vendor/
+#cache:
+#  key: ${CI_COMMIT_REF_SLUG}
+#  paths:
+#    - vendor/
 
 build-master-docker:
   stage: build-docker
