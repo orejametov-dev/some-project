@@ -24,17 +24,12 @@ Composer Install:
     expire_in: 1 day
 
 
-#Build:
-#  stage: build
-#  image: docker:dind
-#  before_script:
-#    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-#  script:
-#    - docker build --pull -t ${CI_REGISTRY_IMAGE}:latest -f infra/local/php/Dockerfile .
-#    - docker push ${CI_REGISTRY_IMAGE}:latest
-#  tags:
-#    - cicd
-#    - shell
+Build:
+  stage: build
+  image: docker:dind
+  script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+
 
 #Test with Stan:
 #  stage: test
