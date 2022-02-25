@@ -23,12 +23,12 @@ Composer Install:
       - vendor
     expire_in: 1 day
 
-
-Build:
-  stage: build
-  image: docker:dind
-  script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+#
+#Build:
+#  stage: build
+#  image: docker:dind
+#  script:
+#    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
 
 
 #Test with Stan:
