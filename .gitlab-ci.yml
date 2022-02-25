@@ -10,9 +10,9 @@ Composer Install:
   stage: build
   image: $PHP_IMAGE
   script:
-    - git config --global gitlab.accesstoken $CI_JOB_TOKEN
+    - git config --global gitlab.accesstoken 8g95W8Ju5-33FySVfznV
     - composer config gitlab-domains $CI_SERVER_HOST
-    - composer config gitlab-token.$CI_SERVER_HOST $CI_JOB_TOKEN
+    - composer config gitlab-token.$CI_SERVER_HOST 8g95W8Ju5-33FySVfznV
     - composer i
   tags:
     - cicd
