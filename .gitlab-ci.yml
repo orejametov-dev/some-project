@@ -6,9 +6,6 @@ stages:
 variables:
   PHP_IMAGE: ginger.alifshop.uz:443/images/php:8.0-fpm-infra
 
-before_script:
-  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-
 Composer Install:
   stage: build
   image: $PHP_IMAGE
@@ -22,6 +19,8 @@ Composer Install:
 Build:
   stage: build
   image: docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
     - docker build --pull -t ${CI_REGISTRY_IMAGE}:latest -f infra/local/php/Dockerfile .
     - docker push ${CI_REGISTRY_IMAGE}:latest
