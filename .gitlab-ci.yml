@@ -14,7 +14,7 @@ Composer Install:
   stage: build
 
   script:
-    - docker build --pull -t $PHP_IMAGE -f infra/local/php .
+    - docker build --pull -t $PHP_IMAGE .
     - docker push $PHP_IMAGE
     - composer i
 
