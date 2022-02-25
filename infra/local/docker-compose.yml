@@ -9,7 +9,7 @@ services:
       context: ./php/
     volumes:
       - ../../:/app
-      - ~/.composer-docker/cache:/root/.composer/cache:delegated
+#      - ~/.composer-docker/cache:/root/.composer/cache:delegated
       - ./php/php-fpm.conf:/usr/local/etc/php-fpm.d/www.override.conf:ro
       - ./php/php.ini:/usr/local/etc/php/conf.d/php-override.ini:ro
       - ./supervisor/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
