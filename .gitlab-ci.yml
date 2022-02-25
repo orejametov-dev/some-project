@@ -9,15 +9,6 @@ variables:
 before_script:
   - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
 
-Composer Install:
-  stage: build
-  image: $PHP_IMAGE
-  script:
-    - composer i
-  tags:
-    - cicd
-    - shell
-
 Build:
   stage: build
   image: docker:dind
