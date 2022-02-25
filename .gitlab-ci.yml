@@ -10,7 +10,7 @@ before_script:
   - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
 
 Composer Install:
-  stage: prepare
+  stage: build
   image: $PHP_IMAGE
   script:
     - composer i
