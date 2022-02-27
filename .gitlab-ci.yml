@@ -1,5 +1,6 @@
 ---
 stages:
+  - before-build
   - build
   - test
 
@@ -7,31 +8,49 @@ variables:
   PHP_IMAGE: $CI_REGISTRY/images/php:8.0-fpm-infra
 
 Composer Install:
-  stage: build
+  stage: before-build
   image: $PHP_IMAGE
   script:
     - git config --global gitlab.accesstoken $CI_JOB_TOKEN
     - composer config gitlab-domains $CI_SERVER_HOST
     - composer config gitlab-token.$CI_SERVER_HOST $CI_JOB_TOKEN
     - composer i
-#  tags:
-#    - cicd
-#    - shell
-
   artifacts:
     paths:
       - vendor
     expire_in: 1 day
 
+Build:
+  stage: build
+  image: docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build --no-cache --pull -f infra/local/php/Dockerfile -t $CI_REGISTRY_IMAGE:latest .
+    - docker run --rm $CI_REGISTRY_IMAGE:latest ls
+#.app-build-script: &app-build-script
+#  stage: build
+#  image: ${DOCKER_BUILD_IMAGE}
+#  before_script:
+#    - until docker info; do sleep 1; done
+#    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+#    - tar -xzf ${BUILD_ARCHIVE}
+#    - rm ${BUILD_ARCHIVE}
+#  script:
+#    - docker build --no-cache --build-arg PHP_IMAGE=$PHP_IMAGE --pull -f infra/$ENVIRONMENT_NAME/Dockerfile -t $APP_BUILT_IMAGE:$BUILT_TAG -t $APP_BUILT_IMAGE:latest .
+#    - docker run --rm $APP_BUILT_IMAGE:$BUILT_TAG ls
+#    - docker push $APP_BUILT_IMAGE:latest
+#    - docker push $APP_BUILT_IMAGE:latest
+
 Static-analyze:
   stage: test
   image: $PHP_IMAGE
   script:
-    - ./vendor/bin/phpstan analyse --memory-limit=2G --configuration='infra/config/phpstan.neon'
+    - docker run --rm $CI_REGISTRY_IMAGE:latest ./vendor/bin/phpstan analyse --memory-limit=2G --configuration='infra/config/phpstan.neon'
 
 Check-CS-Fixer:
   stage: test
   image: $PHP_IMAGE
   script:
-    - ./vendor/bin/php-cs-fixer fix -vvv --dry-run --show-progress=dots --config=./infra/config/.php-cs-fixer.php --allow-risky=yes
+    - docker run --rm $CI_REGISTRY_IMAGE:latest ./vendor/bin/php-cs-fixer fix -vvv --dry-run --show-progress=dots --config=./infra/config/.php-cs-fixer.php --allow-risky=yes
 
