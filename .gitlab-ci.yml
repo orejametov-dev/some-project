@@ -14,68 +14,24 @@ Composer Install:
     - composer config gitlab-domains $CI_SERVER_HOST
     - composer config gitlab-token.$CI_SERVER_HOST $CI_JOB_TOKEN
     - composer i
-  tags:
-    - cicd
-    - shell
+#  tags:
+#    - cicd
+#    - shell
 
   artifacts:
     paths:
       - vendor
     expire_in: 1 day
 
-#
-#Build:
-#  stage: build
-#  image: docker:dind
-#  script:
-#    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+Static-analyze:
+  stage: test
+  image: $PHP_IMAGE
+  script:
+    - ./vendor/bin/phpstan analyse --memory-limit=2G --configuration='infra/config/phpstan.neon'
 
+Check-CS-Fixer:
+  stage: test
+  image: $PHP_IMAGE
+  script:
+    - ./vendor/bin/php-cs-fixer fix -vvv --dry-run --show-progress=dots --config=./infra/config/.php-cs-fixer.php --allow-risky=yes
 
-#Test with Stan:
-#  stage: test
-#  image: ${CI_REGISTRY_IMAGE}:latest
-#  script:
-#    - make analyze
-#  tags:
-#    - cicd
-#    - shell
-
-#stages:
-#  - build
-#  - test
-#
-#variables:
-#  DOCKER_TLS_CERTDIR: "/certs"
-#  DOCKER_TLS_VERIFY: 1
-#  DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
-#  PHP_IMAGE: ginger.alifshop.uz:443/images/php:8.0-fpm-infra
-#
-#build-docker:
-#  stage: build
-#  image: docker:19.03.12
-#  services:
-#    - docker:19.03.12-dind
-#  before_script:
-#    - echo $DOCKER_HOST
-#    - echo $CI_REGISTRY_IMAGE
-#    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-#
-#  script:
-#    - docker build --pull -t ${CI_REGISTRY_IMAGE}:latest .
-#    - docker push ${CI_REGISTRY_IMAGE}:latest
-#
-#build-php:
-#  stage: build
-#  image: $PHP_IMAGE
-#  script:
-#    - composer i
-#
-#  artifacts:
-#    paths:
-#      - vendor/
-#
-#make-analyze:
-#  stage: test
-#  image: $PHP_IMAGE
-#  script:
-#    - make analyze
