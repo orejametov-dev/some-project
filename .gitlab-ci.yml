@@ -28,6 +28,9 @@ Build:
   script:
     - docker build --no-cache --pull -f infra/local/php/Dockerfile -t $CI_REGISTRY_IMAGE:latest .
     - docker push $CI_REGISTRY_IMAGE:latest
+  tags:
+    - cicd
+    - shell
 
 Static-analyze:
   stage: test
