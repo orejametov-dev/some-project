@@ -35,8 +35,8 @@ setup-hooks:
 	cp -r ./infra/config/hooks .git/ && chmod -R +x .git/hooks/
 
 pre-commit-hook:
-	echo "STATIC ANALYZE CHECK..." && make analyze > /dev/null 2>&1\
-	&& echo "CS-FIXER CHECK..." && make cs-check > /dev/null 2>&1\
+	echo "STATIC ANALYZE CHECK..." && make analyze \
+	&& echo "CS-FIXER CHECK..." && make cs-check
 
 # linters
 cs-check:
