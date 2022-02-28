@@ -29,6 +29,7 @@ use Illuminate\Http\Request;
  * @method static Builder|AzoMerchantAccess byStore($store_id)
  * @method static Builder|AzoMerchantAccess byUserId($user_id)
  * @method static Builder|AzoMerchantAccess filterRequests(Request $request)
+ * @method static Builder|AzoMerchantAccess filterRequest(Request $request, array $filters = [])
  * @method static Builder|AzoMerchantAccess newModelQuery()
  * @method static Builder|AzoMerchantAccess newQuery()
  * @method static Builder|AzoMerchantAccess orderRequest(Request $request, string $default_order_str = 'id:desc')
