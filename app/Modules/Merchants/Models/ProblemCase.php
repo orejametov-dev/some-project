@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Http\Request;
 
 /**
  * @property int $id
@@ -47,6 +48,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  * @property ProblemCaseTag|null $before_tags
  * @property ProblemCaseTag|null $tags
  * @property-read Store|null $store
+ * @method static Builder|ProblemCase filterRequest(Request $request, array $filters = [])
  */
 class ProblemCase extends Model implements SimpleStateMachinable
 {
@@ -169,7 +171,7 @@ class ProblemCase extends Model implements SimpleStateMachinable
         return $this->morphMany(Comment::class, 'commentable');
     }
 
-    public function scopeFilterRequests(Builder $query, \Illuminate\Http\Request $request)
+    public function scopeFilterRequests(Builder $query, Request $request)
     {
         if ($client = $request->query('q')) {
             collect(explode(' ', $client))->filter()->each(function ($q) use ($query) {
@@ -247,7 +249,7 @@ class ProblemCase extends Model implements SimpleStateMachinable
         $query->where('store_id', $store_id);
     }
 
-    public function scopeFilterRequest(Builder $builder, \Illuminate\Http\Request $request, array $filters = []): Builder
+    public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder
     {
         return (new ProblemCaseFilters($request, $builder))->execute($filters);
     }
