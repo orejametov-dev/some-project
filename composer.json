@@ -27,11 +27,11 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://gitlab.alifshop.uz/alifuz/backend/backend-utils-gateway.git"
+            "url": "https://gitlab.alifshop.uz/packages/backend/backend-utils-gateway.git"
         },
         {
             "type": "vcs",
-            "url": "https://gitlab.alifshop.uz/alifuz/backend/backend-utils.git"
+            "url": "https://gitlab.alifshop.uz/packages/backend/backend-utils.git"
         }
     ],
     "require-dev": {
@@ -47,7 +47,8 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "gitlab-domains": ["gitlab.alifshop.uz"]
     },
     "extra": {
         "laravel": {
