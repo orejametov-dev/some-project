@@ -4,6 +4,7 @@ namespace App\Http\Controllers\ApiCallsGateway\ProblemCases;
 
 use App\DTOs\ProblemCases\ProblemCaseDTO;
 use App\Exceptions\BusinessException;
+use App\Filters\CommonFilters\ClientIdFilter;
 use App\Filters\CommonFilters\StatusIdFilter;
 use App\Filters\ProblemCase\GProblemCaseFilter;
 use App\Http\Controllers\ApiCallsGateway\ApiBaseController;
@@ -20,7 +21,11 @@ class ProblemCasesController extends ApiBaseController
         $problemCases = ProblemCase::query()
             ->with(['merchant', 'before_tags'])
             ->whereIn('created_from_name', ['CALLS', 'LAW'])
-            ->filterRequest($request, [GProblemCaseFilter::class, StatusIdFilter::class]);
+            ->filterRequest($request, [
+                GProblemCaseFilter::class,
+                StatusIdFilter::class,
+                ClientIdFilter::class,
+            ]);
 
         return ProblemCaseResource::collection($problemCases->paginate($request->query('per_page') ?? 15));
     }

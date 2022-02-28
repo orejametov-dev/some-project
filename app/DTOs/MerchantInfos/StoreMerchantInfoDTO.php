@@ -29,7 +29,6 @@ class StoreMerchantInfoDTO
         return new self(
             self::parseInt($data['merchant_id']),
             self::parseString($data['director_name']),
-
             self::parseString($data['phone']),
             self::parseString($data['vat_number']),
             self::parseString($data['mfo']),

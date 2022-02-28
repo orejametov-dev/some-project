@@ -33,6 +33,7 @@ use Illuminate\Http\Request;
  * @property int|null $rest_limit
  * @property-read Merchant $merchant
  * @method static Builder|MerchantInfo filterRequests(Request $request)
+ * @method static Builder|MerchantInfo filterRequest(Request $request, array $filters = [])
  * @method static Builder|MerchantInfo newModelQuery()
  * @method static Builder|MerchantInfo newQuery()
  * @method static Builder|MerchantInfo query()

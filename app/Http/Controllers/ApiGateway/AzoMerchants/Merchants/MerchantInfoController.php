@@ -61,7 +61,6 @@ class MerchantInfoController extends Controller
     public function getContractProcuration($id, WordService $wordService)
     {
         $merchant_info = MerchantInfo::query()
-            ->with('merchant:id,legal_name,legal_name_prefix')
             ->find($id);
 
         if ($merchant_info === null) {
@@ -77,7 +76,6 @@ class MerchantInfoController extends Controller
     public function getContract(WordService $wordService, $id)
     {
         $merchant_info = MerchantInfo::query()
-            ->with('merchant:id,legal_name,legal_name_prefix')
             ->find($id);
 
         if ($merchant_info === null) {

@@ -2,36 +2,26 @@ version: "3.7"
 
 services:
   app:
-    image: $APP_IMAGE_NAME
+    image: $IMAGE_PHP
     container_name: $APP_CONTAINER_NAME
-    build:
-      dockerfile: Dockerfile
-      context: ./php/
     volumes:
       - ../../:/app
-      - ~/.composer-docker/cache:/root/.composer/cache:delegated
+      - ~/.composer-docker/cache:/home/www/.composer/cache:delegated
       - ./php/php-fpm.conf:/usr/local/etc/php-fpm.d/www.override.conf:ro
       - ./php/php.ini:/usr/local/etc/php/conf.d/php-override.ini:ro
-      - ./supervisor/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
     ports:
       - 127.0.4.1:9000:9000
-    environment:
-      - DEV_UID=$DEV_UID
     depends_on:
       - redis
 
   supervisor:
-    image: $APP_IMAGE_NAME
+    image: $IMAGE_PHP
     container_name: $SUPERVISOR_CONTAINER_NAME
-    build:
-      dockerfile: Dockerfile
-      context: ./php/
     volumes:
       - ../../:/app
-      - ~/.composer-docker/cache:/root/.composer/cache:delegated
-      - ./php/php-fpm.conf:/usr/local/etc/php-fpm.d/www.override.conf:ro
       - ./php/php.ini:/usr/local/etc/php/conf.d/php-override.ini:ro
       - ./supervisor/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
+    user: root
     entrypoint: ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
     depends_on:
       - redis

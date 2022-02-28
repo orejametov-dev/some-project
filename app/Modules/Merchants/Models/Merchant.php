@@ -48,6 +48,7 @@ use Illuminate\Support\Str;
  * @property-read Collection|Tag[] $tags
  * @property-read int|null $tags_count
  * @method static Builder|Merchant filterRequests(Request $request)
+ * @method static Builder|Merchant filterRequest(Request $request, array $filters = [])
  * @method static Builder|Merchant newModelQuery()
  * @method static Builder|Merchant newQuery()
  * @method static Builder|Merchant orderRequest(Request $request, string $default_order_str = 'id:desc')
