@@ -54,4 +54,4 @@ run-inside-container:
 	docker exec -it ${APP_CONTAINER_NAME} ${COMMAND}
 # когда нам нужно запускать команды без зависимостей и без необходимости в контексте приложения, одноразовые команды
 run-on-image:
-	docker run --rm -it -v "${PWD}"/:/app ${APP_IMAGE_NAME} ${COMMAND}
+	docker run --rm -v "${PWD}"/:/app ${IMAGE_PHP} ${COMMAND}
