@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Builder;
 
 class FreshFilter extends AbstractExactFilter
 {
-
     public function filter(Builder $builder, mixed $value): void
     {
         if ($value == true) {
