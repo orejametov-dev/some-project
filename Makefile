@@ -20,7 +20,7 @@ docker-compose:
 
 #mysql
 create-mysql-database:
-	./infra/local/mysql/create-mysql-database.sh
+	./infra/local/mysql/create-mysql-database
 
 #composer
 install:
