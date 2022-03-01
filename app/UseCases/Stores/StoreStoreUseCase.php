@@ -3,19 +3,20 @@
 namespace App\UseCases\Stores;
 
 use App\DTOs\Stores\StoreStoresDTO;
+use App\Exceptions\BusinessException;
 use App\Modules\Merchants\Models\Store;
 use App\UseCases\Cache\FlushCacheUseCase;
-use App\UseCases\Merchants\FindMerchantUseCase;
+use App\UseCases\Merchants\FindMerchantByIdUseCase;
 
-class StoreStoresUseCase
+class StoreStoreUseCase
 {
     public function __construct(
-        private FindMerchantUseCase $findMerchantUseCase,
-        private FlushCacheUseCase $flushCacheUseCase
+        private FindMerchantByIdUseCase $findMerchantUseCase,
+        private FlushCacheUseCase       $flushCacheUseCase
     ) {
     }
 
-    public function execute(StoreStoresDTO $storeStoresDTO)
+    public function execute(StoreStoresDTO $storeStoresDTO): Store
     {
         $merchant = $this->findMerchantUseCase->execute($storeStoresDTO->merchant_id);
 
@@ -24,7 +25,7 @@ class StoreStoresUseCase
             ->exists();
 
         if ($store_exists) {
-            return response()->json(['message' => 'Указанное имя уже занято другим магазином'], 400);
+            throw new BusinessException('Указанное имя уже занято другим магазином','object_not_found', 400);
         }
 
         $merchant_store = new Store();

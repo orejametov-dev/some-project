@@ -23,7 +23,7 @@ class StoreMerchantUseCase
     {
         $company = $this->companyHttpRepository->getCompanyById($company_id);
 
-        if (Merchant::where('company_id', $company_id)->exists()) {
+        if (Merchant::query()->where('company_id', $company_id)->exists()) {
             throw new BusinessException('Указаная компания уже имеет аъзо модуль');
         }
 

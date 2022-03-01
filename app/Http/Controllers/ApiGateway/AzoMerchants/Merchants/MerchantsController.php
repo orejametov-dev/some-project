@@ -21,7 +21,7 @@ use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\Competitor;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Tag;
-use App\UseCases\Merchants\FindMerchantUseCase;
+use App\UseCases\Merchants\FindMerchantByIdUseCase;
 use App\UseCases\Merchants\SetMainStoreUseCase;
 use App\UseCases\Merchants\SetResponsibleUserUseCase;
 use App\UseCases\Merchants\StoreMerchantUseCase;
@@ -204,7 +204,7 @@ class MerchantsController extends ApiBaseController
         return $merchant;
     }
 
-    public function attachCompetitor($id, CompetitorsRequest $request, FindMerchantUseCase $findMerchantUseCase)
+    public function attachCompetitor($id, CompetitorsRequest $request, FindMerchantByIdUseCase $findMerchantUseCase)
     {
         $merchant = $findMerchantUseCase->execute($id);
         $competitor = Competitor::query()->findOrFail($request->input('competitor_id'));
@@ -225,7 +225,7 @@ class MerchantsController extends ApiBaseController
         return $merchant->load('competitors');
     }
 
-    public function updateCompetitor($id, CompetitorsRequest $request, FindMerchantUseCase $findMerchantUseCase)
+    public function updateCompetitor($id, CompetitorsRequest $request, FindMerchantByIdUseCase $findMerchantUseCase)
     {
         $merchant = $findMerchantUseCase->execute($id);
         $competitor = Competitor::query()->findOrFail($request->input('competitor_id'));
@@ -241,7 +241,7 @@ class MerchantsController extends ApiBaseController
         return $merchant->load('competitors');
     }
 
-    public function detachCompetitor($id, Request $request, FindMerchantUseCase $findMerchantUseCase)
+    public function detachCompetitor($id, Request $request, FindMerchantByIdUseCase $findMerchantUseCase)
     {
         $merchant = $findMerchantUseCase->execute($id);
         $competitor = Competitor::query()->findOrFail($request->input('competitor_id'));

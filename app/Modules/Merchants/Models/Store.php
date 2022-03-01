@@ -3,6 +3,7 @@
 namespace App\Modules\Merchants\Models;
 
 use App\Filters\Store\StoreFilters;
+use App\Modules\Merchants\QueryBuilders\StoreQueryBuilder;
 use App\Modules\Merchants\Traits\StoreRelationshipsTrait;
 use App\Traits\SortableByQueryParams;
 use Eloquent;
@@ -33,13 +34,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read Collection|Condition[] $application_conditions
  * @property-read int|null $application_conditions_count
- * @method static Builder|Store filterRequests(Request $request)
- * @method static Builder|Store filterRequest(Request $request, array $filters = [])
- * @method static Builder|Store main()
- * @method static Builder|Store newModelQuery()
- * @method static Builder|Store newQuery()
- * @method static Builder|Store orderRequest(Request $request, string $default_order_str = 'id:desc')
- * @method static Builder|Store query()
+ * @method static StoreQueryBuilder query()
  * @mixin Eloquent
  */
 class Store extends Model
@@ -63,6 +58,15 @@ class Store extends Model
         'district',
         'client_type_register',
     ];
+
+    /**
+     * @param  \Illuminate\Database\Query\Builder $query
+     * @return StoreQueryBuilder
+     */
+    public function newEloquentBuilder($query)
+    {
+        return new StoreQueryBuilder($query);
+    }
 
     public function scopeFilterRequests(Builder $query, Request $request)
     {
@@ -101,28 +105,9 @@ class Store extends Model
         }
     }
 
-    public function scopeMain($query)
-    {
-        return $query->where('is_main', true);
-    }
-
     public function notifications()
     {
         return $this->belongsToMany(Notification::class, 'store_notification', 'store_id', 'notification_id');
     }
 
-    public function scopeByMerchant(Builder $query, $merchant_id)
-    {
-        $query->where('merchant_id', $merchant_id);
-    }
-
-    public function scopeActive(Builder $query)
-    {
-        $query->where('active', true);
-    }
-
-    public function scopeFilterRequest(Builder $builder, Request $request, array $filters = [])
-    {
-        return (new StoreFilters($request, $builder))->execute($filters);
-    }
 }

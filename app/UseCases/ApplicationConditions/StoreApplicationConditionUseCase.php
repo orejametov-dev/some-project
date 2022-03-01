@@ -10,16 +10,16 @@ use App\Jobs\SendHook;
 use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\Store;
 use App\UseCases\Cache\FlushCacheUseCase;
-use App\UseCases\Merchants\FindMerchantUseCase;
+use App\UseCases\Merchants\FindMerchantByIdUseCase;
 use Carbon\Carbon;
 
 class StoreApplicationConditionUseCase
 {
     public function __construct(
         private CheckStartedAtAndFinishedAtConditionUseCase $checkStartedAtAndFinishedAtConditionUseCase,
-        private FindMerchantUseCase $findMerchantUseCase,
-        private FlushCacheUseCase $flushCacheUseCase,
-        private GatewayAuthUser $gatewayAuthUser
+        private FindMerchantByIdUseCase                     $findMerchantUseCase,
+        private FlushCacheUseCase                           $flushCacheUseCase,
+        private GatewayAuthUser                             $gatewayAuthUser
     ) {
     }
 

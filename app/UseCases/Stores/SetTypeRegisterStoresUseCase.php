@@ -8,8 +8,8 @@ use App\UseCases\Cache\FlushCacheUseCase;
 class SetTypeRegisterStoresUseCase
 {
     public function __construct(
-        private FindStoresUseCase $findStoresUseCase,
-        private FlushCacheUseCase $flushCacheUseCase
+        private FindStoreByIdUseCase $findStoresUseCase,
+        private FlushCacheUseCase    $flushCacheUseCase
     ) {
     }
 

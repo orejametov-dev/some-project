@@ -3,17 +3,18 @@
 namespace App\UseCases\Stores;
 
 use App\DTOs\Stores\UpdateStoresDTO;
+use App\Modules\Merchants\Models\Store;
 use App\UseCases\Cache\FlushCacheUseCase;
 
-class UpdateStoresUseCase
+class UpdateStoreUseCase
 {
     public function __construct(
-        private FindStoresUseCase $findStoresUseCase,
-        private FlushCacheUseCase $flushCacheUseCase
+        private FindStoreByIdUseCase $findStoresUseCase,
+        private FlushCacheUseCase    $flushCacheUseCase
     ) {
     }
 
-    public function execute(UpdateStoresDTO $updateStoresDTO)
+    public function execute(UpdateStoresDTO $updateStoresDTO): Store
     {
         $store = $this->findStoresUseCase->execute($updateStoresDTO->store_id);
 

@@ -14,9 +14,9 @@ use App\Http\Requests\ApiPrm\Stores\UpdateStoresRequest;
 use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\Store;
 use App\UseCases\Stores\SetTypeRegisterStoresUseCase;
-use App\UseCases\Stores\StoreStoresUseCase;
-use App\UseCases\Stores\ToggleStoresUseCase;
-use App\UseCases\Stores\UpdateStoresUseCase;
+use App\UseCases\Stores\StoreStoreUseCase;
+use App\UseCases\Stores\ToggleStoreUseCase;
+use App\UseCases\Stores\UpdateStoreUseCase;
 use Illuminate\Http\Request;
 
 class StoresController extends ApiBaseController
@@ -51,21 +51,21 @@ class StoresController extends ApiBaseController
         return $store;
     }
 
-    public function store(StoreStoresRequest $request, StoreStoresUseCase $storeStoresUseCase)
+    public function store(StoreStoresRequest $request, StoreStoreUseCase $storeStoresUseCase)
     {
         $storeStoresDTO = StoreStoresDTO::fromArray($request->validated());
 
         return $storeStoresUseCase->execute($storeStoresDTO);
     }
 
-    public function update($store_id, UpdateStoresRequest $request, UpdateStoresUseCase $updateStoresUseCase)
+    public function update($store_id, UpdateStoresRequest $request, UpdateStoreUseCase $updateStoresUseCase)
     {
         $updateStoresDTO = UpdateStoresDTO::fromArray((int) $store_id, $request->validated());
 
         return $updateStoresUseCase->execute($updateStoresDTO);
     }
 
-    public function toggle($id, Request $request, ToggleStoresUseCase $toggleStoresUseCase)
+    public function toggle($id, Request $request, ToggleStoreUseCase $toggleStoresUseCase)
     {
         $this->validate($request, [
             'activity_reason_id' => 'integer|required',

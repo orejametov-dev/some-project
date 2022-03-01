@@ -7,12 +7,12 @@ namespace App\UseCases\MerchantInfos;
 use App\DTOs\MerchantInfos\StoreMerchantInfoDTO;
 use App\Exceptions\BusinessException;
 use App\Modules\Merchants\Models\MerchantInfo;
-use App\UseCases\Merchants\FindMerchantUseCase;
+use App\UseCases\Merchants\FindMerchantByIdUseCase;
 
 class StoreMerchantInfoUseCase
 {
     public function __construct(
-        private FindMerchantUseCase $findMerchantUseCase
+        private FindMerchantByIdUseCase $findMerchantUseCase
     ) {
     }
 

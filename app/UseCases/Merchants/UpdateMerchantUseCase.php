@@ -13,7 +13,7 @@ class UpdateMerchantUseCase
 {
     public function __construct(
         private FlushCacheUseCase $flushCacheUseCase,
-        private FindMerchantUseCase $findMerchantUseCase
+        private FindMerchantByIdUseCase $findMerchantUseCase
     ) {
     }
 

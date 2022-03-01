@@ -10,15 +10,17 @@ use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Modules\Merchants\Models\AzoMerchantAccess;
 use App\Modules\Merchants\Models\Store;
-use App\UseCases\Merchants\FindMerchantUseCase;
+use App\UseCases\Merchants\FindMerchantByIdUseCase;
+use App\UseCases\Stores\FindStoreByIdUseCase;
 
 class UpdateMerchantUserUseCase
 {
     public function __construct(
-        private FindMerchantUserUseCase $findMerchantUserUseCase,
-        private FindMerchantUseCase $findMerchantUseCase,
+        private FindMerchantUserUseCase       $findMerchantUserUseCase,
+        private FindMerchantByIdUseCase       $findMerchantUseCase,
         private FlushMerchantUserCacheUseCase $flushMerchantUserCacheUseCase,
-        private GatewayAuthUser $authUser
+        private GatewayAuthUser               $authUser,
+        private FindStoreByIdUseCase          $findStoreByIdUseCase,
     ) {
     }
 
@@ -28,15 +30,9 @@ class UpdateMerchantUserUseCase
 
         $merchant = $this->findMerchantUseCase->execute($azo_merchant_access->merchant_id);
 
-        $old_store = Store::query()->find($azo_merchant_access->store_id);
-        if ($old_store === null) {
-            throw new BusinessException('Магазин не найден', 'object_not_found', 404);
-        }
+        $old_store = $this->findStoreByIdUseCase->execute($azo_merchant_access->store_id);
 
-        $store = Store::query()->find($store_id);
-        if ($store === null) {
-            throw new BusinessException('Магазин не найден', 'object_not_found', 404);
-        }
+        $store = $this->findStoreByIdUseCase->execute($store_id);
 
         $azo_merchant_access->store()->associate($store);
 

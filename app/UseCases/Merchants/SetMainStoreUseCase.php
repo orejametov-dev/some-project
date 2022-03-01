@@ -11,7 +11,7 @@ use App\Modules\Merchants\Models\Store;
 class SetMainStoreUseCase
 {
     public function __construct(
-        private FindMerchantUseCase $findMerchantUseCase
+        private FindMerchantByIdUseCase $findMerchantUseCase
     ) {
     }
 
