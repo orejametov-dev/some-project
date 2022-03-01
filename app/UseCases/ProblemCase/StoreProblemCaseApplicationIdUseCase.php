@@ -5,6 +5,7 @@ namespace App\UseCases\ProblemCase;
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use Alifuz\Utils\Gateway\Entities\GatewayApplication;
 use App\Exceptions\ApiBusinessException;
+use App\Exceptions\BusinessException;
 use App\HttpRepositories\Core\CoreHttpRepository;
 use App\Modules\Merchants\Models\ProblemCase;
 
@@ -41,6 +42,12 @@ class StoreProblemCaseApplicationIdUseCase extends AbstractStoreProblemCaseUseCa
 
     protected function getDataByIdentifier(int|string $identifier): mixed
     {
-        return $this->coreHttpRepository->getApplicationDataByApplicationId($identifier);
+        $data = $this->coreHttpRepository->getApplicationDataByApplicationId($identifier);
+
+        if ($data === null) {
+            throw new BusinessException('Заявка не была найдена', 'object_not_found', 404);
+        }
+
+        return $data;
     }
 }
