@@ -2,10 +2,10 @@
 
 namespace App\Modules\Merchants\Models;
 
+use App\Filters\Merchant\MerchantFilters;
 use App\HttpRepositories\HttpResponses\Prm\CompanyHttpResponse;
 use App\Modules\Merchants\Traits\MerchantFileTrait;
 use App\Modules\Merchants\Traits\MerchantRelationshipsTrait;
-use App\Modules\Merchants\Traits\MerchantStatusesTrait;
 use App\Traits\SortableByQueryParams;
 use Carbon\Carbon;
 use Eloquent;
@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 /**
- * App\Modules\Merchants\Models\Merchant
+ * App\Modules\Merchants\Models\Merchant.
  *
  * @property int $id
  * @property string $name
@@ -29,12 +29,12 @@ use Illuminate\Support\Str;
  * @property string|null $telegram_chat_id
  * @property int $has_general_goods
  * @property string|null $logo_url
- * @property $recommend
+ * @property bool $recommend
  * @property string|null $paymo_terminal
  * @property int|null $maintainer_id
  * @property int|null $current_sales
  * @property int $company_id
- * @property int|null min_application_price
+ * @property int|null $min_application_price
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read Collection|AdditionalAgreement[] $additional_agreements
@@ -51,7 +51,8 @@ use Illuminate\Support\Str;
  * @property-read int|null $stores_count
  * @property-read Collection|Tag[] $tags
  * @property-read int|null $tags_count
- * @method static Builder|Merchant filterRequest(Request $request)
+ * @method static Builder|Merchant filterRequests(Request $request)
+ * @method static Builder|Merchant filterRequest(Request $request, array $filters = [])
  * @method static Builder|Merchant newModelQuery()
  * @method static Builder|Merchant newQuery()
  * @method static Builder|Merchant orderRequest(Request $request, string $default_order_str = 'id:desc')
@@ -62,7 +63,7 @@ class Merchant extends Model
 {
     use HasFactory;
 
-    use MerchantRelationshipsTrait, MerchantStatusesTrait;
+    use MerchantRelationshipsTrait;
     use MerchantFileTrait;
     use SortableByQueryParams;
 
@@ -79,11 +80,11 @@ class Merchant extends Model
         'has_general_goods',
         'paymo_terminal_id',
         'min_application_price',
-        'active'
+        'active',
     ];
     protected $appends = ['logo_path'];
     protected $hidden = ['logo_url'];
-    public static $percentage_of_limit = "* 0.95";
+    public static $percentage_of_limit = '* 0.95';
     /*Поля моделей используется в model_hooks*/
     public static $attributeLabels = [
         'name' => 'Название партнёра',
@@ -98,11 +99,11 @@ class Merchant extends Model
         if (!$this->logo_url) {
             return null;
         }
+
         return config('local_services.services_storage.domain') . $this->logo_url;
     }
 
-
-    public function scopeFilterRequest(Builder $query, Request $request)
+    public function scopeFilterRequests(Builder $query, Request $request)
     {
         if ($merchant_ids = $request->query('merchant_ids')) {
             $merchant_ids = explode(';', $merchant_ids);
@@ -114,7 +115,6 @@ class Merchant extends Model
                 $query->where('legal_name', 'like', '%' . $q . '%')
                     ->orWhere('name', 'like', '%' . $q . '%');
             });
-
 
             if (is_numeric($q)) {
                 $query->orWhereHas('merchant_info', function (Builder $query) use ($q) {
@@ -193,7 +193,7 @@ class Merchant extends Model
 
     public static function fromDto(CompanyHttpResponse $company, int $user_id)
     {
-        $merchant = new Merchant();
+        $merchant = new self();
         $merchant->id = $company->id;
         $merchant->name = $company->name;
         $merchant->legal_name = $company->legal_name;
@@ -204,5 +204,10 @@ class Merchant extends Model
         $merchant->company_id = $company->id;
 
         return $merchant;
+    }
+
+    public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder
+    {
+        return (new MerchantFilters($request, $builder))->execute($filters);
     }
 }

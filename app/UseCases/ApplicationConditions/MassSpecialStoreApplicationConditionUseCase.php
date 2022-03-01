@@ -17,12 +17,11 @@ use Carbon\Carbon;
 class MassSpecialStoreApplicationConditionUseCase
 {
     public function __construct(
-        private AlifshopHttpRepository                      $alifshopHttpRepository,
+        private AlifshopHttpRepository $alifshopHttpRepository,
         private CheckStartedAtAndFinishedAtConditionUseCase $checkStartedAtAndFinishedAtConditionUseCase,
-        private FlushCacheUseCase                           $flushCacheUseCase,
-        private GatewayAuthUser                             $gatewayAuthUser
-    )
-    {
+        private FlushCacheUseCase $flushCacheUseCase,
+        private GatewayAuthUser $gatewayAuthUser
+    ) {
     }
 
     public function execute(MassSpecialStoreConditionDTO $massSpecialStoreConditionDTO)
@@ -33,7 +32,7 @@ class MassSpecialStoreApplicationConditionUseCase
 
         if (array_diff($massSpecialStoreConditionDTO->merchant_ids, $merchants->pluck('id')->toArray()) != null) {
             throw new ApiBusinessException('Мерчант не существует', 'merchant_not_exists', [
-                'ru' => 'Мерчант не существует'
+                'ru' => 'Мерчант не существует',
             ], 400);
         }
 
@@ -42,7 +41,7 @@ class MassSpecialStoreApplicationConditionUseCase
         foreach ($merchants as $merchant) {
             $main_store = $merchant->stores()->where('is_main', true)->first();
 
-            if ($main_store === false) {
+            if ($main_store === null) {
                 throw new BusinessException('У данного мерчанта нет основного магазина ' . $merchant->name, 'main_store_not_exists', 400);
             }
 
@@ -55,8 +54,8 @@ class MassSpecialStoreApplicationConditionUseCase
             $condition->event_id = $massSpecialStoreConditionDTO->event_id;
             $condition->merchant_id = $merchant->id;
             $condition->store_id = $main_store->id;
-            $condition->started_at = $massSpecialStoreConditionDTO->started_at ? Carbon::parse($massSpecialStoreConditionDTO->started_at)->format('Y-m-d') : null;
-            $condition->finished_at = $massSpecialStoreConditionDTO->finished_at ? Carbon::parse($massSpecialStoreConditionDTO->finished_at)->format('Y-m-d') : null;
+            $condition->started_at = $massSpecialStoreConditionDTO->started_at ? Carbon::parse($massSpecialStoreConditionDTO->started_at) : null;
+            $condition->finished_at = $massSpecialStoreConditionDTO->finished_at ? Carbon::parse($massSpecialStoreConditionDTO->finished_at) : null;
             $condition->active = $massSpecialStoreConditionDTO->started_at === null;
 
             $condition->save();
@@ -84,7 +83,7 @@ class MassSpecialStoreApplicationConditionUseCase
                     'id' => $item->id,
                     'commission' => $item->commission,
                     'duration' => $item->duration,
-                    'event_id' => $item->event_id
+                    'event_id' => $item->event_id,
                 ];
             });
 

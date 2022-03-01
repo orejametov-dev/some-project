@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @method static Builder|ConditionTemplate query()
  */
-
 class ConditionTemplate extends Model
 {
     use HasFactory;
@@ -19,6 +18,6 @@ class ConditionTemplate extends Model
     protected $table = 'application_condition_templates';
     protected $fillable = [
         'duration',
-        'commission'
+        'commission',
     ];
 }

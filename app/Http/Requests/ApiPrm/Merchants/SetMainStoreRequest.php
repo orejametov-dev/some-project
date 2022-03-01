@@ -24,7 +24,7 @@ class SetMainStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'store_id' => 'required|integer'
+            'store_id' => 'required|integer',
         ];
     }
 }

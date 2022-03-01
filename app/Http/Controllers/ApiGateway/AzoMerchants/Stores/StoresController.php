@@ -4,39 +4,43 @@ namespace App\Http\Controllers\ApiGateway\AzoMerchants\Stores;
 
 use App\DTOs\Stores\StoreStoresDTO;
 use App\DTOs\Stores\UpdateStoresDTO;
+use App\Filters\CommonFilters\ActiveFilter;
+use App\Filters\Merchant\MerchantIdFilter;
+use App\Filters\Store\GStoreFilter;
+use App\Filters\Store\RegionFilter;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Stores\StoreStoresRequest;
 use App\Http\Requests\ApiPrm\Stores\UpdateStoresRequest;
-use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\Store;
-use App\Services\ClientTypeRegisterService;
-use App\UseCases\Stores\DestroyStoresUseCase;
 use App\UseCases\Stores\SetTypeRegisterStoresUseCase;
 use App\UseCases\Stores\StoreStoresUseCase;
 use App\UseCases\Stores\ToggleStoresUseCase;
 use App\UseCases\Stores\UpdateStoresUseCase;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use function GuzzleHttp\Psr7\str;
 
 class StoresController extends ApiBaseController
 {
     public function index(Request $request)
     {
         $stores = Store::query()->with(['merchant'])
-            ->filterRequest($request);
+            ->filterRequest($request, [
+                GStoreFilter::class,
+                MerchantIdFilter::class,
+                RegionFilter::class,
+                ActiveFilter::class,
+            ]);
 
         if ($request->query('object') == 'true') {
             return $stores->first();
         }
 
         if ($request->has('paginate') && ($request->query('paginate') == 'false'
-                or $request->query('paginate') == 0)) {
+                or $request->query('paginate') === '0')) {
             return $stores->get();
         }
 
-        return $stores->paginate($request->query('per_page'));
+        return $stores->paginate($request->query('per_page') ?? 15);
     }
 
     public function show($store_id)
@@ -56,27 +60,27 @@ class StoresController extends ApiBaseController
 
     public function update($store_id, UpdateStoresRequest $request, UpdateStoresUseCase $updateStoresUseCase)
     {
-        $updateStoresDTO = UpdateStoresDTO::fromArray((int)$store_id, $request->validated());
+        $updateStoresDTO = UpdateStoresDTO::fromArray((int) $store_id, $request->validated());
 
         return $updateStoresUseCase->execute($updateStoresDTO);
     }
 
-    public function toggle($id, Request $request , ToggleStoresUseCase $toggleStoresUseCase)
+    public function toggle($id, Request $request, ToggleStoresUseCase $toggleStoresUseCase)
     {
         $this->validate($request, [
-            'activity_reason_id' => 'integer|required'
+            'activity_reason_id' => 'integer|required',
         ]);
 
-        return $toggleStoresUseCase->execute((int)$id, (int)$request->input('activity_reason_id'));
+        return $toggleStoresUseCase->execute((int) $id, (int) $request->input('activity_reason_id'));
     }
 
-    public function setTypeRegister($id, Request $request , SetTypeRegisterStoresUseCase $setTypeRegisterStoresUseCase)
+    public function setTypeRegister($id, Request $request, SetTypeRegisterStoresUseCase $setTypeRegisterStoresUseCase)
     {
         $request->validate([
-            'client_type_register' => 'required|string'
+            'client_type_register' => 'required|string',
         ]);
 
-        return $setTypeRegisterStoresUseCase->execute((int)$id , (string)$request->input('client_type_register'));
+        return $setTypeRegisterStoresUseCase->execute((int) $id, (string) $request->input('client_type_register'));
     }
 
     public function getConditions($id, Request $request)
@@ -88,10 +92,9 @@ class StoresController extends ApiBaseController
             ->active()
             ->where('is_special', false)
             ->byMerchant($store->merchant_id)
-            ->filterRequest($request)
+            ->filterRequests($request)
             ->orderRequest($request)->get();
 
         return $conditionQuery->merge($special_conditions)->sortByDesc('updated_at');
     }
-
 }

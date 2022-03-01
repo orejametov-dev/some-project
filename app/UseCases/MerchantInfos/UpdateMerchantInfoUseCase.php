@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace App\UseCases\MerchantInfos;
 
-
 use App\DTOs\MerchantInfos\StoreMerchantInfoDTO;
 use App\Exceptions\BusinessException;
 use App\Modules\Merchants\Models\MerchantInfo;
-use App\UseCases\Merchants\FindMerchantUseCase;
 
 class UpdateMerchantInfoUseCase
 {
     public function execute(int $id, StoreMerchantInfoDTO $storeMerchantInfoDTO): MerchantInfo
     {
         $merchantInfo = MerchantInfo::query()->find($id);
-        if($merchantInfo === null) {
+        if ($merchantInfo === null) {
             throw new BusinessException('Основной договор не найден', 'object_not_found', 404);
         }
 

@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\ApiComplianceGateway\ProblemCases\ProblemCasesController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,4 +17,3 @@ Route::prefix('stores')
     ->group(function () {
         Route::get('/', [\App\Http\Controllers\ApiComplianceGateway\Stores\StoresController::class, 'index']);
     });
-

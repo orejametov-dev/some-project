@@ -29,7 +29,7 @@ class UpdateApplicationConditions extends FormRequest
             'commission' => 'required|integer|between:0,100',
             'special_offer' => 'nullable|string',
             'event_id' => 'nullable|integer',
-            'discount' => 'required|integer|between:0,100'
+            'discount' => 'required|integer|between:0,100',
         ];
     }
 }

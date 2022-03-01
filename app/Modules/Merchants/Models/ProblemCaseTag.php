@@ -22,11 +22,11 @@ class ProblemCaseTag extends Model
 
     public function scopeFilterRequests(Builder $query, \Illuminate\Http\Request $request)
     {
-        if($request->query('q')){
+        if ($request->query('q')) {
             $query->where('body', 'LIKE', '%' . $request->query('q') . '%');
         }
 
-        if($request->query('type_id')) {
+        if ($request->query('type_id')) {
             $query->where('type_id', $request->query('type_id'));
         }
     }

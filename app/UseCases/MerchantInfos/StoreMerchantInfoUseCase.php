@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\UseCases\MerchantInfos;
 
-
 use App\DTOs\MerchantInfos\StoreMerchantInfoDTO;
 use App\Exceptions\BusinessException;
 use App\Modules\Merchants\Models\MerchantInfo;
@@ -14,8 +13,7 @@ class StoreMerchantInfoUseCase
 {
     public function __construct(
         private FindMerchantUseCase $findMerchantUseCase
-    )
-    {
+    ) {
     }
 
     public function execute(StoreMerchantInfoDTO $storeMerchantInfoDTO): MerchantInfo

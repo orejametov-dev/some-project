@@ -12,7 +12,6 @@ use App\Modules\Merchants\Models\Store;
 use App\UseCases\Cache\FlushCacheUseCase;
 use App\UseCases\Merchants\FindMerchantUseCase;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Cache;
 
 class StoreApplicationConditionUseCase
 {
@@ -21,8 +20,7 @@ class StoreApplicationConditionUseCase
         private FindMerchantUseCase $findMerchantUseCase,
         private FlushCacheUseCase $flushCacheUseCase,
         private GatewayAuthUser $gatewayAuthUser
-    )
-    {
+    ) {
     }
 
     public function execute(StoreConditionDTO $conditionDTO)
@@ -32,16 +30,15 @@ class StoreApplicationConditionUseCase
         $store_ids = $conditionDTO->store_ids ?? [];
 
         $merchant_stores = Store::query()
-            ->where('merchant_id' , $merchant->id)
-            ->where('active' , true)
+            ->where('merchant_id', $merchant->id)
+            ->where('active', true)
             ->get();
 
         $main_store = $merchant_stores->where('is_main', true)->first();
 
-
-        if (array_diff($store_ids ,$merchant_stores->whereIn('id' , $store_ids)->pluck('id')->toArray()) != null) {
-                throw new BusinessException('Указан не правильно магазин' , 'wrong_store' , 400);
-            }
+        if (array_diff($store_ids, $merchant_stores->whereIn('id', $store_ids)->pluck('id')->toArray()) != null) {
+            throw new BusinessException('Указан не правильно магазин', 'wrong_store', 400);
+        }
 
         if ($main_store === null) {
             throw new BusinessException('У данного мерчанта нет основного магазина ' . $merchant->name, 'main_store_not_exists', 400);
@@ -57,15 +54,15 @@ class StoreApplicationConditionUseCase
         $condition->duration = $conditionDTO->duration;
         $condition->commission = $conditionDTO->commission;
         $condition->discount = $conditionDTO->discount;
-        $condition->is_special = $store_ids != null ?? false;
+        $condition->is_special = empty($store_ids) === false;
         $condition->special_offer = $conditionDTO->special_offer;
         $condition->event_id = $conditionDTO->event_id;
         $condition->post_merchant = $conditionDTO->post_merchant;
         $condition->post_alifshop = $conditionDTO->post_alifshop;
         $condition->merchant_id = $merchant->id;
         $condition->store_id = $main_store->id;
-        $condition->started_at = $conditionDTO->started_at ? Carbon::parse($conditionDTO->started_at)->format('Y-m-d') : null;
-        $condition->finished_at = $conditionDTO->finished_at ? Carbon::parse($conditionDTO->finished_at)->format('Y-m-d') : null;
+        $condition->started_at = $conditionDTO->started_at ? Carbon::parse($conditionDTO->started_at) : null;
+        $condition->finished_at = $conditionDTO->finished_at ? Carbon::parse($conditionDTO->finished_at) : null;
         $condition->active = $conditionDTO->started_at === null;
 
         $condition->save();

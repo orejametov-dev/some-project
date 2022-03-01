@@ -1,13 +1,11 @@
 <?php
 
-
 namespace App\Http\Controllers\ApiCreditsGateway\Merchants;
 
-
+use App\Filters\Merchant\GMerchantFilter;
 use App\Http\Controllers\ApiCreditsGateway\ApiBaseController;
 use App\Http\Resources\ApiCredtisGateway\Merchants\MerchantsResource;
-use App\Http\Resources\ApiCredtisGateway\Merchants\SpecialMerchantResourse;
-use App\Http\Resources\ApiMerchantGateway\ProblemCases\ProblemCaseResource;
+use App\Http\Resources\ApiCredtisGateway\Merchants\SpecialMerchantResource;
 use App\Modules\Merchants\Models\Merchant;
 use DB;
 use Illuminate\Http\Request;
@@ -18,14 +16,14 @@ class MerchantsController extends ApiBaseController
     {
         $query = Merchant::query()
             ->with('merchant_info')
-            ->filterRequest($request)
+            ->filterRequest($request, [GMerchantFilter::class])
             ->latest();
 
         if ($request->query('object') == true) {
             return new MerchantsResource($query->first());
         }
 
-        return MerchantsResource::collection($query->paginate($request->query('per_page')));
+        return MerchantsResource::collection($query->paginate($request->query('per_page') ?? 15));
     }
 
     public function indexSpecial(Request $request)
@@ -35,15 +33,15 @@ class MerchantsController extends ApiBaseController
             ->select([
                 DB::raw('group_concat(id) as merchant_ids'),
                 'legal_name',
-                'legal_name_prefix'
+                'legal_name_prefix',
             ])
-            ->filterRequest($request)
+            ->filterRequest($request, [GMerchantFilter::class])
             ->groupBy('legal_name', 'legal_name_prefix');
 
         if ($request->query('object') == true) {
-            return new  SpecialMerchantResourse($query->first());
+            return new  SpecialMerchantResource($query->first());
         }
 
-        return SpecialMerchantResourse::collection($query->paginate($request->query('per_page')));
+        return SpecialMerchantResource::collection($query->paginate($request->query('per_page') ?? 15));
     }
 }

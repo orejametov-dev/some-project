@@ -3,42 +3,37 @@
 namespace App\Services\Core;
 
 use App\Exceptions\ServiceCoreException;
-use App\Modules\Core\Models\WebService;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
-use Illuminate\Support\Facades\Log;
 use Psr\Http\Message\ResponseInterface;
 
 class ServiceCore
 {
     public static function storeHook($body, $keyword, $action, $class, $model)
     {
-        ServiceCore::request('POST', 'model-hooks', [
+        self::request('POST', 'model-hooks', [
             'body' => $body,
             'keyword' => $keyword,
             'action' => $action,
             'class' => $class,
             'model' => [
                 'id' => $model->id,
-                'table_name' => $model->getTable()
-            ]
+                'table_name' => $model->getTable(),
+            ],
         ]);
     }
 
-
     public static function request($method, $route, $params, $should_return_response = false)
     {
-        $token = app(WebService::class)->token;
         $client = self::createRequest();
         $key = $method == 'GET' ? 'query' : 'json';
         try {
             $response = $client->request($method, $route, [
                 'headers' => [
-                    'Service-Token' => $token,
                     'Access-Token' => config('local_services.service_core.service_token'),
                 ],
-                $key => $params
+                $key => $params,
             ]);
             if (!$should_return_response) {
                 return self::parseResponse($response);
@@ -56,7 +51,7 @@ class ServiceCore
             'base_uri' => config('local_services.service_core.domain'),
             'headers' => [
                 'Accept' => 'application/json',
-                'Content-type' => 'application/json'
+                'Content-type' => 'application/json',
             ],
         ]);
     }
@@ -65,5 +60,4 @@ class ServiceCore
     {
         return json_decode($response->getBody()->getContents());
     }
-
 }

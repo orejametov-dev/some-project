@@ -21,8 +21,7 @@ class StoreMerchantUserUseCase
         private CompanyUserHttpRepository $companyUserHttpRepository,
         private GatewayAuthUser $authUser,
         private FlushMerchantUserCacheUseCase $flushMerchantUserCacheUseCase
-    )
-    {
+    ) {
     }
 
     public function execute(int $store_id, int $user_id): AzoMerchantAccess
@@ -30,7 +29,6 @@ class StoreMerchantUserUseCase
         $user = $this->authHttpRepository->getUserById($user_id);
         if ($user === null) {
             throw new BusinessException('Пользователь не найден', 'object_not_found', 404);
-
         }
 
         $store = Store::query()->find($store_id);

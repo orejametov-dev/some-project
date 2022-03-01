@@ -69,6 +69,6 @@ class Kernel extends HttpKernel
         'gateway-access' => GatewayAccessMiddleware::class,
         'access-token' => AccessTokenMiddleware::class,
         'gateway-auth-user' => CheckGatewayAuthUser::class,
-        'time-logger' => DetectTimeLoggerMiddleware::class
+        'time-logger' => DetectTimeLoggerMiddleware::class,
     ];
 }

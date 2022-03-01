@@ -34,11 +34,11 @@ class StorageHttpRepository
     }
 
     protected function getHttpClient(): PendingRequest
-    {;
+    {
         return Http::baseUrl(config('local_services.services_storage.domain') . '/')
             ->withHeaders([
                 'Accept' => 'application/json',
-                'Access-Token' => config('local_services.services_storage.access_token')
+                'Access-Token' => config('local_services.services_storage.access_token'),
             ]);
     }
 }

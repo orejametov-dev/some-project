@@ -17,9 +17,8 @@ abstract class AbstractStoreProblemCaseUseCase
 {
     public function __construct(
         private GatewayApplication $gatewayApplication,
-        private GatewayAuthUser    $gatewayAuthUser
-    )
-    {
+        private GatewayAuthUser $gatewayAuthUser
+    ) {
     }
 
     public function execute(ProblemCaseDTO $problemCaseDTO): ?ProblemCase
@@ -33,11 +32,6 @@ abstract class AbstractStoreProblemCaseUseCase
         $problemCase->store_id = $data->store_id;
         $problemCase->client_id = $data->client_id;
 
-        $problemCase->search_index = $data->client_name
-            . ' ' . $data->client_surname
-            . ' ' . $data->client_patronymic
-            . ' ' . $data->phone;
-
         $problemCase->client_name = $data->client_name;
         $problemCase->client_surname = $data->client_surname;
         $problemCase->client_patronymic = $data->client_patronymic;
@@ -47,8 +41,7 @@ abstract class AbstractStoreProblemCaseUseCase
 
         $problemCase->created_by_id = $this->gatewayAuthUser->getId();
         $problemCase->created_by_name = $this->gatewayAuthUser->getName();
-        $problemCase->created_from_name = $this->gatewayApplication->getApplication();
-
+        $problemCase->created_from_name = $this->gatewayApplication->getApplication()->getValue();
         $problemCase->post_or_pre_created_by_id = $data->post_or_pre_created_by_id;
         $problemCase->post_or_pre_created_by_name = $data->post_or_pre_created_by_name;
         $problemCase->description = $problemCaseDTO->description;

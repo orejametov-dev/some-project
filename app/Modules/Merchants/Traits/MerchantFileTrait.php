@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Modules\Merchants\Traits;
-
 
 use App\HttpRepositories\Storage\StorageHttpRepository;
 use App\HttpServices\Storage\StorageMicroService;
@@ -43,6 +41,7 @@ trait MerchantFileTrait
         $merchant_file->url = $storage_file['url'];
         $merchant_file->merchant_id = $this->id;
         $merchant_file->save();
+
         return $merchant_file;
     }
 

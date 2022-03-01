@@ -2,13 +2,13 @@
 
 namespace App\Services;
 
+use App\Exceptions\BusinessException;
+
 class DistrictService
 {
     private static $districts = [
-        'andijan' =>
-            array(
-                'body_ru' =>
-                    array(
+        'andijan' => [
+                'body_ru' => [
                         'Алтынкульский район',
                         'Андижанский район',
                         'Асакинский район',
@@ -25,9 +25,8 @@ class DistrictService
                         'Шахриханский район',
                         'город Андижан',
                         'город Ханабад',
-                    ),
-                'body_uz' =>
-                    array(
+                    ],
+                'body_uz' => [
                         'Oltinko’l tumani',
                         'Andijon tumani',
                         'Asaka tumani',
@@ -44,12 +43,10 @@ class DistrictService
                         'Shahrixon tumani',
                         'Andijon shahri',
                         'Xonobod shahri',
-                    ),
-            ),
-        'bukhara' =>
-            array(
-                'body_ru' =>
-                    array(
+                    ],
+            ],
+        'bukhara' => [
+                'body_ru' => [
                         'Алатский район',
                         'Бухарский район',
                         'Вабкентский район',
@@ -63,9 +60,8 @@ class DistrictService
                         'Шафирканский район',
                         'город Бухара',
                         'город Каган',
-                    ),
-                'body_uz' =>
-                    array(
+                    ],
+                'body_uz' => [
                         'Olot tumani',
                         'Buxoro tumani',
                         'Vobkent tumani',
@@ -79,12 +75,10 @@ class DistrictService
                         'Shofirkon tumani',
                         'Buxoro shahri',
                         'Kogon shahri',
-                    ),
-            ),
-        'jizzakh' =>
-            array(
-                'body_ru' =>
-                    array(
+                    ],
+            ],
+        'jizzakh' => [
+                'body_ru' => [
                         'Арнасайский район',
                         'Бахмальский район',
                         'Галляаральский район',
@@ -98,9 +92,8 @@ class DistrictService
                         'Шараф-Рашидовский район',
                         'Янгиабадский район',
                         'город Джизак',
-                    ),
-                'body_uz' =>
-                    array(
+                    ],
+                'body_uz' => [
                         'Arnasoy tumani',
                         'Baxmal tumani',
                         'G`allaorol tumani',
@@ -114,12 +107,10 @@ class DistrictService
                         'Sharof Rashidov tumani',
                         'Yangiobod tumani',
                         'Jizzax shahri',
-                    ),
-            ),
-        'qashqadaryo' =>
-            array(
-                'body_ru' =>
-                    array(
+                    ],
+            ],
+        'qashqadaryo' => [
+                'body_ru' => [
                         'Гузарский район',
                         'Дехканабадский район',
                         'Камашинский район',
@@ -134,9 +125,8 @@ class DistrictService
                         'Шахрисабзский район',
                         'Яккабагский район',
                         'город Карши',
-                    ),
-                'body_uz' =>
-                    array(
+                    ],
+                'body_uz' => [
                         'G’uzor tumani',
                         'Dehqonobod tumani',
                         'Qamashi tumani',
@@ -151,12 +141,10 @@ class DistrictService
                         'Shahrisabz tumani',
                         'Yakkabog’ tumani',
                         'Qarshi shahri',
-                    ),
-            ),
-        'navoiy' =>
-            array(
-                'body_ru' =>
-                    array(
+                    ],
+            ],
+        'navoiy' => [
+                'body_ru' => [
                         'Канимехский район',
                         'Карманинский район',
                         'Кызылтепинский район',
@@ -167,9 +155,8 @@ class DistrictService
                         'Хатырчинский район',
                         'город Зарафшан',
                         'город Навои',
-                    ),
-                'body_uz' =>
-                    array(
+                    ],
+                'body_uz' => [
                         'Konimex tumani',
                         'Karman tumani',
                         'Qiziltepa tumani',
@@ -180,12 +167,10 @@ class DistrictService
                         'Xatirchi tumani',
                         'Zarafshon shahri',
                         'Navoiy shahri',
-                    ),
-            ),
-        'namangan' =>
-            array(
-                'body_ru' =>
-                    array(
+                    ],
+            ],
+        'namangan' => [
+                'body_ru' => [
                         'Касансайский район',
                         'Мингбулакский район',
                         'Наманганский район',
@@ -198,9 +183,8 @@ class DistrictService
                         'Чустский район',
                         'Янгикурганский район',
                         'город Наманган',
-                    ),
-                'body_uz' =>
-                    array(
+                    ],
+                'body_uz' => [
                         'Kosonsoy tumani',
                         'Mingbuloq tumani',
                         'Namangan tumani',
@@ -213,12 +197,10 @@ class DistrictService
                         'Chust tumani',
                         'Yangiqo’rg’on tumani',
                         'Namangan shahri',
-                    ),
-            ),
-        'samarkand' =>
-            array(
-                'body_ru' =>
-                    array(
+                    ],
+            ],
+        'samarkand' => [
+                'body_ru' => [
                         'Акдарьинский район',
                         'Булунгурский район',
                         'Джамбайский район',
@@ -235,9 +217,8 @@ class DistrictService
                         'Ургутский район',
                         'город Каттакурган',
                         'город Самарканд',
-                    ),
-                'body_uz' =>
-                    array(
+                    ],
+                'body_uz' => [
                         'Oqdaryo tumani',
                         'Bulung’ur tumani',
                         'Jomboy tumani',
@@ -254,12 +235,10 @@ class DistrictService
                         'Urgut tumani',
                         'Kattaqo’rg’on shahri',
                         'Samarqand shahri',
-                    ),
-            ),
-        'surxondaryo' =>
-            array(
-                'body_ru' =>
-                    array(
+                    ],
+            ],
+        'surxondaryo' => [
+                'body_ru' => [
                         'Алтынсайский район',
                         'Ангорский район',
                         'Байсунский район',
@@ -275,9 +254,8 @@ class DistrictService
                         'Шерабадский район',
                         'Шурчинский район',
                         'город Термез',
-                    ),
-                'body_uz' =>
-                    array(
+                    ],
+                'body_uz' => [
                         'Oltinsoy tumani',
                         'Angor tumani',
                         'Boysun tumani',
@@ -293,12 +271,10 @@ class DistrictService
                         'Sherobod tumani',
                         'Shoʻrchi tumani',
                         'Termiz shahri',
-                    ),
-            ),
-        'sirdarya' =>
-            array(
-                'body_ru' =>
-                    array(
+                    ],
+            ],
+        'sirdarya' => [
+                'body_ru' => [
                         'Акалтынский район',
                         'Баяутский район',
                         'Гулистанский район',
@@ -310,9 +286,8 @@ class DistrictService
                         'город Гулистан',
                         'город Ширин',
                         'город Янгиер',
-                    ),
-                'body_uz' =>
-                    array(
+                    ],
+                'body_uz' => [
                         'Oqoltin tumani',
                         'Boyovut tumani',
                         'Guliston tumani',
@@ -324,12 +299,10 @@ class DistrictService
                         'Guliston shahri',
                         'Shirin shahri',
                         'Yangiyer shahri',
-                    ),
-            ),
-        'tashkent' =>
-            array(
-                'body_ru' =>
-                    array(
+                    ],
+            ],
+        'tashkent' => [
+                'body_ru' => [
                         'Аккурганский район',
                         'Ахангаранский район',
                         'Бекабадский район',
@@ -349,9 +322,8 @@ class DistrictService
                         'город Ангрен',
                         'город Бекабад',
                         'город Чирчик',
-                    ),
-                'body_uz' =>
-                    array(
+                    ],
+                'body_uz' => [
                         'Oqqoʻrgʻon tumani',
                         'Ohangaron tumani',
                         'Bekobod tumani',
@@ -371,12 +343,10 @@ class DistrictService
                         'Angren shahri',
                         'Bekobod shahri',
                         'Chirchiq shahri',
-                    ),
-            ),
-        'fergana' =>
-            array(
-                'body_ru' =>
-                    array(
+                    ],
+            ],
+        'fergana' => [
+                'body_ru' => [
                         'Алтыарыкский район',
                         'Багдадский район',
                         'Бешарыкский район',
@@ -396,9 +366,8 @@ class DistrictService
                         'город Кувасай',
                         'город Маргилан',
                         'город Фергана',
-                    ),
-                'body_uz' =>
-                    array(
+                    ],
+                'body_uz' => [
                         'Oltiariq tumani',
                         'Bagʻdod tumani',
                         'Beshariq tumani',
@@ -418,12 +387,10 @@ class DistrictService
                         'Quvasoy shahri',
                         'Marg’ilon shahri',
                         'Fargʻona shahri',
-                    ),
-            ),
-        'xorazm' =>
-            array(
-                'body_ru' =>
-                    array(
+                    ],
+            ],
+        'xorazm' => [
+                'body_ru' => [
                         'Багатский район',
                         'Гурленский район',
                         'Кошкупырский район',
@@ -435,9 +402,8 @@ class DistrictService
                         'Янгиарыкский район',
                         'Янгибазарский район',
                         'город Ургенч',
-                    ),
-                'body_uz' =>
-                    array(
+                    ],
+                'body_uz' => [
                         'Bogʻot tumani',
                         'Gurlan tumani',
                         'Qoʻshkoʻpir tumani',
@@ -449,12 +415,10 @@ class DistrictService
                         'Yangiariq tumani',
                         'Yangibozor tumani',
                         'Urganch shahri',
-                    ),
-            ),
-        'karakalpakstan' =>
-            array(
-                'body_ru' =>
-                    array(
+                    ],
+            ],
+        'karakalpakstan' => [
+                'body_ru' => [
                         'Амударьинский район',
                         'Берунийский район',
                         'Караузякский район',
@@ -471,9 +435,8 @@ class DistrictService
                         'Шуманайский район',
                         'Элликкалинский район',
                         'город Нукус',
-                    ),
-                'body_uz' =>
-                    array(
+                    ],
+                'body_uz' => [
                         'Amudaryo tumani',
                         'Beruniy tumani',
                         'Qoraoʻzak tumani',
@@ -490,12 +453,10 @@ class DistrictService
                         'Shumanay tumani',
                         'Ellikqala tumani',
                         'Nukus shahri',
-                    ),
-            ),
-        'tashkent_city' =>
-            array(
-                'body_ru' =>
-                    array(
+                    ],
+            ],
+        'tashkent_city' => [
+                'body_ru' => [
                         'Алмазарский район',
                         'Бектемирский район',
                         'Мирабадский район',
@@ -507,9 +468,8 @@ class DistrictService
                         'Шайхантахурский район',
                         'Юнусабадский район',
                         'Яккасарайский район',
-                    ),
-                'body_uz' =>
-                    array(
+                    ],
+                'body_uz' => [
                         'Olmazor tumani',
                         'Bektemir tumani',
                         'Mirobod tumani',
@@ -521,8 +481,8 @@ class DistrictService
                         'Shayxontoxur tumani',
                         'Yunusobod tumani',
                         'Yakkasaroy tumani',
-                    ),
-            ),
+                    ],
+            ],
     ];
 
     public static function getDistricts(): array
@@ -532,6 +492,10 @@ class DistrictService
 
     public static function getDistrictsByRegion(string $region): array
     {
+        if (empty(self::$districts[$region])) {
+            throw new BusinessException('Данный район не был найден', 'object_not_found', 404);
+        }
+
         return self::$districts[$region];
     }
 }

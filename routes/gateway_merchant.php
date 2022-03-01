@@ -12,8 +12,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('merchants/app', [\App\Http\Controllers\ApiMerchantGateway\App\AppController::class, 'index']);
-
 Route::prefix('application-conditions')
     ->group(function () {
         Route::get('/', [App\Http\Controllers\ApiMerchantGateway\Merchants\ApplicationConditionsController::class, 'index']);
@@ -36,7 +34,7 @@ Route::prefix('merchants/requests')
         Route::get('/app', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'app'])->withoutMiddleware([GatewayMiddleware::class, GatewayAuthMiddleware::class]);
         Route::get('/districts', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'getDistricts'])->withoutMiddleware([GatewayMiddleware::class, GatewayAuthMiddleware::class]);
         Route::get('/{token}', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'show'])->withoutMiddleware([GatewayMiddleware::class, GatewayAuthMiddleware::class]);
-        Route::post('/store-main', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'storeMain'])->withoutMiddleware([GatewayMiddleware::class, GatewayAuthMiddleware::class]);
+        Route::post('/store-main', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'storeMain'])->withoutMiddleware([GatewayAuthMiddleware::class]);
     });
 
 Route::prefix('merchants/tags')
@@ -49,7 +47,7 @@ Route::prefix('merchants/users')
         Route::get('/', [App\Http\Controllers\ApiMerchantGateway\Merchants\AzoMerchantAccessesController::class, 'index']);
         Route::get('/{id}', [App\Http\Controllers\ApiMerchantGateway\Merchants\AzoMerchantAccessesController::class, 'show']);
         Route::match(['put', 'patch'], '/{id}', [App\Http\Controllers\ApiMerchantGateway\Merchants\AzoMerchantAccessesController::class, 'update']);
-        Route::post('/request-store' , [App\Http\Controllers\ApiMerchantGateway\Merchants\AzoMerchantAccessesController::class , 'requestStore']);
+        Route::post('/request-store', [App\Http\Controllers\ApiMerchantGateway\Merchants\AzoMerchantAccessesController::class, 'requestStore']);
         Route::post('/', [App\Http\Controllers\ApiMerchantGateway\Merchants\AzoMerchantAccessesController::class, 'store']);
         Route::delete('/{id}', [App\Http\Controllers\ApiMerchantGateway\Merchants\AzoMerchantAccessesController::class, 'destroy']);
     });

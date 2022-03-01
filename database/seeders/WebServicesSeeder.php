@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Modules\Core\Models\WebService;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 

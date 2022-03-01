@@ -22,7 +22,7 @@ class AddMerchantTypeToMerchantTagTable extends Migration
         });
 
         DB::table('merchant_tag')->update([
-           'merchant_type' => \App\Modules\Merchants\Models\Merchant::class
+           'merchant_type' => \App\Modules\Merchants\Models\Merchant::class,
         ]);
     }
 

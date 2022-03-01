@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources\ApiReportGateway\Merchants;
 
-use App\Services\LegalNameService;
+use App\Modules\Merchants\Models\Merchant;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class MerchantsResource extends JsonResource
@@ -15,11 +15,12 @@ class MerchantsResource extends JsonResource
      */
     public function toArray($request)
     {
+        /** @var Merchant|MerchantsResource $this */
         return [
             'id' => $this->id,
             'name' => $this->name,
             'legal_name' => $this->legal_name,
-            'legal_name_prefix' => $this->legal_name_prefix
+            'legal_name_prefix' => $this->legal_name_prefix,
         ];
     }
 }

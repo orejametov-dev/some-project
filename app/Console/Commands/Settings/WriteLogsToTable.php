@@ -6,8 +6,6 @@ use App\Modules\Merchants\Models\Log;
 use App\Services\TimeLogger;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
-
 
 class WriteLogsToTable extends Command
 {
@@ -30,13 +28,11 @@ class WriteLogsToTable extends Command
      *
      * @return void
      */
-
     private $logs;
 
     public function __construct()
     {
         parent::__construct();
-        $this->logs = Cache::get(TimeLogger::CACHE_KEY);
     }
 
     /**
@@ -46,7 +42,8 @@ class WriteLogsToTable extends Command
      */
     public function handle()
     {
-        \Log::channel('command')->info(WriteLogsToTable::class . '|' . now() . ':' . 'started');
+        $this->logs = Cache::get(TimeLogger::CACHE_KEY);
+        \Log::channel('command')->info(self::class . '|' . now() . ':' . 'started');
 
         try {
             if (!empty($this->logs)) {
@@ -64,8 +61,8 @@ class WriteLogsToTable extends Command
             Cache::forget(TimeLogger::CACHE_KEY);
         }
 
-        \Log::channel('command')->info(WriteLogsToTable::class . '|' . now() . ':' . 'finished');
+        \Log::channel('command')->info(self::class . '|' . now() . ':' . 'finished');
+
+        return 0;
     }
-
-
 }

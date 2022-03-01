@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Modules\Merchants\Services;
-
 
 class MerchantStatus
 {
@@ -13,13 +11,13 @@ class MerchantStatus
         self::ACTIVE => [
             'id' => self::ACTIVE,
             'key' => 'ACTIVE',
-            'name' => 'активный'
+            'name' => 'активный',
         ],
         self::ARCHIVE => [
             'id' => self::ARCHIVE,
             'key' => 'ARCHIVE',
-            'name' => 'архивированный'
-        ]
+            'name' => 'архивированный',
+        ],
     ];
 
     public static function getOneById(int $id)

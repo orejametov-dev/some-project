@@ -43,7 +43,7 @@ class NotifyHttpRepository
         return Http::baseUrl(config('local_services.service_notify.domain'))
             ->acceptJson()
             ->withHeaders([
-                'Access-Token' => config('local_services.service_notify.access_token')
+                'Access-Token' => config('local_services.service_notify.access_token'),
             ]);
     }
 }

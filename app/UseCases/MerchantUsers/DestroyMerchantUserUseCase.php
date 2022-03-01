@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\UseCases\MerchantUsers;
-
 
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\Exceptions\BusinessException;
@@ -10,9 +8,7 @@ use App\HttpServices\Auth\AuthMicroService;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Jobs\ToggleMerchantRoleOfUser;
-use App\Modules\Merchants\Models\AzoMerchantAccess;
 use App\Modules\Merchants\Models\Store;
-use Illuminate\Support\Facades\Cache;
 
 class DestroyMerchantUserUseCase
 {
@@ -20,8 +16,7 @@ class DestroyMerchantUserUseCase
         private FindMerchantUserUseCase $findMerchantUserUseCase,
         private GatewayAuthUser $authUser,
         private FlushMerchantUserCacheUseCase $flushMerchantUserCacheUseCase
-    )
-    {
+    ) {
     }
 
     public function execute(int $merchant_user_id): void

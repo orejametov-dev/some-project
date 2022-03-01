@@ -6,6 +6,7 @@ use App\DTOs\Conditions\MassSpecialStoreConditionDTO;
 use App\DTOs\Conditions\MassStoreConditionDTO;
 use App\DTOs\Conditions\StoreConditionDTO;
 use App\DTOs\Conditions\UpdateConditionDTO;
+use App\Filters\Merchant\MerchantIdFilter;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Applications\MassSpecialStoreApplicationConditionRequest;
 use App\Http\Requests\ApiPrm\Applications\MassStoreApplicationConditionsRequest;
@@ -20,9 +21,7 @@ use App\UseCases\ApplicationConditions\StoreApplicationConditionUseCase;
 use App\UseCases\ApplicationConditions\ToggleActiveApplicationConditionUseCase;
 use App\UseCases\ApplicationConditions\TogglePostsApplicationConditionUseCase;
 use App\UseCases\ApplicationConditions\UpdateApplicationConditionUseCase;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 class ApplicationConditionsController extends ApiBaseController
 {
@@ -30,7 +29,7 @@ class ApplicationConditionsController extends ApiBaseController
     {
         $conditionQuery = Condition::query()
             ->with('stores')
-            ->filterRequest($request)
+            ->filterRequest($request, [MerchantIdFilter::class])
             ->orderRequest($request);
 
         if ($request->query('object') == true) {
@@ -48,12 +47,11 @@ class ApplicationConditionsController extends ApiBaseController
     {
         $conditionQuery = Condition::query()
             ->active()
-            ->filterRequest($request)
+            ->filterRequests($request)
             ->orderRequest($request);
 
         if ($request->query('object') == true) {
             return $conditionQuery->first();
-
         }
 
         if ($request->has('paginate') && $request->query('paginate') == false) {
@@ -86,23 +84,23 @@ class ApplicationConditionsController extends ApiBaseController
 
     public function update($condition_id, UpdateApplicationConditions $request, UpdateApplicationConditionUseCase $updateApplicationConditionUseCase)
     {
-        $updateConditionDTO = UpdateConditionDTO::fromArray((int)$condition_id,$request->validated());
+        $updateConditionDTO = UpdateConditionDTO::fromArray((int) $condition_id, $request->validated());
 
         return $updateApplicationConditionUseCase->execute($updateConditionDTO);
     }
 
     public function delete($condition_id, DeleteApplicationConditionUseCase $deleteApplicationConditionUseCase)
     {
-        return $deleteApplicationConditionUseCase->execute((int)$condition_id);
+        return $deleteApplicationConditionUseCase->execute((int) $condition_id);
     }
 
     public function toggle($condition_id, ToggleActiveApplicationConditionUseCase $toggleActiveApplicationConditionUseCase)
     {
-        return $toggleActiveApplicationConditionUseCase->execute((int)$condition_id);
+        return $toggleActiveApplicationConditionUseCase->execute((int) $condition_id);
     }
 
     public function togglePosts($id, TogglePostsApplicationConditionRequest $request, TogglePostsApplicationConditionUseCase $togglePostsApplicationConditionUseCase)
     {
-        return $togglePostsApplicationConditionUseCase->execute((int)$id, (bool)$request->input('post_merchant'), (bool)$request->input('post_alifshop'));
+        return $togglePostsApplicationConditionUseCase->execute((int) $id, (bool) $request->input('post_merchant'), (bool) $request->input('post_alifshop'));
     }
 }

@@ -14,7 +14,7 @@ class CompanyService
     public static function getCompanyByName($name)
     {
         return static::http()->get('companies/company-by-name', [
-            'name' => $name
+            'name' => $name,
         ])->throw()->json();
     }
 
@@ -23,7 +23,7 @@ class CompanyService
         return static::http()->post('companies', [
             'name' => $name,
             'legal_name' => $legal_name,
-            'legal_name_prefix' => $legal_name_prefix
+            'legal_name_prefix' => $legal_name_prefix,
         ])->throw()->json();
     }
 
@@ -35,8 +35,7 @@ class CompanyService
         string $status,
         string $created_at,
         string $updated_at
-    )
-    {
+    ) {
         return static::http()->post('companies/special', [
             'id' => $id,
             'name' => $name,
@@ -51,14 +50,14 @@ class CompanyService
     public static function setStatusExist(int $id, string $company_module = null)
     {
         return static::http()->post('companies/' . $id . '/status-exists', [
-            'company_module' => is_null($company_module) ? 'azo' : $company_module
+            'company_module' => is_null($company_module) ? 'azo' : $company_module,
         ])->throw()->json();
     }
 
     public static function setStatusNotActive(int $id, string $company_module = null)
     {
         return static::http()->post('companies/' . $id . '/status-not-active', [
-            'company_module' => is_null($company_module) ? 'azo' : $company_module
+            'company_module' => is_null($company_module) ? 'azo' : $company_module,
         ])->throw()->json();
     }
 
@@ -68,7 +67,7 @@ class CompanyService
             'user_id' => $user_id,
             'company_id' => $company_id,
             'phone' => $phone,
-            'full_name' => $full_name
+            'full_name' => $full_name,
         ])->throw()->json();
     }
 
@@ -79,22 +78,22 @@ class CompanyService
             'user_id' => $user_id,
             'company_id' => $company_id,
             'phone' => $phone,
-            'full_name' => $full_name
+            'full_name' => $full_name,
         ])->throw()->json();
     }
 
     public static function getCompanyUserByUserId($user_id)
     {
         return static::http()->get('companies/users/get-user-id', [
-            'user_id' => $user_id
+            'user_id' => $user_id,
         ])->throw()->json();
     }
 
     public static function updateCompany($company_id, $name, $legal_name_prefix)
     {
-        return static::http()->put("companies/$company_id" , [
+        return static::http()->put("companies/$company_id", [
             'name' => $name,
-           'legal_name_prefix' => $legal_name_prefix
+           'legal_name_prefix' => $legal_name_prefix,
         ])->throw()->json();
     }
 
@@ -104,7 +103,7 @@ class CompanyService
             ->withHeaders([
                 'Accept' => 'application/json',
                 'Access-Token' => config('local_services.service_prm.service_token'),
-                'Content-Type' => 'application/json'
+                'Content-Type' => 'application/json',
             ]);
     }
 }

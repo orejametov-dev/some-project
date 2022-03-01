@@ -2,6 +2,7 @@
 
 namespace App\Modules\Merchants\Models;
 
+use App\Filters\ProblemCase\ProblemCaseFilters;
 use App\Modules\Merchants\Traits\ProblemCaseStatuses;
 use App\Services\SimpleStateMachine\SimpleStateMachinable;
 use App\Services\SimpleStateMachine\SimpleStateMachineTrait;
@@ -9,29 +10,45 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Http\Request;
 
 /**
- * @property $merchant_id
- * @property $store_id
- * @property $status_id
- * @property $status_key
- * @property $created_by_id
- * @property $created_by_name
- * @property $created_from_name
- * @property $credit_number
- * @property $application_id
- * @property $client_id
- * @property $application_items
- * @property $application_created_at
- * @property $credit_contract_date
- * @property $post_or_pre_created_by_id
- * @property $post_or_pre_created_by_name
- * @property $search_index
- * @property $client_name
- * @property $client_surname
- * @property $client_patronymic
- * @property $phone
- * @property $description
+ * @property int $id
+ * @property int $merchant_id
+ * @property int $store_id
+ * @property int $status_id
+ * @property string $status_key
+ * @property int $created_by_id
+ * @property string $created_by_name
+ * @property string $created_from_name
+ * @property string $credit_number
+ * @property int $application_id
+ * @property int $client_id
+ * @property array $application_items
+ * @property Carbon $application_created_at
+ * @property Carbon $credit_contract_date
+ * @property int $post_or_pre_created_by_id
+ * @property string $post_or_pre_created_by_name
+ * @property string $search_index
+ * @property string $client_name
+ * @property string $client_surname
+ * @property string $client_patronymic
+ * @property string $phone
+ * @property string $description
+ * @property string $merchant_comment
+ * @property int $engaged_by_id
+ * @property string $engaged_by_name
+ * @property string $comment_from_merchant
+ * @property Carbon $deadline
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property ProblemCaseTag|null $before_tags
+ * @property ProblemCaseTag|null $tags
+ * @property-read Store|null $store
+ * @method static Builder|ProblemCase filterRequest(Request $request, array $filters = [])
  */
 class ProblemCase extends Model implements SimpleStateMachinable
 {
@@ -52,33 +69,33 @@ class ProblemCase extends Model implements SimpleStateMachinable
             'name' => 'Новый',
             'lang' => [
                 'uz' => 'Yangi',
-                'ru' => 'Новый'
-            ]
+                'ru' => 'Новый',
+            ],
         ],
         self::IN_PROCESS => [
             'id' => self::IN_PROCESS,
             'name' => 'В процессе',
             'lang' => [
                 'uz' => 'Ko\'rib chiqilmoqda',
-                'ru' => 'В процессе'
-            ]
+                'ru' => 'В процессе',
+            ],
         ],
         self::DONE => [
             'id' => self::DONE,
             'name' => 'Выполнено',
             'lang' => [
                 'uz' => 'Bajarildi',
-                'ru' => 'Выполнено'
-            ]
+                'ru' => 'Выполнено',
+            ],
         ],
         self::FINISHED => [
             'id' => self::FINISHED,
             'name' => 'Завершен',
             'lang' => [
                 'uz' => 'Tugatildi',
-                'ru' => 'Завершен'
-            ]
-        ]
+                'ru' => 'Завершен',
+            ],
+        ],
     ];
 
     public static function getOneById(int $id)
@@ -95,16 +112,16 @@ class ProblemCase extends Model implements SimpleStateMachinable
     {
         return [
             self::NEW => [
-                self::IN_PROCESS
+                self::IN_PROCESS,
             ],
             self::IN_PROCESS => [
                 self::DONE,
             ],
             self::DONE => [
                 self::IN_PROCESS,
-                self::FINISHED
+                self::FINISHED,
             ],
-            self::FINISHED => []
+            self::FINISHED => [],
         ];
     }
 
@@ -121,40 +138,40 @@ class ProblemCase extends Model implements SimpleStateMachinable
         'application_created_at',
         'credit_contract_date',
         'post_or_pre_created_by_id',
-        'post_or_pre_created_by_name'
+        'post_or_pre_created_by_name',
     ];
 
     protected $casts = [
-        'application_items' => 'array'
+        'application_items' => 'array',
     ];
 
-    public function merchant()
+    public function merchant(): BelongsTo
     {
         return $this->belongsTo(Merchant::class);
     }
 
-    public function store()
+    public function store(): BelongsTo
     {
         return $this->belongsTo(Store::class);
     }
 
-    public function tags()
+    public function tags(): BelongsToMany
     {
         return $this->belongsToMany(ProblemCaseTag::class, 'problem_case_tag', 'problem_case_id', 'problem_case_tag_id');
     }
 
-    public function before_tags()
+    public function before_tags(): BelongsToMany
     {
         return $this->belongsToMany(ProblemCaseTag::class, 'problem_case_tag', 'problem_case_id', 'problem_case_tag_id')
             ->where('type_id', ProblemCaseTag::BEFORE_TYPE);
     }
 
-    public function comments()
+    public function comments(): MorphMany
     {
         return $this->morphMany(Comment::class, 'commentable');
     }
 
-    public function scopeFilterRequests(Builder $query, \Illuminate\Http\Request $request)
+    public function scopeFilterRequests(Builder $query, Request $request)
     {
         if ($client = $request->query('q')) {
             collect(explode(' ', $client))->filter()->each(function ($q) use ($query) {
@@ -230,5 +247,10 @@ class ProblemCase extends Model implements SimpleStateMachinable
     public function scopeByStore(Builder $query, $store_id)
     {
         $query->where('store_id', $store_id);
+    }
+
+    public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder
+    {
+        return (new ProblemCaseFilters($request, $builder))->execute($filters);
     }
 }

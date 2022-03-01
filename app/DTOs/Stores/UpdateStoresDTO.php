@@ -11,18 +11,17 @@ class UpdateStoresDTO
     use ParseDataTrait;
 
     public function __construct(
-        public int     $store_id,
-        public string  $name,
-        public ?int    $phone,
+        public int $store_id,
+        public string $name,
+        public ?int $phone,
         public ?string $address,
         public ?string $responsible_person,
-        public ?int    $responsible_person_phone,
-        public string  $region,
-        public ?string  $district,
+        public ?int $responsible_person_phone,
+        public string $region,
+        public ?string $district,
         public ?float $lat,
         public ?float $long
-    )
-    {
+    ) {
     }
 
     public static function fromArray(int $store_id, array $data): self

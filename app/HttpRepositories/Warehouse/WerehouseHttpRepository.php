@@ -11,21 +11,19 @@ class WerehouseHttpRepository
     public function checkDuplicateSKUs($merchant_id)
     {
         $response = $this->getHttpClient()->get('/gate/items/check-duplications', [
-            'merchant_id' => $merchant_id
+            'merchant_id' => $merchant_id,
         ]);
-        if($response->clientError()) {
+        if ($response->clientError()) {
             throw new BusinessException($response->body(), 'duplicate_body');
         }
-
     }
 
     protected function getHttpClient(): PendingRequest
     {
-        ;
         return Http::baseUrl(config('local_services.warehouse.domain') . '/')
             ->withHeaders([
                 'Accept' => 'application/json',
-                'Access-Token' => config('local_services.warehouse.access_token')
+                'Access-Token' => config('local_services.warehouse.access_token'),
             ]);
     }
 }

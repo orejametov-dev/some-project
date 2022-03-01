@@ -2,7 +2,7 @@
 
 namespace App\Modules\Merchants\Models;
 
-
+use App\Filters\MerchantRequest\MerchantRequestFilters;
 use App\HttpRepositories\Storage\StorageHttpRepository;
 use App\HttpServices\Storage\StorageMicroService;
 use App\Modules\Merchants\Traits\MerchantRequestStatusesTrait;
@@ -12,16 +12,20 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 
 /**
- * App\Modules\Merchants\Models\Request
+ * App\Modules\Merchants\Models\Request.
  *
  * @property int $id
  * @property string $name
  * @property string $information
  * @property string|null $legal_name
+ * @property string|null $legal_name_prefix
  * @property string $user_name
  * @property string $user_phone
  * @property string $address
@@ -30,15 +34,21 @@ use Illuminate\Support\Carbon;
  * @property bool $documents_completed
  * @property bool $file_completed
  * @property string|null $region
+ * @property string|null $district
  * @property int|null $engaged_by_id
  * @property string|null $engaged_by_name
+ * @property array $categories
+ * @property int $approximate_sales
  * @property string|null $engaged_at
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property string|null $status_updated_at
+ * @property  string $created_from_name
+ * @property-read Collection|File[] $files
  * @property-read mixed $status
  * @method static Builder|Request allowed()
- * @method static Builder|Request filterRequest(\Illuminate\Http\Request $request)
+ * @method static Builder|Request filterRequests(\Illuminate\Http\Request $request)
+ * @method static Builder|Request filterRequest(\Illuminate\Http\Request $request, array $filters = [])
  * @method static Builder|Request onlyCompletedRequests(\Illuminate\Http\Request $request)
  * @method static Builder|Request inProcess()
  * @method static Builder|Request onTraining()
@@ -116,13 +126,13 @@ class Request extends Model
         self::ON_TRAINING => [
             'id' => self::ON_TRAINING,
             'name' => 'На обучении',
-        ]
+        ],
     ];
 
     public function checkToMainCompleted()
     {
         $main = $this->user_name && $this->legal_name && $this->legal_name_prefix && $this->user_phone && $this->name && $this->region
-            && $this->categories && $this->stores_count && $this->merchant_users_count && $this->approximate_sales;
+            && $this->categories && $this->approximate_sales;
 
         if ($main === true) {
             $this->main_completed = true;
@@ -147,11 +157,10 @@ class Request extends Model
         $file_checker = true;
         unset(File::$registration_file_types['store_photo']);
         foreach (File::$registration_file_types as $key => $file_type) {
-            $file_checker = $file_checker && true;
-            if (!in_array($key, $exist_file_type)) {
+//            $file_checker = $file_checker && true;
+            if (in_array($key, $exist_file_type) === false) {
                 $file_checker = false;
             }
-
         }
 
         if ($file_checker === true) {
@@ -179,42 +188,42 @@ class Request extends Model
     {
         return [
             self::NEW => [
-                self::IN_PROCESS
+                self::IN_PROCESS,
             ],
             self::IN_PROCESS => [
                 self::ON_TRAINING,
-                self::TRASH
+                self::TRASH,
             ],
             self::ON_TRAINING => [
-                self::ALLOWED
+                self::ALLOWED,
             ],
             self::ALLOWED => [],
-            self::TRASH => []
+            self::TRASH => [],
         ];
     }
 
     public static function statusLists(): array
     {
         return [
-            array('id' => self::NEW, 'name' => 'Новый'),
-            array('id' => self::IN_PROCESS, 'name' => 'На переговорах'),
-            array('id' => self::ON_TRAINING, 'name' => 'На обучении'),
-            array('id' => self::ALLOWED, 'name' => 'Одобрено'),
-            array('id' => self::TRASH, 'name' => 'В корзине')
+            ['id' => self::NEW, 'name' => 'Новый'],
+            ['id' => self::IN_PROCESS, 'name' => 'На переговорах'],
+            ['id' => self::ON_TRAINING, 'name' => 'На обучении'],
+            ['id' => self::ALLOWED, 'name' => 'Одобрено'],
+            ['id' => self::TRASH, 'name' => 'В корзине'],
         ];
     }
 
-    public function files()
+    public function files(): HasMany
     {
         return $this->hasMany(File::class, 'request_id', 'id');
     }
 
-    public function cancel_reason()
+    public function cancel_reason(): BelongsTo
     {
         return $this->belongsTo(CancelReason::class);
     }
 
-    public function scopeFilterRequest(Builder $query, \Illuminate\Http\Request $request)
+    public function scopeFilterRequests(Builder $query, \Illuminate\Http\Request $request)
     {
         if ($q = $request->query('q')) {
             $query->where('name', 'like', '%' . $q . '%')
@@ -226,6 +235,10 @@ class Request extends Model
 
         if ($status = $request->query('status_id')) {
             $query->where('status_id', $status);
+        }
+
+        if ($created_from_name = $request->query('created_from_name')) {
+            $query->where('created_from_name', $created_from_name);
         }
 
         if ($request->has('completed') && $request->query('completed') == true) {
@@ -257,6 +270,7 @@ class Request extends Model
         $merchant_request_file->url = $storage_file['url'];
         $merchant_request_file->request_id = $this->id;
         $merchant_request_file->save();
+
         return $merchant_request_file;
     }
 
@@ -276,5 +290,10 @@ class Request extends Model
         $this->engaged_by_id = $user['data']['id'];
         $this->engaged_by_name = $user['data']['name'];
         $this->engaged_at = now();
+    }
+
+    public function scopeFilterRequest(Builder $builder, \Illuminate\Http\Request $request, array $filters = [])
+    {
+        return (new MerchantRequestFilters($request, $builder))->execute($filters);
     }
 }

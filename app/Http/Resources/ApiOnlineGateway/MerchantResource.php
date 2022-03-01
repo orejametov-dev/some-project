@@ -23,7 +23,7 @@ class MerchantResource extends JsonResource
             'tags' => $this->whenLoaded('tags'),
             'information' => $this->information,
             'logo_path' => $this->logo_path,
-            'recommend' => $this->recommend
+            'recommend' => $this->recommend,
         ];
     }
 }

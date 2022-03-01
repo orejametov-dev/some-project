@@ -25,7 +25,7 @@ class StoreMerchantUsers extends FormRequest
     {
         return [
             'store_id' => 'required|integer',
-            'user_id' => 'required|integer'
+            'user_id' => 'required|integer',
         ];
     }
 }

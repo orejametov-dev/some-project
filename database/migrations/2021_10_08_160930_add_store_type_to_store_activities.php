@@ -18,7 +18,7 @@ class AddStoreTypeToStoreActivities extends Migration
         });
 
         DB::table('merchant_activities')->update([
-            'merchant_type' => \App\Modules\Merchants\Models\Store::class
+            'merchant_type' => \App\Modules\Merchants\Models\Store::class,
         ]);
     }
 

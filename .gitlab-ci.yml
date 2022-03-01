@@ -1,0 +1,60 @@
+---
+stages:
+  - before-build
+  - build
+  - test
+
+variables:
+  PHP_IMAGE: $CI_REGISTRY/images/php:8.0-fpm-infra
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master"
+
+Composer Install:
+  stage: before-build
+  image: $PHP_IMAGE
+  script:
+    - git config --global gitlab.accesstoken $CI_JOB_TOKEN
+    - composer config gitlab-domains $CI_SERVER_HOST
+    - composer config gitlab-token.$CI_SERVER_HOST $CI_JOB_TOKEN
+    - composer i
+  artifacts:
+    paths:
+      - vendor
+    expire_in: 1 day
+
+Build:
+  stage: build
+  image: docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build --no-cache --pull -f infra/production/Dockerfile -t $CI_REGISTRY_IMAGE:latest .
+    - docker push $CI_REGISTRY_IMAGE:latest
+  tags:
+    - cicd
+    - shell
+
+Static-analyze:
+  stage: test
+  image: docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker run --rm $CI_REGISTRY_IMAGE:latest ./vendor/bin/phpstan analyse --memory-limit=2G --configuration='infra/config/phpstan.neon'
+  tags:
+    - cicd
+    - shell
+
+Check-CS-Fixer:
+  stage: test
+  image: docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker run --rm $CI_REGISTRY_IMAGE:latest ./vendor/bin/php-cs-fixer fix -vvv --dry-run --show-progress=dots --config=./infra/config/.php-cs-fixer.php --allow-risky=yes
+  tags:
+    - cicd
+    - shell
+

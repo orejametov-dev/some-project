@@ -33,7 +33,6 @@ class CreateMerchantRequestsTable extends Migration
 
             $table->timestamps();
             $table->timestamp('status_updated_at')->nullable();
-
         });
     }
 

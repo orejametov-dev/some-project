@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Controllers\ApiMerchantGateway\Merchants;
-
 
 use App\Exceptions\ApiBusinessException;
 use App\Http\Controllers\ApiMerchantGateway\ApiBaseController;
@@ -10,7 +8,6 @@ use App\HttpRepositories\Notify\NotifyHttpRepository;
 use App\HttpServices\Auth\AuthMicroService;
 use App\HttpServices\Company\CompanyService;
 use App\HttpServices\Hooks\DTO\HookData;
-use App\HttpServices\Notify\NotifyMicroService;
 use App\Jobs\SendHook;
 use App\Jobs\ToggleMerchantRoleOfUser;
 use App\Modules\Merchants\Models\AzoMerchantAccess;
@@ -28,10 +25,10 @@ class AzoMerchantAccessesController extends ApiBaseController
         $merchantUsersQuery = AzoMerchantAccess::query()
             ->with(['merchant', 'store'])
             ->byMerchant($this->merchant_id)
-            ->filterRequest($request)
+            ->filterRequests($request)
             ->orderByDesc('updated_at');
 
-        return $merchantUsersQuery->paginate($request->query('per_page'));
+        return $merchantUsersQuery->paginate($request->query('per_page') ?? 15);
     }
 
     public function show($id)
@@ -46,7 +43,7 @@ class AzoMerchantAccessesController extends ApiBaseController
     public function update($id, Request $request)
     {
         $this->validate($request, [
-            'store_id' => 'required|integer'
+            'store_id' => 'required|integer',
         ]);
 
         $azo_merchant_access = AzoMerchantAccess::query()->findOrFail($id);
@@ -72,7 +69,6 @@ class AzoMerchantAccessesController extends ApiBaseController
             created_by_str: $this->user->getName(),
         ));
 
-
         Cache::tags('azo_merchants')->forget('azo_merchant_user_id_' . $azo_merchant_access->user_id);
         Cache::tags($merchant->id)->flush();
 
@@ -82,13 +78,13 @@ class AzoMerchantAccessesController extends ApiBaseController
     public function requestStore(Request $request, NotifyHttpRepository $notifyHttpRepository)
     {
         $this->validate($request, [
-            'phone' => 'required|string|digits:12'
+            'phone' => 'required|string|digits:12',
         ]);
 
         if (AzoMerchantAccess::query()->where('phone', $request->input('phone'))->exists()) {
             throw new ApiBusinessException('Пользователь с данным номером существует', 'phone_exists', [
                 'ru' => 'Пользователь с данным номером существует',
-                'uz' => 'Bunday raqam egasi tizimda mavjud'
+                'uz' => 'Bunday raqam egasi tizimda mavjud',
             ], 400);
         }
 
@@ -108,8 +104,8 @@ class AzoMerchantAccessesController extends ApiBaseController
         return response()->json(['code' => 'otp_sent',
             'message' => [
                 'ru' => 'Код подтверждения отправлен',
-                'uz' => 'Tasdiqlash kodi yuborildi'
-            ]]);
+                'uz' => 'Tasdiqlash kodi yuborildi',
+            ], ]);
     }
 
     public function store(Request $request)
@@ -117,7 +113,7 @@ class AzoMerchantAccessesController extends ApiBaseController
         $this->validate($request, [
             'code' => 'required|digits:4',
             'user_id' => 'required|integer',
-            'store_id' => 'required|integer'
+            'store_id' => 'required|integer',
         ]);
 
         $user = AuthMicroService::getUserById($request->input('user_id'));
@@ -128,14 +124,14 @@ class AzoMerchantAccessesController extends ApiBaseController
         if (array_search(AuthMicroService::AZO_MERCHANT_ROLE, array_column($user['data']['roles'], 'name'))) {
             throw new ApiBusinessException('Пользователь уже является сотрудником мерчанта', 'merchant_exists', [
                 'ru' => 'Пользователь уже является сотрудником мерчанта',
-                'uz' => 'Foydalanuvchi merchant tizimiga bog\'langan'
+                'uz' => 'Foydalanuvchi merchant tizimiga bog\'langan',
             ], 400);
         }
 
         if (AzoMerchantAccess::query()->where('phone', $user['data']['phone'])->exists()) {
             throw new ApiBusinessException('Пользователь с данным номером существует', 'phone_exists', [
                 'ru' => 'Пользователь с данным номером существует',
-                'uz' => 'Bunday raqam egasi tizimda mavjud'
+                'uz' => 'Bunday raqam egasi tizimda mavjud',
             ], 400);
         }
 
@@ -155,7 +151,7 @@ class AzoMerchantAccessesController extends ApiBaseController
         if (AzoMerchantAccess::query()->where('company_user_id', $company_user['id'])->exists()) {
             throw new ApiBusinessException('Пользователь уже существует', 'user_exists', [
                 'ru' => 'Пользователь уже существует',
-                'uz' => 'Foydalanuvchi tizimda mavjud'
+                'uz' => 'Foydalanuvchi tizimda mavjud',
             ], 400);
         }
 
@@ -230,7 +226,7 @@ class AzoMerchantAccessesController extends ApiBaseController
 
         return response()->json(['message' => [
             'ru' => 'Сотрудник удален',
-            'uz' => 'Xodim o\'chirildi'
+            'uz' => 'Xodim o\'chirildi',
         ]]);
     }
 }

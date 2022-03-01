@@ -2,7 +2,9 @@
 
 namespace App\Modules\Merchants\Models;
 
+use App\Filters\Condition\ConditionFilters;
 use App\Traits\SortableByQueryParams;
+use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,12 +12,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 
 /**
- * Class ApplicationCondition
+ * Class ApplicationCondition.
  *
- * @package App\Modules\Applications\Models
  * @property int $id
  * @property bool $active
  * @property int $duration
@@ -26,9 +26,9 @@ use Illuminate\Support\Carbon;
  * @property int $merchant_id
  * @property int $store_id
  * @property int $event_id
- * @property boolean $is_special
- * @property boolean $post_merchant
- * @property boolean $post_alifshop
+ * @property bool $is_special
+ * @property bool $post_merchant
+ * @property bool $post_alifshop
  * @property Merchant $merchant
  * @property Store $store
  * @property Carbon|null $created_at
@@ -38,7 +38,8 @@ use Illuminate\Support\Carbon;
  * @property-read mixed $title
  * @method static Builder|Condition active()
  * @method static Builder|Condition postMerchant()
- * @method static Builder|Condition filterRequest(Request $request)
+ * @method static Builder|Condition filterRequests(Request $request)
+ * @method static Builder|Condition filterRequest(Request $request, array $filters = [])
  * @method static Builder|Condition newModelQuery()
  * @method static Builder|Condition newQuery()
  * @method static Builder|Condition orderRequest(Request $request, string $default_order_str = 'id:desc')
@@ -57,11 +58,11 @@ class Condition extends Model
         'commission',
         'active',
         'discount',
-        'special_offer',// should be unique by partner
+        'special_offer', // should be unique by partner
         'post_merchant',
         'post_alifshop',
         'started_at',
-        'finished_at'
+        'finished_at',
     ];
     protected $appends = ['title'];
 
@@ -91,7 +92,7 @@ class Condition extends Model
         return $builder->where('post_merchant', true);
     }
 
-    public function scopeFilterRequest(Builder $query, Request $request)
+    public function scopeFilterRequests(Builder $query, Request $request)
     {
         if ($condition_ids = $request->query('condition_ids')) {
             $condition_ids = explode(';', $condition_ids);
@@ -122,6 +123,7 @@ class Condition extends Model
         if ($request->has('active')) {
             $query->where('active', $request->query('active'));
         }
+
         return $query;
     }
 
@@ -133,5 +135,10 @@ class Condition extends Model
     public function scopeByMerchant(Builder $query, $merchant_id)
     {
         return $query->where('merchant_id', $merchant_id);
+    }
+
+    public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder
+    {
+        return (new ConditionFilters($request, $builder))->execute($filters);
     }
 }

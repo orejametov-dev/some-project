@@ -3,7 +3,7 @@
 namespace App\Modules\Merchants\Models;
 
 use App\DTOs\MerchantInfos\StoreMerchantInfoDTO;
-use Carbon\Carbon;
+use App\Filters\MerchantInfo\MerchantInfoFilters;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,9 +11,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
 /**
- * Class MerchantInfo
+ * Class MerchantInfo.
  *
- * @package App\Modules\Partners\Models
  * @property int $id
  * @property string $legal_name
  * @property string $legal_name_prefix
@@ -33,7 +32,8 @@ use Illuminate\Http\Request;
  * @property string|null $contract_date
  * @property int|null $rest_limit
  * @property-read Merchant $merchant
- * @method static Builder|MerchantInfo filterRequest(Request $request)
+ * @method static Builder|MerchantInfo filterRequests(Request $request)
+ * @method static Builder|MerchantInfo filterRequest(Request $request, array $filters = [])
  * @method static Builder|MerchantInfo newModelQuery()
  * @method static Builder|MerchantInfo newQuery()
  * @method static Builder|MerchantInfo query()
@@ -60,7 +60,7 @@ class MerchantInfo extends Model
         'contract_number',
         'limit',
         'contract_date',
-        'legal_name_prefix'
+        'legal_name_prefix',
     ];
 
     public $timestamps = false;
@@ -70,7 +70,7 @@ class MerchantInfo extends Model
         return $this->belongsTo(Merchant::class);
     }
 
-    public function scopeFilterRequest(Builder $query, Request $request)
+    public function scopeFilterRequests(Builder $query, Request $request)
     {
         if ($request->query('merchant_id')) {
             $query->where('merchant_id', $request->query('merchant_id'));
@@ -79,12 +79,12 @@ class MerchantInfo extends Model
 
     public static function getMaxContractNumber()
     {
-        return MerchantInfo::max('contract_number');
+        return self::max('contract_number');
     }
 
     public static function fromDTO(StoreMerchantInfoDTO $storeMerchantInfoDTO)
     {
-        $merchantInfo = new MerchantInfo();
+        $merchantInfo = new self();
 
         $merchantInfo->merchant_id = $storeMerchantInfoDTO->merchant_id;
         $merchantInfo->legal_name = $storeMerchantInfoDTO->legal_name;
@@ -98,10 +98,15 @@ class MerchantInfo extends Model
         $merchantInfo->bank_account = $storeMerchantInfoDTO->bank_account;
         $merchantInfo->bank_name = $storeMerchantInfoDTO->bank_name;
         $merchantInfo->address = $storeMerchantInfoDTO->address;
-        $merchantInfo->contract_number = MerchantInfo::getMaxContractNumber() + 1;
+        $merchantInfo->contract_number = self::getMaxContractNumber() + 1;
         $merchantInfo->contract_date = now();
-        $merchantInfo->limit = MerchantInfo::LIMIT;
+        $merchantInfo->limit = self::LIMIT;
 
         return $merchantInfo;
+    }
+
+    public function scopeFiltersRequest(Builder $builder, Request $request, array $filters = [])
+    {
+        return (new MerchantInfoFilters($request, $builder))->execute($filters);
     }
 }
