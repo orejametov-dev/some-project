@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
+use App\Filters\AzoMerchantAccess\GAzoMerchantAccessFilter;
 use App\Filters\CommonFilters\StoreIdFilter;
 use App\Filters\CommonFilters\UserIdsFilter;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
@@ -20,6 +21,7 @@ class AzoMerchantAccessesController extends ApiBaseController
         $azo_merchant_accesses = AzoMerchantAccess::query()
             ->with(['merchant', 'store'])
             ->filterRequest($request, [
+                GAzoMerchantAccessFilter::class,
                 UserIdsFilter::class,
                 StoreIdFilter::class,
             ])
