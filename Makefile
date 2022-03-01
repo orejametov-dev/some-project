@@ -20,7 +20,7 @@ docker-compose:
 
 #mysql
 create-mysql-database:
-	./infra/local/mysql/create-mysql-database.sh
+	./infra/local/mysql/create-mysql-database
 
 #composer
 install:
@@ -35,8 +35,8 @@ setup-hooks:
 	cp -r ./infra/config/hooks .git/ && chmod -R +x .git/hooks/
 
 pre-commit-hook:
-	echo "STATIC ANALYZE CHECK..." && make analyze > /dev/null 2>&1\
-	&& echo "CS-FIXER CHECK..." && make cs-check > /dev/null 2>&1\
+	echo "STATIC ANALYZE CHECK..." && make analyze \
+	&& echo "CS-FIXER CHECK..." && make cs-check
 
 # linters
 cs-check:
@@ -54,4 +54,4 @@ run-inside-container:
 	docker exec -it ${APP_CONTAINER_NAME} ${COMMAND}
 # когда нам нужно запускать команды без зависимостей и без необходимости в контексте приложения, одноразовые команды
 run-on-image:
-	docker run --rm -it -v "${PWD}"/:/app ${APP_IMAGE_NAME} ${COMMAND}
+	docker run --rm -v "${PWD}"/:/app ${IMAGE_PHP} ${COMMAND}
