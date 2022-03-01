@@ -8,7 +8,6 @@ use App\Exceptions\ApiBusinessException;
 use App\Exceptions\BusinessException;
 use App\HttpRepositories\Core\CoreHttpRepository;
 use App\Modules\Merchants\Models\ProblemCase;
-use Carbon\Carbon;
 
 class StoreProblemCaseApplicationIdUseCase extends AbstractStoreProblemCaseUseCase
 {
