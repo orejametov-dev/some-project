@@ -1,6 +1,6 @@
 server {
     listen 80;
-    server_name service-merchant.test;
+    server_name service-merchant.infralocal.alifshop.uz;
     root /app/public;
     index index.php;
 

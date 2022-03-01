@@ -5,6 +5,7 @@ namespace App\Filters\Condition;
 use App\Filters\AbstractFilters;
 use App\Filters\CommonFilters\ActiveFilter;
 use App\Filters\CommonFilters\UpdatedAtFilter;
+use App\Filters\Merchant\MerchantIdFilter;
 use App\Filters\Merchant\MerchantIdsFilter;
 use App\Filters\Store\StoreIdsFilter;
 
@@ -19,6 +20,7 @@ class ConditionFilters extends AbstractFilters
         CommissionFilter::class,
         DurationFilter::class,
         ActiveFilter::class,
+        MerchantIdFilter::class,
     ];
 
     protected function getRequestBindings(): array

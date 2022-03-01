@@ -47,6 +47,7 @@ use Illuminate\Support\Collection;
  * @property-read mixed $status
  * @method static Builder|Request allowed()
  * @method static Builder|Request filterRequests(\Illuminate\Http\Request $request)
+ * @method static Builder|Request filterRequest(\Illuminate\Http\Request $request, array $filters = [])
  * @method static Builder|Request onlyCompletedRequests(\Illuminate\Http\Request $request)
  * @method static Builder|Request inProcess()
  * @method static Builder|Request onTraining()

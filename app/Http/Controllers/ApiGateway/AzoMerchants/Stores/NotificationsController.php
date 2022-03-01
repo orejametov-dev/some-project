@@ -3,6 +3,11 @@
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Stores;
 
 use App\Exceptions\BusinessException;
+use App\Filters\CommonFilters\CreatedAtFilter;
+use App\Filters\CommonFilters\CreatedByIdFilter;
+use App\Filters\Notification\GNotificationFilter;
+use App\Filters\Notification\MerchantIdNotificationFilter;
+use App\Filters\Notification\PublishedFilter;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Notification;
@@ -17,7 +22,13 @@ class NotificationsController extends ApiBaseController
     public function index(Request $request)
     {
         $notifications = Notification::query()
-            ->filterRequests($request)
+            ->filterRequest($request, [
+                GNotificationFilter::class,
+                CreatedAtFilter::class,
+                CreatedByIdFilter::class,
+                MerchantIdNotificationFilter::class,
+                PublishedFilter::class,
+            ])
             ->latest();
 
         if ($request->query('object') == true) {

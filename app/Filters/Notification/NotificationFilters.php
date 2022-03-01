@@ -14,6 +14,7 @@ class NotificationFilters extends AbstractFilters
         CreatedByIdFilter::class,
         CreatedAtFilter::class,
         PublishedFilter::class,
+        FreshFilter::class,
     ];
 
     protected function getRequestBindings(): array

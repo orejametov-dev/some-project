@@ -25,6 +25,7 @@ use Illuminate\Http\Request;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @method static Builder|Notification filterRequests(Request $request)
+ * @method static Builder|Notification filterRequest(Request $request, array $filters = [])
  * @method static Builder|Notification query()
  */
 class Notification extends Model
@@ -117,6 +118,6 @@ class Notification extends Model
 
     public function scopeFilterRequest(Builder $builder, Request $request, array $filters = [])
     {
-        return (new NotificationFilters($request, $builder))->execute($request);
+        return (new NotificationFilters($request, $builder))->execute($filters);
     }
 }
