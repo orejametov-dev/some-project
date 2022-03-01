@@ -66,6 +66,6 @@ trait MerchantRelationshipsTrait
 
     public function competitors(): BelongsToMany
     {
-        return $this->belongsToMany(Competitor::class, 'merchant_competitor')->withPivot('percentage_sales', 'percentage_approve', 'partnership_at')->withTimestamps();
+        return $this->belongsToMany(Competitor::class, 'merchant_competitor')->withPivot('volume_sales', 'percentage_approve', 'partnership_at')->withTimestamps();
     }
 }

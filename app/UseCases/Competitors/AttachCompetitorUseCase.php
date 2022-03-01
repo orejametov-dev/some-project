@@ -28,7 +28,7 @@ class AttachCompetitorUseCase
         }
 
         $merchant->competitors()->attach($competitor->id, [
-            'percentage_sales' => $competitorDTO->percentage_sales,
+            'volume_sales' => $competitorDTO->volume_sales,
             'percentage_approve' => $competitorDTO->percentage_approve,
             'partnership_at' => $competitorDTO->partnership_at,
         ]);
