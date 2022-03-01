@@ -12,11 +12,11 @@ use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\ProblemCase;
 use App\Modules\Merchants\Models\Request;
 use App\Modules\Merchants\Models\Store;
-use App\Modules\Merchants\Services\MerchantStatus;
 use App\Services\ClientTypeRegisterService;
 use App\Services\DistrictService;
 use App\Services\LegalNameService;
 use App\Services\RegionService;
+use Illuminate\Support\Facades\Cache;
 
 class AppController extends ApiBaseController
 {
@@ -26,7 +26,6 @@ class AppController extends ApiBaseController
         $merchants_count = Merchant::query()->count();
         $stores_count = Store::query()->count();
         $merchant_request_statuses = Request::statusLists();
-        $merchant_statuses = MerchantStatus::get();
         $problem_case_statuses = array_values(ProblemCase::$statuses);
         $problem_case_sources = ProblemCase::$sources;
         $merchant_activity_reasons = ActivityReason::query()->where('type', 'MERCHANT')->get();
@@ -34,7 +33,10 @@ class AppController extends ApiBaseController
         $cancel_reasons = CancelReason::query()->get();
         $legal_name_prefixes = LegalNameService::getNamePrefixes();
         $competitors = Competitor::query()->select('id', 'name')->get()->toArray();
-        $condition_templates = ConditionTemplate::allCached();
+
+        $condition_templates = Cache::remember('condition_templates:table', 3600, function () {
+            return ConditionTemplate::query()->get();
+        });
 
         $authUser = $this->user;
 

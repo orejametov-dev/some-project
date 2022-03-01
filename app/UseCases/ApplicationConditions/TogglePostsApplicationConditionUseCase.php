@@ -4,18 +4,19 @@ namespace App\UseCases\ApplicationConditions;
 
 use App\Exceptions\BusinessException;
 use App\HttpRepositories\Alifshop\AlifshopHttpRepository;
+use App\Modules\Merchants\Models\Condition;
 use App\UseCases\Cache\FlushCacheUseCase;
 
 class TogglePostsApplicationConditionUseCase
 {
     public function __construct(
         private AlifshopHttpRepository $alifshopHttpRepository,
-        private FindConditionUseCase $findConditionUseCase,
+        private FindConditionByIdUseCase $findConditionUseCase,
         private FlushCacheUseCase $flushCacheUseCase
     ) {
     }
 
-    public function execute(int $id, bool $post_merchant, bool $post_alifshop)
+    public function execute(int $id, bool $post_merchant, bool $post_alifshop) : Condition
     {
         $condition = $this->findConditionUseCase->execute($id);
 

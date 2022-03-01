@@ -17,13 +17,13 @@ class StoreApplicationConditionUseCase
 {
     public function __construct(
         private CheckStartedAtAndFinishedAtConditionUseCase $checkStartedAtAndFinishedAtConditionUseCase,
-        private FindMerchantByIdUseCase                     $findMerchantUseCase,
-        private FlushCacheUseCase                           $flushCacheUseCase,
-        private GatewayAuthUser                             $gatewayAuthUser
+        private FindMerchantByIdUseCase $findMerchantUseCase,
+        private FlushCacheUseCase $flushCacheUseCase,
+        private GatewayAuthUser $gatewayAuthUser
     ) {
     }
 
-    public function execute(StoreConditionDTO $conditionDTO)
+    public function execute(StoreConditionDTO $conditionDTO) : Condition
     {
         $merchant = $this->findMerchantUseCase->execute($conditionDTO->merchant_id);
 

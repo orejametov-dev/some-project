@@ -46,7 +46,7 @@ class MerchantRequestsController extends ApiBaseController
 
     public function store(MerchantRequestStore $request, StoreMerchantRequestUseCase $storeMerchantRequestUseCase)
     {
-        return $storeMerchantRequestUseCase->execute(StoreMerchantRequestDTO::fromArray($request->validated()));
+        return $storeMerchantRequestUseCase->execute(StoreMerchantRequestDTO::fromArray($request->validated()), true);
     }
 
     public function update($id, MerchantRequestUpdateRequest $request)
@@ -58,7 +58,7 @@ class MerchantRequestsController extends ApiBaseController
         }
 
         if (CompanyService::getCompanyByName($request->input('name'))) {
-            return response()->json(['message' => 'Указанное имя компании уже занято'], 400);
+            throw new BusinessException('Указанное имя компании уже занято', 'object_not_found', 400);
         }
 
         $merchant_request->fill($request->validated());

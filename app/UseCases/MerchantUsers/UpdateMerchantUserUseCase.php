@@ -5,22 +5,20 @@ declare(strict_types=1);
 namespace App\UseCases\MerchantUsers;
 
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
-use App\Exceptions\BusinessException;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Modules\Merchants\Models\AzoMerchantAccess;
-use App\Modules\Merchants\Models\Store;
 use App\UseCases\Merchants\FindMerchantByIdUseCase;
 use App\UseCases\Stores\FindStoreByIdUseCase;
 
 class UpdateMerchantUserUseCase
 {
     public function __construct(
-        private FindMerchantUserUseCase       $findMerchantUserUseCase,
-        private FindMerchantByIdUseCase       $findMerchantUseCase,
+        private FindMerchantUserByIdUseCase $findMerchantUserUseCase,
+        private FindMerchantByIdUseCase $findMerchantUseCase,
         private FlushMerchantUserCacheUseCase $flushMerchantUserCacheUseCase,
-        private GatewayAuthUser               $authUser,
-        private FindStoreByIdUseCase          $findStoreByIdUseCase,
+        private GatewayAuthUser $authUser,
+        private FindStoreByIdUseCase $findStoreByIdUseCase,
     ) {
     }
 

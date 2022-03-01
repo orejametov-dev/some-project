@@ -8,7 +8,12 @@ use App\Modules\Merchants\Models\ProblemCaseTag;
 
 class AttachTagsProblemCaseUseCase
 {
-    public function execute(int $id, array $tags_request)
+    /**
+     * @param int $id
+     * @param array $tags_request
+     * @throws BusinessException
+     */
+    public function execute(int $id, array $tags_request): ProblemCase
     {
         $problemCase = ProblemCase::query()->find($id);
 
@@ -25,6 +30,6 @@ class AttachTagsProblemCaseUseCase
         }
         $problemCase->tags()->attach($tags);
 
-        return response()->json($problemCase->load('tags'));
+        return $problemCase->load('tags');
     }
 }

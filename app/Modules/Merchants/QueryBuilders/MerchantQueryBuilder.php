@@ -2,24 +2,14 @@
 
 namespace App\Modules\Merchants\QueryBuilders;
 
-use App\Filters\Store\StoreFilters;
-use App\Modules\Merchants\Models\Store;
+use App\Filters\Merchant\MerchantFilters;
+use App\Modules\Merchants\Models\Merchant;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
-class StoreQueryBuilder extends Builder
+class MerchantQueryBuilder extends Builder
 {
-    public function main(): self
-    {
-        return $this->where('is_main', true);
-    }
-
-    public function byMerchant($merchant_id): self
-    {
-        return $this->where('merchant_id', $merchant_id);
-    }
-
     public function active(): self
     {
         return $this->where('active', true);
@@ -27,12 +17,12 @@ class StoreQueryBuilder extends Builder
 
     public function filterRequest(Request $request, array $filters = []): Builder
     {
-        return (new StoreFilters($request, $this))->execute($filters);
+        return (new MerchantFilters($request, $this))->execute($filters);
     }
 
     /**
      * @param array $columns
-     * @return StoreQueryBuilder|Store|object|null
+     * @return MerchantQueryBuilder|Merchant|object|null
      */
     public function first($columns = ['*'])
     {
@@ -42,7 +32,7 @@ class StoreQueryBuilder extends Builder
     /**
      * @param $id
      * @param array $columns
-     * @return StoreQueryBuilder|StoreQueryBuilder[]|Collection|Store|null
+     * @return MerchantQueryBuilder|MerchantQueryBuilder[]|Collection|Merchant|null
      */
     public function find($id, $columns = ['*'])
     {
@@ -51,7 +41,7 @@ class StoreQueryBuilder extends Builder
 
     /**
      * @param array $columns
-     * @return Store[]|Collection
+     * @return Merchant[]|Collection
      */
     public function get($columns = ['*'])
     {

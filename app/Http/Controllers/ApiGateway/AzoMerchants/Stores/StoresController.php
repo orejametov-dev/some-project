@@ -13,8 +13,8 @@ use App\Http\Requests\ApiPrm\Stores\StoreStoresRequest;
 use App\Http\Requests\ApiPrm\Stores\UpdateStoresRequest;
 use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\Store;
-use App\UseCases\Stores\SetTypeRegisterStoresUseCase;
-use App\UseCases\Stores\StoreStoreUseCase;
+use App\UseCases\Stores\SaveStoreUseCase;
+use App\UseCases\Stores\SetTypeRegisterStoreUseCase;
 use App\UseCases\Stores\ToggleStoreUseCase;
 use App\UseCases\Stores\UpdateStoreUseCase;
 use Illuminate\Http\Request;
@@ -51,7 +51,7 @@ class StoresController extends ApiBaseController
         return $store;
     }
 
-    public function store(StoreStoresRequest $request, StoreStoreUseCase $storeStoresUseCase)
+    public function store(StoreStoresRequest $request, SaveStoreUseCase $storeStoresUseCase)
     {
         $storeStoresDTO = StoreStoresDTO::fromArray($request->validated());
 
@@ -74,7 +74,7 @@ class StoresController extends ApiBaseController
         return $toggleStoresUseCase->execute((int) $id, (int) $request->input('activity_reason_id'));
     }
 
-    public function setTypeRegister($id, Request $request, SetTypeRegisterStoresUseCase $setTypeRegisterStoresUseCase)
+    public function setTypeRegister($id, Request $request, SetTypeRegisterStoreUseCase $setTypeRegisterStoresUseCase)
     {
         $request->validate([
             'client_type_register' => 'required|string',

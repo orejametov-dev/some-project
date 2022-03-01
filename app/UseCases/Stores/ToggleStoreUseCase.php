@@ -11,9 +11,9 @@ use App\UseCases\Cache\FlushCacheUseCase;
 class ToggleStoreUseCase
 {
     public function __construct(
-        private GatewayAuthUser      $gatewayAuthUser,
+        private GatewayAuthUser $gatewayAuthUser,
         private FindStoreByIdUseCase $findStoresUseCase,
-        private FlushCacheUseCase    $flushCacheUseCase
+        private FlushCacheUseCase $flushCacheUseCase
     ) {
     }
 

@@ -8,7 +8,7 @@ use App\Exceptions\BusinessException;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Store;
 
-class SetMainStoreUseCase
+class SetMerchantMainStoreUseCase
 {
     public function __construct(
         private FindMerchantByIdUseCase $findMerchantUseCase

@@ -3,6 +3,7 @@
 namespace App\Modules\Merchants\Models;
 
 use App\Filters\ProblemCase\ProblemCaseFilters;
+use App\Modules\Merchants\QueryBuilders\ProblemCaseQueryBuilder;
 use App\Modules\Merchants\Traits\ProblemCaseStatuses;
 use App\Services\SimpleStateMachine\SimpleStateMachinable;
 use App\Services\SimpleStateMachine\SimpleStateMachineTrait;
@@ -97,6 +98,15 @@ class ProblemCase extends Model implements SimpleStateMachinable
             ],
         ],
     ];
+
+    /**
+     * @param  \Illuminate\Database\Query\Builder $query
+     * @return ProblemCaseQueryBuilder
+     */
+    public function newEloquentBuilder($query)
+    {
+        return new ProblemCaseQueryBuilder($query);
+    }
 
     public static function getOneById(int $id)
     {

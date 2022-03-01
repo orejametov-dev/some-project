@@ -8,11 +8,11 @@ use App\Modules\Merchants\Models\Store;
 use App\UseCases\Cache\FlushCacheUseCase;
 use App\UseCases\Merchants\FindMerchantByIdUseCase;
 
-class StoreStoreUseCase
+class SaveStoreUseCase
 {
     public function __construct(
         private FindMerchantByIdUseCase $findMerchantUseCase,
-        private FlushCacheUseCase       $flushCacheUseCase
+        private FlushCacheUseCase $flushCacheUseCase
     ) {
     }
 
@@ -25,7 +25,7 @@ class StoreStoreUseCase
             ->exists();
 
         if ($store_exists) {
-            throw new BusinessException('Указанное имя уже занято другим магазином','object_not_found', 400);
+            throw new BusinessException('Указанное имя уже занято другим магазином', 'object_not_found', 400);
         }
 
         $merchant_store = new Store();
@@ -37,7 +37,7 @@ class StoreStoreUseCase
         $merchant_store->region = $storeStoresDTO->region;
         $merchant_store->district = $storeStoresDTO->district;
 
-        if (Store::where('merchant_id', $merchant->id)->count() === 0) {
+        if (Store::query()->where('merchant_id', $merchant->id)->count() === 0) {
             $merchant_store->is_main = true;
         }
 

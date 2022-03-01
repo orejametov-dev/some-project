@@ -33,7 +33,7 @@ class StoreProblemCaseApplicationIdUseCase extends AbstractStoreProblemCaseUseCa
         }
     }
 
-    protected function setIdentifierNumberAndDate(ProblemCase $problemCase, $identifier_number, $data)
+    protected function setIdentifierNumberAndDate(ProblemCase $problemCase, string|int $identifier_number, mixed $data): void
     {
         $problemCase->application_id = $identifier_number;
         $problemCase->application_created_at = $data->application_created_at;
