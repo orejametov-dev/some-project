@@ -15,7 +15,7 @@ use App\Http\Requests\ApiPrm\Merchants\SetMainStoreRequest;
 use App\Http\Requests\ApiPrm\Merchants\SetResponsibleUserRequest;
 use App\Http\Requests\ApiPrm\Merchants\StoreMerchantRequest;
 use App\Http\Requests\ApiPrm\Merchants\UpdateMerchantRequest;
-use App\HttpRepositories\Warehouse\WerehouseHttpRepository;
+use App\HttpRepositories\Warehouse\WarehouseHttpRepository;
 use App\HttpServices\Company\CompanyService;
 use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\Competitor;
@@ -176,12 +176,12 @@ class MerchantsController extends ApiBaseController
         return $merchant;
     }
 
-    public function toggleGeneralGoods($id, Request $request)
+    public function toggleGeneralGoods($id, Request $request, WarehouseHttpRepository $werehouseHttpRepository)
     {
         $merchant = Merchant::findOrFail($id);
         $merchant->has_general_goods = !$merchant->has_general_goods;
 
-        (new WerehouseHttpRepository)->checkDuplicateSKUs($merchant->id);
+        $werehouseHttpRepository->checkDuplicateSKUs($merchant->id);
 
         $merchant->save();
 

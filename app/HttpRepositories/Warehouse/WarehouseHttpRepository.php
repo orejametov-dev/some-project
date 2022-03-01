@@ -6,7 +6,7 @@ use App\Exceptions\BusinessException;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 
-class WerehouseHttpRepository
+class WarehouseHttpRepository
 {
     public function checkDuplicateSKUs($merchant_id)
     {
