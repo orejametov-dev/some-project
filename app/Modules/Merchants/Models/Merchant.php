@@ -5,12 +5,17 @@ namespace App\Modules\Merchants\Models;
 use App\HttpRepositories\HttpResponses\Prm\CompanyHttpResponse;
 use App\Modules\Merchants\QueryBuilders\MerchantQueryBuilder;
 use App\Modules\Merchants\Traits\MerchantFileTrait;
-use App\Modules\Merchants\Traits\MerchantRelationshipsTrait;
 use App\Traits\SortableByQueryParams;
 use Eloquent;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
 /**
@@ -32,8 +37,8 @@ use Illuminate\Support\Str;
  * @property int|null $current_sales
  * @property int $company_id
  * @property int|null $min_application_price
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property-read Collection|AdditionalAgreement[] $additional_agreements
  * @property-read int|null $additional_agreements_count
  * @property-read Collection|Condition[] $application_conditions
@@ -55,7 +60,6 @@ class Merchant extends Model
 {
     use HasFactory;
 
-    use MerchantRelationshipsTrait;
     use MerchantFileTrait;
     use SortableByQueryParams;
 
@@ -87,7 +91,7 @@ class Merchant extends Model
     ];
 
     /**
-     * @param  \Illuminate\Database\Query\Builder $query
+     * @param Builder $query
      * @return MerchantQueryBuilder
      */
     public function newEloquentBuilder($query)
@@ -117,5 +121,56 @@ class Merchant extends Model
         $merchant->company_id = $company->id;
 
         return $merchant;
+    }
+
+    public function stores(): HasMany
+    {
+        return $this->hasMany(Store::class);
+    }
+
+    public function azo_merchant_accesses(): HasMany
+    {
+        return $this->hasMany(AzoMerchantAccess::class);
+    }
+
+    public function application_conditions(): HasMany
+    {
+        return $this->hasMany(Condition::class);
+    }
+
+    public function application_active_conditions(): HasMany
+    {
+        return $this->hasMany(Condition::class)->where('active', true);
+    }
+
+    public function tags(): MorphToMany
+    {
+        return $this->morphToMany(Tag::class, 'merchant', 'merchant_tag', 'merchant_id', 'tag_id');
+    }
+
+    public function files(): HasMany
+    {
+        return $this->hasMany(File::class, 'merchant_id', 'id');
+    }
+
+    public function merchant_info(): HasOne
+    {
+        return $this->hasOne(MerchantInfo::class);
+    }
+
+    public function additional_agreements(): HasMany
+    {
+        return $this->hasMany(AdditionalAgreement::class);
+    }
+
+    public function activity_reasons(): BelongsToMany
+    {
+        return $this->belongsToMany(ActivityReason::class, 'merchant_activities', 'merchant_id', 'activity_reason_id')->withTimestamps()
+            ->withPivot(['id', 'merchant_id', 'activity_reason_id', 'active', 'created_by_id', 'created_by_name', 'created_at', 'updated_at']);
+    }
+
+    public function competitors(): BelongsToMany
+    {
+        return $this->belongsToMany(Competitor::class, 'merchant_competitor')->withPivot('volume_sales', 'percentage_approve', 'partnership_at')->withTimestamps();
     }
 }

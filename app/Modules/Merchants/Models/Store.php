@@ -3,13 +3,16 @@
 namespace App\Modules\Merchants\Models;
 
 use App\Modules\Merchants\QueryBuilders\StoreQueryBuilder;
-use App\Modules\Merchants\Traits\StoreRelationshipsTrait;
 use App\Traits\SortableByQueryParams;
 use Eloquent;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
 
 /**
@@ -39,7 +42,6 @@ use Illuminate\Support\Carbon;
 class Store extends Model
 {
     use HasFactory;
-    use StoreRelationshipsTrait;
     use SortableByQueryParams;
 
     protected $table = 'stores';
@@ -60,7 +62,7 @@ class Store extends Model
     ];
 
     /**
-     * @param  \Illuminate\Database\Query\Builder $query
+     * @param Builder $query
      * @return StoreQueryBuilder
      */
     public function newEloquentBuilder($query)
@@ -68,8 +70,28 @@ class Store extends Model
         return new StoreQueryBuilder($query);
     }
 
-    public function notifications() : BelongsToMany
+    public function notifications(): BelongsToMany
     {
         return $this->belongsToMany(Notification::class, 'store_notification', 'store_id', 'notification_id');
+    }
+
+    public function merchant(): BelongsTo
+    {
+        return $this->belongsTo(Merchant::class);
+    }
+
+    public function application_conditions(): HasMany
+    {
+        return $this->hasMany(Condition::class);
+    }
+
+    public function activity_reasons(): MorphToMany
+    {
+        return $this->morphToMany(ActivityReason::class, 'store', 'store_activities')->withTimestamps();
+    }
+
+    public function conditions(): BelongsToMany
+    {
+        return $this->belongsToMany(Condition::class, 'special_store_conditions', 'store_id', 'condition_id');
     }
 }
