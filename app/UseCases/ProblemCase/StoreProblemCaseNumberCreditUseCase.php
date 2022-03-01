@@ -5,6 +5,7 @@ namespace App\UseCases\ProblemCase;
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use Alifuz\Utils\Gateway\Entities\GatewayApplication;
 use App\Exceptions\ApiBusinessException;
+use App\Exceptions\BusinessException;
 use App\HttpRepositories\Core\CoreHttpRepository;
 use App\Modules\Merchants\Models\ProblemCase;
 
@@ -33,14 +34,20 @@ class StoreProblemCaseNumberCreditUseCase extends AbstractStoreProblemCaseUseCas
         }
     }
 
-    protected function getDataByIdentifier(int|string $identifier): mixed
-    {
-        return $this->coreHttpRepository->getApplicationDataByContractNumber($identifier);
-    }
-
     protected function setIdentifierNumberAndDate(ProblemCase $problemCase, $identifier_number, $data)
     {
         $problemCase->credit_number = $identifier_number;
         $problemCase->credit_contract_date = $data->credit_contract_date;
+    }
+
+    protected function getDataByIdentifier(int|string $identifier): mixed
+    {
+        $data = $this->coreHttpRepository->getApplicationDataByContractNumber($identifier);
+
+        if ($data === null) {
+            throw new BusinessException('Кредит не был найден', 'object_not_found', 404);
+        }
+
+        return $data;
     }
 }
