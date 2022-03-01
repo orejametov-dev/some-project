@@ -176,12 +176,12 @@ class MerchantsController extends ApiBaseController
         return $merchant;
     }
 
-    public function toggleGeneralGoods($id, Request $request, WarehouseHttpRepository $werehouseHttpRepository)
+    public function toggleGeneralGoods($id, Request $request, WarehouseHttpRepository $warehouseHttpRepository)
     {
         $merchant = Merchant::findOrFail($id);
         $merchant->has_general_goods = !$merchant->has_general_goods;
 
-        $werehouseHttpRepository->checkDuplicateSKUs($merchant->id);
+        $warehouseHttpRepository->checkDuplicateSKUs($merchant->id);
 
         $merchant->save();
 
@@ -204,7 +204,7 @@ class MerchantsController extends ApiBaseController
         return $merchant;
     }
 
-    public function attachCompetitor($id, CompetitorsRequest $request, AttachCompetitorUseCase $attachCompetitorUseCase): Merchant
+    public function attachCompetitor($id, CompetitorsRequest $request, AttachCompetitorUseCase $attachCompetitorUseCase)
     {
         $competitorDTO = CompetitorDTO::fromArray((int) $id, $request->validated());
         $response = $attachCompetitorUseCase->execute($competitorDTO);
@@ -212,7 +212,7 @@ class MerchantsController extends ApiBaseController
         return $response;
     }
 
-    public function updateCompetitor($id, CompetitorsRequest $request, UpdateCompetitorUseCase $updateCompetitorUseCase): Merchant
+    public function updateCompetitor($id, CompetitorsRequest $request, UpdateCompetitorUseCase $updateCompetitorUseCase)
     {
         $competitorDTO = CompetitorDTO::fromArray((int) $id, $request->validated());
         $response = $updateCompetitorUseCase->execute($competitorDTO);
