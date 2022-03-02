@@ -20,12 +20,10 @@ use App\HttpServices\Company\CompanyService;
 use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Tag;
-
-use App\UseCases\Merchants\FindMerchantByIdUseCase;
-use App\UseCases\Merchants\SetMerchantMainStoreUseCase;
 use App\UseCases\Competitors\AttachCompetitorUseCase;
 use App\UseCases\Competitors\DetachCompetitorUseCase;
 use App\UseCases\Competitors\UpdateCompetitorUseCase;
+use App\UseCases\Merchants\SetMerchantMainStoreUseCase;
 use App\UseCases\Merchants\SetResponsibleUserUseCase;
 use App\UseCases\Merchants\StoreMerchantUseCase;
 use App\UseCases\Merchants\UpdateMerchantUseCase;
