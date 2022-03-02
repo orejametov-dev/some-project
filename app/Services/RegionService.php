@@ -4,7 +4,7 @@ namespace App\Services;
 
 class RegionService
 {
-    private static $regions = [
+    private static array $regions = [
         'tashkent_city' => [
             'body_ru' => 'Ташкент',
             'body_uz' => 'Toshkent',

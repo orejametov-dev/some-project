@@ -10,7 +10,7 @@ use App\Modules\Merchants\Models\Request as MerchantRequest;
 use App\Services\DistrictService;
 use App\Services\LegalNameService;
 use App\Services\RegionService;
-use App\UseCases\MerchantRequests\StoreMainMerchantRequestUseCase;
+use App\UseCases\MerchantRequests\StoreMerchantRequestUseCase;
 use Illuminate\Http\Request;
 
 class MerchantRequestsController extends Controller
@@ -37,9 +37,9 @@ class MerchantRequestsController extends Controller
         return $merchant_request;
     }
 
-    public function storeMain(MerchantRequestStoreMain $request, StoreMainMerchantRequestUseCase $storeMainMerchantRequestUseCase)
+    public function storeMain(MerchantRequestStoreMain $request, StoreMerchantRequestUseCase $storeMerchantRequestUseCase)
     {
-        return $storeMainMerchantRequestUseCase->execute(StoreMerchantRequestDTO::fromArray($request->validated()));
+        return $storeMerchantRequestUseCase->execute(StoreMerchantRequestDTO::fromArray($request->validated()), false);
     }
 
     public function getDistricts(Request $request)

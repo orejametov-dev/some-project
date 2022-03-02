@@ -2,10 +2,11 @@
 
 namespace App\UseCases\Stores;
 
+use App\Modules\Merchants\Models\Store;
 use App\Services\ClientTypeRegisterService;
 use App\UseCases\Cache\FlushCacheUseCase;
 
-class SetTypeRegisterStoresUseCase
+class SetTypeRegisterStoreUseCase
 {
     public function __construct(
         private FindStoreByIdUseCase $findStoresUseCase,
@@ -13,7 +14,7 @@ class SetTypeRegisterStoresUseCase
     ) {
     }
 
-    public function execute(int $id, string $client_type_register)
+    public function execute(int $id, string $client_type_register) : Store
     {
         $client_type_register = ClientTypeRegisterService::getOneByKey($client_type_register);
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases;
 
+use App\DTOs\Comments\CommentDTO;
 use App\Filters\CommonFilters\DateFilter;
 use App\Filters\CommonFilters\StatusIdFilter;
 use App\Filters\Merchant\MerchantIdFilter;
@@ -16,7 +17,6 @@ use App\Http\Requests\ApiPrm\ProblemCases\ProblemCaseAttachTagsRequest;
 use App\Http\Requests\ApiPrm\ProblemCases\ProblemCaseSetAssignedRequest;
 use App\Http\Requests\ApiPrm\ProblemCases\ProblemCaseSetStatusRequest;
 use App\Http\Requests\ApiPrm\ProblemCases\ProblemCaseUpdateRequest;
-use App\Modules\Merchants\DTO\Comments\CommentDTO;
 use App\Modules\Merchants\Models\Comment;
 use App\Modules\Merchants\Models\ProblemCase;
 use App\UseCases\ProblemCase\AttachTagsProblemCaseUseCase;

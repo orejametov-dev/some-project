@@ -23,7 +23,7 @@ class StoreApplicationConditionUseCase
     ) {
     }
 
-    public function execute(StoreConditionDTO $conditionDTO)
+    public function execute(StoreConditionDTO $conditionDTO) : Condition
     {
         $merchant = $this->findMerchantUseCase->execute($conditionDTO->merchant_id);
 

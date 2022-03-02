@@ -5,7 +5,7 @@ namespace App\UseCases\MerchantUsers;
 use App\Exceptions\BusinessException;
 use App\Modules\Merchants\Models\AzoMerchantAccess;
 
-class FindMerchantUserUseCase
+class FindMerchantUserByIdUseCase
 {
     public function execute(int $merchant_user_id): AzoMerchantAccess
     {

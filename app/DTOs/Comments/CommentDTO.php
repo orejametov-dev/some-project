@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Merchants\DTO\Comments;
+namespace App\DTOs\Comments;
 
 use Alifuz\Utils\Parser\ParseDataTrait;
 

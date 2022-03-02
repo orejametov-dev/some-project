@@ -2,17 +2,22 @@
 
 namespace App\Modules\Merchants\QueryBuilders;
 
-use App\Filters\Store\StoreFilters;
-use App\Modules\Merchants\Models\Store;
+use App\Filters\Condition\ConditionFilters;
+use App\Modules\Merchants\Models\Condition;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
-class StoreQueryBuilder extends Builder
+class ConditionQueryBuilder extends Builder
 {
-    public function main(): self
+    public function active(): self
     {
-        return $this->where('is_main', true);
+        return $this->where('active', true);
+    }
+
+    public function postMerchant(): self
+    {
+        return $this->where('post_merchant', true);
     }
 
     public function byMerchant($merchant_id): self
@@ -20,19 +25,14 @@ class StoreQueryBuilder extends Builder
         return $this->where('merchant_id', $merchant_id);
     }
 
-    public function active(): self
-    {
-        return $this->where('active', true);
-    }
-
     public function filterRequest(Request $request, array $filters = []): Builder
     {
-        return (new StoreFilters($request, $this))->execute($filters);
+        return (new ConditionFilters($request, $this))->execute($filters);
     }
 
     /**
      * @param array $columns
-     * @return StoreQueryBuilder|Store|object|null
+     * @return ConditionQueryBuilder|Condition|object|null
      */
     public function first($columns = ['*'])
     {
@@ -42,7 +42,7 @@ class StoreQueryBuilder extends Builder
     /**
      * @param $id
      * @param array $columns
-     * @return StoreQueryBuilder|StoreQueryBuilder[]|Collection|Store|null
+     * @return ConditionQueryBuilder|ConditionQueryBuilder[]|Collection|Condition|null
      */
     public function find($id, $columns = ['*'])
     {
@@ -51,7 +51,7 @@ class StoreQueryBuilder extends Builder
 
     /**
      * @param array $columns
-     * @return Store[]|Collection
+     * @return Condition[]|Collection
      */
     public function get($columns = ['*'])
     {

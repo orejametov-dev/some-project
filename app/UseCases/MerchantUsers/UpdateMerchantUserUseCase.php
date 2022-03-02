@@ -14,7 +14,7 @@ use App\UseCases\Stores\FindStoreByIdUseCase;
 class UpdateMerchantUserUseCase
 {
     public function __construct(
-        private FindMerchantUserUseCase $findMerchantUserUseCase,
+        private FindMerchantUserByIdUseCase $findMerchantUserUseCase,
         private FindMerchantByIdUseCase $findMerchantUseCase,
         private FlushMerchantUserCacheUseCase $flushMerchantUserCacheUseCase,
         private GatewayAuthUser $authUser,

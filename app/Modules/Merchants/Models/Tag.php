@@ -19,8 +19,6 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read Collection|Merchant[] $merchants
  * @property-read int|null $merchants_count
- * @method static Builder|Tag newModelQuery()
- * @method static Builder|Tag newQuery()
  * @method static Builder|Tag query()
  * @mixin Eloquent
  */

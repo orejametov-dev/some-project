@@ -25,7 +25,7 @@ class MassStoreApplicationConditionUseCase
     ) {
     }
 
-    public function execute(MassStoreConditionDTO $massStoreConditionDTO)
+    public function execute(MassStoreConditionDTO $massStoreConditionDTO) : void
     {
         $merchants = Merchant::query()
             ->whereIn('id', $massStoreConditionDTO->merchant_ids)
@@ -119,7 +119,5 @@ class MassStoreApplicationConditionUseCase
             $this->alifshopHttpRepository->storeOrUpdateConditions($merchant->company_id, $conditions);
             $this->flushCacheUseCase->execute($merchant->id);
         }
-
-        return response()->json(['message' => 'Условия изменены']);
     }
 }
