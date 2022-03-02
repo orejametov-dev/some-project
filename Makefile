@@ -2,6 +2,7 @@ include infra/local/.env
 
 #init:
 first-run:
+	docker login ginger.alifshop.uz:443
 	make build
 	chmod o+rw storage bootstrap/
 	make create-mysql-database
