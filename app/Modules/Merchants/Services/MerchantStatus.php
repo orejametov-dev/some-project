@@ -2,8 +2,6 @@
 
 namespace App\Modules\Merchants\Services;
 
-use Illuminate\Http\JsonResponse;
-
 class MerchantStatus
 {
     public const ACTIVE = 1;

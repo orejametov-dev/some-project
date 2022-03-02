@@ -5,7 +5,6 @@ namespace App\Modules\Merchants\Traits;
 use App\HttpRepositories\Storage\StorageHttpRepository;
 use App\HttpServices\Storage\StorageMicroService;
 use App\Modules\Merchants\Models\File;
-use App\Modules\Merchants\Models\Merchant;
 use Illuminate\Http\UploadedFile;
 
 trait MerchantFileTrait
