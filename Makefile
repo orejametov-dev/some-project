@@ -3,7 +3,7 @@ include infra/local/.env
 #init:
 first-run:
 	docker login ginger.alifshop.uz:443
-	sudo ifconfig lo0 alias 127.0.4.5 || sudo ifconfig lo:0 127.0.4.5 || netsh -c Interface ip add address addr=127.0.4.5
+	sudo ifconfig lo0 alias 127.0.4.5 || sudo ifconfig lo:0 127.0.4.5 || netsh interface ip add address "Loopback" 127.0.4.5 255.255.255.255
 	make build
 	chmod o+rw storage bootstrap/
 	make create-mysql-database
