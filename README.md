@@ -6,7 +6,7 @@ Then you need to install databases that will serve all of our local projects
 
 
 Then you can simply follow these steps to up you project with docker
-1. Clone git@gitlab.alifshop.uz:alifuz/backend/backend-service-notify-laravel.git
+1. Clone git@gitlab.alifshop.uz:alifuz/backend/service-merchant-laravel.git
 2. Run cp env.example .env
 3. Run `make first-run` to configure your project
 
