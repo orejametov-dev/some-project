@@ -53,7 +53,7 @@ class MerchantQueryBuilder extends Builder
         return parent::exists();
     }
 
-    public function  whereIn($column, $values, $boolean = 'and', $not = false)
+    public function whereIn($column, $values, $boolean = 'and', $not = false)
     {
         return parent::whereIn($column, $values, $boolean, $not);
     }

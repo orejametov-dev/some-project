@@ -82,6 +82,7 @@ class ApplicationConditionsController extends ApiBaseController
         $massSpecialStoreConditionDTO = MassSpecialStoreConditionDTO::fromArray($request->validated());
 
         $massSpecialStoreApplicationConditionUseCase->execute($massSpecialStoreConditionDTO);
+
         return response()->json(['message' => 'Условия изменены']);
     }
 

@@ -7,8 +7,8 @@ use App\UseCases\Merchants\FindMerchantByIdUseCase;
 class DetachCompetitorUseCase
 {
     public function __construct(
-        private FindMerchantByIdUseCase       $findMerchantUseCase,
-        private FindCompetitorUseCase         $findCompetitorUseCase,
+        private FindMerchantByIdUseCase $findMerchantUseCase,
+        private FindCompetitorUseCase $findCompetitorUseCase,
         private FindMerchantCompetitorUseCase $findMerchantCompetitorUseCase,
     ) {
     }

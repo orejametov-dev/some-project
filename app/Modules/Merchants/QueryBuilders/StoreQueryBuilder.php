@@ -30,7 +30,6 @@ class StoreQueryBuilder extends Builder
         return (new StoreFilters($request, $this))->execute($filters);
     }
 
-
     /**
      * @param array $columns
      * @return StoreQueryBuilder|Store|object|null

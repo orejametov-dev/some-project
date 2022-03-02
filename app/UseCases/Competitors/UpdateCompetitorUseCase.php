@@ -5,7 +5,6 @@ namespace App\UseCases\Competitors;
 use App\DTOs\Competitors\CompetitorDTO;
 use App\Modules\Merchants\Models\Merchant;
 use App\UseCases\Merchants\FindMerchantByIdUseCase;
-use App\UseCases\Merchants\FindMerchantUseCase;
 
 class UpdateCompetitorUseCase
 {
