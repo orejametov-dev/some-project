@@ -2,7 +2,6 @@
 
 namespace App\Modules\Merchants\Models;
 
-use App\Filters\Store\StoreFilters;
 use App\Modules\Merchants\QueryBuilders\StoreQueryBuilder;
 use App\Modules\Merchants\Traits\StoreRelationshipsTrait;
 use App\Traits\SortableByQueryParams;
@@ -109,5 +108,4 @@ class Store extends Model
     {
         return $this->belongsToMany(Notification::class, 'store_notification', 'store_id', 'notification_id');
     }
-
 }

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
+use App\DTOs\Competitors\CompetitorDTO;
 use App\DTOs\Merchants\UpdateMerchantDTO;
-use App\Exceptions\ApiBusinessException;
 use App\Filters\CommonFilters\ActiveFilter;
 use App\Filters\CommonFilters\TagsFilter;
 use App\Filters\Merchant\GMerchantFilter;
@@ -15,18 +15,18 @@ use App\Http\Requests\ApiPrm\Merchants\SetMainStoreRequest;
 use App\Http\Requests\ApiPrm\Merchants\SetResponsibleUserRequest;
 use App\Http\Requests\ApiPrm\Merchants\StoreMerchantRequest;
 use App\Http\Requests\ApiPrm\Merchants\UpdateMerchantRequest;
+use App\HttpRepositories\Warehouse\WarehouseHttpRepository;
 use App\HttpServices\Company\CompanyService;
-use App\HttpServices\Warehouse\WarehouseService;
 use App\Modules\Merchants\Models\ActivityReason;
-use App\Modules\Merchants\Models\Competitor;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Tag;
-use App\UseCases\Merchants\FindMerchantByIdUseCase;
+use App\UseCases\Competitors\AttachCompetitorUseCase;
+use App\UseCases\Competitors\DetachCompetitorUseCase;
+use App\UseCases\Competitors\UpdateCompetitorUseCase;
 use App\UseCases\Merchants\SetMainStoreUseCase;
 use App\UseCases\Merchants\SetResponsibleUserUseCase;
 use App\UseCases\Merchants\StoreMerchantUseCase;
 use App\UseCases\Merchants\UpdateMerchantUseCase;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -176,12 +176,12 @@ class MerchantsController extends ApiBaseController
         return $merchant;
     }
 
-    public function toggleGeneralGoods($id, Request $request)
+    public function toggleGeneralGoods($id, Request $request, WarehouseHttpRepository $warehouseHttpRepository)
     {
         $merchant = Merchant::findOrFail($id);
         $merchant->has_general_goods = !$merchant->has_general_goods;
 
-        WarehouseService::checkDuplicateSKUs($merchant->id);
+        $warehouseHttpRepository->checkDuplicateSKUs($merchant->id);
 
         $merchant->save();
 
@@ -204,51 +204,25 @@ class MerchantsController extends ApiBaseController
         return $merchant;
     }
 
-    public function attachCompetitor($id, CompetitorsRequest $request, FindMerchantByIdUseCase $findMerchantUseCase)
+    public function attachCompetitor($id, CompetitorsRequest $request, AttachCompetitorUseCase $attachCompetitorUseCase)
     {
-        $merchant = $findMerchantUseCase->execute($id);
-        $competitor = Competitor::query()->findOrFail($request->input('competitor_id'));
+        $competitorDTO = CompetitorDTO::fromArray((int) $id, $request->validated());
+        $response = $attachCompetitorUseCase->execute($competitorDTO);
 
-        if ($merchant->competitors()->find($competitor->id)) {
-            throw new ApiBusinessException('Информация о данном конкуренте на этого мерчанта уже была создана', 'merchant_competitor_exists', [
-                'ru' => 'Информация о данном конкуренте на этого мерчанта уже была создана',
-                'uz' => 'Merchantdagi bu konkurent haqidagi ma\'lumot qo\'shib bo\'lingan ekan',
-            ], 400);
-        }
-
-        $merchant->competitors()->attach($competitor->id, [
-            'volume_sales' => $request->input('volume_sales'),
-            'percentage_approve' => $request->input('percentage_approve'),
-            'partnership_at' => $request->input('partnership_at') !== null ? Carbon::parse($request->input('partnership_at')) : null,
-        ]);
-
-        return $merchant->load('competitors');
+        return $response;
     }
 
-    public function updateCompetitor($id, CompetitorsRequest $request, FindMerchantByIdUseCase $findMerchantUseCase)
+    public function updateCompetitor($id, CompetitorsRequest $request, UpdateCompetitorUseCase $updateCompetitorUseCase)
     {
-        $merchant = $findMerchantUseCase->execute($id);
-        $competitor = Competitor::query()->findOrFail($request->input('competitor_id'));
+        $competitorDTO = CompetitorDTO::fromArray((int) $id, $request->validated());
+        $response = $updateCompetitorUseCase->execute($competitorDTO);
 
-        $merchant->competitors()->findOrFail($competitor->id);
-        $merchant->competitors()->detach($competitor->id);
-        $merchant->competitors()->attach($competitor->id, [
-            'volume_sales' => (int) $request->input('volume_sales'),
-            'percentage_approve' => (int) $request->input('percentage_approve'),
-            'partnership_at' => $request->input('partnership_at') !== null ? Carbon::parse($request->input('partnership_at')) : null,
-        ]);
-
-        return $merchant->load('competitors');
+        return $response;
     }
 
-    public function detachCompetitor($id, Request $request, FindMerchantByIdUseCase $findMerchantUseCase)
+    public function detachCompetitor($id, Request $request, DetachCompetitorUseCase $detachCompetitorUseCase)
     {
-        $merchant = $findMerchantUseCase->execute($id);
-        $competitor = Competitor::query()->findOrFail($request->input('competitor_id'));
-
-        $merchant->competitors()->findOrFail($competitor->id);
-
-        $merchant->competitors()->detach($competitor->id);
+        $detachCompetitorUseCase->execute((int) $id, (int) $request->input('competitor_id'));
 
         return response()->json(['message' => 'Данные о конкуренте были удалены у этого мерчанта']);
     }

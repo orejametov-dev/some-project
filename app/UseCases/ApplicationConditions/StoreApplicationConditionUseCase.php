@@ -17,9 +17,9 @@ class StoreApplicationConditionUseCase
 {
     public function __construct(
         private CheckStartedAtAndFinishedAtConditionUseCase $checkStartedAtAndFinishedAtConditionUseCase,
-        private FindMerchantByIdUseCase                     $findMerchantUseCase,
-        private FlushCacheUseCase                           $flushCacheUseCase,
-        private GatewayAuthUser                             $gatewayAuthUser
+        private FindMerchantByIdUseCase $findMerchantUseCase,
+        private FlushCacheUseCase $flushCacheUseCase,
+        private GatewayAuthUser $gatewayAuthUser
     ) {
     }
 

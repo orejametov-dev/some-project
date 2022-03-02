@@ -12,7 +12,7 @@ class StoreStoreUseCase
 {
     public function __construct(
         private FindMerchantByIdUseCase $findMerchantUseCase,
-        private FlushCacheUseCase       $flushCacheUseCase
+        private FlushCacheUseCase $flushCacheUseCase
     ) {
     }
 
@@ -25,7 +25,7 @@ class StoreStoreUseCase
             ->exists();
 
         if ($store_exists) {
-            throw new BusinessException('Указанное имя уже занято другим магазином','object_not_found', 400);
+            throw new BusinessException('Указанное имя уже занято другим магазином', 'object_not_found', 400);
         }
 
         $merchant_store = new Store();

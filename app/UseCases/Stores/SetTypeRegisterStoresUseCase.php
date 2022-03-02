@@ -9,7 +9,7 @@ class SetTypeRegisterStoresUseCase
 {
     public function __construct(
         private FindStoreByIdUseCase $findStoresUseCase,
-        private FlushCacheUseCase    $flushCacheUseCase
+        private FlushCacheUseCase $flushCacheUseCase
     ) {
     }
 
