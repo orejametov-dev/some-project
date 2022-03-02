@@ -62,9 +62,9 @@ class ProblemCase extends Model implements SimpleStateMachinable
     public const DONE = 3;
     public const FINISHED = 4;
 
-    public static $sources = ['CALLS', 'LAW', 'COMPLIANCE'];
+    public static array $sources = ['CALLS', 'LAW', 'COMPLIANCE'];
 
-    public static $statuses = [
+    public static array $statuses = [
         self::NEW => [
             'id' => self::NEW,
             'name' => 'Новый',
@@ -108,7 +108,7 @@ class ProblemCase extends Model implements SimpleStateMachinable
         return new ProblemCaseQueryBuilder($query);
     }
 
-    public static function getOneById(int $id)
+    public static function getOneById(int $id): self
     {
         return json_decode(json_encode(self::$statuses[$id]));
     }
@@ -181,82 +181,19 @@ class ProblemCase extends Model implements SimpleStateMachinable
         return $this->morphMany(Comment::class, 'commentable');
     }
 
-    public function scopeFilterRequests(Builder $query, Request $request)
+    public function scopeOnlyNew(Builder $query): Builder
     {
-        if ($client = $request->query('q')) {
-            collect(explode(' ', $client))->filter()->each(function ($q) use ($query) {
-                $q = '%' . $q . '%';
-
-                $query->where(function ($query) use ($q) {
-                    $query->where('client_name', 'like', $q)
-                        ->orWhere('client_surname', 'like', $q)
-                        ->orWhere('client_patronymic', 'like', $q)
-                        ->orWhere('phone', 'like', $q);
-                });
-            });
-        }
-
-        if ($id = $request->query('id')) {
-            $query->where('id', $id);
-        }
-
-        if ($request->merchant_id) {
-            $query->where('merchant_id', $request->merchant_id);
-        }
-
-        if ($request->store_id) {
-            $query->where('store_id', $request->store_id);
-        }
-
-        if ($request->query('engaged_by_id')) {
-            $query->where('engaged_by_id', $request->query('engaged_by_id'));
-        }
-
-        if ($request->query('created_at')) {
-            $query->where('created_at', $request->query('created_at'));
-        }
-
-        if ($request->query('client_id')) {
-            $query->where('client_id', $request->query('client_id'));
-        }
-
-        if ($request->query('assigned_to_id')) {
-            $query->where('assigned_to_id', $request->query('assigned_to_id'));
-        }
-
-        if ($request->query('date')) {
-            $date = Carbon::parse($request->query('date'));
-            $query->whereDate('created_at', $date);
-        }
-
-        if ($request->query('tag_id')) {
-            $query->whereHas('tags', function ($query) use ($request) {
-                $query->where('problem_case_tag_id', $request->query('tag_id'));
-            });
-        }
-
-        if ($request->query('source')) {
-            $query->where('created_from_name', 'LIKE', '%' . $request->query('source') . '%');
-        }
-
-        if ($request->query('status_id')) {
-            $query->where('status_id', $request->query('status_id'));
-        }
+        return $query->where('status_id', self::NEW);
     }
 
-    public function scopeOnlyNew(Builder $query)
+    public function scopeByMerchant(Builder $query,int $merchant_id): Builder
     {
-        $query->where('status_id', self::NEW);
+        return $query->where('merchant_id', $merchant_id);
     }
 
-    public function scopeByMerchant(Builder $query, $merchant_id)
+    public function scopeByStore(Builder $query, $store_id): Builder
     {
-        $query->where('merchant_id', $merchant_id);
-    }
-
-    public function scopeByStore(Builder $query, $store_id)
-    {
-        $query->where('store_id', $store_id);
+        return $query->where('store_id', $store_id);
     }
 
     public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder

@@ -5,11 +5,12 @@ namespace App\Modules\Merchants\Traits;
 use App\HttpRepositories\Storage\StorageHttpRepository;
 use App\HttpServices\Storage\StorageMicroService;
 use App\Modules\Merchants\Models\File;
+use App\Modules\Merchants\Models\Merchant;
 use Illuminate\Http\UploadedFile;
 
 trait MerchantFileTrait
 {
-    public function uploadLogo(UploadedFile $uploadedAvatar)
+    public function uploadLogo(UploadedFile $uploadedAvatar): self
     {
         if ($this->logo_url) {
             StorageMicroService::destroy($this->logo_url);
@@ -18,9 +19,11 @@ trait MerchantFileTrait
 
         $this->logo_url = $storage_file['url'];
         $this->save();
+
+        return $this;
     }
 
-    public function deleteLogo()
+    public function deleteLogo(): void
     {
         if (!$this->logo_url) {
             return;
@@ -31,7 +34,7 @@ trait MerchantFileTrait
         $this->save();
     }
 
-    public function uploadFile(UploadedFile $uploadedFile, $type)
+    public function uploadFile(UploadedFile $uploadedFile, string $type): File
     {
         $storage_file = (new StorageHttpRepository)->uploadFile($uploadedFile, 'merchants');
         $merchant_file = new File();
@@ -45,7 +48,7 @@ trait MerchantFileTrait
         return $merchant_file;
     }
 
-    public function deleteFile($file_id)
+    public function deleteFile(int $file_id): void
     {
         $file = $this->files()->find($file_id);
         if (!$file) {

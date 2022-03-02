@@ -5,7 +5,6 @@ namespace App\Modules\Merchants\Models;
 use App\Modules\Merchants\QueryBuilders\ConditionQueryBuilder;
 use App\Traits\SortableByQueryParams;
 use Carbon\Carbon;
-use Eloquent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -36,7 +35,6 @@ use Illuminate\Database\Query\Builder;
  * @property Carbon|null $finished_at
  * @property-read mixed $title
  * @method static ConditionQueryBuilder query()
- * @mixin Eloquent
  */
 class Condition extends Model
 {

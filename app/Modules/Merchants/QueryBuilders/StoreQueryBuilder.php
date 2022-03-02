@@ -15,7 +15,7 @@ class StoreQueryBuilder extends Builder
         return $this->where('is_main', true);
     }
 
-    public function byMerchant($merchant_id): self
+    public function byMerchant(int $merchant_id): self
     {
         return $this->where('merchant_id', $merchant_id);
     }
@@ -40,7 +40,7 @@ class StoreQueryBuilder extends Builder
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @param array $columns
      * @return StoreQueryBuilder|StoreQueryBuilder[]|Collection|Store|null
      */
@@ -53,7 +53,7 @@ class StoreQueryBuilder extends Builder
      * @param array $columns
      * @return Store[]|Collection
      */
-    public function get($columns = ['*'])
+    public function get(mixed $columns = ['*'])
     {
         return parent::get($columns);
     }
@@ -61,12 +61,16 @@ class StoreQueryBuilder extends Builder
     /**
      * @return bool
      */
-    public function exists()
+    public function exists(): bool
     {
         return parent::exists();
     }
 
-    public function count($columns = '*')
+    /**
+     * @param mixed $columns
+     * @return int
+     */
+    public function count(mixed $columns = '*'): int
     {
         return parent::count($columns);
     }

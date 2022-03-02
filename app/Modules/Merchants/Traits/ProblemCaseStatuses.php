@@ -52,7 +52,7 @@ trait ProblemCaseStatuses
         $status = self::getOneById(self::NEW);
         $this->status_updated_at = now();
         $this->status_id = $status->id;
-        $this->status_key = $status->name;
+        $this->status_key = $status['name'];
 
         return $this;
     }
@@ -78,7 +78,7 @@ trait ProblemCaseStatuses
         $this->assertStateSwitchTo($status_id);
         $this->status_updated_at = now();
         $this->status_id = $status_id;
-        $this->status_key = $status->name;
+        $this->status_key = $status['name'];
 
         return $this;
     }
