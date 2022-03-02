@@ -2,90 +2,97 @@
 
 namespace App\Modules\Merchants\Traits;
 
+use App\Modules\Merchants\Models\Request;
+use Illuminate\Database\Eloquent\Builder;
+
 trait MerchantRequestStatusesTrait
 {
-    public function isStatusNew()
+    public function isStatusNew(): bool
     {
         return $this->status_id == self::NEW;
     }
 
-    public function isInProcess()
+    public function isInProcess(): bool
     {
         return $this->status_id == self::IN_PROCESS;
     }
 
-    public function isOnTraining()
+    public function isOnTraining(): bool
     {
         return $this->status_id == self::ON_TRAINING;
     }
 
-    public function isStatusAllowed()
+    public function isStatusAllowed(): bool
     {
         return $this->status_id == self::ALLOWED;
     }
 
-    public function isStatusTrash()
+    public function isStatusTrash(): bool
     {
         return $this->status_id == self::TRASH;
     }
 
-    public function scopeNew($builder)
+    public function scopeNew(Builder $builder): Builder
     {
         return $builder->where('status_id', self::NEW);
     }
 
-    public function scopeInProcess($builder)
+    public function scopeInProcess(Builder $builder): Builder
     {
         return $builder->where('status_id', self::IN_PROCESS);
     }
 
-    public function scopeOnTraining($builder)
+    public function scopeOnTraining(Builder $builder): Builder
     {
         return $builder->where('status_id', self::ON_TRAINING);
     }
 
-    public function scopeAllowed($builder)
+    public function scopeAllowed(Builder $builder): Builder
     {
         return $builder->where('status_id', self::ALLOWED);
     }
 
-    public function scopeTrash($builder)
+    public function scopeTrash(Builder $builder): Builder
     {
         return $builder->where('status_id', self::TRASH);
     }
 
-    public function setStatusNew()
+    public function setStatusNew(): Request
     {
         $status = self::getOneById(self::NEW);
         $this->status_updated_at = now();
         $this->status_id = $status->id;
+
+        return $this;
     }
 
-    public function setStatusInProcess()
+    public function setStatusInProcess(): self
     {
-        $this->setStatus(self::IN_PROCESS);
+        return $this->setStatus(self::IN_PROCESS);
     }
 
-    public function setStatusOnTraining()
+    public function setStatusOnTraining(): self
     {
-        $this->setStatus(self::ON_TRAINING);
+        return $this->setStatus(self::ON_TRAINING);
     }
 
-    public function setStatusAllowed()
+    public function setStatusAllowed(): self
     {
-        $this->setStatus(self::ALLOWED);
+        return $this->setStatus(self::ALLOWED);
     }
 
-    public function setStatusTrash()
+    public function setStatusTrash(): self
     {
-        $this->setStatus(self::TRASH);
+        return $this->setStatus(self::TRASH);
     }
 
-    public function setStatus(int $status_id)
+    public function setStatus(int $status_id): Request
     {
         $status = self::getOneById($status_id);
         $this->assertStateSwitchTo($status->id);
         $this->status_updated_at = now();
         $this->status_id = $status_id;
+
+        return $this;
     }
 }

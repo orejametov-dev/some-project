@@ -12,7 +12,7 @@ class SaveStoreUseCase
 {
     public function __construct(
         private FindMerchantByIdUseCase $findMerchantUseCase,
-        private FlushCacheUseCase $flushCacheUseCase
+        private FlushCacheUseCase $flushCacheUseCase,
     ) {
     }
 
@@ -20,11 +20,7 @@ class SaveStoreUseCase
     {
         $merchant = $this->findMerchantUseCase->execute($storeStoresDTO->merchant_id);
 
-        $store_exists = Store::query()
-            ->where('name', $storeStoresDTO->name)
-            ->exists();
-
-        if ($store_exists) {
+        if (Store::query()->where('name', $storeStoresDTO->name)->exists() === true) {
             throw new BusinessException('Указанное имя уже занято другим магазином', 'object_not_found', 400);
         }
 

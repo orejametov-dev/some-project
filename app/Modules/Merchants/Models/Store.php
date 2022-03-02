@@ -4,7 +4,6 @@ namespace App\Modules\Merchants\Models;
 
 use App\Modules\Merchants\QueryBuilders\StoreQueryBuilder;
 use App\Traits\SortableByQueryParams;
-use Eloquent;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -37,7 +36,6 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $application_conditions_count
  * @method static StoreQueryBuilder query()
  * @property string[] $fillable
- * @mixin Eloquent
  */
 class Store extends Model
 {

@@ -174,7 +174,7 @@ class Request extends Model
         return json_decode(json_encode(self::$statuses[$id]));
     }
 
-    public function getStateAttribute()
+    public function getStateAttribute(): ?int
     {
         return $this->status_id;
     }

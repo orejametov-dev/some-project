@@ -60,7 +60,6 @@ class AppController extends ApiBaseController
             'stores_count',
             'me',
             'merchant_request_statuses',
-            'merchant_statuses',
             'problem_case_statuses',
             'file_types',
             'registration_file_types',

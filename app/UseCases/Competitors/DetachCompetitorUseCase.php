@@ -2,13 +2,13 @@
 
 namespace App\UseCases\Competitors;
 
-use App\UseCases\Merchants\FindMerchantUseCase;
+use App\UseCases\Merchants\FindMerchantByIdUseCase;
 
 class DetachCompetitorUseCase
 {
     public function __construct(
-        private FindMerchantUseCase $findMerchantUseCase,
-        private FindCompetitorUseCase $findCompetitorUseCase,
+        private FindMerchantByIdUseCase       $findMerchantUseCase,
+        private FindCompetitorUseCase         $findCompetitorUseCase,
         private FindMerchantCompetitorUseCase $findMerchantCompetitorUseCase,
     ) {
     }

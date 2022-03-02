@@ -30,6 +30,7 @@ class StoreQueryBuilder extends Builder
         return (new StoreFilters($request, $this))->execute($filters);
     }
 
+
     /**
      * @param array $columns
      * @return StoreQueryBuilder|Store|object|null
@@ -56,5 +57,18 @@ class StoreQueryBuilder extends Builder
     public function get($columns = ['*'])
     {
         return parent::get($columns);
+    }
+
+    /**
+     * @return bool
+     */
+    public function exists()
+    {
+        return parent::exists();
+    }
+
+    public function count($columns = '*')
+    {
+        return parent::count($columns);
     }
 }

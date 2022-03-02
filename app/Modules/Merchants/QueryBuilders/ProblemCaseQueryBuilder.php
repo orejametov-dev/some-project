@@ -35,4 +35,9 @@ class ProblemCaseQueryBuilder extends Builder
     {
         return parent::get($columns);
     }
+
+    public function orderByDesc($column)
+    {
+        return parent::orderByDesc($column);
+    }
 }

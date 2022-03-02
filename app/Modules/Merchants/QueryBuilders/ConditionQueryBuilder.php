@@ -57,4 +57,9 @@ class ConditionQueryBuilder extends Builder
     {
         return parent::get($columns);
     }
+
+    public function exists()
+    {
+        return parent::exists();
+    }
 }
