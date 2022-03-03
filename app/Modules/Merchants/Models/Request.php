@@ -3,6 +3,7 @@
 namespace App\Modules\Merchants\Models;
 
 use App\Filters\MerchantRequest\MerchantRequestFilters;
+use App\HttpRepositories\Storage\StorageHttpRepository;
 use App\HttpServices\Storage\StorageMicroService;
 use App\Modules\Merchants\Traits\MerchantRequestStatusesTrait;
 use App\Services\SimpleStateMachine\SimpleStateMachineTrait;
@@ -244,7 +245,7 @@ class Request extends Model
 
     public function uploadFile(UploadedFile $uploadedFile, $type)
     {
-        $storage_file = StorageMicroService::uploadFile($uploadedFile, 'merchants');
+        $storage_file = (new StorageHttpRepository)->uploadFile($uploadedFile, 'merchants');
         $merchant_request_file = new File();
         $merchant_request_file->file_type = $type;
         $merchant_request_file->mime_type = $storage_file['mime_type'];

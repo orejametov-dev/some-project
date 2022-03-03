@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
+use App\Filters\AzoMerchantAccess\GAzoMerchantAccessFilter;
+use App\Filters\CommonFilters\StoreIdFilter;
+use App\Filters\CommonFilters\UserIdsFilter;
+use App\Filters\Merchant\MerchantIdFilter;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\MerchantUsers\StoreMerchantUsers;
 use App\Http\Requests\ApiPrm\MerchantUsers\UpdateMerchantUserRequest;
@@ -17,7 +21,12 @@ class AzoMerchantAccessesController extends ApiBaseController
     {
         $azo_merchant_accesses = AzoMerchantAccess::query()
             ->with(['merchant', 'store'])
-            ->filterRequests($request)
+            ->filterRequest($request, [
+                MerchantIdFilter::class,
+                GAzoMerchantAccessFilter::class,
+                UserIdsFilter::class,
+                StoreIdFilter::class,
+            ])
             ->orderRequest($request);
 
         if ($request->query('object') == true) {

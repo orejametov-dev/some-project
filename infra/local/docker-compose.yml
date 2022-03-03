@@ -10,7 +10,7 @@ services:
       - ./php/php-fpm.conf:/usr/local/etc/php-fpm.d/www.override.conf:ro
       - ./php/php.ini:/usr/local/etc/php/conf.d/php-override.ini:ro
     ports:
-      - 127.0.4.1:9000:9000
+      - $PROJECT_IP:9000:9000
     depends_on:
       - redis
 
@@ -33,7 +33,7 @@ services:
       - ../../:/app
       - ./nginx/templates:/etc/nginx/templates
     ports:
-      - 127.0.4.1:80:80
+      - $PROJECT_IP:80:80
     environment:
       - APP_CONTAINER_NAME=$APP_CONTAINER_NAME
     depends_on:
@@ -42,7 +42,7 @@ services:
     container_name: $REDIS_CONTAINER_NAME
     image: $IMAGE_REDIS
     ports:
-      - 127.0.4.1:6379:6379
+      - $PROJECT_IP:6379:6379
 
 networks:
   default:

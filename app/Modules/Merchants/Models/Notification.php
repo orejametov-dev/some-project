@@ -118,6 +118,6 @@ class Notification extends Model
 
     public function scopeFilterRequest(Builder $builder, Request $request, array $filters = [])
     {
-        return (new NotificationFilters($request, $builder))->execute($request);
+        return (new NotificationFilters($request, $builder))->execute($filters);
     }
 }

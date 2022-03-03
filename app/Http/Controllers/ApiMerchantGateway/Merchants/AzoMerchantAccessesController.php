@@ -4,10 +4,10 @@ namespace App\Http\Controllers\ApiMerchantGateway\Merchants;
 
 use App\Exceptions\ApiBusinessException;
 use App\Http\Controllers\ApiMerchantGateway\ApiBaseController;
+use App\HttpRepositories\Notify\NotifyHttpRepository;
 use App\HttpServices\Auth\AuthMicroService;
 use App\HttpServices\Company\CompanyService;
 use App\HttpServices\Hooks\DTO\HookData;
-use App\HttpServices\Notify\NotifyMicroService;
 use App\Jobs\SendHook;
 use App\Jobs\ToggleMerchantRoleOfUser;
 use App\Modules\Merchants\Models\AzoMerchantAccess;
@@ -25,7 +25,7 @@ class AzoMerchantAccessesController extends ApiBaseController
         $merchantUsersQuery = AzoMerchantAccess::query()
             ->with(['merchant', 'store'])
             ->byMerchant($this->merchant_id)
-            ->filterRequests($request)
+            ->filterRequest($request, [])
             ->orderByDesc('updated_at');
 
         return $merchantUsersQuery->paginate($request->query('per_page') ?? 15);
@@ -75,7 +75,7 @@ class AzoMerchantAccessesController extends ApiBaseController
         return $azo_merchant_access;
     }
 
-    public function requestStore(Request $request)
+    public function requestStore(Request $request, NotifyHttpRepository $notifyHttpRepository)
     {
         $this->validate($request, [
             'phone' => 'required|string|digits:12',
@@ -94,7 +94,7 @@ class AzoMerchantAccessesController extends ApiBaseController
         if (config('app.env') == 'production') {
             $code = Randomizr::generateOtp();
             $message = SmsMessages::onAuthentication($code);
-            NotifyMicroService::sendSms($request->input('phone'), $message);
+            $notifyHttpRepository->sendSms($request->input('phone'), $message);
         } else {
             $code = 1111;
         }

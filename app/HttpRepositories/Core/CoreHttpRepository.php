@@ -31,12 +31,20 @@ class CoreHttpRepository
     {
         $data = $this->getHttpClient()->get("applications/$contract_number")->throw()->json();
 
+        if (empty($data)) {
+            return null;
+        }
+
         return CreditNumberApplicationDataResponse::fromArray($data);
     }
 
     public function getApplicationDataByApplicationId($application_id): ?ApplicationIdApplicationDataResponse
     {
         $data = $this->getHttpClient()->get("applications/$application_id")->throw()->json();
+
+        if (empty($data)) {
+            return null;
+        }
 
         return ApplicationIdApplicationDataResponse::fromArray($data);
     }

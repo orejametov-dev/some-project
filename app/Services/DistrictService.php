@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Exceptions\BusinessException;
+
 class DistrictService
 {
     private static $districts = [
@@ -490,6 +492,10 @@ class DistrictService
 
     public static function getDistrictsByRegion(string $region): array
     {
+        if (empty(self::$districts[$region])) {
+            throw new BusinessException('Данный район не был найден', 'object_not_found', 404);
+        }
+
         return self::$districts[$region];
     }
 }
