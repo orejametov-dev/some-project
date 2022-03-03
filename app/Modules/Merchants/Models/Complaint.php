@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Http\Request;
 
 /**
@@ -14,7 +15,7 @@ use Illuminate\Http\Request;
  * @property int $azo_merchant_access_id
  * @property array $meta
  * @property Carbon $created_at
- * @method static Builder|Complaint filterRequest(Request $request)
+ * @method static Builder|Complaint filterRequest(Request $request, array $filters = [])
  * @method static Builder|Complaint orderRequest(Request $request, string $default_order_str = 'id:desc')
  * @method static Builder|Complaint query()
  */
@@ -32,7 +33,7 @@ class Complaint extends Model
       'meta' => 'json',
     ];
 
-    public function azo_merchant_access()
+    public function azo_merchant_access(): BelongsTo
     {
         return $this->belongsTo(AzoMerchantAccess::class, 'azo_merchant_access_id');
     }
