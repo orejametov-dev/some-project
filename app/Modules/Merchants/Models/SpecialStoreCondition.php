@@ -2,7 +2,6 @@
 
 namespace App\Modules\Merchants\Models;
 
-use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,7 +18,6 @@ use Illuminate\Support\Carbon;
  * @method static Builder|SpecialStoreCondition newModelQuery()
  * @method static Builder|SpecialStoreCondition newQuery()
  * @method static Builder|SpecialStoreCondition query()
- * @mixin Eloquent
  */
 class SpecialStoreCondition extends Model
 {

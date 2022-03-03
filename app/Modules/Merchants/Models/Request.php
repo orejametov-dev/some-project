@@ -8,7 +8,6 @@ use App\HttpServices\Storage\StorageMicroService;
 use App\Modules\Merchants\Traits\MerchantRequestStatusesTrait;
 use App\Services\SimpleStateMachine\SimpleStateMachineTrait;
 use App\Traits\SortableByQueryParams;
-use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -58,7 +57,6 @@ use Illuminate\Support\Collection;
  * @method static Builder|Request orderRequest(\Illuminate\Http\Request $request, string $default_order_str = 'id:desc')
  * @method static Builder|Request query()
  * @method static Builder|Request trash()
- * @mixin Eloquent
  * @property int|null $stores_count
  * @property int|null $merchant_users_count
  * @property string|null $director_name

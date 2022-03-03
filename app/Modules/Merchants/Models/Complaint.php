@@ -4,7 +4,6 @@ namespace App\Modules\Merchants\Models;
 
 use App\Traits\SortableByQueryParams;
 use Carbon\Carbon;
-use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -24,7 +23,6 @@ use Illuminate\Http\Request;
  * @property-read AzoMerchantAccess $azo_merchant_access
  * @method static Builder|Complaint newModelQuery()
  * @method static Builder|Complaint newQuery()
- * @mixin Eloquent
  */
 class Complaint extends Model
 {

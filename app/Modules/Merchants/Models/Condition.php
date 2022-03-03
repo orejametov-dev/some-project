@@ -5,7 +5,6 @@ namespace App\Modules\Merchants\Models;
 use App\Filters\Condition\ConditionFilters;
 use App\Traits\SortableByQueryParams;
 use Carbon\Carbon;
-use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -37,7 +36,6 @@ use Illuminate\Http\Request;
  * @property Carbon|null $started_at
  * @property Carbon|null $finished_at
  * @property-read mixed $title
- * @mixin Eloquent
  * @property-read Collection|Store[] $stores
  * @property-read int|null $stores_count
  * @method static Builder|Condition newModelQuery()

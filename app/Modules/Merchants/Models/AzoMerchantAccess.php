@@ -5,7 +5,6 @@ namespace App\Modules\Merchants\Models;
 use App\Filters\AzoMerchantAccess\AzoMerchantAccessFilters;
 use App\Traits\SortableByQueryParams;
 use Carbon\Carbon;
-use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -34,7 +33,6 @@ use Illuminate\Http\Request;
  * @method static Builder|AzoMerchantAccess newQuery()
  * @method static Builder|AzoMerchantAccess orderRequest(Request $request, string $default_order_str = 'id:desc')
  * @method static Builder|AzoMerchantAccess query()
- * @mixin Eloquent
  * @property int|null $company_user_id
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @method static Builder|AzoMerchantAccess byActiveMerchant()

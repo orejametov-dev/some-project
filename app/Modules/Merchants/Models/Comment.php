@@ -3,7 +3,6 @@
 namespace App\Modules\Merchants\Models;
 
 use App\Traits\SortableByQueryParams;
-use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -25,10 +24,9 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Model|Eloquent $commentable
+ * @property-read Model $commentable
  * @method static Builder|Comment newModelQuery()
- * @method static Builder|Comment newQuery()
- * @mixin Eloquent
+ * @method static Builder|Comment newQuery()t
  */
 class Comment extends Model
 {

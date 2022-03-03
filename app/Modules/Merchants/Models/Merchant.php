@@ -6,7 +6,6 @@ use App\Filters\Merchant\MerchantFilters;
 use App\HttpRepositories\HttpResponses\Prm\CompanyHttpResponse;
 use App\Modules\Merchants\Traits\MerchantFileTrait;
 use App\Traits\SortableByQueryParams;
-use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -54,7 +53,6 @@ use Illuminate\Support\Str;
  * @property-read int|null $stores_count
  * @property-read Collection|Tag[] $tags
  * @property-read int|null $tags_count
- * @mixin Eloquent
  * @property int $payment_day
  * @property int $active
  * @property-read Collection|ActivityReason[] $activity_reasons

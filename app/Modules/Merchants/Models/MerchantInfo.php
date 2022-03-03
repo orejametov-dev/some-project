@@ -4,7 +4,6 @@ namespace App\Modules\Merchants\Models;
 
 use App\DTOs\MerchantInfos\StoreMerchantInfoDTO;
 use App\Filters\MerchantInfo\MerchantInfoFilters;
-use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -37,7 +36,6 @@ use Illuminate\Http\Request;
  * @method static Builder|MerchantInfo newModelQuery()
  * @method static Builder|MerchantInfo newQuery()
  * @method static Builder|MerchantInfo query()
- * @mixin Eloquent
  * @method static Builder|MerchantInfo filtersRequest(Request $request, array $filters = [])
  */
 class MerchantInfo extends Model

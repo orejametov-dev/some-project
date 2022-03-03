@@ -4,7 +4,6 @@ namespace App\Modules\Merchants\Models;
 
 use App\Filters\Store\StoreFilters;
 use App\Traits\SortableByQueryParams;
-use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -37,7 +36,6 @@ use Illuminate\Support\Carbon;
  * @property-read Collection|Condition[] $application_conditions
  * @property-read int|null $application_conditions_count
  * @property string[] $filable
- * @mixin Eloquent
  * @property int $is_archived
  * @property bool $active
  * @property string|null $district

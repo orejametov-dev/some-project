@@ -5,7 +5,6 @@ namespace App\Modules\Merchants\Models;
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\Filters\Notification\NotificationFilters;
 use Carbon\Carbon;
-use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -38,7 +37,6 @@ use Illuminate\Http\Request;
  * @method static Builder|Notification onlyByMerchant($merchant_id)
  * @method static Builder|Notification onlyByStore($store_id)
  * @method static Builder|Notification onlyMoreThanStartSchedule()
- * @mixin Eloquent
  */
 class Notification extends Model
 {

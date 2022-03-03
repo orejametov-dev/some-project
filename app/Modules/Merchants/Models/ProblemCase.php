@@ -7,7 +7,6 @@ use App\Modules\Merchants\Traits\ProblemCaseStatuses;
 use App\Services\SimpleStateMachine\SimpleStateMachinable;
 use App\Services\SimpleStateMachine\SimpleStateMachineTrait;
 use Carbon\Carbon;
-use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -75,7 +74,6 @@ use Illuminate\Http\Request;
  * @method static Builder|ProblemCase newQuery()
  * @method static Builder|ProblemCase onlyNew()
  * @method static Builder|ProblemCase query()
- * @mixin Eloquent
  */
 class ProblemCase extends Model implements SimpleStateMachinable
 {

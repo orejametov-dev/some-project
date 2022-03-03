@@ -2,7 +2,6 @@
 
 namespace App\Modules\Merchants\Models;
 
-use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,7 +18,6 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @method static Builder|ConditionTemplate newModelQuery()
  * @method static Builder|ConditionTemplate newQuery()
- * @mixin Eloquent
  */
 class ConditionTemplate extends Model
 {

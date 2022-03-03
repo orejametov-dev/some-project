@@ -2,7 +2,6 @@
 
 namespace App\Modules\Merchants\Models;
 
-use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,7 +20,6 @@ use Illuminate\Support\Carbon;
  * @method static Builder|CancelReason newModelQuery()
  * @method static Builder|CancelReason newQuery()
  * @method static Builder|CancelReason query()
- * @mixin Eloquent
  */
 class CancelReason extends Model
 {
