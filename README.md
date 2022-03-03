@@ -1,22 +1,32 @@
-Service Law
-Relations -> Plectica.
-Quick start
-1. Clone project
-   git@gitlab.alifshop.uz:alifuz/backend/service-merchant-laravel.git
-2. Copy .env.example file to .env
-   cp .env.example .env
-3. Install composer and npm:
-   composer install
-   or
-   composer install --ignore-platform-reqs
-   npm install
-4. Generate unique application key:
-   php artisan key:generate
-5. Now we need to fill this fields in .env as in your local db. For Example:
-   DB_DATABASE=service_merchants DB_USERNAME=service_merchants DB_PASSWORD=123
+First you need to download docker and docker-compose on your host-machine 
+Then you need to install databases that will serve all of our local projects
+1. Clone [git@gitlab.alifshop.uz](mailto:git@gitlab.alifshop.uz):alifuz/backend/backend-infra.git
 
-Run migrations and seeds:
+2. Run `make build`
 
-php artisan migrate:fresh --seed
-6. run in local server:
-   php artisan serve
+
+Then you can simply follow these steps to up you project with docker
+1. Clone git@gitlab.alifshop.uz:alifuz/backend/service-merchant-laravel.git
+2. Run cp env.example .env
+3. Run `make first-run` to configure your project
+
+   Works on linux and Mac!
+
+   При первом запуске у вас выйдет окно которое запросит Username и Password от [gitlab.alifshop.uz](http://gitlab.alifshop.uz) !!! Это нужно будет ввести один раз как видно из названия команды
+
+   также если у вас mac или linux у вас запросит пароль от рута
+
+
+4. Run `make install` to install composer
+
+5. Run `make laravel {name}`
+
+   Позволяет запускать команды `php artisan`
+
+   ex. : `make laravel name="key:generate"`
+
+6. Run `make laravel name="migrate:fresh --seed""`
+
+
+
+

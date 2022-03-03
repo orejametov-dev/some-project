@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\HttpServices\Notify\NotifyMicroService;
+use App\HttpRepositories\Notify\NotifyHttpRepository;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -33,8 +33,8 @@ class SendSmsJob implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
+    public function handle(NotifyHttpRepository $notifyHttpRepository)
     {
-        NotifyMicroService::sendSms($this->phone, $this->message, NotifyMicroService::PROBLEM_CASE);
+        $notifyHttpRepository->sendSms($this->phone, $this->message, NotifyHttpRepository::PROBLEM_CASE);
     }
 }
