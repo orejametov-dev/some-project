@@ -2,10 +2,30 @@
 
 namespace App\Modules\Merchants\Models;
 
+use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
+/**
+ * App\Modules\Merchants\Models\ProblemCaseTag.
+ *
+ * @property int $id
+ * @property string $body
+ * @property int $type_id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Collection|ProblemCase[] $problem_cases
+ * @property-read int|null $problem_cases_count
+ * @method static Builder|ProblemCaseTag filterRequests(Request $request)
+ * @method static Builder|ProblemCaseTag newModelQuery()
+ * @method static Builder|ProblemCaseTag newQuery()
+ * @method static Builder|ProblemCaseTag query()
+ * @mixin Eloquent
+ */
 class ProblemCaseTag extends Model
 {
     use HasFactory;
@@ -20,7 +40,7 @@ class ProblemCaseTag extends Model
         return $this->belongsToMany(ProblemCase::class, 'problem_cases', 'problem_case_tag_id', 'problem_case_id');
     }
 
-    public function scopeFilterRequests(Builder $query, \Illuminate\Http\Request $request)
+    public function scopeFilterRequests(Builder $query, Request $request)
     {
         if ($request->query('q')) {
             $query->where('body', 'LIKE', '%' . $request->query('q') . '%');

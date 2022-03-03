@@ -92,7 +92,6 @@ class StoresController extends ApiBaseController
             ->active()
             ->where('is_special', false)
             ->byMerchant($store->merchant_id)
-            ->filterRequests($request)
             ->orderRequest($request)->get();
 
         return $conditionQuery->merge($special_conditions)->sortByDesc('updated_at');

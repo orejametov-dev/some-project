@@ -10,7 +10,7 @@ parameters:
         - /app/routes
         - /app/tests
 
-    level: 6
+    level: 5
 
     tmpDir: /app/storage/framework/cache/phpstan
 

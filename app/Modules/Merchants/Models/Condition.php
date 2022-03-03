@@ -2,15 +2,17 @@
 
 namespace App\Modules\Merchants\Models;
 
-use App\Modules\Merchants\QueryBuilders\ConditionQueryBuilder;
+use App\Filters\Condition\ConditionFilters;
 use App\Traits\SortableByQueryParams;
 use Carbon\Carbon;
 use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Http\Request;
 
 /**
  * Class ApplicationCondition.
@@ -35,8 +37,17 @@ use Illuminate\Database\Query\Builder;
  * @property Carbon|null $started_at
  * @property Carbon|null $finished_at
  * @property-read mixed $title
- * @method static ConditionQueryBuilder query()
  * @mixin Eloquent
+ * @property-read Collection|Store[] $stores
+ * @property-read int|null $stores_count
+ * @method static Builder|Condition newModelQuery()
+ * @method static Builder|Condition newQuery()
+ * @method static Builder|Condition orderRequest(Request $request, string $default_order_str = 'id:desc')
+ * @method static Builder|Condition query()
+ * @method static Builder|Condition active()
+ * @method static Builder|Condition byMerchant($merchant_id)
+ * @method static Builder|Condition filterRequest(\Illuminate\Http\Request $request, array $filters = [])
+ * @method static Builder|Condition postMerchant()
  */
 class Condition extends Model
 {
@@ -58,15 +69,6 @@ class Condition extends Model
     ];
     protected $appends = ['title'];
 
-    /**
-     * @param Builder $query
-     * @return ConditionQueryBuilder
-     */
-    public function newEloquentBuilder($query)
-    {
-        return new ConditionQueryBuilder($query);
-    }
-
     //Relationships
     public function store(): BelongsTo
     {
@@ -86,5 +88,25 @@ class Condition extends Model
     public function getTitleAttribute()
     {
         return $this->duration . 'м' . ' / ' . $this->commission . '%';
+    }
+
+    public function scopeByMerchant(Builder $query, $merchant_id): Builder
+    {
+        return $query->where('merchant_id', $merchant_id);
+    }
+
+    public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder
+    {
+        return (new ConditionFilters($request, $builder))->execute($filters);
+    }
+
+    public function scopeActive($builder): Builder
+    {
+        return $builder->where('active', true);
+    }
+
+    public function scopePostMerchant($builder): Builder
+    {
+        return $builder->where('post_merchant', true);
     }
 }
