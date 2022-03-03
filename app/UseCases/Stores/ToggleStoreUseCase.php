@@ -19,7 +19,7 @@ class ToggleStoreUseCase
 
     public function execute(int $id, int $activity_reason_id): Store
     {
-        $active_reason = ActivityReason::where('type', 'STORE')->find($activity_reason_id);
+        $active_reason = ActivityReason::query()->where('type', 'STORE')->find($activity_reason_id);
 
         if ($active_reason === null) {
             throw new  BusinessException('Причина не найден', 'object_not_found', 404);

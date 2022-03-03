@@ -44,18 +44,6 @@ class ProblemCasesController extends ApiBaseController
                 MerchantIdFilter::class,
                 ])->orderBy('created_at', 'DESC');
 
-//        $problemCases = ProblemCase::with('tags')
-//            ->filterRequests($request)
-//            ->orderBy('created_at', 'DESC');
-//
-//        if ($request->has('object') and $request->query('object') == true) {
-//            return $problemCases->first();
-//        }
-//
-//        if ($request->has('paginate') and $request->query('paginate') == false) {
-//            return $problemCases->get();
-//        }
-
         return $problemCases->paginate($request->query('per_page') ?? 15);
     }
 

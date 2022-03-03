@@ -11,7 +11,6 @@ class MerchantsController extends Controller
     public function index(Request $request)
     {
         $query = Merchant::query()
-            ->filterRequests($request)
             ->latest();
 
         if ($request->query('object') == true) {

@@ -28,6 +28,7 @@ use Illuminate\Http\Request;
  * @method static Builder|AdditionalAgreement newQuery()
  * @method static Builder|AdditionalAgreement query()
  * @mixin Eloquent
+ * @property string|null $document_type
  */
 class AdditionalAgreement extends Model
 {

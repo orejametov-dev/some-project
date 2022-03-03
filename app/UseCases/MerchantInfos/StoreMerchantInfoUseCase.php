@@ -20,7 +20,7 @@ class StoreMerchantInfoUseCase
     {
         $merchant = $this->findMerchantUseCase->execute($storeMerchantInfoDTO->merchant_id);
 
-        if (MerchantInfo::where('merchant_id', $merchant->id)->exists()) {
+        if (MerchantInfo::query()->where('merchant_id', $merchant->id)->exists()) {
             throw new BusinessException('Партнер уже имеет основной договор');
         }
 

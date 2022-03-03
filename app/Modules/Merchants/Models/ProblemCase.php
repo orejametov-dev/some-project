@@ -3,12 +3,13 @@
 namespace App\Modules\Merchants\Models;
 
 use App\Filters\ProblemCase\ProblemCaseFilters;
-use App\Modules\Merchants\QueryBuilders\ProblemCaseQueryBuilder;
 use App\Modules\Merchants\Traits\ProblemCaseStatuses;
 use App\Services\SimpleStateMachine\SimpleStateMachinable;
 use App\Services\SimpleStateMachine\SimpleStateMachineTrait;
 use Carbon\Carbon;
+use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,6 +18,8 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Http\Request;
 
 /**
+ * App\Modules\Merchants\Models\ProblemCase.
+ *
  * @property int $id
  * @property int $merchant_id
  * @property int $store_id
@@ -49,7 +52,30 @@ use Illuminate\Http\Request;
  * @property ProblemCaseTag|null $before_tags
  * @property ProblemCaseTag|null $tags
  * @property-read Store|null $store
+ * @property string $status_updated_at
+ * @property int|null $assigned_to_id
+ * @property string|null $assigned_to_name
+ * @property string|null $manager_comment
+ * @property string|null $engaged_at
+ * @property-read int|null $before_tags_count
+ * @property-read Collection|Comment[] $comments
+ * @property-read int|null $comments_count
+ * @property-read mixed $state
+ * @property-read Merchant $merchant
+ * @property-read int|null $tags_count
+ * @method static Builder|ProblemCase byMerchant($merchant_id)
+ * @method static Builder|ProblemCase byStore($store_id)
+ * @method static Builder|ProblemCase done()
  * @method static Builder|ProblemCase filterRequest(Request $request, array $filters = [])
+ * @method static Builder|ProblemCase filterRequests(Request $request)
+ * @method static Builder|ProblemCase finished()
+ * @method static Builder|ProblemCase inProcess()
+ * @method static Builder|ProblemCase new()
+ * @method static Builder|ProblemCase newModelQuery()
+ * @method static Builder|ProblemCase newQuery()
+ * @method static Builder|ProblemCase onlyNew()
+ * @method static Builder|ProblemCase query()
+ * @mixin Eloquent
  */
 class ProblemCase extends Model implements SimpleStateMachinable
 {
@@ -99,16 +125,7 @@ class ProblemCase extends Model implements SimpleStateMachinable
         ],
     ];
 
-    /**
-     * @param  \Illuminate\Database\Query\Builder $query
-     * @return ProblemCaseQueryBuilder
-     */
-    public function newEloquentBuilder($query)
-    {
-        return new ProblemCaseQueryBuilder($query);
-    }
-
-    public static function getOneById(int $id): self
+    public static function getOneById(int $id)
     {
         return json_decode(json_encode(self::$statuses[$id]));
     }
@@ -179,6 +196,69 @@ class ProblemCase extends Model implements SimpleStateMachinable
     public function comments(): MorphMany
     {
         return $this->morphMany(Comment::class, 'commentable');
+    }
+
+    public function scopeFilterRequests(Builder $query, Request $request)
+    {
+        if ($client = $request->query('q')) {
+            collect(explode(' ', $client))->filter()->each(function ($q) use ($query) {
+                $q = '%' . $q . '%';
+
+                $query->where(function ($query) use ($q) {
+                    $query->where('client_name', 'like', $q)
+                        ->orWhere('client_surname', 'like', $q)
+                        ->orWhere('client_patronymic', 'like', $q)
+                        ->orWhere('phone', 'like', $q);
+                });
+            });
+        }
+
+        if ($id = $request->query('id')) {
+            $query->where('id', $id);
+        }
+
+        if ($request->merchant_id) {
+            $query->where('merchant_id', $request->merchant_id);
+        }
+
+        if ($request->store_id) {
+            $query->where('store_id', $request->store_id);
+        }
+
+        if ($request->query('engaged_by_id')) {
+            $query->where('engaged_by_id', $request->query('engaged_by_id'));
+        }
+
+        if ($request->query('created_at')) {
+            $query->where('created_at', $request->query('created_at'));
+        }
+
+        if ($request->query('client_id')) {
+            $query->where('client_id', $request->query('client_id'));
+        }
+
+        if ($request->query('assigned_to_id')) {
+            $query->where('assigned_to_id', $request->query('assigned_to_id'));
+        }
+
+        if ($request->query('date')) {
+            $date = Carbon::parse($request->query('date'));
+            $query->whereDate('created_at', $date);
+        }
+
+        if ($request->query('tag_id')) {
+            $query->whereHas('tags', function ($query) use ($request) {
+                $query->where('problem_case_tag_id', $request->query('tag_id'));
+            });
+        }
+
+        if ($request->query('source')) {
+            $query->where('created_from_name', 'LIKE', '%' . $request->query('source') . '%');
+        }
+
+        if ($request->query('status_id')) {
+            $query->where('status_id', $request->query('status_id'));
+        }
     }
 
     public function scopeOnlyNew(Builder $query): Builder

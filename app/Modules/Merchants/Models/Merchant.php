@@ -2,10 +2,12 @@
 
 namespace App\Modules\Merchants\Models;
 
+use App\Filters\Merchant\MerchantFilters;
 use App\HttpRepositories\HttpResponses\Prm\CompanyHttpResponse;
-use App\Modules\Merchants\QueryBuilders\MerchantQueryBuilder;
 use App\Modules\Merchants\Traits\MerchantFileTrait;
 use App\Traits\SortableByQueryParams;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
@@ -52,7 +54,22 @@ use Illuminate\Support\Str;
  * @property-read int|null $stores_count
  * @property-read Collection|Tag[] $tags
  * @property-read int|null $tags_count
- * @method static MerchantQueryBuilder query()
+ * @mixin Eloquent
+ * @property int $payment_day
+ * @property int $active
+ * @property-read Collection|ActivityReason[] $activity_reasons
+ * @property-read int|null $activity_reasons_count
+ * @property-read Collection|Condition[] $application_active_conditions
+ * @property-read int|null $application_active_conditions_count
+ * @property-read int|null $azo_merchant_accesses_count
+ * @property-read Collection|Competitor[] $competitors
+ * @property-read int|null $competitors_count
+ * @method static Builder|Merchant newModelQuery()
+ * @method static Builder|Merchant newQuery()
+ * @method static Builder|Merchant orderRequest(Request $request, string $default_order_str = 'id:desc')
+ * @method static Builder|Merchant query()
+ * @method static Builder|Merchant active()
+ * @method static Builder|Merchant filterRequest(\Illuminate\Http\Request $request, array $filters = [])
  */
 class Merchant extends Model
 {
@@ -87,15 +104,6 @@ class Merchant extends Model
         'alifshop_slug' => 'Алифшоп слаг',
         'information' => 'Информация',
     ];
-
-    /**
-     * @param Builder $query
-     * @return MerchantQueryBuilder
-     */
-    public function newEloquentBuilder($query)
-    {
-        return new MerchantQueryBuilder($query);
-    }
 
     public function getLogoPathAttribute()
     {
@@ -170,5 +178,15 @@ class Merchant extends Model
     public function competitors(): BelongsToMany
     {
         return $this->belongsToMany(Competitor::class, 'merchant_competitor')->withPivot('volume_sales', 'percentage_approve', 'partnership_at')->withTimestamps();
+    }
+
+    public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder
+    {
+        return (new MerchantFilters($request, $builder))->execute($filters);
+    }
+
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('active', true);
     }
 }

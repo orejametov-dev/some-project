@@ -2,8 +2,10 @@
 
 namespace App\Modules\Merchants\Models;
 
-use App\Modules\Merchants\QueryBuilders\StoreQueryBuilder;
+use App\Filters\Store\StoreFilters;
 use App\Traits\SortableByQueryParams;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
 /**
@@ -34,7 +36,25 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read Collection|Condition[] $application_conditions
  * @property-read int|null $application_conditions_count
- * @method static StoreQueryBuilder query()
+ * @property string[] $filable
+ * @mixin Eloquent
+ * @property int $is_archived
+ * @property bool $active
+ * @property string|null $district
+ * @property-read Collection|ActivityReason[] $activity_reasons
+ * @property-read int|null $activity_reasons_count
+ * @property-read Collection|Condition[] $conditions
+ * @property-read int|null $conditions_count
+ * @property-read Collection|Notification[] $notifications
+ * @property-read int|null $notifications_count
+ * @method static Builder|Store newModelQuery()
+ * @method static Builder|Store newQuery()
+ * @method static Builder|Store orderRequest(Request $request, string $default_order_str = 'id:desc')
+ * @method static Builder|Store query()
+ * @method static Builder|Store active()
+ * @method static Builder|Store byMerchant($merchant_id)
+ * @method static Builder|Store filterRequest(\Illuminate\Http\Request $request, array $filters = [])
+ * @method static Builder|Store main()
  * @property string[] $fillable
  */
 class Store extends Model
@@ -59,15 +79,6 @@ class Store extends Model
         'client_type_register',
     ];
 
-    /**
-     * @param Builder $query
-     * @return StoreQueryBuilder
-     */
-    public function newEloquentBuilder($query)
-    {
-        return new StoreQueryBuilder($query);
-    }
-
     public function notifications(): BelongsToMany
     {
         return $this->belongsToMany(Notification::class, 'store_notification', 'store_id', 'notification_id');
@@ -91,5 +102,25 @@ class Store extends Model
     public function conditions(): BelongsToMany
     {
         return $this->belongsToMany(Condition::class, 'special_store_conditions', 'store_id', 'condition_id');
+    }
+
+    public function scopeMain($query): Builder
+    {
+        return $query->where('is_main', true);
+    }
+
+    public function scopeByMerchant(Builder $query, $merchant_id): Builder
+    {
+        return $query->where('merchant_id', $merchant_id);
+    }
+
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('active', true);
+    }
+
+    public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder
+    {
+        return (new StoreFilters($request, $builder))->execute($filters);
     }
 }

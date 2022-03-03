@@ -107,7 +107,7 @@ class MerchantsController extends ApiBaseController
         $merchant = Merchant::query()->findOrFail($id);
         $tags = $request->input('tags');
 
-        $tags = Tag::whereIn('id', $tags)->get();
+        $tags = Tag::query()->whereIn('id', $tags)->get();
 
         foreach ($request->input('tags') as $tag) {
             if (!$tags->contains('id', $tag)) {
@@ -155,7 +155,7 @@ class MerchantsController extends ApiBaseController
             'activity_reason_id' => 'integer|required',
         ]);
 
-        $activity_reason = ActivityReason::where('type', 'MERCHANT')
+        $activity_reason = ActivityReason::query()->where('type', 'MERCHANT')
             ->findOrFail($request->input('activity_reason_id'));
 
         $merchant = Merchant::findOrFail($id);
