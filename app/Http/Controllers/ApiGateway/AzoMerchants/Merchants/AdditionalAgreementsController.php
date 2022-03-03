@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
 use App\Exceptions\BusinessException;
+use App\Filters\Merchant\MerchantIdFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiPrm\Merchants\StoreAdditionalAgreements;
 use App\Modules\Merchants\Models\AdditionalAgreement;
@@ -16,7 +17,7 @@ class AdditionalAgreementsController extends Controller
     public function index(Request $request)
     {
         $additional_agreements = AdditionalAgreement::query()
-            ->filterRequest($request);
+            ->filterRequest($request, [MerchantIdFilter::class]);
 
         if ($request->query('object') == 'true') {
             return $additional_agreements->first();
