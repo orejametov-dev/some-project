@@ -25,7 +25,7 @@ class AzoMerchantAccessesController extends ApiBaseController
         $merchantUsersQuery = AzoMerchantAccess::query()
             ->with(['merchant', 'store'])
             ->byMerchant($this->merchant_id)
-            ->filterRequests($request)
+            ->filterRequest($request, [])
             ->orderByDesc('updated_at');
 
         return $merchantUsersQuery->paginate($request->query('per_page') ?? 15);
