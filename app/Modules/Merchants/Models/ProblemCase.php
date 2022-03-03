@@ -88,9 +88,9 @@ class ProblemCase extends Model implements SimpleStateMachinable
     public const DONE = 3;
     public const FINISHED = 4;
 
-    public static $sources = ['CALLS', 'LAW', 'COMPLIANCE'];
+    public static array $sources = ['CALLS', 'LAW', 'COMPLIANCE'];
 
-    public static $statuses = [
+    public static array $statuses = [
         self::NEW => [
             'id' => self::NEW,
             'name' => 'Новый',
@@ -130,7 +130,7 @@ class ProblemCase extends Model implements SimpleStateMachinable
         return json_decode(json_encode(self::$statuses[$id]));
     }
 
-    public function getStateAttribute()
+    public function getStateAttribute(): ?int
     {
         return $this->status_id;
     }
@@ -266,7 +266,7 @@ class ProblemCase extends Model implements SimpleStateMachinable
         return $query->where('status_id', self::NEW);
     }
 
-    public function scopeByMerchant(Builder $query, $merchant_id): Builder
+    public function scopeByMerchant(Builder $query, int $merchant_id): Builder
     {
         return $query->where('merchant_id', $merchant_id);
     }

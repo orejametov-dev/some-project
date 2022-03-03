@@ -6,12 +6,18 @@ use Throwable;
 
 class SimpleStateMachineException extends \Exception
 {
-    private $error_code;
+    private string $error_code;
 
+    /**
+     * @param string $message
+     * @param string $error_code
+     * @param int $code
+     * @param Throwable|null $previous
+     */
     public function __construct(
-        $message = 'Невозможно переключиться с текущего статуса на указанный.',
-        $error_code = 'STATE_MACHINE_ASSERTION_FAILED',
-        $code = 400,
+        string $message = 'Невозможно переключиться с текущего статуса на указанный.',
+        string $error_code = 'STATE_MACHINE_ASSERTION_FAILED',
+        int $code = 400,
         Throwable $previous = null
     ) {
         parent::__construct($message, $code, $previous);

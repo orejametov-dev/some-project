@@ -9,17 +9,17 @@ use Illuminate\Support\Facades\Cache;
 
 class OtpProtector
 {
-    private $key;
-    private $cached_info;
+    private string $key;
+    private Cache $cached_info;
     const EXPIRES_IN = 600; // 10 min
 
-    public function __construct($key)
+    public function __construct(string $key)
     {
         $this->key = $key;
         $this->cached_info = Cache::tags(CacheService::OTP)->get($this->key);
     }
 
-    public function writeOtpToCache($otp)
+    public function writeOtpToCache(int $otp): void
     {
         // если первый раз отправили - сохраняем в кеш и ставим expires in
         // если второй раз отправили - сохраняем код но не меняем expires in
@@ -47,7 +47,7 @@ class OtpProtector
         }
     }
 
-    public function verifyOtp($otp, $forget = true)
+    public function verifyOtp(int $otp, bool $forget = true): void
     {
         $this->cached_info = Cache::tags(CacheService::OTP)->get($this->key);
         if (!$this->cached_info) {
@@ -69,7 +69,7 @@ class OtpProtector
         }
     }
 
-    public function verifyRequestOtpCount()
+    public function verifyRequestOtpCount(): void
     {
         if (!empty($this->cached_info['otps']) and count($this->cached_info['otps']) >= 3) {
             throw new ApiBusinessException('Лимит исчерпан', 'limit_exceeded', [

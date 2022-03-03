@@ -22,9 +22,7 @@ class TogglePostsApplicationConditionUseCase
 
         $merchant = $condition->merchant;
 
-        $main_store = $merchant->stores()->where('is_main', true)->exists();
-
-        if ($main_store === false) {
+        if ($merchant->stores()->where('is_main', true)->exists() === false) {
             throw new BusinessException('У данного мерчанта нет основного магазина ' . $merchant->name, 'main_store_not_exists', 400);
         }
 

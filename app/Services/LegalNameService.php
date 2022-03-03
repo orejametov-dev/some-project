@@ -6,7 +6,7 @@ use App\Exceptions\ApiBusinessException;
 
 class LegalNameService
 {
-    private static $legal_name_prefixes = [
+    private static array $legal_name_prefixes = [
         'LLC' => [
             'body_uz' => [
                 'value' => 'MCHJ',
@@ -85,7 +85,7 @@ class LegalNameService
         return self::$legal_name_prefixes;
     }
 
-    public static function findNamePrefix($prefix): array
+    public static function findNamePrefix(string $prefix): array
     {
         if (!array_key_exists($prefix, self::$legal_name_prefixes)) {
             throw new ApiBusinessException("Такого юр.имени нету $prefix", 'prefix_not_have', [
