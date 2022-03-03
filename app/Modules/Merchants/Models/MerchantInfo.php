@@ -37,7 +37,6 @@ use Illuminate\Http\Request;
  * @method static Builder|MerchantInfo newModelQuery()
  * @method static Builder|MerchantInfo newQuery()
  * @method static Builder|MerchantInfo query()
- * @method static Builder|MerchantInfo filtersRequest(Request $request, array $filters = [])
  */
 class MerchantInfo extends Model
 {
@@ -105,7 +104,7 @@ class MerchantInfo extends Model
         return $merchantInfo;
     }
 
-    public function scopeFiltersRequest(Builder $builder, Request $request, array $filters = []): Builder
+    public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder
     {
         return (new MerchantInfoFilters($request, $builder))->execute($filters);
     }
