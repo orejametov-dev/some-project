@@ -93,11 +93,6 @@ class Condition extends Model
         return $query->where('merchant_id', $merchant_id);
     }
 
-    public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder
-    {
-        return (new ConditionFilters($request, $builder))->execute($filters);
-    }
-
     public function scopeActive($builder): Builder
     {
         return $builder->where('active', true);
@@ -106,5 +101,10 @@ class Condition extends Model
     public function scopePostMerchant($builder): Builder
     {
         return $builder->where('post_merchant', true);
+    }
+
+    public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder
+    {
+        return (new ConditionFilters($request, $builder))->execute($filters);
     }
 }

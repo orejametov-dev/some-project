@@ -7,6 +7,7 @@ use App\Filters\MerchantInfo\MerchantInfoFilters;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Http\Request;
 
 /**
@@ -64,7 +65,7 @@ class MerchantInfo extends Model
 
     public $timestamps = false;
 
-    public function merchant()
+    public function merchant(): BelongsTo
     {
         return $this->belongsTo(Merchant::class);
     }
@@ -104,7 +105,7 @@ class MerchantInfo extends Model
         return $merchantInfo;
     }
 
-    public function scopeFiltersRequest(Builder $builder, Request $request, array $filters = [])
+    public function scopeFiltersRequest(Builder $builder, Request $request, array $filters = []): Builder
     {
         return (new MerchantInfoFilters($request, $builder))->execute($filters);
     }

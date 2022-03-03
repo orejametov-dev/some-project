@@ -25,7 +25,6 @@ use Illuminate\Http\Request;
  * @property string $type
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @method static Builder|Notification filterRequests(Request $request)
  * @method static Builder|Notification filterRequest(Request $request, array $filters = [])
  * @method static Builder|Notification query()
  * @property int $created_by_id
@@ -126,7 +125,7 @@ class Notification extends Model
         $query->where('start_schedule', '<=', now());
     }
 
-    public function scopeFilterRequest(Builder $builder, Request $request, array $filters = [])
+    public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder
     {
         return (new NotificationFilters($request, $builder))->execute($filters);
     }

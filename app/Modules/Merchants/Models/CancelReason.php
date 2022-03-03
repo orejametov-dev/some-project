@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -25,7 +26,7 @@ class CancelReason extends Model
 {
     use HasFactory;
 
-    public function merchant_requests()
+    public function merchant_requests(): HasMany
     {
         return $this->hasMany(Request::class);
     }
