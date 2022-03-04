@@ -38,10 +38,10 @@ class MerchantsController extends ApiBaseController
         $merchants = Merchant::query()
             ->with(['stores', 'tags', 'activity_reasons' => function ($query) {
                 $query
-                    ->whereHas('merchants' , function ($query) {
+                    ->whereHas('merchants', function ($query) {
                         $query->where('merchants.active', false);
                     })
-                    ->where('merchant_activities.active' ,false)
+                    ->where('merchant_activities.active', false)
                     ->orderByDesc('id')
                     ->take(1);
             }])
@@ -68,7 +68,7 @@ class MerchantsController extends ApiBaseController
     public function store(StoreMerchantRequest $request, StoreMerchantUseCase $storeMerchantUseCase)
     {
         $merchant = $storeMerchantUseCase->execute(
-            company_id: (int)$request->input('company_id')
+            company_id: (int) $request->input('company_id')
         );
 
         return $merchant;
@@ -76,7 +76,7 @@ class MerchantsController extends ApiBaseController
 
     public function update($id, UpdateMerchantRequest $request, UpdateMerchantUseCase $updateMerchantUseCase)
     {
-        $updateMerchantDTO = UpdateMerchantDTO::fromArray((int)$id, $request->validated());
+        $updateMerchantDTO = UpdateMerchantDTO::fromArray((int) $id, $request->validated());
         $merchant = $updateMerchantUseCase->execute($updateMerchantDTO);
 
         return $merchant;
@@ -215,7 +215,7 @@ class MerchantsController extends ApiBaseController
 
     public function attachCompetitor($id, CompetitorsRequest $request, AttachCompetitorUseCase $attachCompetitorUseCase)
     {
-        $competitorDTO = CompetitorDTO::fromArray((int)$id, $request->validated());
+        $competitorDTO = CompetitorDTO::fromArray((int) $id, $request->validated());
         $response = $attachCompetitorUseCase->execute($competitorDTO);
 
         return $response;
@@ -223,7 +223,7 @@ class MerchantsController extends ApiBaseController
 
     public function updateCompetitor($id, CompetitorsRequest $request, UpdateCompetitorUseCase $updateCompetitorUseCase)
     {
-        $competitorDTO = CompetitorDTO::fromArray((int)$id, $request->validated());
+        $competitorDTO = CompetitorDTO::fromArray((int) $id, $request->validated());
         $response = $updateCompetitorUseCase->execute($competitorDTO);
 
         return $response;
@@ -231,7 +231,7 @@ class MerchantsController extends ApiBaseController
 
     public function detachCompetitor($id, Request $request, DetachCompetitorUseCase $detachCompetitorUseCase)
     {
-        $detachCompetitorUseCase->execute((int)$id, (int)$request->input('competitor_id'));
+        $detachCompetitorUseCase->execute((int) $id, (int) $request->input('competitor_id'));
 
         return response()->json(['message' => 'Данные о конкуренте были удалены у этого мерчанта']);
     }
