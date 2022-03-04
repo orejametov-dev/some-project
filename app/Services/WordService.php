@@ -34,11 +34,11 @@ class WordService
         $contract_file = storage_path($contract_path);
         $contract_template = new TemplateProcessor($contract_file);
         $current_date = $merchant_info->contract_date;
-        $legal_name_prefix = LegalNameService::findNamePrefix($merchant_info->legal_name_prefix);
+        $legal_name_prefix = LegalNameService::findNamePrefix($merchant_info->merchant->legal_name_prefix);
 
         $contract_template->setValue('date', Carbon::parse($current_date)->translatedFormat('«d» F Y'));
 
-        $contract_template->setValue('legal_name', $merchant_info->legal_name);
+        $contract_template->setValue('legal_name', $merchant_info->merchant->legal_name);
         $contract_template->setValue('legal_name_prefix', $legal_name_prefix['body_ru']['value']);
         $contract_template->setValue('director_name', $merchant_info->director_name);
         $contract_template->setValue('phone', '+' .
@@ -78,7 +78,7 @@ class WordService
         $contract_template = new TemplateProcessor($contract_file);
         $current_date = $merchant_info->contract_date;
         $limit = $additional_agreement->limit / 100;
-        $legal_name_prefix = LegalNameService::findNamePrefix($merchant_info->legal_name_prefix);
+        $legal_name_prefix = LegalNameService::findNamePrefix($merchant_info->merchant->legal_name_prefix);
 
         $contract_template->setValue('current_date', Carbon::parse($current_date)->translatedFormat('«d» F Y'));
 
@@ -89,7 +89,7 @@ class WordService
         $contract_template->setValue('limit_expired_at', Carbon::parse($additional_agreement->limit_expired_at)->format('Y-m-d'));
 
         /*Merchant Infos fields*/
-        $contract_template->setValue('legal_name', $merchant_info->legal_name);
+        $contract_template->setValue('legal_name', $merchant_info->merchant->legal_name);
         $contract_template->setValue('legal_name_prefix', $legal_name_prefix['body_ru']['value']);
         $contract_template->setValue('director_name', $merchant_info->director_name);
         $contract_template->setValue('phone', '+' .

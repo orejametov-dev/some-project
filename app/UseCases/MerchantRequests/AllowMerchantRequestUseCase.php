@@ -52,8 +52,6 @@ class AllowMerchantRequestUseCase
         $merchantInfo = MerchantInfo::fromDTO(new StoreMerchantInfoDTO(
             merchant_id: $merchant->id,
             director_name: $merchant_request->director_name,
-            legal_name: $company->legal_name,
-            legal_name_prefix: $company->legal_name_prefix,
             phone: $merchant_request->phone,
             vat_number: $merchant_request->vat_number,
             mfo: $merchant_request->mfo,

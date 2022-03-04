@@ -6,6 +6,7 @@ use App\Filters\Merchant\MerchantFilters;
 use App\HttpRepositories\HttpResponses\Prm\CompanyHttpResponse;
 use App\Modules\Merchants\Traits\MerchantFileTrait;
 use App\Traits\SortableByQueryParams;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,8 +16,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Str;
 
 /**
  * App\Modules\Merchants\Models\Merchant.
@@ -25,14 +24,10 @@ use Illuminate\Support\Str;
  * @property string $name
  * @property string|null $legal_name
  * @property string|null $legal_name_prefix
- * @property string|null $information
  * @property string|null $token
- * @property string $alifshop_slug
- * @property string|null $telegram_chat_id
  * @property int $has_general_goods
  * @property string|null $logo_url
  * @property bool $recommend
- * @property string|null $paymo_terminal
  * @property int|null $maintainer_id
  * @property int|null $current_sales
  * @property int $company_id
@@ -82,12 +77,8 @@ class Merchant extends Model
         'legal_name',
         'legal_name_prefix',
         'token',
-        'alifshop_slug',
-        'information',
         'logo_url',
-        'telegram_chat_id',
         'has_general_goods',
-        'paymo_terminal_id',
         'min_application_price',
         'active',
     ];
@@ -99,8 +90,6 @@ class Merchant extends Model
         'name' => 'Название партнёра',
         'legal_name' => 'Юридическое имя',
         'token' => 'Токен алифшопа',
-        'alifshop_slug' => 'Алифшоп слаг',
-        'information' => 'Информация',
     ];
 
     public function getLogoPathAttribute()
@@ -120,7 +109,6 @@ class Merchant extends Model
         $merchant->legal_name = $company->legal_name;
         $merchant->legal_name_prefix = $company->legal_name_prefix;
         $merchant->token = $company->token;
-        $merchant->alifshop_slug = Str::slug($company->name);
         $merchant->maintainer_id = $user_id;
         $merchant->company_id = $company->id;
 
