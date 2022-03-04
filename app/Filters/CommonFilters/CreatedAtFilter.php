@@ -11,7 +11,7 @@ class CreatedAtFilter extends AbstractExactFilter
     public function filter(Builder $builder, mixed $value): void
     {
         $date = Carbon::parse($value)->format('Y-m-d');
-        $builder->where('created_at', $date);
+        $builder->where('created_at', 'LIKE', '%' . $date . '%');
     }
 
     public function getBindingName(): string
