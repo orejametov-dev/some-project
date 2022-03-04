@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Filters\Store;
+namespace App\Filters\Tag;
 
 use App\Filters\AbstractExactFilter;
 use Illuminate\Database\Eloquent\Builder;
 
-class GStoreFilter extends AbstractExactFilter
+class QTagFilter extends AbstractExactFilter
 {
     public function filter(Builder $builder, mixed $value): void
     {
-        $builder->where('name', 'like', '%' . $value . '%');
+        $builder->where('title', 'LIKE', '%' . $value . '%');
     }
 
     public function getBindingName(): string

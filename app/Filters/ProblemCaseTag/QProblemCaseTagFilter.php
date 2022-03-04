@@ -1,20 +1,19 @@
 <?php
 
-namespace App\Filters\Complaint;
+namespace App\Filters\ProblemCaseTag;
 
 use App\Filters\AbstractExactFilter;
 use Illuminate\Database\Eloquent\Builder;
 
-class ReasonCorrectionFilter extends AbstractExactFilter
+class QProblemCaseTagFilter extends AbstractExactFilter
 {
-
     public function filter(Builder $builder, mixed $value): void
     {
-        // TODO: Implement filter() method.
+        $builder->where('body', 'LIKE', '%' . $value . '%');
     }
 
     public function getBindingName(): string
     {
-        // TODO: Implement getBindingName() method.
+        return 'q';
     }
 }

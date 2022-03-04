@@ -5,7 +5,7 @@ namespace App\Filters\MerchantRequest;
 use App\Filters\AbstractExactFilter;
 use Illuminate\Database\Eloquent\Builder;
 
-class GMerchantRequestFilter extends AbstractExactFilter
+class QMerchantRequestFilter extends AbstractExactFilter
 {
     public function filter(Builder $builder, mixed $value): void
     {
