@@ -38,7 +38,6 @@ use Illuminate\Http\Request;
  * @property-read mixed $title
  * @method static Builder|Condition active()
  * @method static Builder|Condition postMerchant()
- * @method static Builder|Condition filterRequests(Request $request)
  * @method static Builder|Condition filterRequest(Request $request, array $filters = [])
  * @method static Builder|Condition newModelQuery()
  * @method static Builder|Condition newQuery()
@@ -92,47 +91,12 @@ class Condition extends Model
         return $builder->where('post_merchant', true);
     }
 
-    public function scopeFilterRequests(Builder $query, Request $request)
-    {
-        if ($condition_ids = $request->query('condition_ids')) {
-            $condition_ids = explode(';', $condition_ids);
-            $query->whereIn('id', $condition_ids);
-        }
-        if ($condition_id = $request->query('condition_id')) {
-            $query->where('id', $condition_id);
-        }
-
-        if ($store_id = $request->store_id) {
-            $query->where('store_id', $store_id);
-        }
-        if ($merchant_id = $request->merchant_id) {
-            $query->where('merchant_id', $merchant_id);
-        }
-        if ($updated_at = $request->query('updated_at')) {
-            $query->where('updated_at', $updated_at);
-        }
-        if ($discount = $request->query('discount')) {
-            $query->where('discount', $discount);
-        }
-        if ($commission = $request->query('commission')) {
-            $query->where('commission', $commission);
-        }
-        if ($duration = $request->query('duration')) {
-            $query->where('duration', $duration);
-        }
-        if ($request->has('active')) {
-            $query->where('active', $request->query('active'));
-        }
-
-        return $query;
-    }
-
-    public function getTitleAttribute()
+    public function getTitleAttribute(): string
     {
         return $this->duration . 'м' . ' / ' . $this->commission . '%';
     }
 
-    public function scopeByMerchant(Builder $query, $merchant_id)
+    public function scopeByMerchant(Builder $query, $merchant_id): Builder
     {
         return $query->where('merchant_id', $merchant_id);
     }

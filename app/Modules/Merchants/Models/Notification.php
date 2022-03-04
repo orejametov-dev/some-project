@@ -24,7 +24,6 @@ use Illuminate\Http\Request;
  * @property string $type
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @method static Builder|Notification filterRequests(Request $request)
  * @method static Builder|Notification filterRequest(Request $request, array $filters = [])
  * @method static Builder|Notification query()
  */
@@ -80,43 +79,12 @@ class Notification extends Model
         });
     }
 
-    public function scopeFilterRequests(Builder $query, Request $request)
-    {
-        if ($request->query('q')) {
-            $query->where('title_uz', 'LIKE', '%' . $request->query('q') . '%')
-                ->orWhere('title_ru', 'LIKE', '%' . $request->query('q') . '%');
-        }
-        if ($request->merchant_id) {
-            $query->whereHas('stores', function (Builder $query) use ($request) {
-                $query->where('stores.merchant_id', $request->merchant_id);
-            });
-        }
-
-        if ($request->query('created_by_id')) {
-            $query->where('created_by_id', $request->query('created_by_id'));
-        }
-
-        if ($request->query('created_at')) {
-            $date = \Carbon\Carbon::parse($request->query('created_at'))->format('Y-m-d');
-            $query->whereDate('created_at', $date);
-        }
-
-        if ($request->has('published') && $request->query('published') == true) {
-            $query->where('start_schedule', '<=', now())
-                ->where('end_schedule', '>=', now());
-        }
-
-        if ($request->has('published') && $request->query('published') == false) {
-            $query->where('end_schedule', '<=', now());
-        }
-    }
-
     public function scopeOnlyMoreThanStartSchedule(Builder $query)
     {
         $query->where('start_schedule', '<=', now());
     }
 
-    public function scopeFilterRequest(Builder $builder, Request $request, array $filters = [])
+    public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder
     {
         return (new NotificationFilters($request, $builder))->execute($filters);
     }

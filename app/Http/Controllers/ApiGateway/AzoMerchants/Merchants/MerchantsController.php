@@ -6,8 +6,8 @@ use App\DTOs\Competitors\CompetitorDTO;
 use App\DTOs\Merchants\UpdateMerchantDTO;
 use App\Filters\CommonFilters\ActiveFilter;
 use App\Filters\CommonFilters\TagsFilter;
-use App\Filters\Merchant\GMerchantFilter;
 use App\Filters\Merchant\MaintainerIdFilter;
+use App\Filters\Merchant\QMerchantFilter;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Competitors\CompetitorsRequest;
 use App\Http\Requests\ApiPrm\Files\StoreFileRequest;
@@ -37,7 +37,7 @@ class MerchantsController extends ApiBaseController
     {
         $merchants = Merchant::query()->with(['stores', 'tags'])
             ->filterRequest($request, [
-                GMerchantFilter::class,
+                QMerchantFilter::class,
                 ActiveFilter::class,
                 MaintainerIdFilter::class,
                 TagsFilter::class,

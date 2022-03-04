@@ -5,9 +5,9 @@ namespace App\Http\Controllers\ApiGateway\AzoMerchants\Stores;
 use App\Exceptions\BusinessException;
 use App\Filters\CommonFilters\CreatedAtFilter;
 use App\Filters\CommonFilters\CreatedByIdFilter;
-use App\Filters\Notification\GNotificationFilter;
 use App\Filters\Notification\MerchantIdNotificationFilter;
 use App\Filters\Notification\PublishedFilter;
+use App\Filters\Notification\QNotificationFilter;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Notification;
@@ -23,7 +23,7 @@ class NotificationsController extends ApiBaseController
     {
         $notifications = Notification::query()
             ->filterRequest($request, [
-                GNotificationFilter::class,
+                QNotificationFilter::class,
                 CreatedAtFilter::class,
                 CreatedByIdFilter::class,
                 MerchantIdNotificationFilter::class,

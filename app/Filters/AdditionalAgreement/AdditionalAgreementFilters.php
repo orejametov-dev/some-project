@@ -1,24 +1,13 @@
 <?php
 
-namespace App\Filters\Store;
+namespace App\Filters\AdditionalAgreement;
 
 use App\Filters\AbstractFilters;
-use App\Filters\CommonFilters\ActiveFilter;
-use App\Filters\CommonFilters\IdFilter;
 use App\Filters\Merchant\MerchantIdFilter;
-use App\Filters\Merchant\MerchantIdsFilter;
 
-class StoreFilters extends AbstractFilters
+class AdditionalAgreementFilters extends AbstractFilters
 {
     protected array $filters = [
-        MerchantIdsFilter::class,
-        StoreIdsFilter::class,
-        IdFilter::class,
-        IsMainFilter::class,
-        RegionFilter::class,
-        ActiveFilter::class,
-        QStoreFilter::class,
-        StoreIdFilter::class,
         MerchantIdFilter::class,
     ];
 

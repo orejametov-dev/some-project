@@ -10,7 +10,7 @@ class MerchantTagsController extends Controller
 {
     public function index(Request $request)
     {
-        return Tag::query()->filterRequests($request)
+        return Tag::query()->filterRequest($request, [])
             ->paginate($request->query('per_page') ?? 15);
     }
 }

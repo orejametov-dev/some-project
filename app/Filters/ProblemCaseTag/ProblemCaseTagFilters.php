@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Filters\MerchantInfo;
+namespace App\Filters\ProblemCaseTag;
 
 use App\Filters\AbstractFilters;
-use App\Filters\Merchant\MerchantIdsFilter;
 
-class MerchantInfoFilters extends AbstractFilters
+class ProblemCaseTagFilters extends AbstractFilters
 {
     protected array $filters = [
-        MerchantIdsFilter::class,
-
+        QProblemCaseTagFilter::class,
+        TypeIdFilter::class,
     ];
 
     protected function getRequestBindings(): array

@@ -17,7 +17,7 @@ class RemoveColumnsToMerchantsTable extends Migration
             $table->dropColumn('alifshop_slug');
             $table->dropColumn('information');
             $table->dropColumn('telegram_chat_id');
-            $table->dropColumn('paymo_terminal_id');
+            //$table->dropColumn('paymo_terminal_id');
         });
     }
 

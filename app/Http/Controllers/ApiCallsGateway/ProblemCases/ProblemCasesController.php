@@ -6,7 +6,7 @@ use App\DTOs\ProblemCases\ProblemCaseDTO;
 use App\Exceptions\BusinessException;
 use App\Filters\CommonFilters\ClientIdFilter;
 use App\Filters\CommonFilters\StatusIdFilter;
-use App\Filters\ProblemCase\GProblemCaseFilter;
+use App\Filters\ProblemCase\QProblemCaseFilter;
 use App\Http\Controllers\ApiCallsGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\ProblemCases\ProblemCaseStoreRequest;
 use App\Http\Resources\ApiCallsGateway\ProblemCases\ProblemCaseResource;
@@ -22,7 +22,7 @@ class ProblemCasesController extends ApiBaseController
             ->with(['merchant', 'before_tags'])
             ->whereIn('created_from_name', ['CALLS', 'LAW'])
             ->filterRequest($request, [
-                GProblemCaseFilter::class,
+                QProblemCaseFilter::class,
                 StatusIdFilter::class,
                 ClientIdFilter::class,
             ]);

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases;
 
+use App\Filters\ProblemCaseTag\QProblemCaseTagFilter;
+use App\Filters\ProblemCaseTag\TypeIdFilter;
 use App\Http\Controllers\Controller;
 use App\Modules\Merchants\Models\ProblemCaseTag;
 use Illuminate\Http\Request;
@@ -11,7 +13,10 @@ class ProblemCaseTagsController extends Controller
     public function index(Request $request)
     {
         $tags = ProblemCaseTag::query()
-            ->filterRequests($request)
+            ->filterRequest($request, [
+                QProblemCaseTagFilter::class,
+                TypeIdFilter::class,
+            ])
             ->orderBy('created_at', 'DESC');
 
         if ($request->has('object') and $request->query('object') == true) {

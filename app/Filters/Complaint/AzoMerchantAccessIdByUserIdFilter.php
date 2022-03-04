@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Filters\Store;
+namespace App\Filters\Complaint;
 
 use App\Filters\AbstractExactFilter;
 use Illuminate\Database\Eloquent\Builder;
 
-class GStoreFilter extends AbstractExactFilter
+class AzoMerchantAccessIdByUserIdFilter extends AbstractExactFilter
 {
     public function filter(Builder $builder, mixed $value): void
     {
-        $builder->where('name', 'like', '%' . $value . '%');
+        $builder->where('azo_merchant_access_id', $value);
     }
 
     public function getBindingName(): string
     {
-        return 'q';
+        return 'user_id';
     }
 }

@@ -7,7 +7,6 @@ use App\HttpRepositories\HttpResponses\Prm\CompanyHttpResponse;
 use App\Modules\Merchants\Traits\MerchantFileTrait;
 use App\Modules\Merchants\Traits\MerchantRelationshipsTrait;
 use App\Traits\SortableByQueryParams;
-use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -47,7 +46,6 @@ use Illuminate\Support\Str;
  * @property-read int|null $stores_count
  * @property-read Collection|Tag[] $tags
  * @property-read int|null $tags_count
- * @method static Builder|Merchant filterRequests(Request $request)
  * @method static Builder|Merchant filterRequest(Request $request, array $filters = [])
  * @method static Builder|Merchant newModelQuery()
  * @method static Builder|Merchant newQuery()
@@ -91,81 +89,6 @@ class Merchant extends Model
         }
 
         return config('local_services.services_storage.domain') . $this->logo_url;
-    }
-
-    public function scopeFilterRequests(Builder $query, Request $request)
-    {
-        if ($merchant_ids = $request->query('merchant_ids')) {
-            $merchant_ids = explode(';', $merchant_ids);
-            $query->whereIn('id', $merchant_ids);
-        }
-
-        if ($q = $request->query('q')) {
-            $query->where(function ($query) use ($q) {
-                $query->where('legal_name', 'like', '%' . $q . '%')
-                    ->orWhere('name', 'like', '%' . $q . '%');
-            });
-
-            if (is_numeric($q)) {
-                $query->orWhereHas('merchant_info', function (Builder $query) use ($q) {
-                    $query->Where('tin', $q)
-                        ->orWhere('contract_number', $q);
-                });
-            }
-        }
-
-        if ($merchant_id = $request->query('merchant_id')) {
-            $query->where('id', $merchant_id);
-        }
-
-        if ($merchant_id = $request->query('id')) {
-            $query->where('id', $merchant_id);
-        }
-
-        if ($legal_name = $request->query('legal_name')) {
-            $query->where('legal_name', $legal_name);
-        }
-
-        if ($request->query('date')) {
-            $date = Carbon::parse($request->query('date'));
-            $query->whereDate('created_at', $date);
-        }
-
-        if ($maintainer_id = $request->query('maintainer_id')) {
-            $query->where('maintainer_id', $maintainer_id);
-        }
-
-        if ($tags_string = $request->query('tags')) {
-            $tags = explode(';', $tags_string);
-
-            $query->whereHas('tags', function ($query) use ($tags) {
-                $query->whereIn('id', $tags);
-            });
-        }
-
-        if ($region = $request->query('region')) {
-            $query->whereHas('stores', function ($query) use ($region) {
-                $query->where('region', $region);
-            });
-        }
-
-        if ($token = $request->query('token')) {
-            $query->where('token', $token);
-        }
-
-        if ($status_id = $request->query('status_id')) {
-            $query->where('status_id', $status_id);
-        }
-
-        if ($request->has('active')) {
-            $query->where('active', $request->query('active'));
-        }
-
-        if ($request->query('tin')) {
-            $query->whereHas('merchant_info', function ($query) use ($request) {
-                $query->where('tin', $request->query('tin'));
-            });
-        }
     }
 
     public function scopeActive(Builder $query)
