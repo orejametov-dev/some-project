@@ -9,6 +9,7 @@ class MerchantInfoFilters extends AbstractFilters
 {
     protected array $filters = [
         MerchantIdsFilter::class,
+
     ];
 
     protected function getRequestBindings(): array

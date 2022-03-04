@@ -20,6 +20,7 @@ class AzoMerchantAccessFilters extends AbstractFilters
         UserIdsFilter::class,
         MerchantIdFilter::class,
         StoreIdFilter::class,
+
     ];
 
     protected function getRequestBindings(): array

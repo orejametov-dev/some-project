@@ -5,6 +5,7 @@ namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 use App\DTOs\MerchantRequest\StoreMerchantRequestDTO;
 use App\Exceptions\BusinessException;
 use App\Filters\CommonFilters\StatusIdFilter;
+use App\Filters\MerchantRequest\CreatedFromNameFilter;
 use App\Filters\MerchantRequest\QMerchantRequestFilter;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestStore;
@@ -28,6 +29,7 @@ class MerchantRequestsController extends ApiBaseController
             ->filterRequest($request, [
                 QMerchantRequestFilter::class,
                 StatusIdFilter::class,
+                CreatedFromNameFilter::class,
             ])
             ->orderRequest($request);
 

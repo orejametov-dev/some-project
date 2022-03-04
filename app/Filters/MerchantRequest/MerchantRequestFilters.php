@@ -10,6 +10,7 @@ class MerchantRequestFilters extends AbstractFilters
     protected array $filters = [
         QMerchantRequestFilter::class,
         StatusIdFilter::class,
+        CreatedFromNameFilter::class,
     ];
 
     protected function getRequestBindings(): array
