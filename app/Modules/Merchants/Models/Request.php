@@ -23,7 +23,6 @@ use Illuminate\Support\Collection;
  *
  * @property int $id
  * @property string $name
- * @property string $information
  * @property string|null $legal_name
  * @property string|null $legal_name_prefix
  * @property string $user_name
@@ -48,7 +47,6 @@ use Illuminate\Support\Collection;
  * @property-read mixed $status
  * @method static Builder|Request allowed()
  * @method static Builder|Request filterRequest(\Illuminate\Http\Request $request, array $filters = [])
- * @method static Builder|Request onlyCompletedRequests(\Illuminate\Http\Request $request)
  * @method static Builder|Request inProcess()
  * @method static Builder|Request onTraining()
  * @method static Builder|Request new()
@@ -79,7 +77,6 @@ class Request extends Model
         'name',
         'user_name',
         'user_phone',
-        'information',
         'region',
         'district',
         'stores_count',
@@ -227,12 +224,7 @@ class Request extends Model
         $query->where('token', $token);
     }
 
-    public function scopeOnlyCompletedRequests(Builder $query, \Illuminate\Http\Request $request)
-    {
-        $query->where('completed', true);
-    }
-
-    public function uploadFile(UploadedFile $uploadedFile, $type): File
+    public function uploadFile(UploadedFile $uploadedFile, $type)
     {
         $storage_file = (new StorageHttpRepository)->uploadFile($uploadedFile, 'merchants');
         $merchant_request_file = new File();

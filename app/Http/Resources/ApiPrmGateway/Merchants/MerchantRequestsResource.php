@@ -19,7 +19,6 @@ class MerchantRequestsResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'information' => $this->information,
             'created_from_name' => $this->created_from_name,
             'created_at' => $this->created_at,
             'engaged_by' => [
