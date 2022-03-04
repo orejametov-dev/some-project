@@ -47,7 +47,6 @@ use Illuminate\Support\Collection;
  * @property-read Collection|File[] $files
  * @property-read mixed $status
  * @method static Builder|Request allowed()
- * @method static Builder|Request filterRequests(\Illuminate\Http\Request $request)
  * @method static Builder|Request filterRequest(\Illuminate\Http\Request $request, array $filters = [])
  * @method static Builder|Request onlyCompletedRequests(\Illuminate\Http\Request $request)
  * @method static Builder|Request inProcess()
@@ -223,33 +222,6 @@ class Request extends Model
         return $this->belongsTo(CancelReason::class);
     }
 
-    public function scopeFilterRequests(Builder $query, \Illuminate\Http\Request $request)
-    {
-        if ($q = $request->query('q')) {
-            $query->where('name', 'like', '%' . $q . '%')
-                ->orWhere('information', 'like', '%' . $q . '%')
-                ->orWhere('legal_name', 'like', '%' . $q . '%')
-                ->orWhere('user_name', 'like', '%' . $q . '%')
-                ->orWhere('user_phone', 'like', '%' . $q . '%');
-        }
-
-        if ($status = $request->query('status_id')) {
-            $query->where('status_id', $status);
-        }
-
-        if ($created_from_name = $request->query('created_from_name')) {
-            $query->where('created_from_name', $created_from_name);
-        }
-
-        if ($request->has('completed') && $request->query('completed') == true) {
-            $query->where('completed', true);
-        }
-
-        if ($request->has('completed') && $request->query('completed') == false) {
-            $query->where('completed', false);
-        }
-    }
-
     public function scopeOnlyByToken(Builder $query, $token)
     {
         $query->where('token', $token);
@@ -260,7 +232,7 @@ class Request extends Model
         $query->where('completed', true);
     }
 
-    public function uploadFile(UploadedFile $uploadedFile, $type)
+    public function uploadFile(UploadedFile $uploadedFile, $type): File
     {
         $storage_file = (new StorageHttpRepository)->uploadFile($uploadedFile, 'merchants');
         $merchant_request_file = new File();
@@ -292,7 +264,7 @@ class Request extends Model
         $this->engaged_at = now();
     }
 
-    public function scopeFilterRequest(Builder $builder, \Illuminate\Http\Request $request, array $filters = [])
+    public function scopeFilterRequest(Builder $builder, \Illuminate\Http\Request $request, array $filters = []): Builder
     {
         return (new MerchantRequestFilters($request, $builder))->execute($filters);
     }

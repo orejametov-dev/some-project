@@ -2,6 +2,7 @@
 
 namespace App\Modules\Merchants\Models;
 
+use App\Filters\Complaint\ComplaintFilters;
 use App\Traits\SortableByQueryParams;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -38,22 +39,8 @@ class Complaint extends Model
         return $this->belongsTo(AzoMerchantAccess::class, 'azo_merchant_access_id');
     }
 
-    public function scopeFilterRequest(Builder $query, Request $request)
+    public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder
     {
-        if ($id = $request->query('id')) {
-            $query->where('id', $id);
-        }
-
-        if ($azo_merchant_access_id = $request->query('user_id')) {
-            $query->where('azo_merchant_access_id', $azo_merchant_access_id);
-        }
-
-        if ($azo_merchant_access_id = $request->query('azo_merchant_access_id')) {
-            $query->where('azo_merchant_access_id', $azo_merchant_access_id);
-        }
-
-        if ($reason_correction = $request->query('reason_correction')) {
-            $query->where('reason_correction', 'LIKE', $reason_correction . '%');
-        }
+        return (new ComplaintFilters($request, $builder))->execute($filters);
     }
 }

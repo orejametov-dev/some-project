@@ -33,7 +33,6 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read Collection|Condition[] $application_conditions
  * @property-read int|null $application_conditions_count
- * @method static Builder|Store filterRequests(Request $request)
  * @method static Builder|Store filterRequest(Request $request, array $filters = [])
  * @method static Builder|Store main()
  * @method static Builder|Store newModelQuery()
@@ -64,43 +63,6 @@ class Store extends Model
         'client_type_register',
     ];
 
-    public function scopeFilterRequests(Builder $query, Request $request)
-    {
-        $searchIndex = $request->q;
-        if ($merchant_id = $request->query('merchant_id')) {
-            $query->where('merchant_id', $merchant_id);
-        }
-
-        if ($store_id = $request->query('store_id')) {
-            $query->where('id', $store_id);
-        }
-
-        if ($store_id = $request->query('id')) {
-            $query->where('id', $store_id);
-        }
-
-        if ($store_ids = $request->query('store_ids')) {
-            $store_ids = explode(';', $store_ids);
-            $query->whereIn('id', $store_ids);
-        }
-
-        if ($is_main = $request->query('is_main')) {
-            $query->where('is_main', $is_main);
-        }
-
-        if ($searchIndex) {
-            $query->where('name', 'like', '%' . $searchIndex . '%');
-        }
-
-        if ($request->query('region')) {
-            $query->where('region', $request->query('region'));
-        }
-
-        if ($request->has('active')) {
-            $query->where('active', $request->query('active'));
-        }
-    }
-
     public function scopeMain($query)
     {
         return $query->where('is_main', true);
@@ -121,7 +83,7 @@ class Store extends Model
         $query->where('active', true);
     }
 
-    public function scopeFilterRequest(Builder $builder, Request $request, array $filters = [])
+    public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder
     {
         return (new StoreFilters($request, $builder))->execute($filters);
     }

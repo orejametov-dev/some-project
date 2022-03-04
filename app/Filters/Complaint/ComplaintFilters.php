@@ -11,7 +11,6 @@ class ComplaintFilters extends AbstractFilters
         IdFilter::class,
         AzoMerchantAccessIdByUserIdFilter::class,
         AzoMerchantAccessByAccessIdFilter::class,
-        ReasonCorrectionFilter::class,
     ];
 
     protected function getRequestBindings(): array
