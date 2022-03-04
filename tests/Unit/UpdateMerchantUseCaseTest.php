@@ -23,8 +23,6 @@ class UpdateMerchantUseCaseTest extends TestCase
 //            'legal_name' => 'test',
 //            'legal_name_prefix' => 'test',
 //            'token' => 'test',
-//            'alifshop_slug' => 'test',
-//            'information' => 'test',
 //            'min_application_price' => 12321312
 //        ]);
 //
@@ -36,8 +34,6 @@ class UpdateMerchantUseCaseTest extends TestCase
 //            legal_name: 'test',
 //            legal_name_prefix: 'test',
 //            token: 'test',
-//            alifshop_slug: 'test',
-//            information: 'test',
 //            min_application_price: 12321312
 //        );
 //
@@ -52,8 +48,6 @@ class UpdateMerchantUseCaseTest extends TestCase
 //            'legal_name' => 'test',
 //            'legal_name_prefix' => 'test',
 //            'token' => 'test',
-//            'alifshop_slug' => 'test',
-//            'information' => 'test',
 //            'min_application_price' => 12321312
 //        ]);
 //
@@ -65,8 +59,6 @@ class UpdateMerchantUseCaseTest extends TestCase
 //            legal_name: 'test',
 //            legal_name_prefix: 'test',
 //            token: 'test',
-//            alifshop_slug: 'test',
-//            information: 'test',
 //            min_application_price: 12321312
 //        );
 //

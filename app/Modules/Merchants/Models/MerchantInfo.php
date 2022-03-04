@@ -87,8 +87,6 @@ class MerchantInfo extends Model
         $merchantInfo = new self();
 
         $merchantInfo->merchant_id = $storeMerchantInfoDTO->merchant_id;
-        $merchantInfo->legal_name = $storeMerchantInfoDTO->legal_name;
-        $merchantInfo->legal_name_prefix = $storeMerchantInfoDTO->legal_name_prefix;
         $merchantInfo->director_name = $storeMerchantInfoDTO->director_name;
         $merchantInfo->phone = $storeMerchantInfoDTO->phone;
         $merchantInfo->vat_number = $storeMerchantInfoDTO->vat_number;
