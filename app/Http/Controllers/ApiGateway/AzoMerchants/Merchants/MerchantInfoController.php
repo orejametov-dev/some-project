@@ -17,7 +17,7 @@ class MerchantInfoController extends Controller
     public function index(Request $request)
     {
         $merchantInfoQuery = MerchantInfo::query()
-            ->with('merchant')
+            ->with('merchant:id,legal_name,legal_name_prefix')
             ->filterRequests($request);
 
         if ($request->query('object') == true) {
