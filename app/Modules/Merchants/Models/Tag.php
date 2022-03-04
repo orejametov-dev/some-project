@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
 /**
@@ -19,6 +21,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read Collection|Merchant[] $merchants
  * @property-read int|null $merchants_count
+ * @method static Builder|Store filterRequest(Request $request, array $filters = [])
  * @method static Builder|Tag newModelQuery()
  * @method static Builder|Tag newQuery()
  * @method static Builder|Tag query()
@@ -30,19 +33,12 @@ class Tag extends Model
 
     protected $table = 'merchant_tags';
 
-    public function merchants()
+    public function merchants(): MorphToMany
     {
         return $this->morphedByMany(Merchant::class, 'merchant', 'merchant_tag', 'tag_id', 'merchant_id')->withTimestamps();
     }
 
-    public function scopeFilterRequests(Builder $query, \Illuminate\Http\Request $request)
-    {
-        if ($request->query('q')) {
-            $query->where('title', 'LIKE', '%' . $request->query('q') . '%');
-        }
-    }
-
-    public function scopeFilterRequest(Builder $builder, \Illuminate\Http\Request $request, array $filters = [])
+    public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder
     {
         return (new TagFilters($request, $builder))->execute($filters);
     }
