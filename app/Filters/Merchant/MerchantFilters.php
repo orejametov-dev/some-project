@@ -12,7 +12,7 @@ use App\Filters\CommonFilters\TagsFilter;
 class MerchantFilters extends AbstractFilters
 {
     protected array $filters = [
-        GMerchantFilter::class,
+        QMerchantFilter::class,
         MerchantIdsFilter::class,
         IdFilter::class,
         TagsFilter::class,

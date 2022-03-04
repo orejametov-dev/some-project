@@ -9,7 +9,7 @@ use App\Filters\CommonFilters\CreatedByIdFilter;
 class NotificationFilters extends AbstractFilters
 {
     protected array $filters = [
-        GNotificationFilter::class,
+        QNotificationFilter::class,
         MerchantIdNotificationFilter::class,
         CreatedByIdFilter::class,
         CreatedAtFilter::class,

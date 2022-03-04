@@ -17,7 +17,7 @@ class StoreFilters extends AbstractFilters
         IsMainFilter::class,
         RegionFilter::class,
         ActiveFilter::class,
-        GStoreFilter::class,
+        QStoreFilter::class,
         StoreIdFilter::class,
         MerchantIdFilter::class,
     ];
