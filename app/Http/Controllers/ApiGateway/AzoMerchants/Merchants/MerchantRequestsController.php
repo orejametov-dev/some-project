@@ -4,6 +4,8 @@ namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
 use App\DTOs\MerchantRequest\StoreMerchantRequestDTO;
 use App\Exceptions\BusinessException;
+use App\Filters\CommonFilters\StatusIdFilter;
+use App\Filters\MerchantRequest\QMerchantRequestFilter;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestStore;
 use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestStoreDocuments;
@@ -23,7 +25,10 @@ class MerchantRequestsController extends ApiBaseController
     public function index(Request $request)
     {
         $merchantRequests = MerchantRequest::query()
-            ->filterRequests($request)
+            ->filterRequest($request, [
+                QMerchantRequestFilter::class,
+                StatusIdFilter::class,
+            ])
             ->orderRequest($request);
 
         if ($request->query('object') == true) {

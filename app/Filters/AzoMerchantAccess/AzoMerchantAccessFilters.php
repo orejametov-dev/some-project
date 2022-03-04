@@ -12,12 +12,12 @@ use App\Filters\Store\StoreIdsFilter;
 class AzoMerchantAccessFilters extends AbstractFilters
 {
     protected array $filters = [
-        GAzoMerchantAccessFilter::class,
+        QAzoMerchantAccessFilter::class,
         DateFilter::class,
         MerchantIdsFilter::class,
         StoreIdsFilter::class,
         UserIdsFilter::class,
-        MerchantIdFilter::class
+        MerchantIdFilter::class,
     ];
 
     protected function getRequestBindings(): array
