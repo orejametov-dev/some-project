@@ -3,7 +3,6 @@
 namespace App\Modules\Merchants\Models;
 
 use App\Filters\AdditionalAgreement\AdditionalAgreementFilters;
-use App\Filters\AzoMerchantAccess\AzoMerchantAccessFilters;
 use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
