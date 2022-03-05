@@ -3,13 +3,14 @@
 namespace App\Filters\MerchantInfo;
 
 use App\Filters\AbstractFilters;
+use App\Filters\Merchant\MerchantIdFilter;
 use App\Filters\Merchant\MerchantIdsFilter;
 
 class MerchantInfoFilters extends AbstractFilters
 {
     protected array $filters = [
         MerchantIdsFilter::class,
-
+        MerchantIdFilter::class
     ];
 
     protected function getRequestBindings(): array

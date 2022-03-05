@@ -4,6 +4,7 @@ namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
 use App\DTOs\MerchantInfos\StoreMerchantInfoDTO;
 use App\Exceptions\BusinessException;
+use App\Filters\Merchant\MerchantIdFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiPrm\Merchants\StoreMerchantInfo;
 use App\Http\Requests\ApiPrm\Merchants\UpdateMerchantInfo;
@@ -18,7 +19,7 @@ class MerchantInfoController extends Controller
     {
         $merchantInfoQuery = MerchantInfo::query()
             ->with('merchant:id,legal_name,legal_name_prefix')
-            ->filterRequest($request);
+            ->filterRequest($request, [MerchantIdFilter::class]);
 
         if ($request->query('object') == true) {
             return $merchantInfoQuery->first();
