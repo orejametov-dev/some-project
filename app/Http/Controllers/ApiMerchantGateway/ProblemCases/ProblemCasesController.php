@@ -120,6 +120,6 @@ class ProblemCasesController extends ApiBaseController
                 ->onlyNew()->count();
         });
 
-        return response()->json(['count' =>  (int) $counter]);
+        return response()->json(['count' => (int) $counter]);
     }
 }

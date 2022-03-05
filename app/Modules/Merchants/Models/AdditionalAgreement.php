@@ -2,6 +2,7 @@
 
 namespace App\Modules\Merchants\Models;
 
+use App\Filters\AdditionalAgreement\AdditionalAgreementFilters;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -22,7 +23,7 @@ use Illuminate\Http\Request;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read Merchant $merchant
- * @method static Builder|AdditionalAgreement filterRequest(Request $request)
+ * @method static Builder|AdditionalAgreement filterRequest(Request $request, array $filters = []))
  * @method static Builder|AdditionalAgreement newModelQuery()
  * @method static Builder|AdditionalAgreement newQuery()
  * @method static Builder|AdditionalAgreement query()
@@ -47,10 +48,8 @@ class AdditionalAgreement extends Model
         return $this->belongsTo(Merchant::class);
     }
 
-    public function scopeFilterRequest(Builder $query, Request $request)
+    public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder
     {
-        if ($request->query('merchant_id')) {
-            $query->where('merchant_id', $request->query('merchant_id'));
-        }
+        return (new AdditionalAgreementFilters($request, $builder))->execute($filters);
     }
 }

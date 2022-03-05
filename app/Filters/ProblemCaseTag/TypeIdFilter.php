@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Filters\Tag;
+namespace App\Filters\ProblemCaseTag;
 
 use App\Filters\AbstractExactFilter;
 use Illuminate\Database\Eloquent\Builder;
 
-class GTagFilter extends AbstractExactFilter
+class TypeIdFilter extends AbstractExactFilter
 {
     public function filter(Builder $builder, mixed $value): void
     {
-        $builder->where('title', 'LIKE', '%' . $value . '%');
+        $builder->where('type_id', $value);
     }
 
     public function getBindingName(): string
     {
-        return 'q';
+        return 'type_id';
     }
 }

@@ -83,7 +83,17 @@ class Condition extends Model
         return $this->belongsTo(Merchant::class);
     }
 
-    public function getTitleAttribute()
+    public function scopeActive($builder)
+    {
+        return $builder->where('active', true);
+    }
+
+    public function scopePostMerchant($builder)
+    {
+        return $builder->where('post_merchant', true);
+    }
+
+    public function getTitleAttribute(): string
     {
         return $this->duration . 'м' . ' / ' . $this->commission . '%';
     }
@@ -91,16 +101,6 @@ class Condition extends Model
     public function scopeByMerchant(Builder $query, $merchant_id): Builder
     {
         return $query->where('merchant_id', $merchant_id);
-    }
-
-    public function scopeActive($builder): Builder
-    {
-        return $builder->where('active', true);
-    }
-
-    public function scopePostMerchant($builder): Builder
-    {
-        return $builder->where('post_merchant', true);
     }
 
     public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder

@@ -196,70 +196,7 @@ class ProblemCase extends Model implements SimpleStateMachinable
         return $this->morphMany(Comment::class, 'commentable');
     }
 
-    public function scopeFilterRequests(Builder $query, Request $request)
-    {
-        if ($client = $request->query('q')) {
-            collect(explode(' ', $client))->filter()->each(function ($q) use ($query) {
-                $q = '%' . $q . '%';
-
-                $query->where(function ($query) use ($q) {
-                    $query->where('client_name', 'like', $q)
-                        ->orWhere('client_surname', 'like', $q)
-                        ->orWhere('client_patronymic', 'like', $q)
-                        ->orWhere('phone', 'like', $q);
-                });
-            });
-        }
-
-        if ($id = $request->query('id')) {
-            $query->where('id', $id);
-        }
-
-        if ($request->merchant_id) {
-            $query->where('merchant_id', $request->merchant_id);
-        }
-
-        if ($request->store_id) {
-            $query->where('store_id', $request->store_id);
-        }
-
-        if ($request->query('engaged_by_id')) {
-            $query->where('engaged_by_id', $request->query('engaged_by_id'));
-        }
-
-        if ($request->query('created_at')) {
-            $query->where('created_at', $request->query('created_at'));
-        }
-
-        if ($request->query('client_id')) {
-            $query->where('client_id', $request->query('client_id'));
-        }
-
-        if ($request->query('assigned_to_id')) {
-            $query->where('assigned_to_id', $request->query('assigned_to_id'));
-        }
-
-        if ($request->query('date')) {
-            $date = Carbon::parse($request->query('date'));
-            $query->whereDate('created_at', $date);
-        }
-
-        if ($request->query('tag_id')) {
-            $query->whereHas('tags', function ($query) use ($request) {
-                $query->where('problem_case_tag_id', $request->query('tag_id'));
-            });
-        }
-
-        if ($request->query('source')) {
-            $query->where('created_from_name', 'LIKE', '%' . $request->query('source') . '%');
-        }
-
-        if ($request->query('status_id')) {
-            $query->where('status_id', $request->query('status_id'));
-        }
-    }
-
-    public function scopeOnlyNew(Builder $query): Builder
+    public function scopeOnlyNew(Builder $query)
     {
         return $query->where('status_id', self::NEW);
     }

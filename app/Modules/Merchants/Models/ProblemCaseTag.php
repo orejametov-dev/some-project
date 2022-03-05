@@ -2,6 +2,7 @@
 
 namespace App\Modules\Merchants\Models;
 
+use App\Filters\ProblemCaseTag\ProblemCaseTagFilters;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -39,14 +40,8 @@ class ProblemCaseTag extends Model
         return $this->belongsToMany(ProblemCase::class, 'problem_cases', 'problem_case_tag_id', 'problem_case_id');
     }
 
-    public function scopeFilterRequests(Builder $query, Request $request)
+    public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder
     {
-        if ($request->query('q')) {
-            $query->where('body', 'LIKE', '%' . $request->query('q') . '%');
-        }
-
-        if ($request->query('type_id')) {
-            $query->where('type_id', $request->query('type_id'));
-        }
+        return (new ProblemCaseTagFilters($request, $builder))->execute($filters);
     }
 }

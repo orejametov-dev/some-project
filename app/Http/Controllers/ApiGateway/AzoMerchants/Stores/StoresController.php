@@ -6,7 +6,7 @@ use App\DTOs\Stores\StoreStoresDTO;
 use App\DTOs\Stores\UpdateStoresDTO;
 use App\Filters\CommonFilters\ActiveFilter;
 use App\Filters\Merchant\MerchantIdFilter;
-use App\Filters\Store\GStoreFilter;
+use App\Filters\Store\QStoreFilter;
 use App\Filters\Store\RegionFilter;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Stores\StoreStoresRequest;
@@ -25,7 +25,7 @@ class StoresController extends ApiBaseController
     {
         $stores = Store::query()->with(['merchant'])
             ->filterRequest($request, [
-                GStoreFilter::class,
+                QStoreFilter::class,
                 MerchantIdFilter::class,
                 RegionFilter::class,
                 ActiveFilter::class,

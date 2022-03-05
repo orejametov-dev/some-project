@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\ApiMerchantGateway\Notifications;
 
+use App\Filters\CommonFilters\CreatedAtFilter;
 use App\Filters\Notification\FreshFilter;
 use App\Http\Controllers\ApiMerchantGateway\ApiBaseController;
 use App\Http\Resources\ApiMerchantGateway\Notifications\NotificationsResource;
@@ -16,6 +17,8 @@ class NotificationsController extends ApiBaseController
         $notifications = Notification::query()
             ->filterRequest($request, [
                 FreshFilter::class,
+                CreatedAtFilter::class,
+
             ])
             ->latest()
             ->onlyByStore($this->store_id)

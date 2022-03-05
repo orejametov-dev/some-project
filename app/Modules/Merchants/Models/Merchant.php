@@ -101,6 +101,11 @@ class Merchant extends Model
         return config('local_services.services_storage.domain') . $this->logo_url;
     }
 
+    public function scopeActive(Builder $query)
+    {
+        $query->where('active', true);
+    }
+
     public static function fromDto(CompanyHttpResponse $company, int $user_id)
     {
         $merchant = new self();
@@ -169,10 +174,5 @@ class Merchant extends Model
     public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder
     {
         return (new MerchantFilters($request, $builder))->execute($filters);
-    }
-
-    public function scopeActive(Builder $query): Builder
-    {
-        return $query->where('active', true);
     }
 }

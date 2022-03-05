@@ -5,7 +5,7 @@ namespace App\Filters\ProblemCase;
 use App\Filters\AbstractExactFilter;
 use Illuminate\Database\Eloquent\Builder;
 
-class GProblemCaseFilter extends AbstractExactFilter
+class QProblemCaseFilter extends AbstractExactFilter
 {
     public function filter(Builder $builder, mixed $value) : void
     {

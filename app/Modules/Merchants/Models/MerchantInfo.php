@@ -32,7 +32,6 @@ use Illuminate\Http\Request;
  * @property string|null $contract_date
  * @property int|null $rest_limit
  * @property-read Merchant $merchant
- * @method static Builder|MerchantInfo filterRequests(Request $request)
  * @method static Builder|MerchantInfo filterRequest(Request $request, array $filters = [])
  * @method static Builder|MerchantInfo newModelQuery()
  * @method static Builder|MerchantInfo newQuery()
@@ -69,19 +68,12 @@ class MerchantInfo extends Model
         return $this->belongsTo(Merchant::class);
     }
 
-    public function scopeFilterRequests(Builder $query, Request $request)
-    {
-        if ($request->query('merchant_id')) {
-            $query->where('merchant_id', $request->query('merchant_id'));
-        }
-    }
-
     public static function getMaxContractNumber()
     {
         return self::max('contract_number');
     }
 
-    public static function fromDTO(StoreMerchantInfoDTO $storeMerchantInfoDTO)
+    public static function fromDTO(StoreMerchantInfoDTO $storeMerchantInfoDTO): self
     {
         $merchantInfo = new self();
 

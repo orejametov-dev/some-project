@@ -5,7 +5,7 @@ namespace App\Filters\Notification;
 use App\Filters\AbstractExactFilter;
 use Illuminate\Database\Eloquent\Builder;
 
-class GNotificationFilter extends AbstractExactFilter
+class QNotificationFilter extends AbstractExactFilter
 {
     public function filter(Builder $builder, mixed $value): void
     {

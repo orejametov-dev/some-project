@@ -9,8 +9,8 @@ use App\Filters\Merchant\MerchantIdFilter;
 use App\Filters\Merchant\MerchantIdsFilter;
 use App\Filters\ProblemCase\AssignedToIdFilter;
 use App\Filters\ProblemCase\CreatedFromNameFilter;
-use App\Filters\ProblemCase\GProblemCaseFilter;
 use App\Filters\ProblemCase\ProblemCaseTagIdFilter;
+use App\Filters\ProblemCase\QProblemCaseFilter;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Comments\StoreCommentRequest;
 use App\Http\Requests\ApiPrm\ProblemCases\ProblemCaseAttachTagsRequest;
@@ -34,7 +34,7 @@ class ProblemCasesController extends ApiBaseController
         $problemCases = ProblemCase::query()
             ->with(['tags', 'merchant', 'store'])
             ->filterRequest($request, [
-                GProblemCaseFilter::class,
+                QProblemCaseFilter::class,
                 StatusIdFilter::class,
                 MerchantIdsFilter::class,
                 AssignedToIdFilter::class,

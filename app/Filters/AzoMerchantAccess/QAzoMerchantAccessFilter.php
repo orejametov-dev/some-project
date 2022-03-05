@@ -5,7 +5,7 @@ namespace App\Filters\AzoMerchantAccess;
 use App\Filters\AbstractExactFilter;
 use Illuminate\Database\Eloquent\Builder;
 
-class GAzoMerchantAccessFilter extends AbstractExactFilter
+class QAzoMerchantAccessFilter extends AbstractExactFilter
 {
     public function filter(Builder $builder, mixed $value): void
     {

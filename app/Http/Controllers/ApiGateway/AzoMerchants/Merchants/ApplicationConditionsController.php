@@ -47,6 +47,7 @@ class ApplicationConditionsController extends ApiBaseController
     {
         $conditionQuery = Condition::query()
             ->active()
+            ->filterRequest($request, [])
             ->orderRequest($request);
 
         if ($request->query('object') == true) {
