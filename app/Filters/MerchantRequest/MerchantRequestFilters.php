@@ -8,8 +8,9 @@ use App\Filters\CommonFilters\StatusIdFilter;
 class MerchantRequestFilters extends AbstractFilters
 {
     protected array $filters = [
-        GMerchantRequestFilter::class,
+        QMerchantRequestFilter::class,
         StatusIdFilter::class,
+        CreatedFromNameFilter::class,
     ];
 
     protected function getRequestBindings(): array

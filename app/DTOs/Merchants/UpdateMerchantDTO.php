@@ -16,8 +16,6 @@ class UpdateMerchantDTO
         public ?string $legal_name,
         public ?string $legal_name_prefix,
         public string $token,
-        public string $alifshop_slug,
-        public ?string $information,
         public int $min_application_price
     ) {
     }
@@ -30,8 +28,6 @@ class UpdateMerchantDTO
             self::parseString($data['legal_name']),
             self::parseString($data['legal_name_prefix']),
             self::parseString($data['token']),
-            self::parseString($data['alifshop_slug']),
-            self::parseNullableString($data['information']),
             self::parseInt($data['min_application_price'])
         );
     }

@@ -1,15 +1,13 @@
 <?php
 
-namespace App\Filters\MerchantInfo;
+namespace App\Filters\AdditionalAgreement;
 
 use App\Filters\AbstractFilters;
 use App\Filters\Merchant\MerchantIdFilter;
-use App\Filters\Merchant\MerchantIdsFilter;
 
-class MerchantInfoFilters extends AbstractFilters
+class AdditionalAgreementFilters extends AbstractFilters
 {
     protected array $filters = [
-        MerchantIdsFilter::class,
         MerchantIdFilter::class,
     ];
 

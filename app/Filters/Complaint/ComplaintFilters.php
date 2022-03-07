@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Filters\MerchantInfo;
+namespace App\Filters\Complaint;
 
 use App\Filters\AbstractFilters;
-use App\Filters\Merchant\MerchantIdFilter;
-use App\Filters\Merchant\MerchantIdsFilter;
+use App\Filters\CommonFilters\IdFilter;
 
-class MerchantInfoFilters extends AbstractFilters
+class ComplaintFilters extends AbstractFilters
 {
     protected array $filters = [
-        MerchantIdsFilter::class,
-        MerchantIdFilter::class,
+        IdFilter::class,
+        AzoMerchantAccessIdByUserIdFilter::class,
+        AzoMerchantAccessByAccessIdFilter::class,
     ];
 
     protected function getRequestBindings(): array

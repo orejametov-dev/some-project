@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\ApiOnlineGateway\Stores;
 
 use App\Filters\Merchant\MerchantIdFilter;
-use App\Filters\Store\GStoreFilter;
+use App\Filters\Store\QStoreFilter;
 use App\Filters\Store\RegionFilter;
 use App\Filters\Store\StoreIdFilter;
 use App\Filters\Store\StoreIdsFilter;
@@ -18,7 +18,7 @@ class StoresController extends Controller
         $stores = Store::query()
             ->active()
             ->filterRequest($request, [
-                GStoreFilter::class,
+                QStoreFilter::class,
                 StoreIdsFilter::class,
                 StoreIdFilter::class,
                 RegionFilter::class,
