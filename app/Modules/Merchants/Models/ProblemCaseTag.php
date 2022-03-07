@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 
 /**
  * @method static Builder|ProblemCase filterRequest(Request $request, array $filters = [])
+ * @method static Builder|AzoMerchantAccess query()
  */
 class ProblemCaseTag extends Model
 {
