@@ -5,15 +5,17 @@ namespace App\Modules\Merchants\Models;
 use App\Filters\Merchant\MerchantFilters;
 use App\HttpRepositories\HttpResponses\Prm\CompanyHttpResponse;
 use App\Modules\Merchants\Traits\MerchantFileTrait;
-use App\Modules\Merchants\Traits\MerchantRelationshipsTrait;
 use App\Traits\SortableByQueryParams;
-use Eloquent;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 /**
  * App\Modules\Merchants\Models\Merchant.
@@ -30,8 +32,8 @@ use Illuminate\Support\Str;
  * @property int|null $current_sales
  * @property int $company_id
  * @property int|null $min_application_price
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property-read Collection|AdditionalAgreement[] $additional_agreements
  * @property-read int|null $additional_agreements_count
  * @property-read Collection|Condition[] $application_conditions
@@ -46,18 +48,26 @@ use Illuminate\Support\Str;
  * @property-read int|null $stores_count
  * @property-read Collection|Tag[] $tags
  * @property-read int|null $tags_count
- * @method static Builder|Merchant filterRequest(Request $request, array $filters = [])
+ * @property int $payment_day
+ * @property int $active
+ * @property-read Collection|ActivityReason[] $activity_reasons
+ * @property-read int|null $activity_reasons_count
+ * @property-read Collection|Condition[] $application_active_conditions
+ * @property-read int|null $application_active_conditions_count
+ * @property-read int|null $azo_merchant_accesses_count
+ * @property-read Collection|Competitor[] $competitors
+ * @property-read int|null $competitors_count
  * @method static Builder|Merchant newModelQuery()
  * @method static Builder|Merchant newQuery()
  * @method static Builder|Merchant orderRequest(Request $request, string $default_order_str = 'id:desc')
  * @method static Builder|Merchant query()
- * @mixin Eloquent
+ * @method static Builder|Merchant active()
+ * @method static Builder|Merchant filterRequest(\Illuminate\Http\Request $request, array $filters = [])
  */
 class Merchant extends Model
 {
     use HasFactory;
 
-    use MerchantRelationshipsTrait;
     use MerchantFileTrait;
     use SortableByQueryParams;
 
@@ -108,6 +118,57 @@ class Merchant extends Model
         $merchant->company_id = $company->id;
 
         return $merchant;
+    }
+
+    public function stores(): HasMany
+    {
+        return $this->hasMany(Store::class);
+    }
+
+    public function azo_merchant_accesses(): HasMany
+    {
+        return $this->hasMany(AzoMerchantAccess::class);
+    }
+
+    public function application_conditions(): HasMany
+    {
+        return $this->hasMany(Condition::class);
+    }
+
+    public function application_active_conditions(): HasMany
+    {
+        return $this->hasMany(Condition::class)->where('active', true);
+    }
+
+    public function tags(): MorphToMany
+    {
+        return $this->morphToMany(Tag::class, 'merchant', 'merchant_tag', 'merchant_id', 'tag_id');
+    }
+
+    public function files(): HasMany
+    {
+        return $this->hasMany(File::class, 'merchant_id', 'id');
+    }
+
+    public function merchant_info(): HasOne
+    {
+        return $this->hasOne(MerchantInfo::class);
+    }
+
+    public function additional_agreements(): HasMany
+    {
+        return $this->hasMany(AdditionalAgreement::class);
+    }
+
+    public function activity_reasons(): BelongsToMany
+    {
+        return $this->belongsToMany(ActivityReason::class, 'merchant_activities', 'merchant_id', 'activity_reason_id')->withTimestamps()
+            ->withPivot(['id', 'merchant_id', 'activity_reason_id', 'active', 'created_by_id', 'created_by_name', 'created_at', 'updated_at']);
+    }
+
+    public function competitors(): BelongsToMany
+    {
+        return $this->belongsToMany(Competitor::class, 'merchant_competitor')->withPivot('volume_sales', 'percentage_approve', 'partnership_at')->withTimestamps();
     }
 
     public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder

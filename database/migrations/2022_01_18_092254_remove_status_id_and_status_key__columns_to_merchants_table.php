@@ -30,7 +30,7 @@ class RemoveStatusIdAndStatusKeyColumnsToMerchantsTable extends Migration
     {
         Schema::table('merchants', function (Blueprint $table) {
             $table->smallInteger('status_id')->default(MerchantStatus::ACTIVE);
-            $table->string('status_key')->default(MerchantStatus::getOneById(MerchantStatus::ACTIVE)->key);
+            $table->string('status_key')->default(MerchantStatus::getOneById(MerchantStatus::ACTIVE)['key']);
             $table->timestamp('status_updated_at')->default(now());
         });
     }

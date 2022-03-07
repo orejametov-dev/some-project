@@ -6,7 +6,7 @@ use App\Exceptions\BusinessException;
 
 class DistrictService
 {
-    private static $districts = [
+    private static array $districts = [
         'andijan' => [
                 'body_ru' => [
                         'Алтынкульский район',

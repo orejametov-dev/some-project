@@ -4,12 +4,12 @@ namespace App\UseCases\Competitors;
 
 use App\DTOs\Competitors\CompetitorDTO;
 use App\Modules\Merchants\Models\Merchant;
-use App\UseCases\Merchants\FindMerchantUseCase;
+use App\UseCases\Merchants\FindMerchantByIdUseCase;
 
 class UpdateCompetitorUseCase
 {
     public function __construct(
-        private FindMerchantUseCase $findMerchantUseCase,
+        private FindMerchantByIdUseCase $findMerchantUseCase,
         private FindCompetitorUseCase $findCompetitorUseCase,
         private FindMerchantCompetitorUseCase $findMerchantCompetitorUseCase,
     ) {

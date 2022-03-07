@@ -7,12 +7,12 @@ namespace App\UseCases\MerchantInfos;
 use App\DTOs\MerchantInfos\StoreMerchantInfoDTO;
 use App\Exceptions\BusinessException;
 use App\Modules\Merchants\Models\MerchantInfo;
-use App\UseCases\Merchants\FindMerchantUseCase;
+use App\UseCases\Merchants\FindMerchantByIdUseCase;
 
 class StoreMerchantInfoUseCase
 {
     public function __construct(
-        private FindMerchantUseCase $findMerchantUseCase
+        private FindMerchantByIdUseCase $findMerchantUseCase
     ) {
     }
 
@@ -20,7 +20,7 @@ class StoreMerchantInfoUseCase
     {
         $merchant = $this->findMerchantUseCase->execute($storeMerchantInfoDTO->merchant_id);
 
-        if (MerchantInfo::where('merchant_id', $merchant->id)->exists()) {
+        if (MerchantInfo::query()->where('merchant_id', $merchant->id)->exists()) {
             throw new BusinessException('Партнер уже имеет основной договор');
         }
 

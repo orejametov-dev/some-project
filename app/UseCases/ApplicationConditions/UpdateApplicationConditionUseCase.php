@@ -8,6 +8,7 @@ use App\Exceptions\BusinessException;
 use App\HttpRepositories\Core\CoreHttpRepository;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
+use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\Store;
 use App\UseCases\Cache\FlushCacheUseCase;
 
@@ -15,18 +16,18 @@ class UpdateApplicationConditionUseCase
 {
     public function __construct(
         private CoreHttpRepository $coreHttpRepository,
-        private FindConditionUseCase $findConditionUseCase,
+        private FindConditionByIdUseCase $findConditionUseCase,
         private FlushCacheUseCase $flushCacheUseCase,
         private GatewayAuthUser $gatewayAuthUser
     ) {
     }
 
-    public function execute(UpdateConditionDTO $updateConditionDTO)
+    public function execute(UpdateConditionDTO $updateConditionDTO) : Condition
     {
         $condition = $this->findConditionUseCase->execute($updateConditionDTO->condition_id);
 
         if ($this->coreHttpRepository->checkApplicationToExistByConditionId($updateConditionDTO->condition_id)) {
-            return response()->json(['message' => 'Условие не может быть изменено'], 400);
+            throw new BusinessException('Условие не может быть изменено', 'not_allowed', 400);
         }
 
         $merchant = $condition->merchant;
