@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases;
 
+use App\DTOs\Comments\CommentDTO;
 use App\Filters\CommonFilters\DateFilter;
 use App\Filters\CommonFilters\StatusIdFilter;
 use App\Filters\Merchant\MerchantIdFilter;
 use App\Filters\Merchant\MerchantIdsFilter;
 use App\Filters\ProblemCase\AssignedToIdFilter;
 use App\Filters\ProblemCase\CreatedFromNameFilter;
-use App\Filters\ProblemCase\GProblemCaseFilter;
 use App\Filters\ProblemCase\ProblemCaseTagIdFilter;
+use App\Filters\ProblemCase\QProblemCaseFilter;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Comments\StoreCommentRequest;
 use App\Http\Requests\ApiPrm\ProblemCases\ProblemCaseAttachTagsRequest;
 use App\Http\Requests\ApiPrm\ProblemCases\ProblemCaseSetAssignedRequest;
 use App\Http\Requests\ApiPrm\ProblemCases\ProblemCaseSetStatusRequest;
 use App\Http\Requests\ApiPrm\ProblemCases\ProblemCaseUpdateRequest;
-use App\Modules\Merchants\DTO\Comments\CommentDTO;
 use App\Modules\Merchants\Models\Comment;
 use App\Modules\Merchants\Models\ProblemCase;
 use App\UseCases\ProblemCase\AttachTagsProblemCaseUseCase;
@@ -34,7 +34,7 @@ class ProblemCasesController extends ApiBaseController
         $problemCases = ProblemCase::query()
             ->with(['tags', 'merchant', 'store'])
             ->filterRequest($request, [
-                GProblemCaseFilter::class,
+                QProblemCaseFilter::class,
                 StatusIdFilter::class,
                 MerchantIdsFilter::class,
                 AssignedToIdFilter::class,
@@ -43,18 +43,6 @@ class ProblemCasesController extends ApiBaseController
                 CreatedFromNameFilter::class,
                 MerchantIdFilter::class,
                 ])->orderBy('created_at', 'DESC');
-
-//        $problemCases = ProblemCase::with('tags')
-//            ->filterRequests($request)
-//            ->orderBy('created_at', 'DESC');
-//
-//        if ($request->has('object') and $request->query('object') == true) {
-//            return $problemCases->first();
-//        }
-//
-//        if ($request->has('paginate') and $request->query('paginate') == false) {
-//            return $problemCases->get();
-//        }
 
         return $problemCases->paginate($request->query('per_page') ?? 15);
     }

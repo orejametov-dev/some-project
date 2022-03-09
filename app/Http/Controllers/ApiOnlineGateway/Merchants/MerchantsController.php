@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\ApiOnlineGateway\Merchants;
 
 use App\Filters\CommonFilters\TagsFilter;
-use App\Filters\Merchant\GMerchantFilter;
+use App\Filters\Merchant\QMerchantFilter;
 use App\Filters\Merchant\RegionMerchantFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiOnlineGateway\MerchantResource;
@@ -23,7 +23,7 @@ class MerchantsController extends Controller
             ->with('tags')
             ->active()
             ->filterRequest($request, [
-                GMerchantFilter::class,
+                QMerchantFilter::class,
                 RegionMerchantFilter::class,
                 TagsFilter::class,
             ])
@@ -33,12 +33,11 @@ class MerchantsController extends Controller
         return MerchantResource::collection($query->paginate($request->query('per_page') ?? 15));
     }
 
-    public function show($id, Request $request)
+    public function show($id)
     {
         $merchant = Merchant::query()
             ->with('tags')
             ->active()
-            ->filterRequests($request)
             ->findOrFail($id);
 
         return new MerchantResource($merchant);

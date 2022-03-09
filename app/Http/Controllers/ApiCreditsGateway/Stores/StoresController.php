@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\ApiCreditsGateway\Stores;
 
-use App\Filters\Store\GStoreFilter;
+use App\Filters\Store\QStoreFilter;
 use App\Filters\Store\StoreIdFilter;
 use App\Filters\Store\StoreIdsFilter;
 use App\Http\Controllers\ApiCreditsGateway\ApiBaseController;
@@ -16,7 +16,7 @@ class StoresController extends ApiBaseController
     {
         $stores = Store::query()->with(['merchant'])
             ->filterRequest($request, [
-                GStoreFilter::class,
+                QStoreFilter::class,
                 StoreIdFilter::class,
                 StoreIdsFilter::class,
             ]);

@@ -2,10 +2,10 @@
 
 namespace App\Modules\Merchants\Models;
 
-use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class MerchantFile.
@@ -26,7 +26,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|File newModelQuery()
  * @method static Builder|File newQuery()
  * @method static Builder|File query()
- * @mixin Eloquent
  */
 class File extends Model
 {
@@ -99,12 +98,12 @@ class File extends Model
 
     protected $appends = ['link'];
 
-    public function merchant()
+    public function merchant(): BelongsTo
     {
         return $this->belongsTo(Merchant::class);
     }
 
-    public function request()
+    public function request(): BelongsTo
     {
         return $this->belongsTo(Request::class);
     }

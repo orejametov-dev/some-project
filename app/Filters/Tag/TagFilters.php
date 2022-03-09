@@ -5,7 +5,7 @@ namespace App\Filters\Tag;
 class TagFilters extends \App\Filters\AbstractFilters
 {
     protected array $filters = [
-        GTagFilter::class,
+        QTagFilter::class,
     ];
 
     protected function getRequestBindings(): array

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class ApplicationConditionTemplatesSeeder extends Seeder
 {
@@ -56,7 +57,7 @@ class ApplicationConditionTemplatesSeeder extends Seeder
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
-        \DB::table('application_condition_templates')->insert([
+        DB::table('application_condition_templates')->insert([
             $condition_template_1,
             $condition_template_2,
             $condition_template_3,

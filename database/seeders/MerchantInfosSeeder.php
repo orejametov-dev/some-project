@@ -15,7 +15,6 @@ class MerchantInfosSeeder extends Seeder
     public function run()
     {
         $merchant_info_1 = [
-            'legal_name' => 'OOO Idea',
             'director_name' => 'Ismoil Nosirov',
             'phone' => '998901112233',
             'vat_number' => '312738127000',
@@ -33,7 +32,6 @@ class MerchantInfosSeeder extends Seeder
         ];
 
         $merchant_info_2 = [
-            'legal_name' => 'ООО «RETAIL OPERATION GROUP»',
             'director_name' => 'Ismoil Nosr',
             'phone' => '998912223344',
             'vat_number' => '312738127111',
@@ -51,7 +49,6 @@ class MerchantInfosSeeder extends Seeder
         ];
 
         $merchant_info_3 = [
-            'legal_name' => 'OOO "Mobilezone Store"',
             'director_name' => 'Nosr Ismoil',
             'phone' => '9989133323344',
             'vat_number' => '312738127222',

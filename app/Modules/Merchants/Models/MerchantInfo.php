@@ -4,10 +4,10 @@ namespace App\Modules\Merchants\Models;
 
 use App\DTOs\MerchantInfos\StoreMerchantInfoDTO;
 use App\Filters\MerchantInfo\MerchantInfoFilters;
-use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Http\Request;
 
 /**
@@ -32,12 +32,10 @@ use Illuminate\Http\Request;
  * @property string|null $contract_date
  * @property int|null $rest_limit
  * @property-read Merchant $merchant
- * @method static Builder|MerchantInfo filterRequests(Request $request)
  * @method static Builder|MerchantInfo filterRequest(Request $request, array $filters = [])
  * @method static Builder|MerchantInfo newModelQuery()
  * @method static Builder|MerchantInfo newQuery()
  * @method static Builder|MerchantInfo query()
- * @mixin Eloquent
  */
 class MerchantInfo extends Model
 {
@@ -65,16 +63,9 @@ class MerchantInfo extends Model
 
     public $timestamps = false;
 
-    public function merchant()
+    public function merchant(): BelongsTo
     {
         return $this->belongsTo(Merchant::class);
-    }
-
-    public function scopeFilterRequests(Builder $query, Request $request)
-    {
-        if ($request->query('merchant_id')) {
-            $query->where('merchant_id', $request->query('merchant_id'));
-        }
     }
 
     public static function getMaxContractNumber()
@@ -82,13 +73,11 @@ class MerchantInfo extends Model
         return self::max('contract_number');
     }
 
-    public static function fromDTO(StoreMerchantInfoDTO $storeMerchantInfoDTO)
+    public static function fromDTO(StoreMerchantInfoDTO $storeMerchantInfoDTO): self
     {
         $merchantInfo = new self();
 
         $merchantInfo->merchant_id = $storeMerchantInfoDTO->merchant_id;
-        $merchantInfo->legal_name = $storeMerchantInfoDTO->legal_name;
-        $merchantInfo->legal_name_prefix = $storeMerchantInfoDTO->legal_name_prefix;
         $merchantInfo->director_name = $storeMerchantInfoDTO->director_name;
         $merchantInfo->phone = $storeMerchantInfoDTO->phone;
         $merchantInfo->vat_number = $storeMerchantInfoDTO->vat_number;
@@ -105,7 +94,7 @@ class MerchantInfo extends Model
         return $merchantInfo;
     }
 
-    public function scopeFiltersRequest(Builder $builder, Request $request, array $filters = [])
+    public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder
     {
         return (new MerchantInfoFilters($request, $builder))->execute($filters);
     }

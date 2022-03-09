@@ -47,7 +47,7 @@ class ApplicationConditionsController extends ApiBaseController
     {
         $conditionQuery = Condition::query()
             ->active()
-            ->filterRequests($request)
+            ->filterRequest($request, [])
             ->orderRequest($request);
 
         if ($request->query('object') == true) {
@@ -72,14 +72,18 @@ class ApplicationConditionsController extends ApiBaseController
     {
         $massStoreConditionDTO = MassStoreConditionDTO::fromArray($request->validated());
 
-        return $massStoreApplicationConditionUseCase->execute($massStoreConditionDTO);
+        $massStoreApplicationConditionUseCase->execute($massStoreConditionDTO);
+
+        return response()->json(['message' => 'Условия изменены']);
     }
 
     public function massSpecialStore(MassSpecialStoreApplicationConditionRequest $request, MassSpecialStoreApplicationConditionUseCase $massSpecialStoreApplicationConditionUseCase)
     {
         $massSpecialStoreConditionDTO = MassSpecialStoreConditionDTO::fromArray($request->validated());
 
-        return $massSpecialStoreApplicationConditionUseCase->execute($massSpecialStoreConditionDTO);
+        $massSpecialStoreApplicationConditionUseCase->execute($massSpecialStoreConditionDTO);
+
+        return response()->json(['message' => 'Условия изменены']);
     }
 
     public function update($condition_id, UpdateApplicationConditions $request, UpdateApplicationConditionUseCase $updateApplicationConditionUseCase)
@@ -91,7 +95,9 @@ class ApplicationConditionsController extends ApiBaseController
 
     public function delete($condition_id, DeleteApplicationConditionUseCase $deleteApplicationConditionUseCase)
     {
-        return $deleteApplicationConditionUseCase->execute((int) $condition_id);
+        $deleteApplicationConditionUseCase->execute((int) $condition_id);
+
+        return response()->json(['message' => 'Условие удалено']);
     }
 
     public function toggle($condition_id, ToggleActiveApplicationConditionUseCase $toggleActiveApplicationConditionUseCase)

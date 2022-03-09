@@ -8,7 +8,6 @@ use App\HttpServices\Storage\StorageMicroService;
 use App\Modules\Merchants\Traits\MerchantRequestStatusesTrait;
 use App\Services\SimpleStateMachine\SimpleStateMachineTrait;
 use App\Traits\SortableByQueryParams;
-use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -23,7 +22,6 @@ use Illuminate\Support\Collection;
  *
  * @property int $id
  * @property string $name
- * @property string $information
  * @property string|null $legal_name
  * @property string|null $legal_name_prefix
  * @property string $user_name
@@ -43,13 +41,11 @@ use Illuminate\Support\Collection;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property string|null $status_updated_at
- * @property  string $created_from_name
+ * @property string $created_from_name
  * @property-read Collection|File[] $files
  * @property-read mixed $status
  * @method static Builder|Request allowed()
- * @method static Builder|Request filterRequests(\Illuminate\Http\Request $request)
  * @method static Builder|Request filterRequest(\Illuminate\Http\Request $request, array $filters = [])
- * @method static Builder|Request onlyCompletedRequests(\Illuminate\Http\Request $request)
  * @method static Builder|Request inProcess()
  * @method static Builder|Request onTraining()
  * @method static Builder|Request new()
@@ -58,7 +54,22 @@ use Illuminate\Support\Collection;
  * @method static Builder|Request orderRequest(\Illuminate\Http\Request $request, string $default_order_str = 'id:desc')
  * @method static Builder|Request query()
  * @method static Builder|Request trash()
- * @mixin Eloquent
+ * @property int|null $stores_count
+ * @property int|null $merchant_users_count
+ * @property string|null $director_name
+ * @property string|null $phone
+ * @property string|null $vat_number
+ * @property string|null $mfo
+ * @property string|null $tin
+ * @property string|null $oked
+ * @property string|null $bank_account
+ * @property string|null $bank_name
+ * @property int $completed
+ * @property int|null $cancel_reason_id
+ * @property-read CancelReason|null $cancel_reason
+ * @property-read int|null $files_count
+ * @property-read mixed $state
+ * @method static Builder|Request onlyByToken($token)
  */
 class Request extends Model
 {
@@ -80,7 +91,6 @@ class Request extends Model
         'name',
         'user_name',
         'user_phone',
-        'information',
         'region',
         'district',
         'stores_count',
@@ -174,7 +184,7 @@ class Request extends Model
         return json_decode(json_encode(self::$statuses[$id]));
     }
 
-    public function getStateAttribute()
+    public function getStateAttribute(): ?int
     {
         return $this->status_id;
     }
@@ -223,41 +233,9 @@ class Request extends Model
         return $this->belongsTo(CancelReason::class);
     }
 
-    public function scopeFilterRequests(Builder $query, \Illuminate\Http\Request $request)
-    {
-        if ($q = $request->query('q')) {
-            $query->where('name', 'like', '%' . $q . '%')
-                ->orWhere('information', 'like', '%' . $q . '%')
-                ->orWhere('legal_name', 'like', '%' . $q . '%')
-                ->orWhere('user_name', 'like', '%' . $q . '%')
-                ->orWhere('user_phone', 'like', '%' . $q . '%');
-        }
-
-        if ($status = $request->query('status_id')) {
-            $query->where('status_id', $status);
-        }
-
-        if ($created_from_name = $request->query('created_from_name')) {
-            $query->where('created_from_name', $created_from_name);
-        }
-
-        if ($request->has('completed') && $request->query('completed') == true) {
-            $query->where('completed', true);
-        }
-
-        if ($request->has('completed') && $request->query('completed') == false) {
-            $query->where('completed', false);
-        }
-    }
-
     public function scopeOnlyByToken(Builder $query, $token)
     {
         $query->where('token', $token);
-    }
-
-    public function scopeOnlyCompletedRequests(Builder $query, \Illuminate\Http\Request $request)
-    {
-        $query->where('completed', true);
     }
 
     public function uploadFile(UploadedFile $uploadedFile, $type)
@@ -292,7 +270,7 @@ class Request extends Model
         $this->engaged_at = now();
     }
 
-    public function scopeFilterRequest(Builder $builder, \Illuminate\Http\Request $request, array $filters = [])
+    public function scopeFilterRequest(Builder $builder, \Illuminate\Http\Request $request, array $filters = []): Builder
     {
         return (new MerchantRequestFilters($request, $builder))->execute($filters);
     }

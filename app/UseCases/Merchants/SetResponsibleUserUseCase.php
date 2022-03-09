@@ -12,7 +12,7 @@ class SetResponsibleUserUseCase
 {
     public function __construct(
         private AuthHttpRepository $authHttpRepository,
-        private FindMerchantUseCase $findMerchantUseCase
+        private FindMerchantByIdUseCase $findMerchantUseCase
     ) {
     }
 

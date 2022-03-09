@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\ApiComplianceGateway\Stores;
 
-use App\Filters\Store\GStoreFilter;
+use App\Filters\Store\QStoreFilter;
 use App\Filters\Store\StoreIdsFilter;
 use App\Http\Controllers\ApiComplianceGateway\ApiBaseController;
 use App\Http\Resources\ApiComplianceGateway\Stores\StoresResource;
@@ -18,7 +18,7 @@ class StoresController extends ApiBaseController
             $storesQuery = Store::query()
                 ->filterRequest($request, [
                     StoreIdsFilter::class,
-                    GStoreFilter::class,
+                    QStoreFilter::class,
                 ]);
 
             return StoresResource::collection($storesQuery->paginate($request->query('per_page') ?? 15));

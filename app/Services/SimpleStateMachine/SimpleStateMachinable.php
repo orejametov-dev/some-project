@@ -4,7 +4,7 @@ namespace App\Services\SimpleStateMachine;
 
 interface SimpleStateMachinable
 {
-    public function getStateAttribute();
+    public function getStateAttribute(): ?int;
 
     public function getSimpleStateMachineMap(): array;
 }

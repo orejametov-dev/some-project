@@ -6,6 +6,7 @@ use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\Filters\Notification\NotificationFilters;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -24,9 +25,17 @@ use Illuminate\Http\Request;
  * @property string $type
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @method static Builder|Notification filterRequests(Request $request)
  * @method static Builder|Notification filterRequest(Request $request, array $filters = [])
  * @method static Builder|Notification query()
+ * @property int $created_by_id
+ * @property string $created_by_name
+ * @property-read Collection|Store[] $stores
+ * @property-read int|null $stores_count
+ * @method static Builder|Notification newModelQuery()
+ * @method static Builder|Notification newQuery()
+ * @method static Builder|Notification onlyByMerchant($merchant_id)
+ * @method static Builder|Notification onlyByStore($store_id)
+ * @method static Builder|Notification onlyMoreThanStartSchedule()
  */
 class Notification extends Model
 {
@@ -80,43 +89,12 @@ class Notification extends Model
         });
     }
 
-    public function scopeFilterRequests(Builder $query, Request $request)
-    {
-        if ($request->query('q')) {
-            $query->where('title_uz', 'LIKE', '%' . $request->query('q') . '%')
-                ->orWhere('title_ru', 'LIKE', '%' . $request->query('q') . '%');
-        }
-        if ($request->merchant_id) {
-            $query->whereHas('stores', function (Builder $query) use ($request) {
-                $query->where('stores.merchant_id', $request->merchant_id);
-            });
-        }
-
-        if ($request->query('created_by_id')) {
-            $query->where('created_by_id', $request->query('created_by_id'));
-        }
-
-        if ($request->query('created_at')) {
-            $date = \Carbon\Carbon::parse($request->query('created_at'))->format('Y-m-d');
-            $query->whereDate('created_at', $date);
-        }
-
-        if ($request->has('published') && $request->query('published') == true) {
-            $query->where('start_schedule', '<=', now())
-                ->where('end_schedule', '>=', now());
-        }
-
-        if ($request->has('published') && $request->query('published') == false) {
-            $query->where('end_schedule', '<=', now());
-        }
-    }
-
     public function scopeOnlyMoreThanStartSchedule(Builder $query)
     {
         $query->where('start_schedule', '<=', now());
     }
 
-    public function scopeFilterRequest(Builder $builder, Request $request, array $filters = [])
+    public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder
     {
         return (new NotificationFilters($request, $builder))->execute($filters);
     }

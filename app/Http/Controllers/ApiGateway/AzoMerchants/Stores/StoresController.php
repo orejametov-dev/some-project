@@ -6,17 +6,17 @@ use App\DTOs\Stores\StoreStoresDTO;
 use App\DTOs\Stores\UpdateStoresDTO;
 use App\Filters\CommonFilters\ActiveFilter;
 use App\Filters\Merchant\MerchantIdFilter;
-use App\Filters\Store\GStoreFilter;
+use App\Filters\Store\QStoreFilter;
 use App\Filters\Store\RegionFilter;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Stores\StoreStoresRequest;
 use App\Http\Requests\ApiPrm\Stores\UpdateStoresRequest;
 use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\Store;
-use App\UseCases\Stores\SetTypeRegisterStoresUseCase;
-use App\UseCases\Stores\StoreStoresUseCase;
-use App\UseCases\Stores\ToggleStoresUseCase;
-use App\UseCases\Stores\UpdateStoresUseCase;
+use App\UseCases\Stores\SaveStoreUseCase;
+use App\UseCases\Stores\SetTypeRegisterStoreUseCase;
+use App\UseCases\Stores\ToggleStoreUseCase;
+use App\UseCases\Stores\UpdateStoreUseCase;
 use Illuminate\Http\Request;
 
 class StoresController extends ApiBaseController
@@ -25,7 +25,7 @@ class StoresController extends ApiBaseController
     {
         $stores = Store::query()->with(['merchant'])
             ->filterRequest($request, [
-                GStoreFilter::class,
+                QStoreFilter::class,
                 MerchantIdFilter::class,
                 RegionFilter::class,
                 ActiveFilter::class,
@@ -51,21 +51,21 @@ class StoresController extends ApiBaseController
         return $store;
     }
 
-    public function store(StoreStoresRequest $request, StoreStoresUseCase $storeStoresUseCase)
+    public function store(StoreStoresRequest $request, SaveStoreUseCase $storeStoresUseCase)
     {
         $storeStoresDTO = StoreStoresDTO::fromArray($request->validated());
 
         return $storeStoresUseCase->execute($storeStoresDTO);
     }
 
-    public function update($store_id, UpdateStoresRequest $request, UpdateStoresUseCase $updateStoresUseCase)
+    public function update($store_id, UpdateStoresRequest $request, UpdateStoreUseCase $updateStoresUseCase)
     {
         $updateStoresDTO = UpdateStoresDTO::fromArray((int) $store_id, $request->validated());
 
         return $updateStoresUseCase->execute($updateStoresDTO);
     }
 
-    public function toggle($id, Request $request, ToggleStoresUseCase $toggleStoresUseCase)
+    public function toggle($id, Request $request, ToggleStoreUseCase $toggleStoresUseCase)
     {
         $this->validate($request, [
             'activity_reason_id' => 'integer|required',
@@ -74,7 +74,7 @@ class StoresController extends ApiBaseController
         return $toggleStoresUseCase->execute((int) $id, (int) $request->input('activity_reason_id'));
     }
 
-    public function setTypeRegister($id, Request $request, SetTypeRegisterStoresUseCase $setTypeRegisterStoresUseCase)
+    public function setTypeRegister($id, Request $request, SetTypeRegisterStoreUseCase $setTypeRegisterStoresUseCase)
     {
         $request->validate([
             'client_type_register' => 'required|string',
@@ -92,7 +92,7 @@ class StoresController extends ApiBaseController
             ->active()
             ->where('is_special', false)
             ->byMerchant($store->merchant_id)
-            ->filterRequests($request)
+            ->filterRequest($request, [])
             ->orderRequest($request)->get();
 
         return $conditionQuery->merge($special_conditions)->sortByDesc('updated_at');

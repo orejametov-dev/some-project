@@ -3,13 +3,15 @@
 namespace App\Modules\Merchants\Models;
 
 use App\Filters\Store\StoreFilters;
-use App\Modules\Merchants\Traits\StoreRelationshipsTrait;
 use App\Traits\SortableByQueryParams;
-use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -33,22 +35,33 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read Collection|Condition[] $application_conditions
  * @property-read int|null $application_conditions_count
- * @method static Builder|Store filterRequests(Request $request)
- * @method static Builder|Store filterRequest(Request $request, array $filters = [])
- * @method static Builder|Store main()
+ * @property string[] $filable
+ * @property int $is_archived
+ * @property bool $active
+ * @property string|null $district
+ * @property-read Collection|ActivityReason[] $activity_reasons
+ * @property-read int|null $activity_reasons_count
+ * @property-read Collection|Condition[] $conditions
+ * @property-read int|null $conditions_count
+ * @property-read Collection|Notification[] $notifications
+ * @property-read int|null $notifications_count
  * @method static Builder|Store newModelQuery()
  * @method static Builder|Store newQuery()
  * @method static Builder|Store orderRequest(Request $request, string $default_order_str = 'id:desc')
  * @method static Builder|Store query()
- * @mixin Eloquent
+ * @method static Builder|Store active()
+ * @method static Builder|Store byMerchant($merchant_id)
+ * @method static Builder|Store filterRequest(\Illuminate\Http\Request $request, array $filters = [])
+ * @method static Builder|Store main()
+ * @property string[] $fillable
  */
 class Store extends Model
 {
     use HasFactory;
-    use StoreRelationshipsTrait;
     use SortableByQueryParams;
 
     protected $table = 'stores';
+
     protected $fillable = [
         'name',
         'is_main',
@@ -64,64 +77,47 @@ class Store extends Model
         'client_type_register',
     ];
 
-    public function scopeFilterRequests(Builder $query, Request $request)
-    {
-        $searchIndex = $request->q;
-        if ($merchant_id = $request->query('merchant_id')) {
-            $query->where('merchant_id', $merchant_id);
-        }
-
-        if ($store_id = $request->query('store_id')) {
-            $query->where('id', $store_id);
-        }
-
-        if ($store_id = $request->query('id')) {
-            $query->where('id', $store_id);
-        }
-
-        if ($store_ids = $request->query('store_ids')) {
-            $store_ids = explode(';', $store_ids);
-            $query->whereIn('id', $store_ids);
-        }
-
-        if ($is_main = $request->query('is_main')) {
-            $query->where('is_main', $is_main);
-        }
-
-        if ($searchIndex) {
-            $query->where('name', 'like', '%' . $searchIndex . '%');
-        }
-
-        if ($request->query('region')) {
-            $query->where('region', $request->query('region'));
-        }
-
-        if ($request->has('active')) {
-            $query->where('active', $request->query('active'));
-        }
-    }
-
-    public function scopeMain($query)
-    {
-        return $query->where('is_main', true);
-    }
-
-    public function notifications()
+    public function notifications(): BelongsToMany
     {
         return $this->belongsToMany(Notification::class, 'store_notification', 'store_id', 'notification_id');
     }
 
-    public function scopeByMerchant(Builder $query, $merchant_id)
+    public function merchant(): BelongsTo
     {
-        $query->where('merchant_id', $merchant_id);
+        return $this->belongsTo(Merchant::class);
     }
 
-    public function scopeActive(Builder $query)
+    public function application_conditions(): HasMany
     {
-        $query->where('active', true);
+        return $this->hasMany(Condition::class);
     }
 
-    public function scopeFilterRequest(Builder $builder, Request $request, array $filters = [])
+    public function activity_reasons(): MorphToMany
+    {
+        return $this->morphToMany(ActivityReason::class, 'store', 'store_activities')->withTimestamps();
+    }
+
+    public function conditions(): BelongsToMany
+    {
+        return $this->belongsToMany(Condition::class, 'special_store_conditions', 'store_id', 'condition_id');
+    }
+
+    public function scopeMain($query): Builder
+    {
+        return $query->where('is_main', true);
+    }
+
+    public function scopeByMerchant(Builder $query, $merchant_id): Builder
+    {
+        return $query->where('merchant_id', $merchant_id);
+    }
+
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('active', true);
+    }
+
+    public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder
     {
         return (new StoreFilters($request, $builder))->execute($filters);
     }

@@ -5,16 +5,17 @@ namespace App\Modules\Merchants\Models;
 use App\Filters\Merchant\MerchantFilters;
 use App\HttpRepositories\HttpResponses\Prm\CompanyHttpResponse;
 use App\Modules\Merchants\Traits\MerchantFileTrait;
-use App\Modules\Merchants\Traits\MerchantRelationshipsTrait;
 use App\Traits\SortableByQueryParams;
 use Carbon\Carbon;
-use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 /**
  * App\Modules\Merchants\Models\Merchant.
@@ -23,20 +24,16 @@ use Illuminate\Support\Str;
  * @property string $name
  * @property string|null $legal_name
  * @property string|null $legal_name_prefix
- * @property string|null $information
  * @property string|null $token
- * @property string $alifshop_slug
- * @property string|null $telegram_chat_id
  * @property int $has_general_goods
  * @property string|null $logo_url
  * @property bool $recommend
- * @property string|null $paymo_terminal
  * @property int|null $maintainer_id
  * @property int|null $current_sales
  * @property int $company_id
  * @property int|null $min_application_price
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property-read Collection|AdditionalAgreement[] $additional_agreements
  * @property-read int|null $additional_agreements_count
  * @property-read Collection|Condition[] $application_conditions
@@ -51,19 +48,26 @@ use Illuminate\Support\Str;
  * @property-read int|null $stores_count
  * @property-read Collection|Tag[] $tags
  * @property-read int|null $tags_count
- * @method static Builder|Merchant filterRequests(Request $request)
- * @method static Builder|Merchant filterRequest(Request $request, array $filters = [])
+ * @property int $payment_day
+ * @property int $active
+ * @property-read Collection|ActivityReason[] $activity_reasons
+ * @property-read int|null $activity_reasons_count
+ * @property-read Collection|Condition[] $application_active_conditions
+ * @property-read int|null $application_active_conditions_count
+ * @property-read int|null $azo_merchant_accesses_count
+ * @property-read Collection|Competitor[] $competitors
+ * @property-read int|null $competitors_count
  * @method static Builder|Merchant newModelQuery()
  * @method static Builder|Merchant newQuery()
  * @method static Builder|Merchant orderRequest(Request $request, string $default_order_str = 'id:desc')
  * @method static Builder|Merchant query()
- * @mixin Eloquent
+ * @method static Builder|Merchant active()
+ * @method static Builder|Merchant filterRequest(\Illuminate\Http\Request $request, array $filters = [])
  */
 class Merchant extends Model
 {
     use HasFactory;
 
-    use MerchantRelationshipsTrait;
     use MerchantFileTrait;
     use SortableByQueryParams;
 
@@ -73,12 +77,8 @@ class Merchant extends Model
         'legal_name',
         'legal_name_prefix',
         'token',
-        'alifshop_slug',
-        'information',
         'logo_url',
-        'telegram_chat_id',
         'has_general_goods',
-        'paymo_terminal_id',
         'min_application_price',
         'active',
     ];
@@ -90,8 +90,6 @@ class Merchant extends Model
         'name' => 'Название партнёра',
         'legal_name' => 'Юридическое имя',
         'token' => 'Токен алифшопа',
-        'alifshop_slug' => 'Алифшоп слаг',
-        'information' => 'Информация',
     ];
 
     public function getLogoPathAttribute()
@@ -101,89 +99,6 @@ class Merchant extends Model
         }
 
         return config('local_services.services_storage.domain') . $this->logo_url;
-    }
-
-    public function scopeFilterRequests(Builder $query, Request $request)
-    {
-        if ($merchant_ids = $request->query('merchant_ids')) {
-            $merchant_ids = explode(';', $merchant_ids);
-            $query->whereIn('id', $merchant_ids);
-        }
-
-        if ($q = $request->query('q')) {
-            $query->where(function ($query) use ($q) {
-                $query->where('legal_name', 'like', '%' . $q . '%')
-                    ->orWhere('name', 'like', '%' . $q . '%');
-            });
-
-            if (is_numeric($q)) {
-                $query->orWhereHas('merchant_info', function (Builder $query) use ($q) {
-                    $query->Where('tin', $q)
-                        ->orWhere('contract_number', $q);
-                });
-            }
-        }
-
-        if ($merchant_id = $request->query('merchant_id')) {
-            $query->where('id', $merchant_id);
-        }
-
-        if ($merchant_id = $request->query('id')) {
-            $query->where('id', $merchant_id);
-        }
-
-        if ($legal_name = $request->query('legal_name')) {
-            $query->where('legal_name', $legal_name);
-        }
-
-        if ($alifshop_items = $request->query('alifshop_items')) {
-            $query->where('alifshop_items', $alifshop_items);
-        }
-
-        if ($telegram_chat_id = $request->query('telegram_chat_id')) {
-            $query->where('telegram_chat_id', $telegram_chat_id);
-        }
-
-        if ($request->query('date')) {
-            $date = Carbon::parse($request->query('date'));
-            $query->whereDate('created_at', $date);
-        }
-
-        if ($maintainer_id = $request->query('maintainer_id')) {
-            $query->where('maintainer_id', $maintainer_id);
-        }
-
-        if ($tags_string = $request->query('tags')) {
-            $tags = explode(';', $tags_string);
-
-            $query->whereHas('tags', function ($query) use ($tags) {
-                $query->whereIn('id', $tags);
-            });
-        }
-
-        if ($region = $request->query('region')) {
-            $query->whereHas('stores', function ($query) use ($region) {
-                $query->where('region', $region);
-            });
-        }
-
-        if ($token = $request->query('token')) {
-            $query->where('token', $token);
-        }
-
-        if ($status_id = $request->query('status_id')) {
-            $query->where('status_id', $status_id);
-        }
-
-        if ($request->has('active')) {
-            $query->where('active', $request->query('active'));
-        }
-
-        if ($request->query('tin')) {
-            $query->whereHas('merchant_info', function ($query) use ($request) {
-                $query->where('tin', $request->query('tin'));
-            });
-        }
     }
 
     public function scopeActive(Builder $query)
@@ -199,11 +114,61 @@ class Merchant extends Model
         $merchant->legal_name = $company->legal_name;
         $merchant->legal_name_prefix = $company->legal_name_prefix;
         $merchant->token = $company->token;
-        $merchant->alifshop_slug = Str::slug($company->name);
         $merchant->maintainer_id = $user_id;
         $merchant->company_id = $company->id;
 
         return $merchant;
+    }
+
+    public function stores(): HasMany
+    {
+        return $this->hasMany(Store::class);
+    }
+
+    public function azo_merchant_accesses(): HasMany
+    {
+        return $this->hasMany(AzoMerchantAccess::class);
+    }
+
+    public function application_conditions(): HasMany
+    {
+        return $this->hasMany(Condition::class);
+    }
+
+    public function application_active_conditions(): HasMany
+    {
+        return $this->hasMany(Condition::class)->where('active', true);
+    }
+
+    public function tags(): MorphToMany
+    {
+        return $this->morphToMany(Tag::class, 'merchant', 'merchant_tag', 'merchant_id', 'tag_id');
+    }
+
+    public function files(): HasMany
+    {
+        return $this->hasMany(File::class, 'merchant_id', 'id');
+    }
+
+    public function merchant_info(): HasOne
+    {
+        return $this->hasOne(MerchantInfo::class);
+    }
+
+    public function additional_agreements(): HasMany
+    {
+        return $this->hasMany(AdditionalAgreement::class);
+    }
+
+    public function activity_reasons(): BelongsToMany
+    {
+        return $this->belongsToMany(ActivityReason::class, 'merchant_activities', 'merchant_id', 'activity_reason_id')->withTimestamps()
+            ->withPivot(['id', 'merchant_id', 'activity_reason_id', 'active', 'created_by_id', 'created_by_name', 'created_at', 'updated_at']);
+    }
+
+    public function competitors(): BelongsToMany
+    {
+        return $this->belongsToMany(Competitor::class, 'merchant_competitor')->withPivot('volume_sales', 'percentage_approve', 'partnership_at')->withTimestamps();
     }
 
     public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder
