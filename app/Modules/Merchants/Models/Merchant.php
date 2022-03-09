@@ -171,6 +171,11 @@ class Merchant extends Model
         return $this->belongsToMany(Competitor::class, 'merchant_competitor')->withPivot('volume_sales', 'percentage_approve', 'partnership_at')->withTimestamps();
     }
 
+    public function merchant_activities(): HasMany
+    {
+        return $this->hasMany(MerchantActivity::class, 'merchant_id');
+    }
+
     public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder
     {
         return (new MerchantFilters($request, $builder))->execute($filters);
