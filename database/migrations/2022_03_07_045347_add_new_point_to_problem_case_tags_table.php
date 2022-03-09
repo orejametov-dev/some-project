@@ -14,7 +14,7 @@ class AddNewPointToProblemCaseTagsTable extends Migration
     public function up()
     {
         Schema::table('problem_case_tags', function (Blueprint $table) {
-            $table->unsignedInteger('point')->after('type_id');
+            $table->unsignedInteger('point')->nullable()->after('type_id');
         });
     }
 
