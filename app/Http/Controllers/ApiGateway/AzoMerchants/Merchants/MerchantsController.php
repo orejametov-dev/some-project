@@ -36,9 +36,14 @@ class MerchantsController extends ApiBaseController
     public function index(Request $request)
     {
         $merchants = Merchant::query()
-            ->with(['tags', 'activity_reasons' => function ($query) {
-                $query->orderByDesc('id')
-                    ->first();
+            ->with(['stores', 'tags', 'activity_reasons' => function ($query) {
+                $query
+                    ->whereHas('merchants', function ($query) {
+                        $query->where('merchants.active', false);
+                    })
+                    ->where('merchant_activities.active', false)
+                    ->orderByDesc('id')
+                    ->take(1);
             }])
             ->filterRequest($request, [
                 QMerchantFilter::class,
@@ -52,7 +57,7 @@ class MerchantsController extends ApiBaseController
             return $merchants->first();
         }
 
-        return $merchants->paginate($request->query('per_page') ?? 15);
+        return $merchants->paginate($request->query('per_page') ?? 3);
     }
 
     public function show($id)
