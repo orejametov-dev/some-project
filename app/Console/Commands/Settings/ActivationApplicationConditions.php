@@ -2,8 +2,7 @@
 
 namespace App\Console\Commands\Settings;
 
-use App\Modules\Merchants\Models\Condition;
-use Carbon\Carbon;
+use App\UseCases\ApplicationConditions\MassToggleApplicationConditionUseCase;
 use Illuminate\Console\Command;
 
 class ActivationApplicationConditions extends Command
@@ -37,17 +36,9 @@ class ActivationApplicationConditions extends Command
      *
      * @return int
      */
-    public function handle()
+    public function handle(MassToggleApplicationConditionUseCase $massToggleApplicationConditionUseCase)
     {
-        $to_date = Carbon::now()->format('Y-m-d');
-
-        Condition::query()
-            ->with('merchant')
-            ->whereHas('merchant', function ($query) {
-                $query->where('active', true);
-            })
-            ->where('started_at', $to_date)
-            ->update(['active' => true]);
+        $massToggleApplicationConditionUseCase->execute();
 
         return 0;
     }
