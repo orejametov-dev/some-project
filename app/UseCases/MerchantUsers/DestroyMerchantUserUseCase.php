@@ -13,7 +13,7 @@ use App\Modules\Merchants\Models\Store;
 class DestroyMerchantUserUseCase
 {
     public function __construct(
-        private FindMerchantUserUseCase $findMerchantUserUseCase,
+        private FindMerchantUserByIdUseCase $findMerchantUserUseCase,
         private GatewayAuthUser $authUser,
         private FlushMerchantUserCacheUseCase $flushMerchantUserCacheUseCase
     ) {

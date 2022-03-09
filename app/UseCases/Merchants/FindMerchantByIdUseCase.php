@@ -5,7 +5,7 @@ namespace App\UseCases\Merchants;
 use App\Exceptions\BusinessException;
 use App\Modules\Merchants\Models\Merchant;
 
-class FindMerchantUseCase
+class FindMerchantByIdUseCase
 {
     public function execute(int $merchant_id): Merchant
     {

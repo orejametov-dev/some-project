@@ -6,6 +6,7 @@ use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\Filters\Notification\NotificationFilters;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -26,6 +27,15 @@ use Illuminate\Http\Request;
  * @property Carbon|null $updated_at
  * @method static Builder|Notification filterRequest(Request $request, array $filters = [])
  * @method static Builder|Notification query()
+ * @property int $created_by_id
+ * @property string $created_by_name
+ * @property-read Collection|Store[] $stores
+ * @property-read int|null $stores_count
+ * @method static Builder|Notification newModelQuery()
+ * @method static Builder|Notification newQuery()
+ * @method static Builder|Notification onlyByMerchant($merchant_id)
+ * @method static Builder|Notification onlyByStore($store_id)
+ * @method static Builder|Notification onlyMoreThanStartSchedule()
  */
 class Notification extends Model
 {

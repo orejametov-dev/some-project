@@ -8,10 +8,10 @@ use App\Exceptions\BusinessException;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Store;
 
-class SetMainStoreUseCase
+class SetMerchantMainStoreUseCase
 {
     public function __construct(
-        private FindMerchantUseCase $findMerchantUseCase
+        private FindMerchantByIdUseCase $findMerchantUseCase
     ) {
     }
 
@@ -19,7 +19,7 @@ class SetMainStoreUseCase
     {
         $merchant = $this->findMerchantUseCase->execute($merchant_id);
 
-        $store = Store::where('merchant_id', $merchant->id)->find($store_id);
+        $store = Store::query()->where('merchant_id', $merchant->id)->find($store_id);
 
         if ($store === null) {
             throw new BusinessException('Магазин не найден', 'object_not_found', 404);
@@ -28,7 +28,7 @@ class SetMainStoreUseCase
         $store->is_main = true;
         $store->save();
 
-        Store::where('merchant_id', $merchant->id)->where('id', '<>', $store_id)->update([
+        Store::query()->where('merchant_id', $merchant->id)->where('id', '<>', $store_id)->update([
             'is_main' => false,
         ]);
 

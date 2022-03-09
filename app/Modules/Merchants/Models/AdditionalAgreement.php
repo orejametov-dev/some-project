@@ -4,7 +4,6 @@ namespace App\Modules\Merchants\Models;
 
 use App\Filters\AdditionalAgreement\AdditionalAgreementFilters;
 use Carbon\Carbon;
-use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -28,7 +27,7 @@ use Illuminate\Http\Request;
  * @method static Builder|AdditionalAgreement newModelQuery()
  * @method static Builder|AdditionalAgreement newQuery()
  * @method static Builder|AdditionalAgreement query()
- * @mixin Eloquent
+ * @property string|null $document_type
  */
 class AdditionalAgreement extends Model
 {

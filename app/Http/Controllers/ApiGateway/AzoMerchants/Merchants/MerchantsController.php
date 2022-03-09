@@ -23,7 +23,7 @@ use App\Modules\Merchants\Models\Tag;
 use App\UseCases\Competitors\AttachCompetitorUseCase;
 use App\UseCases\Competitors\DetachCompetitorUseCase;
 use App\UseCases\Competitors\UpdateCompetitorUseCase;
-use App\UseCases\Merchants\SetMainStoreUseCase;
+use App\UseCases\Merchants\SetMerchantMainStoreUseCase;
 use App\UseCases\Merchants\SetResponsibleUserUseCase;
 use App\UseCases\Merchants\StoreMerchantUseCase;
 use App\UseCases\Merchants\UpdateMerchantUseCase;
@@ -94,7 +94,7 @@ class MerchantsController extends ApiBaseController
         return $setResponsibleUserUseCase->execute($id, $request->input('maintainer_id'));
     }
 
-    public function setMainStore($id, SetMainStoreRequest $request, SetMainStoreUseCase $setMainStoreUseCase)
+    public function setMainStore($id, SetMainStoreRequest $request, SetMerchantMainStoreUseCase $setMainStoreUseCase)
     {
         return $setMainStoreUseCase->execute($id, $request->input('store_id'));
     }
@@ -107,7 +107,7 @@ class MerchantsController extends ApiBaseController
         $merchant = Merchant::query()->findOrFail($id);
         $tags = $request->input('tags');
 
-        $tags = Tag::whereIn('id', $tags)->get();
+        $tags = Tag::query()->whereIn('id', $tags)->get();
 
         foreach ($request->input('tags') as $tag) {
             if (!$tags->contains('id', $tag)) {
@@ -155,7 +155,7 @@ class MerchantsController extends ApiBaseController
             'activity_reason_id' => 'integer|required',
         ]);
 
-        $activity_reason = ActivityReason::where('type', 'MERCHANT')
+        $activity_reason = ActivityReason::query()->where('type', 'MERCHANT')
             ->findOrFail($request->input('activity_reason_id'));
 
         $merchant = Merchant::findOrFail($id);
