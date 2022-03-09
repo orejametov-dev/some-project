@@ -43,7 +43,7 @@ class MerchantsController extends ApiBaseController
                     })
                     ->where('merchant_activities.active', false)
                     ->orderByDesc('id')
-                    ->take(1);
+                    ->first();
             }])
             ->filterRequest($request, [
                 QMerchantFilter::class,
@@ -57,7 +57,7 @@ class MerchantsController extends ApiBaseController
             return $merchants->first();
         }
 
-        return $merchants->paginate($request->query('per_page') ?? 3);
+        return $merchants->paginate($request->query('per_page') ?? 15);
     }
 
     public function show($id)
