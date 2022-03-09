@@ -11,7 +11,7 @@ class FlushMerchantUserCacheUseCase
     ) {
     }
 
-    public function execute(int $user_id, int $merchant_id)
+    public function execute(int $user_id, int $merchant_id): void
     {
         $this->cacheRepository->tags('azo_merchants')->forget('azo_merchant_user_id_' . $user_id);
         $this->cacheRepository->tags($merchant_id)->flush();

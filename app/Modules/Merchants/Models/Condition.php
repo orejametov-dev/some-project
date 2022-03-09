@@ -5,8 +5,8 @@ namespace App\Modules\Merchants\Models;
 use App\Filters\Condition\ConditionFilters;
 use App\Traits\SortableByQueryParams;
 use Carbon\Carbon;
-use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -36,14 +36,16 @@ use Illuminate\Http\Request;
  * @property Carbon|null $started_at
  * @property Carbon|null $finished_at
  * @property-read mixed $title
- * @method static Builder|Condition active()
- * @method static Builder|Condition postMerchant()
- * @method static Builder|Condition filterRequest(Request $request, array $filters = [])
+ * @property-read Collection|Store[] $stores
+ * @property-read int|null $stores_count
  * @method static Builder|Condition newModelQuery()
  * @method static Builder|Condition newQuery()
  * @method static Builder|Condition orderRequest(Request $request, string $default_order_str = 'id:desc')
  * @method static Builder|Condition query()
- * @mixin Eloquent
+ * @method static Builder|Condition active()
+ * @method static Builder|Condition byMerchant($merchant_id)
+ * @method static Builder|Condition filterRequest(\Illuminate\Http\Request $request, array $filters = [])
+ * @method static Builder|Condition postMerchant()
  */
 class Condition extends Model
 {

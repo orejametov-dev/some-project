@@ -7,7 +7,7 @@ class MerchantStatus
     public const ACTIVE = 1;
     public const ARCHIVE = 2;
 
-    private static $statuses = [
+    private static array $statuses = [
         self::ACTIVE => [
             'id' => self::ACTIVE,
             'key' => 'ACTIVE',
@@ -20,7 +20,7 @@ class MerchantStatus
         ],
     ];
 
-    public static function getOneById(int $id)
+    public static function getOneById(int $id): array
     {
         return json_decode(json_encode(self::$statuses[$id]));
     }

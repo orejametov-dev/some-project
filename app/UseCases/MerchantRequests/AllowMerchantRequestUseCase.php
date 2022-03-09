@@ -12,6 +12,7 @@ use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\MerchantInfo;
 use App\Modules\Merchants\Models\Request as MerchantRequest;
 use App\Modules\Merchants\Models\Tag;
+use Illuminate\Support\Facades\DB;
 
 class AllowMerchantRequestUseCase
 {
@@ -22,7 +23,7 @@ class AllowMerchantRequestUseCase
 
     public function execute(int $id): MerchantRequest
     {
-        $merchant_request = MerchantRequest::find($id);
+        $merchant_request = MerchantRequest::query()->find($id);
 
         if ($merchant_request === null) {
             throw new BusinessException('Запрос на регистарцию не найден', 'object_not_found', 404);
@@ -61,15 +62,15 @@ class AllowMerchantRequestUseCase
             address: $merchant_request->address
         ));
 
-        \DB::transaction(function () use ($merchantInfo, $merchant, $merchant_request) {
+        DB::transaction(function () use ($merchantInfo, $merchant, $merchant_request) {
             $merchant->save();
 
             $merchantInfo->save();
 
             // вот тут немножко не понятно как быть?
             // вынести на отдельный use case ?
-            File::where('request_id', $merchant_request->id)->update(['merchant_id' => $merchant->id]);
-            $ids = Tag::whereIn('title', $merchant_request->categories)->pluck('id');
+            File::query()->where('request_id', $merchant_request->id)->update(['merchant_id' => $merchant->id]);
+            $ids = Tag::query()->whereIn('title', $merchant_request->categories)->pluck('id');
             $merchant->tags()->attach($ids);
             $merchant_request->setStatusAllowed();
             $merchant_request->save();
