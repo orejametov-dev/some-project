@@ -8,29 +8,29 @@ class TimeLogger
 {
     public const CACHE_KEY = 'logs_';
     public const CACHE_TTL = 24 * 60;
-    public $name;
-    public $started_at;
-    public $finished_at;
-    public $diff;
+    public string $name;
+    public float $started_at;
+    public float $finished_at;
+    public float $diff;
 
-    public function __construct($name)
+    public function __construct(string $name)
     {
         $this->name = $name;
     }
 
-    public function start()
+    public function start(): void
     {
         $this->started_at = microtime(true) * 1000;
     }
 
-    public function end()
+    public function end(): void
     {
         $this->finished_at = microtime(true) * 1000;
         $this->diff = round($this->finished_at - $this->started_at, 3);
         $this->save();
     }
 
-    private function save()
+    private function save(): void
     {
         if (config('local_services.time_logger')) {
             $cached_info = Cache::get(self::CACHE_KEY);

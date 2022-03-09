@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ApiLawGateway\ProblemCases\ProblemCasesController;
 use App\Http\Controllers\ApiLawGateway\ProblemCases\ProblemCaseTagsController;
+use Illuminate\Support\Facades\Route;
 
 Route::prefix('merchants/problem-cases')
     ->group(function () {

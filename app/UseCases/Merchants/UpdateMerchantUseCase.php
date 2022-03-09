@@ -13,7 +13,7 @@ class UpdateMerchantUseCase
 {
     public function __construct(
         private FlushCacheUseCase $flushCacheUseCase,
-        private FindMerchantUseCase $findMerchantUseCase
+        private FindMerchantByIdUseCase $findMerchantUseCase
     ) {
     }
 
@@ -23,13 +23,13 @@ class UpdateMerchantUseCase
     public function execute(UpdateMerchantDTO $updateMerchantDTO): Merchant
     {
         // check unique name
-        if (Merchant::where('name', $updateMerchantDTO->name)
+        if (Merchant::query()->where('name', $updateMerchantDTO->name)
             ->where('id', '!=', $updateMerchantDTO->id)->exists()) {
             throw new BusinessException('Мерчант с таким названием уже существует');
         }
 
         // check unique token
-        if (Merchant::where('token', $updateMerchantDTO->token)
+        if (Merchant::query()->where('token', $updateMerchantDTO->token)
             ->where('id', '!=', $updateMerchantDTO->id)->exists()) {
             throw new BusinessException('Мерчант с таким токеном уже существует');
         }

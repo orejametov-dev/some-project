@@ -5,9 +5,9 @@ namespace App\UseCases\ApplicationConditions;
 use App\Exceptions\BusinessException;
 use App\Modules\Merchants\Models\Condition;
 
-class FindConditionUseCase
+class FindConditionByIdUseCase
 {
-    public function execute($condition_id): ?Condition
+    public function execute(int $condition_id): Condition
     {
         $condition = Condition::query()->find($condition_id);
 

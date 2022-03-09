@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Alifuz\Utils\Gateway\Middlewares\GatewayAuthMiddleware;
 use Alifuz\Utils\Gateway\Middlewares\GatewayMiddleware;
+use App\Http\Middleware\AccessTokenMiddleware;
+use App\Http\Middleware\DetectTimeLoggerMiddleware;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -22,7 +24,7 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->routes(function () {
             Route::prefix('api')
-                ->middleware(['api', 'access-token', 'time-logger'])
+                ->middleware(['api', AccessTokenMiddleware::class, DetectTimeLoggerMiddleware::class])
                 ->namespace($this->namespace)
                 ->group(base_path('routes/api_gate.php'));
 

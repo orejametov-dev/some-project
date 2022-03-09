@@ -2,10 +2,6 @@
 
 namespace App\Http;
 
-use App\Http\Middleware\AccessTokenMiddleware;
-use App\Http\Middleware\CheckGatewayAuthUser;
-use App\Http\Middleware\DetectTimeLoggerMiddleware;
-use App\Http\Middleware\GatewayAccessMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -66,9 +62,5 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'gateway-access' => GatewayAccessMiddleware::class,
-        'access-token' => AccessTokenMiddleware::class,
-        'gateway-auth-user' => CheckGatewayAuthUser::class,
-        'time-logger' => DetectTimeLoggerMiddleware::class,
     ];
 }

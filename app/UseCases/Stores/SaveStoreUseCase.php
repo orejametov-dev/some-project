@@ -3,28 +3,25 @@
 namespace App\UseCases\Stores;
 
 use App\DTOs\Stores\StoreStoresDTO;
+use App\Exceptions\BusinessException;
 use App\Modules\Merchants\Models\Store;
 use App\UseCases\Cache\FlushCacheUseCase;
-use App\UseCases\Merchants\FindMerchantUseCase;
+use App\UseCases\Merchants\FindMerchantByIdUseCase;
 
-class StoreStoresUseCase
+class SaveStoreUseCase
 {
     public function __construct(
-        private FindMerchantUseCase $findMerchantUseCase,
-        private FlushCacheUseCase $flushCacheUseCase
+        private FindMerchantByIdUseCase $findMerchantUseCase,
+        private FlushCacheUseCase $flushCacheUseCase,
     ) {
     }
 
-    public function execute(StoreStoresDTO $storeStoresDTO)
+    public function execute(StoreStoresDTO $storeStoresDTO): Store
     {
         $merchant = $this->findMerchantUseCase->execute($storeStoresDTO->merchant_id);
 
-        $store_exists = Store::query()
-            ->where('name', $storeStoresDTO->name)
-            ->exists();
-
-        if ($store_exists) {
-            return response()->json(['message' => 'Указанное имя уже занято другим магазином'], 400);
+        if (Store::query()->where('name', $storeStoresDTO->name)->exists() === true) {
+            throw new BusinessException('Указанное имя уже занято другим магазином', 'object_not_found', 400);
         }
 
         $merchant_store = new Store();
@@ -36,7 +33,7 @@ class StoreStoresUseCase
         $merchant_store->region = $storeStoresDTO->region;
         $merchant_store->district = $storeStoresDTO->district;
 
-        if (Store::where('merchant_id', $merchant->id)->count() === 0) {
+        if (Store::query()->where('merchant_id', $merchant->id)->count() === 0) {
             $merchant_store->is_main = true;
         }
 

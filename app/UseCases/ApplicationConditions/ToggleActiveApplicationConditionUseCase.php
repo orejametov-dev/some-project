@@ -6,19 +6,20 @@ use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\HttpRepositories\Alifshop\AlifshopHttpRepository;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
+use App\Modules\Merchants\Models\Condition;
 use App\UseCases\Cache\FlushCacheUseCase;
 
 class ToggleActiveApplicationConditionUseCase
 {
     public function __construct(
         private AlifshopHttpRepository $alifshopHttpRepository,
-        private FindConditionUseCase $findConditionUseCase,
+        private FindConditionByIdUseCase $findConditionUseCase,
         private FlushCacheUseCase $flushCacheUseCase,
         private GatewayAuthUser $gatewayAuthUser
     ) {
     }
 
-    public function execute(int $condition_id)
+    public function execute(int $condition_id) : Condition
     {
         $condition = $this->findConditionUseCase->execute($condition_id);
         $condition->active = !$condition->active;

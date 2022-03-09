@@ -3,6 +3,7 @@
 namespace App\UseCases\ApplicationConditions;
 
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
+use App\Exceptions\BusinessException;
 use App\HttpRepositories\Core\CoreHttpRepository;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
@@ -12,19 +13,19 @@ class DeleteApplicationConditionUseCase
 {
     public function __construct(
         private CoreHttpRepository $coreHttpRepository,
-        private FindConditionUseCase $findConditionUseCase,
+        private FindConditionByIdUseCase $findConditionUseCase,
         private FlushCacheUseCase $flushCacheUseCase,
         private GatewayAuthUser $gatewayAuthUser
     ) {
     }
 
-    public function execute(int $condition_id)
+    public function execute(int $condition_id): void
     {
         $condition = $this->findConditionUseCase->execute($condition_id);
         $applications = $this->coreHttpRepository->checkApplicationToExistByConditionId($condition_id);
 
         if ($applications) {
-            return response()->json(['message' => 'Условие не может быть удалено'], 400);
+            throw new BusinessException('Условие не может быть удалено', '', 400);
         }
 
         $merchant = $condition->merchant;
@@ -45,7 +46,5 @@ class DeleteApplicationConditionUseCase
         ));
 
         $this->flushCacheUseCase->execute($merchant->id);
-
-        return response()->json(['message' => 'Условие удалено']);
     }
 }

@@ -9,7 +9,7 @@ class ClientTypeRegisterService
     public const MYID = 'MYID';
     public const COMMON = 'COMMON';
 
-    private static $client_type_register = [
+    private static array $client_type_register = [
         self::MYID => [
             'key' => self::MYID,
             'type' => 'MYID',
@@ -25,7 +25,7 @@ class ClientTypeRegisterService
         return self::$client_type_register;
     }
 
-    public static function getOneByKey(string $type)
+    public static function getOneByKey(string $type): array
     {
         $type_register = array_search($type, array_column(self::$client_type_register, 'key', 'key'));
 

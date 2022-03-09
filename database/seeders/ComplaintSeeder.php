@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class ComplaintSeeder extends Seeder
 {
@@ -144,7 +145,7 @@ class ComplaintSeeder extends Seeder
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
-        \DB::table('complaints')->insert([
+        DB::table('complaints')->insert([
             $complaint_1,
             $complaint_2,
             $complaint_3,

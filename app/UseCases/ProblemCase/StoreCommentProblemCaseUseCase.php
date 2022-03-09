@@ -3,7 +3,7 @@
 namespace App\UseCases\ProblemCase;
 
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
-use App\Modules\Merchants\DTO\Comments\CommentDTO;
+use App\DTOs\Comments\CommentDTO;
 use App\Modules\Merchants\Models\Comment;
 
 class StoreCommentProblemCaseUseCase

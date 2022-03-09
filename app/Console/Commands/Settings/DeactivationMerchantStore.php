@@ -9,6 +9,7 @@ use App\Modules\Merchants\Models\Merchant;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Log;
 
 class DeactivationMerchantStore extends Command
@@ -49,11 +50,11 @@ class DeactivationMerchantStore extends Command
         $from_date = Carbon::now()->subWeeks(2)->format('Y-m-d');
         $to_date = Carbon::now()->format('Y-m-d');
 
-        Merchant::where('active', true)
+        Merchant::query()->where('active', true)
             ->where('created_at', '<', $from_date)
             ->chunkById(100, function ($merchants) use ($companyHttpRepository, $coreService, $from_date, $to_date) {
                 foreach ($merchants as $merchant) {
-                    $activity_reasons = \DB::table('merchant_activities')
+                    $activity_reasons = DB::table('merchant_activities')
                         ->where('merchant_id', $merchant->id)
                         ->orderByDesc('id')
                         ->first();
