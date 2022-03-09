@@ -20,7 +20,7 @@ class MerchantStatus
         ],
     ];
 
-    public static function getOneById(int $id): array
+    public static function getOneById(int $id)
     {
         return json_decode(json_encode(self::$statuses[$id]));
     }
