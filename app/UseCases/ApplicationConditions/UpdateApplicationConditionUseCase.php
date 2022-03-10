@@ -26,7 +26,11 @@ class UpdateApplicationConditionUseCase
     {
         $condition = $this->findConditionUseCase->execute($updateConditionDTO->condition_id);
 
-        if ($this->coreHttpRepository->checkApplicationToExistByConditionId($updateConditionDTO->condition_id)) {
+        if ($this->coreHttpRepository->checkApplicationToExistByConditionId($updateConditionDTO->condition_id)
+            && $condition->commission !== $updateConditionDTO->commission
+            && $condition->duration !== $updateConditionDTO->duration
+            && $condition->discount !== $updateConditionDTO->discount
+        ) {
             throw new BusinessException('Условие не может быть изменено', 'not_allowed', 400);
         }
 
