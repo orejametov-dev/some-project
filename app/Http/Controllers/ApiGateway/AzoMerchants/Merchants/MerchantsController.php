@@ -6,6 +6,7 @@ use App\DTOs\Competitors\CompetitorDTO;
 use App\DTOs\Merchants\UpdateMerchantDTO;
 use App\Filters\CommonFilters\ActiveFilter;
 use App\Filters\CommonFilters\TagsFilter;
+use App\Filters\Merchant\ActivityReasonIdFilter;
 use App\Filters\Merchant\MaintainerIdFilter;
 use App\Filters\Merchant\QMerchantFilter;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
@@ -47,6 +48,7 @@ class MerchantsController extends ApiBaseController
                 ActiveFilter::class,
                 MaintainerIdFilter::class,
                 TagsFilter::class,
+                ActivityReasonIdFilter::class,
             ])
             ->orderRequest($request);
 

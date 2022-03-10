@@ -25,6 +25,7 @@ class MerchantFilters extends AbstractFilters
         ActiveFilter::class,
         TinMerchantFilter::class,
         SpecialMerchantIdFilter::class,
+        ActivityReasonIdFilter::class,
     ];
 
     protected function getRequestBindings(): array
