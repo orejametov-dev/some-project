@@ -5,7 +5,7 @@ namespace App\Console\Commands\Settings;
 use App\HttpServices\Core\CoreService;
 use App\Modules\Merchants\Models\Merchant;
 use Illuminate\Console\Command;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 class UpdateCurrentSales extends Command
 {

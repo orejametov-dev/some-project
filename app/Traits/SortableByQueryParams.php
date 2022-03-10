@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 trait SortableByQueryParams
 {
-    public function scopeOrderRequest(Builder $query, Request $request, string $default_order_str = 'id:desc')
+    public function scopeOrderRequest(Builder $query, Request $request, string $default_order_str = 'id:desc'): Builder
     {
         $order_str = $request->query('order') ?? $default_order_str;
         $orders_arr = explode(',', $order_str);

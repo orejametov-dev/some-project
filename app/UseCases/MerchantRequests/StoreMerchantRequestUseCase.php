@@ -18,7 +18,7 @@ class StoreMerchantRequestUseCase
     ) {
     }
 
-    public function execute(StoreMerchantRequestDTO $storeMerchantRequestDTO)
+    public function execute(StoreMerchantRequestDTO $storeMerchantRequestDTO, bool $fromPrm): MerchantRequest
     {
         $merchant_request = MerchantRequest::query()
             ->where('user_phone', $storeMerchantRequestDTO->user_phone)
@@ -31,7 +31,7 @@ class StoreMerchantRequestUseCase
         }
 
         if ($this->companyHttpRepository->checkCompanyToExistByName($storeMerchantRequestDTO->name) === true) {
-            return response()->json(['message' => 'Указанное имя компании уже занято'], 400);
+            throw new BusinessException('Указанное имя компании уже занято', 'object_not_found', 400);
         }
 
         $merchant_request = new MerchantRequest();
@@ -45,9 +45,12 @@ class StoreMerchantRequestUseCase
         $merchant_request->region = $storeMerchantRequestDTO->region;
         $merchant_request->district = $storeMerchantRequestDTO->district;
 
-        $merchant_request->address = $storeMerchantRequestDTO->address;
-        $merchant_request->engaged_by_id = $this->gatewayAuthUser->getId();
-        $merchant_request->engaged_by_name = $this->gatewayAuthUser->getName();
+        if ($fromPrm === true) {
+            $merchant_request->address = $storeMerchantRequestDTO->address;
+            $merchant_request->engaged_by_id = $this->gatewayAuthUser->getId();
+            $merchant_request->engaged_by_name = $this->gatewayAuthUser->getName();
+        }
+
         $merchant_request->created_from_name = $this->gatewayApplication->getApplication()->getValue();
         $merchant_request->setStatusNew();
 

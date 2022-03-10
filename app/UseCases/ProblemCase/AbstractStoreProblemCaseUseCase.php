@@ -75,5 +75,5 @@ abstract class AbstractStoreProblemCaseUseCase
 
     abstract protected function getDataByIdentifier(string|int $identifier): mixed;
 
-    abstract protected function setIdentifierNumberAndDate(ProblemCase $problemCase, $identifier_number, $data);
+    abstract protected function setIdentifierNumberAndDate(ProblemCase $problemCase, string|int $identifier_number, mixed $data): void;
 }

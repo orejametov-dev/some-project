@@ -11,10 +11,11 @@ class FlushCacheUseCase
     ) {
     }
 
-    public function execute(int $merchant_id)
+    public function execute(int $merchant_id) : void
     {
         $this->cacheRepository->tags($merchant_id)->flush();
         $this->cacheRepository->tags('azo_merchants')->flush();
         $this->cacheRepository->tags('company')->flush();
+        $this->cacheRepository->tags('merchants')->flush();
     }
 }

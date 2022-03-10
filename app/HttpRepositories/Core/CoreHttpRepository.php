@@ -4,18 +4,21 @@ namespace App\HttpRepositories\Core;
 
 use App\HttpRepositories\HttpResponses\Core\ApplicationIdApplicationDataResponse;
 use App\HttpRepositories\HttpResponses\Core\CreditNumberApplicationDataResponse;
+use App\HttpRepositories\HttpResponses\Core\MerchantApplicationsAndClientsCountByRangeDataResponse;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 
 class CoreHttpRepository
 {
-    public function getMerchantApplicationsAndClientsCountByRange($merchant_id, $from_date, $to_date)
+    public function getMerchantApplicationsAndClientsCountByRange($merchant_id, $from_date, $to_date): MerchantApplicationsAndClientsCountByRangeDataResponse
     {
-        return $this->getHttpClient()->get('merchant-activity', [
+        $result = $this->getHttpClient()->get('merchant-activity', [
             'from_date' => $from_date,
             'to_date' => $to_date,
             'merchant_id' => $merchant_id,
         ])->json();
+
+        return MerchantApplicationsAndClientsCountByRangeDataResponse::fromArray($result['data']);
     }
 
     public function getStoreApplicationsAndClientsCountByRange($store_id, $from_date, $to_date)

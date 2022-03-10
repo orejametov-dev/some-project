@@ -16,6 +16,7 @@ use App\Services\ClientTypeRegisterService;
 use App\Services\DistrictService;
 use App\Services\LegalNameService;
 use App\Services\RegionService;
+use Illuminate\Support\Facades\Cache;
 
 class AppController extends ApiBaseController
 {
@@ -32,7 +33,10 @@ class AppController extends ApiBaseController
         $cancel_reasons = CancelReason::query()->get();
         $legal_name_prefixes = LegalNameService::getNamePrefixes();
         $competitors = Competitor::query()->select('id', 'name')->get()->toArray();
-        $condition_templates = ConditionTemplate::allCached();
+
+        $condition_templates = Cache::remember('condition_templates:table', 3600, function () {
+            return ConditionTemplate::query()->get();
+        });
 
         $authUser = $this->user;
 
