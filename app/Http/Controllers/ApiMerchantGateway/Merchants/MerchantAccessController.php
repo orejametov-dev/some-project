@@ -20,6 +20,6 @@ class MerchantAccessController extends Controller
             throw new BusinessException('Сотрудник не найден', 'object_not_found', 404);
         }
 
-        return new AccessMerchantCheckToActiveMerchantResource($azo_merchant_access);
+        return new AccessMerchantCheckToActiveMerchantResource($azo_merchant_access->merchant);
     }
 }
