@@ -23,6 +23,9 @@ Composer Install:
     paths:
       - vendor
     expire_in: 1 day
+  tags:
+    - docker
+    - cicd
 
 Build:
   stage: build
@@ -34,7 +37,7 @@ Build:
     - docker push $CI_REGISTRY_IMAGE:latest
   tags:
     - cicd
-    - shell
+    - dind
 
 Static-analyze:
   stage: test
@@ -45,7 +48,7 @@ Static-analyze:
     - docker run --rm $CI_REGISTRY_IMAGE:latest ./vendor/bin/phpstan analyse --memory-limit=2G --configuration='infra/config/phpstan.neon'
   tags:
     - cicd
-    - shell
+    - dind
 
 Check-CS-Fixer:
   stage: test
@@ -56,5 +59,5 @@ Check-CS-Fixer:
     - docker run --rm $CI_REGISTRY_IMAGE:latest ./vendor/bin/php-cs-fixer fix -vvv --dry-run --show-progress=dots --config=./infra/config/.php-cs-fixer.php --allow-risky=yes
   tags:
     - cicd
-    - shell
+    - dind
 
