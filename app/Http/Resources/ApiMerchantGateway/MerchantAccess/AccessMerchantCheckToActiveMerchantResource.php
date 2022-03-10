@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources\ApiMerchantGateway\MerchantAccess;
 
-use App\Modules\Merchants\Models\AzoMerchantAccess;
+use App\Modules\Merchants\Models\Merchant;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class AccessMerchantCheckToActiveMerchantResource extends JsonResource
@@ -15,10 +15,10 @@ class AccessMerchantCheckToActiveMerchantResource extends JsonResource
      */
     public function toArray($request)
     {
-        /** @var AzoMerchantAccess|AccessMerchantCheckToActiveMerchantResource $this */
+        /** @var Merchant|AccessMerchantCheckToActiveMerchantResource $this */
         return [
-            'name' => $this->merchant->name,
-            'active' => $this->merchant->active,
+            'name' => $this->name,
+            'active' => $this->active,
         ];
     }
 }
