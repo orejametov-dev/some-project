@@ -178,7 +178,7 @@ class MerchantsController extends ApiBaseController
 
         Cache::tags($merchant->id)->flush();
         Cache::tags('merchants')->flush();
-        Cache::tags('azo_merchant')->flush();
+        Cache::tags('azo_merchants')->flush();
 
         return $merchant;
     }
