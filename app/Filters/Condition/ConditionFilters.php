@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filters\Condition;
 
 use App\Filters\AbstractFilters;

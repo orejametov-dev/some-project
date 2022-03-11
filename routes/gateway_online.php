@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Alifuz\Utils\Gateway\Middlewares\GatewayAuthMiddleware;
 use App\Http\Controllers\ApiOnlineGateway\Conditions\ConditionsController;
 use App\Http\Controllers\ApiOnlineGateway\Merchants\MerchantsController as OnlineMerchantsController;

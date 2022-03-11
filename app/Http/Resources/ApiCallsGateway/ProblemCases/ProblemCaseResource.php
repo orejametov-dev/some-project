@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources\ApiCallsGateway\ProblemCases;
 
 use App\Http\Resources\ApiCallsGateway\Merchants\MerchantResource;

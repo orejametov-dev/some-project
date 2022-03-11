@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Http\Controllers\ApiGate\Complaints\ComplaintsController;
 use App\Http\Controllers\ApiGate\Conditions\ConditionsController;
 use App\Http\Controllers\ApiGate\Merchants\AzoMerchantAccesses;

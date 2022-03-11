@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Merchants\Models;
 
 use App\Filters\MerchantRequest\MerchantRequestFilters;
@@ -37,10 +39,10 @@ use Illuminate\Support\Collection;
  * @property string|null $engaged_by_name
  * @property array $categories
  * @property int $approximate_sales
- * @property string|null $engaged_at
+ * @property Carbon|null $engaged_at
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property string|null $status_updated_at
+ * @property Carbon|null $status_updated_at
  * @property string $created_from_name
  * @property-read Collection|File[] $files
  * @property-read mixed $status
@@ -86,6 +88,10 @@ class Request extends Model
 
     protected $table = 'merchant_requests';
     protected $appends = ['status'];
+    protected $dates = [
+        'status_updated_at',
+        'engaged_at',
+    ];
     protected $casts = ['categories' => 'array'];
     protected $fillable = [
         'name',

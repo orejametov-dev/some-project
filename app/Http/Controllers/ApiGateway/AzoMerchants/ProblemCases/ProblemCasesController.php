@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases;
 
 use App\DTOs\Comments\CommentDTO;

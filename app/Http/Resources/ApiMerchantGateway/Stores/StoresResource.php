@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources\ApiMerchantGateway\Stores;
 
 use App\Modules\Merchants\Models\Store;
