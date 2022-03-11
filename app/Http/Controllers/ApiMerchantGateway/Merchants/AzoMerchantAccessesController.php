@@ -101,7 +101,7 @@ class AzoMerchantAccessesController extends ApiBaseController
             $code = 1111;
         }
 
-        $otpProtector->writeOtpToCache($code);
+        $otpProtector->writeOtpToCache((int) $code);
 
         return response()->json(['code' => 'otp_sent',
             'message' => [
