@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\ApiGateway;
 
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;

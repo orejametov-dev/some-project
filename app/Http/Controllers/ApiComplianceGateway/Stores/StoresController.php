@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\ApiComplianceGateway\Stores;
 
 use App\Filters\Store\QStoreFilter;

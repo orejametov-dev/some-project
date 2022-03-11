@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Alifuz\Utils\Gateway\Middlewares\GatewayAuthMiddleware;
 use Alifuz\Utils\Gateway\Middlewares\GatewayMiddleware;
 use App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantsController;

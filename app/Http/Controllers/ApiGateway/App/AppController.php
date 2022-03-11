@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\ApiGateway\App;
 
 use App\Http\Controllers\ApiGateway\ApiBaseController;

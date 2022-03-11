@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Merchants\Models;
 
 use App\Filters\ProblemCase\ProblemCaseFilters;
@@ -51,7 +53,7 @@ use Illuminate\Http\Request;
  * @property ProblemCaseTag|null $before_tags
  * @property ProblemCaseTag|null $tags
  * @property-read Store|null $store
- * @property string $status_updated_at
+ * @property Carbon $status_updated_at
  * @property int|null $assigned_to_id
  * @property string|null $assigned_to_name
  * @property string|null $manager_comment
@@ -165,7 +167,9 @@ class ProblemCase extends Model implements SimpleStateMachinable
         'post_or_pre_created_by_id',
         'post_or_pre_created_by_name',
     ];
-
+    protected $dates = [
+        'status_updated_at',
+    ];
     protected $casts = [
         'application_items' => 'array',
     ];

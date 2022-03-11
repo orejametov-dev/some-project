@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Stores;
 
 use App\DTOs\Stores\StoreStoresDTO;

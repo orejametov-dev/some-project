@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\HttpServices\Auth;
 
 use Illuminate\Support\Facades\Http;

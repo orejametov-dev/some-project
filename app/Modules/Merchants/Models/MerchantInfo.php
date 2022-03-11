@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Merchants\Models;
 
 use App\DTOs\MerchantInfos\StoreMerchantInfoDTO;
 use App\Filters\MerchantInfo\MerchantInfoFilters;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -29,7 +32,7 @@ use Illuminate\Http\Request;
  * @property int $merchant_id
  * @property int|null $limit
  * @property string|null $limit_expired_at
- * @property string|null $contract_date
+ * @property Carbon|null $contract_date
  * @property int|null $rest_limit
  * @property-read Merchant $merchant
  * @method static Builder|MerchantInfo filterRequest(Request $request, array $filters = [])
@@ -44,6 +47,9 @@ class MerchantInfo extends Model
     public const LIMIT = 100000000000;
 
     protected $table = 'merchant_infos';
+    protected $dates = [
+        'contract_date',
+    ];
     protected $fillable = [
         'legal_name',
         'director_name',

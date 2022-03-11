@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filters\CommonFilters;
 
 use App\Filters\AbstractExactFilter;
@@ -11,7 +13,7 @@ class DateFilter extends AbstractExactFilter
     public function filter(Builder $builder, mixed $value): void
     {
         $date = Carbon::parse($value);
-        $builder->whereDate('created_at', $date);
+        $builder->whereDate('created_at', '=', $date);
     }
 
     public function getBindingName(): string

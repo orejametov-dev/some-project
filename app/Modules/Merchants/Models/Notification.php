@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Merchants\Models;
 
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
