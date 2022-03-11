@@ -2,12 +2,17 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\ApiCallsGateway\Comments\CommentsController;
 use App\Http\Controllers\ApiCallsGateway\ProblemCases\ProblemCasesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::prefix('comments')->group(function () {
+    Route::get('/', [CommentsController::class, 'index']);
 });
 
 Route::prefix('merchants/problem-cases')
