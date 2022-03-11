@@ -24,6 +24,7 @@ use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\MerchantActivity;
 use App\Modules\Merchants\Models\Tag;
+use App\UseCases\Cache\FlushCacheUseCase;
 use App\UseCases\Competitors\AttachCompetitorUseCase;
 use App\UseCases\Competitors\DetachCompetitorUseCase;
 use App\UseCases\Competitors\UpdateCompetitorUseCase;
@@ -159,7 +160,7 @@ class MerchantsController extends ApiBaseController
             ])->whereRaw("(IFNULL(sub_query.limit, 0) + IFNULL(sub_query.agreement_sum, 0)) $percentage_of_limit <= sub_query.current_sales")->get();
     }
 
-    public function toggle($id, Request $request)
+    public function toggle($id, Request $request, FlushCacheUseCase $flushCacheUseCase)
     {
         $this->validate($request, [
             'activity_reason_id' => 'integer|required',
@@ -180,8 +181,7 @@ class MerchantsController extends ApiBaseController
 
         CompanyService::setStatusNotActive($merchant->company_id);
 
-        Cache::tags($merchant->id)->flush();
-        Cache::tags('merchants')->flush();
+        $flushCacheUseCase->execute($merchant->id);
 
         return $merchant;
     }
