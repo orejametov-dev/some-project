@@ -52,7 +52,7 @@ class AzoMerchantAccessesController extends ApiBaseController
 
     public function update($id, UpdateMerchantUserRequest $request, UpdateMerchantUserUseCase $updateMerchantUserUseCase)
     {
-        return $updateMerchantUserUseCase->execute($id, $request->input('store_id'));
+        return $updateMerchantUserUseCase->execute((int) $id, $request->input('store_id'));
     }
 
     public function destroy($id, DestroyMerchantUserUseCase $destroyMerchantUserUseCase)
