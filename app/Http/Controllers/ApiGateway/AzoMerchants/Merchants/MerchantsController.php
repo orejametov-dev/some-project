@@ -150,7 +150,7 @@ class MerchantsController extends ApiBaseController
             })
             ->groupBy(['merchants.id', 'merchants.name', 'merchant_infos.limit']);
 
-        return DB::table(DB::raw("({$merchant_query->toSql()}) as sub_query")->getValue())
+        return DB::table(DB::raw("({$merchant_query->toSql()}) as sub_query"))
             ->select([
                 'sub_query.id',
                 'sub_query.name',
