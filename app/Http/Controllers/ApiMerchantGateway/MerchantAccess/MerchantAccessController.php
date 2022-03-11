@@ -15,6 +15,7 @@ class MerchantAccessController extends Controller
     {
         return Cache::tags('azo_merchants')->remember('active_merchant_by_user_id_' . $gatewayAuthUser->getId(), 86400, function () use ($gatewayAuthUser) {
             $azo_merchant_access = AzoMerchantAccess::query()
+                ->with(['merchant', 'store'])
                 ->where('user_id', $gatewayAuthUser->getId())
                 ->first();
 
@@ -22,7 +23,7 @@ class MerchantAccessController extends Controller
                 throw new BusinessException('Сотрудник не найден', 'object_not_found', 404);
             }
 
-            return new AccessMerchantCheckToActiveMerchantResource($azo_merchant_access->merchant);
+            return new AccessMerchantCheckToActiveMerchantResource($azo_merchant_access);
         });
     }
 }
