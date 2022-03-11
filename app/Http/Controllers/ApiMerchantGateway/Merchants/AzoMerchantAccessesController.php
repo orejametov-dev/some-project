@@ -121,7 +121,7 @@ class AzoMerchantAccessesController extends ApiBaseController
         $user = AuthMicroService::getUserById($request->input('user_id'));
 
         $protector = new OtpProtector('new_azo_merchant_user_' . $user['data']['phone']);
-        $protector->verifyOtp($request->input('code'));
+        $protector->verifyOtp((int) $request->input('code'));
 
         if (array_search(AuthMicroService::AZO_MERCHANT_ROLE, array_column($user['data']['roles'], 'name'))) {
             throw new ApiBusinessException('Пользователь уже является сотрудником мерчанта', 'merchant_exists', [
