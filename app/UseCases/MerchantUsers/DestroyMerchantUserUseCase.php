@@ -42,7 +42,7 @@ class DestroyMerchantUserUseCase
             created_by_str: $this->authUser->getName(),
         ));
 
-        $this->flushMerchantUserCacheUseCase->execute($azo_merchant_access->user_id, $azo_merchant_access->merchant_id);
+        $this->flushMerchantUserCacheUseCase->execute($azo_merchant_access->user_id, $azo_merchant_access->merchant_id, $this->authUser->getId());
         ToggleMerchantRoleOfUser::dispatch($azo_merchant_access->user_id, AuthMicroService::DEACTIVATE_MERCHANT_ROLE);
     }
 }
