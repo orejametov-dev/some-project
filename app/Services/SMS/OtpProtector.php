@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Cache;
 class OtpProtector
 {
     private string $key;
-    private Cache $cached_info;
+    private mixed $cached_info;
     const EXPIRES_IN = 600; // 10 min
 
     public function __construct(string $key)
