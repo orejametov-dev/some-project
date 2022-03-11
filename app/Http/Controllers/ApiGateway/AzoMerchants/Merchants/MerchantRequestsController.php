@@ -152,7 +152,7 @@ class MerchantRequestsController extends ApiBaseController
 
     public function allow($id, AllowMerchantRequestUseCase $allowMerchantRequestUseCase)
     {
-        $merchant_request = $allowMerchantRequestUseCase->execute($id);
+        $merchant_request = $allowMerchantRequestUseCase->execute((int) $id);
 
         return $merchant_request;
     }

@@ -57,7 +57,7 @@ class AzoMerchantAccessesController extends ApiBaseController
 
     public function destroy($id, DestroyMerchantUserUseCase $destroyMerchantUserUseCase)
     {
-        $destroyMerchantUserUseCase->execute($id);
+        $destroyMerchantUserUseCase->execute((int) $id);
 
         return response()->json(['message' => 'Сотрудник удален']);
     }
