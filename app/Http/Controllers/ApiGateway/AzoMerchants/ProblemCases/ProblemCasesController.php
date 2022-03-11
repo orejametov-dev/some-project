@@ -63,14 +63,14 @@ class ProblemCasesController extends ApiBaseController
 
     public function setManagerComment($id, StoreCommentRequest $request, StoreCommentProblemCaseUseCase $storeCommentProblemCaseUseCase)
     {
-        $commentDTO = CommentDTO::fromArray($id, $request->validated(), Comment::PROBLEM_CASE_FOR_PRM);
+        $commentDTO = CommentDTO::fromArray((int) $id, $request->validated(), Comment::PROBLEM_CASE_FOR_PRM);
 
         return $storeCommentProblemCaseUseCase->execute($commentDTO);
     }
 
     public function setMerchantComment($id, StoreCommentRequest $request, StoreCommentProblemCaseUseCase $storeCommentProblemCaseUseCase)
     {
-        $commentDTO = CommentDTO::fromArray($id, $request->validated(), Comment::PROBLEM_CASE_FOR_MERCHANT);
+        $commentDTO = CommentDTO::fromArray((int) $id, $request->validated(), Comment::PROBLEM_CASE_FOR_MERCHANT);
 
         return $storeCommentProblemCaseUseCase->execute($commentDTO);
     }
