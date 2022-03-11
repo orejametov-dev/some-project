@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\HttpRepositories\HttpResponses\Auth;
 
 use Alifuz\Utils\Parser\ParseDataTrait;

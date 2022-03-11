@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Http\Controllers\ApiGateway\AzoMerchants\Comments\CommentsController;
 use App\Http\Controllers\ApiGateway\AzoMerchants\Complaints\ComplaintsController;
 use App\Http\Controllers\ApiGateway\AzoMerchants\ExtraServices\MerchantsController as ExtraMerchantsController;

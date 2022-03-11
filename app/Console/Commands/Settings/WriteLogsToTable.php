@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands\Settings;
 
 use App\Modules\Merchants\Models\Log;

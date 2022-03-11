@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources\ApiGate\Merchants;
 
 use App\Http\Resources\ApiGate\Conditions\ConditionsResource;

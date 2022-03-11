@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\ApiMerchantGateway\Stores;
 
 use App\Http\Controllers\ApiMerchantGateway\ApiBaseController;

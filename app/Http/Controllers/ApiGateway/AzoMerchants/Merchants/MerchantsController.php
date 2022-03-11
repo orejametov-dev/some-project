@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
 use App\DTOs\Competitors\CompetitorDTO;
@@ -148,7 +150,7 @@ class MerchantsController extends ApiBaseController
             })
             ->groupBy(['merchants.id', 'merchants.name', 'merchant_infos.limit']);
 
-        return DB::table(DB::raw("({$merchant_query->toSql()}) as sub_query"))
+        return DB::table(DB::raw("({$merchant_query->toSql()}) as sub_query")->getValue())
             ->select([
                 'sub_query.id',
                 'sub_query.name',
