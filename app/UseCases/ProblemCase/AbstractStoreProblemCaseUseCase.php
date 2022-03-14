@@ -11,7 +11,6 @@ use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Jobs\SendSmsJob;
 use App\Modules\Merchants\Models\ProblemCase;
-use App\Modules\Merchants\Models\ProblemCaseTag;
 use App\Services\SMS\SmsMessages;
 
 abstract class AbstractStoreProblemCaseUseCase
@@ -51,15 +50,6 @@ abstract class AbstractStoreProblemCaseUseCase
 
         $problemCase->setStatusNew();
         $problemCase->save();
-
-        if ($problemCaseDTO->tags !== null) {
-            $tags = [];
-            foreach ($problemCaseDTO->tags as $item) {
-                $tag = ProblemCaseTag::query()->firstOrCreate(['body' => $item['name'], 'type_id' => ProblemCaseTag::BEFORE_TYPE]);
-                $tags[] = $tag->id;
-            }
-            $problemCase->tags()->attach($tags);
-        }
 
         SendHook::dispatch(new HookData(
             service: 'merchants',
