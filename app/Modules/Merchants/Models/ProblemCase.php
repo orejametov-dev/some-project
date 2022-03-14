@@ -125,7 +125,7 @@ class ProblemCase extends Model implements SimpleStateMachinable
         ],
     ];
 
-    public static function getOneById(int $id): object
+    public static function getOneById(int $id): mixed
     {
         return json_decode(json_encode(self::$statuses[$id]));
     }
