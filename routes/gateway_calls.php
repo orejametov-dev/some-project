@@ -22,5 +22,6 @@ Route::prefix('merchants/problem-cases')
         Route::get('/tags', [ProblemCaseTagsController::class, 'index']);
         Route::get('/statuses', [ProblemCasesController::class, 'getStatusList']);
         Route::get('/{id}', [ProblemCasesController::class, 'show']);
+        Route::match(['put', 'patch'], '/{id}/attach-tags', [ProblemCasesController::class, 'attachTags']);
         Route::post('/', [ProblemCasesController::class, 'store']);
     });
