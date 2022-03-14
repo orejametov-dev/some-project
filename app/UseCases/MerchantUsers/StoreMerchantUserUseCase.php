@@ -82,7 +82,7 @@ class StoreMerchantUserUseCase
 
         ToggleMerchantRoleOfUser::dispatch($azo_merchant_access->user_id, AuthHttpRepository::ACTIVATE_MERCHANT_ROLE);
 
-        $this->flushMerchantUserCacheUseCase->execute($azo_merchant_access->user_id, $merchant->id, $this->authUser->getId());
+        $this->flushMerchantUserCacheUseCase->execute($azo_merchant_access->user_id, $merchant->id);
 
         return $azo_merchant_access;
     }

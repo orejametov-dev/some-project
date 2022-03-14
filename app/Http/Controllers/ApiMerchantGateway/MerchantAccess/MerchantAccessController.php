@@ -23,14 +23,8 @@ class MerchantAccessController extends Controller
                 throw new BusinessException('Сотрудник не найден', 'object_not_found', 404);
             }
 
-            $active = false;
-
-            if ($azo_merchant_access->merchant->active == true && $azo_merchant_access->store->active == true) {
-                $active = true;
-            }
-
             return response()->json([
-                'active' => $active,
+                'active' => (bool) $azo_merchant_access->merchant->active == true && $azo_merchant_access->store->active == true,
             ]);
         });
     }
