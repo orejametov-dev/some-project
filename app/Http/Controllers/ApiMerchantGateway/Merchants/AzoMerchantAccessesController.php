@@ -70,7 +70,7 @@ class AzoMerchantAccessesController extends ApiBaseController
         ));
 
         Cache::tags('azo_merchants')->forget('azo_merchant_user_id_' . $azo_merchant_access->user_id);
-        Cache::tags('azo_merchants')->forget('active_merchant_by_user_id_' . $this->user->getId());
+        Cache::tags('azo_merchants')->forget('active_merchant_by_user_id_' . $azo_merchant_access->user_id);
 
         Cache::tags($merchant->id)->flush();
 
@@ -193,7 +193,7 @@ class AzoMerchantAccessesController extends ApiBaseController
         ToggleMerchantRoleOfUser::dispatch($azo_merchant_access->user_id, AuthMicroService::ACTIVATE_MERCHANT_ROLE);
 
         Cache::tags('azo_merchants')->forget('azo_merchant_user_id_' . $azo_merchant_access->user_id);
-        Cache::tags('azo_merchants')->forget('active_merchant_by_user_id_' . $this->user->getId());
+        Cache::tags('azo_merchants')->forget('active_merchant_by_user_id_' . $azo_merchant_access->user_id);
         Cache::tags($merchant->id)->flush();
 
         return $azo_merchant_access;
@@ -223,7 +223,7 @@ class AzoMerchantAccessesController extends ApiBaseController
         ));
 
         Cache::tags('azo_merchants')->forget('azo_merchant_user_id_' . $azo_merchant_access->user_id);
-        Cache::tags('azo_merchants')->forget('active_merchant_by_user_id_' . $this->user->getId());
+        Cache::tags('azo_merchants')->forget('active_merchant_by_user_id_' . $azo_merchant_access->user_id);
         Cache::tags($merchant->id)->flush();
 
         ToggleMerchantRoleOfUser::dispatch($azo_merchant_access->user_id, AuthMicroService::DEACTIVATE_MERCHANT_ROLE);
