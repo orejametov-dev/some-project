@@ -104,12 +104,12 @@ class Store extends Model
         return $this->belongsToMany(Condition::class, 'special_store_conditions', 'store_id', 'condition_id');
     }
 
-    public function scopeMain($query): Builder
+    public function scopeMain(Builder $query): Builder
     {
         return $query->where('is_main', true);
     }
 
-    public function scopeByMerchant(Builder $query, $merchant_id): Builder
+    public function scopeByMerchant(Builder $query, int $merchant_id): Builder
     {
         return $query->where('merchant_id', $merchant_id);
     }

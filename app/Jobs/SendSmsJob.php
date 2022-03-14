@@ -23,7 +23,7 @@ class SendSmsJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($phone, $message)
+    public function __construct(string $phone, string $message)
     {
         self::onQueue('service-notify');
         $this->phone = $phone;

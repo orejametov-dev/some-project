@@ -9,7 +9,7 @@ use Carbon\Carbon;
 
 class MassToggleApplicationConditionUseCase
 {
-    public function execute($active = true): void
+    public function execute(bool $active = true): void
     {
         $conditionQuery = Condition::query()
             ->whereHas('merchant', function ($query) {

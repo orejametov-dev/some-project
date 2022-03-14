@@ -66,33 +66,33 @@ class AzoMerchantAccess extends Model
         return $this->belongsTo(Merchant::class);
     }
 
-    public function scopeByMerchant(Builder $query, $merchant_id)
+    public function scopeByMerchant(Builder $query, int $merchant_id): Builder
     {
-        $query->where('merchant_id', $merchant_id);
+        return $query->where('merchant_id', $merchant_id);
     }
 
-    public function scopeByActiveMerchant(Builder $query)
+    public function scopeByActiveMerchant(Builder $query): Builder
     {
-        $query->whereHas('merchant', function ($query) {
+        return $query->whereHas('merchant', function ($query) {
             $query->where('active', true);
         });
     }
 
-    public function scopeByActiveStore(Builder $query)
+    public function scopeByActiveStore(Builder $query): Builder
     {
-        $query->whereHas('store', function ($query) {
+        return $query->whereHas('store', function ($query) {
             $query->where('active', true);
         });
     }
 
-    public function scopeByStore(Builder $query, $store_id)
+    public function scopeByStore(Builder $query, int $store_id): Builder
     {
-        $query->where('store_id', $store_id);
+        return $query->where('store_id', $store_id);
     }
 
-    public function scopeByUserId(Builder $query, $user_id)
+    public function scopeByUserId(Builder $query, int $user_id): Builder
     {
-        $query->where('user_id', $user_id);
+        return $query->where('user_id', $user_id);
     }
 
     public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder
