@@ -3,11 +3,12 @@
 namespace App\HttpServices\Warehouse;
 
 use App\Exceptions\BusinessException;
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 
 class WarehouseService
 {
-    public static function checkDuplicateSKUs($merchant_id)
+    public static function checkDuplicateSKUs(int $merchant_id): void
     {
         $response = static::http()->get('/gate/items/check-duplications', [
             'merchant_id' => $merchant_id,
@@ -17,7 +18,7 @@ class WarehouseService
         }
     }
 
-    protected static function http()
+    protected static function http(): PendingRequest
     {
         return Http::baseUrl(config('local_services.warehouse.domain') . '/')
             ->withHeaders([

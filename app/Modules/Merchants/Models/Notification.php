@@ -56,14 +56,18 @@ class Notification extends Model
         'type',
     ];
 
-    public function setAllType()
+    public function setAllType(): self
     {
         $this->type = self::ALL_TYPE;
+
+        return $this;
     }
 
-    public function setCertainType()
+    public function setCertainType(): self
     {
         $this->type = self::CERTAIN_TYPE;
+
+        return $this;
     }
 
     public function stores(): BelongsToMany
@@ -71,29 +75,31 @@ class Notification extends Model
         return $this->belongsToMany(Store::class, 'store_notification', 'notification_id', 'store_id');
     }
 
-    public function setCreatedBy(GatewayAuthUser $user)
+    public function setCreatedBy(GatewayAuthUser $user): self
     {
         $this->created_by_id = $user->getId();
         $this->created_by_name = $user->getName();
+
+        return $this;
     }
 
-    public function scopeOnlyByMerchant(Builder $query, $merchant_id)
+    public function scopeOnlyByMerchant(Builder $query, int $merchant_id): Builder
     {
-        $query->whereHas('stores', function (Builder $query) use ($merchant_id) {
+        return $query->whereHas('stores', function (Builder $query) use ($merchant_id) {
             $query->where('stores.merchant_id', $merchant_id);
         });
     }
 
-    public function scopeOnlyByStore(Builder $query, $store_id)
+    public function scopeOnlyByStore(Builder $query, int $store_id): Builder
     {
-        $query->whereHas('stores', function (Builder $query) use ($store_id) {
+        return $query->whereHas('stores', function (Builder $query) use ($store_id) {
             $query->where('stores.id', $store_id);
         });
     }
 
-    public function scopeOnlyMoreThanStartSchedule(Builder $query)
+    public function scopeOnlyMoreThanStartSchedule(Builder $query): Builder
     {
-        $query->where('start_schedule', '<=', now());
+        return $query->where('start_schedule', '<=', now());
     }
 
     public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder

@@ -86,15 +86,15 @@ class Merchant extends Model
     ];
     protected $appends = ['logo_path'];
     protected $hidden = ['logo_url'];
-    public static $percentage_of_limit = '* 0.95';
+    public static string $percentage_of_limit = '* 0.95';
     /*Поля моделей используется в model_hooks*/
-    public static $attributeLabels = [
+    public static array $attributeLabels = [
         'name' => 'Название партнёра',
         'legal_name' => 'Юридическое имя',
         'token' => 'Токен алифшопа',
     ];
 
-    public function getLogoPathAttribute()
+    public function getLogoPathAttribute(): string|null
     {
         if (!$this->logo_url) {
             return null;
@@ -103,12 +103,12 @@ class Merchant extends Model
         return config('local_services.services_storage.domain') . $this->logo_url;
     }
 
-    public function scopeActive(Builder $query)
+    public function scopeActive(Builder $query): Builder
     {
-        $query->where('active', true);
+        return $query->where('active', true);
     }
 
-    public static function fromDto(CompanyHttpResponse $company, int $user_id)
+    public static function fromDto(CompanyHttpResponse $company, int $user_id): self
     {
         $merchant = new self();
         $merchant->id = $company->id;
