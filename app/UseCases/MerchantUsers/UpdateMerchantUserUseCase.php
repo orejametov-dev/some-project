@@ -50,7 +50,7 @@ class UpdateMerchantUserUseCase
             created_by_str: $this->authUser->getName(),
         ));
 
-        $this->flushMerchantUserCacheUseCase->execute($azo_merchant_access->user_id, $merchant->id);
+        $this->flushMerchantUserCacheUseCase->execute($azo_merchant_access->user_id, $merchant->id, $this->authUser->getId());
 
         return $azo_merchant_access;
     }
