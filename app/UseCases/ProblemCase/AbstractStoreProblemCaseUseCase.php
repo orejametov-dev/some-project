@@ -55,7 +55,7 @@ abstract class AbstractStoreProblemCaseUseCase
         if ($problemCaseDTO->tags !== null) {
             $tags = [];
             foreach ($problemCaseDTO->tags as $item) {
-                $tag = ProblemCaseTag::query()->firstOrCreate(['body' => $item['name'], 'type_id' => $item['type_id']]);
+                $tag = ProblemCaseTag::query()->firstOrCreate(['body' => $item['name'], 'type_id' => ProblemCaseTag::BEFORE_TYPE]);
                 $tags[] = $tag->id;
             }
             $problemCase->tags()->attach($tags);

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\ApiPrm\ProblemCases;
 
-use App\Modules\Merchants\Models\ProblemCaseTag;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ProblemCaseStoreRequest extends FormRequest
@@ -32,7 +31,6 @@ class ProblemCaseStoreRequest extends FormRequest
             'description' => 'required',
             'tags' => 'nullable|array',
             'tags.*.name' => 'nullable|string',
-            'tags.*.type_id' => 'nullable|integer|in:' . ProblemCaseTag::BEFORE_TYPE . ', ' . ProblemCaseTag::AFTER_TYPE,
         ];
     }
 }
