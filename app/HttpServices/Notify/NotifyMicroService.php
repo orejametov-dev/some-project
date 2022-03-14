@@ -14,7 +14,7 @@ class NotifyMicroService
     public const COMMON = 'COMMON';
     public const PROBLEM_CASE = 'PROBLEM_CASE';
 
-    public static function sendSms($phone, $body, $tag = self::COMMON): array
+    public static function sendSms(string $phone, string $body, string $tag = self::COMMON): array
     {
         $http = self::http();
 
@@ -23,7 +23,7 @@ class NotifyMicroService
             ->json();
     }
 
-    public static function sendDistribution($phone, $body, $tag = self::COMMON): array
+    public static function sendDistribution(string $phone, string $body, string $tag = self::COMMON): array
     {
         $http = self::http();
 
@@ -32,7 +32,7 @@ class NotifyMicroService
             ->json();
     }
 
-    public static function call($phone, $body, $tag = self::COMMON): array
+    public static function call(string $phone, string $body, string $tag = self::COMMON): array
     {
         $http = self::http();
 

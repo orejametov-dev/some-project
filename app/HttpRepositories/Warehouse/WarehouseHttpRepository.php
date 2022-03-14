@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Http;
 
 class WarehouseHttpRepository
 {
-    public function checkDuplicateSKUs($merchant_id)
+    public function checkDuplicateSKUs(int $merchant_id): void
     {
         $response = $this->getHttpClient()->get('/gate/items/check-duplications', [
             'merchant_id' => $merchant_id,

@@ -8,7 +8,7 @@ use GuzzleHttp\Client as HttpClient;
 
 class AlifshopHttpRepository
 {
-    public function storeOrUpdateConditions(int $company_id, $conditions)
+    public function storeOrUpdateConditions(int $company_id, mixed $conditions): mixed
     {
         $client = self::getHttpClient();
         $response = $client->request('POST', '/gate/service-merchants/companies/' . $company_id . '/conditions', [
@@ -18,12 +18,12 @@ class AlifshopHttpRepository
         return self::parseResponse($response);
     }
 
-    protected function parseResponse($response)
+    protected function parseResponse(mixed $response): mixed
     {
         return json_decode($response->getBody()->getContents(), true);
     }
 
-    protected function getHttpClient()
+    protected function getHttpClient(): HttpClient
     {
         return new HttpClient([
             'base_uri' => config('local_services.alifshop.domain'),

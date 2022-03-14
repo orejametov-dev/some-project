@@ -22,7 +22,7 @@ class CompanyUserHttpRepository
         return CompanyUserHttpResponse::fromArray($result);
     }
 
-    public function getCompanyUserByUserId($user_id): ?CompanyUserHttpResponse
+    public function getCompanyUserByUserId(int $user_id): ?CompanyUserHttpResponse
     {
         $result = $this->getHttpClient()->get('companies/users/get-user-id', [
             'user_id' => $user_id,
@@ -35,7 +35,7 @@ class CompanyUserHttpRepository
         return CompanyUserHttpResponse::fromArray($result);
     }
 
-    public function checkCompanyUserToExistByUserId($user_id): bool
+    public function checkCompanyUserToExistByUserId(int $user_id): bool
     {
         $result = $this->getHttpClient()->get('companies/users/get-user-id', [
             'user_id' => $user_id,

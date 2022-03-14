@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Http;
 
 class StorageHttpRepository
 {
-    public function uploadFile(UploadedFile $file, $type)
+    public function uploadFile(UploadedFile $file, string $type): mixed
     {
         return $this->getHttpClient()
             ->attach(
@@ -25,7 +25,7 @@ class StorageHttpRepository
             ->json();
     }
 
-    public function destroy(string $url)
+    public function destroy(string $url): mixed
     {
         return $this->getHttpClient()
             ->delete($url)

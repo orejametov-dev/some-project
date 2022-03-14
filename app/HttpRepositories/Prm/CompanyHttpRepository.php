@@ -42,14 +42,14 @@ class CompanyHttpRepository
         return $result !== null;
     }
 
-    public function setStatusExist(int $id, string $company_module = null)
+    public function setStatusExist(int $id, string $company_module = null): mixed
     {
         return $this->getHttpClient()->post('companies/' . $id . '/status-exists', [
             'company_module' => is_null($company_module) ? 'azo' : $company_module,
         ])->throw()->json();
     }
 
-    public function setStatusNotActive(int $id, string $company_module = null)
+    public function setStatusNotActive(int $id, string $company_module = null): mixed
     {
         return $this->getHttpClient()->post('companies/' . $id . '/status-not-active', [
             'company_module' => is_null($company_module) ? 'azo' : $company_module,
