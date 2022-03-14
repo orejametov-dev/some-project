@@ -22,7 +22,6 @@ use App\HttpRepositories\Warehouse\WarehouseHttpRepository;
 use App\HttpServices\Company\CompanyService;
 use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\Merchant;
-use App\Modules\Merchants\Models\MerchantActivity;
 use App\Modules\Merchants\Models\Tag;
 use App\UseCases\Cache\FlushCacheUseCase;
 use App\UseCases\Competitors\AttachCompetitorUseCase;
@@ -32,7 +31,6 @@ use App\UseCases\Merchants\SetMerchantMainStoreUseCase;
 use App\UseCases\Merchants\SetResponsibleUserUseCase;
 use App\UseCases\Merchants\StoreMerchantUseCase;
 use App\UseCases\Merchants\UpdateMerchantUseCase;
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -42,10 +40,7 @@ class MerchantsController extends ApiBaseController
     public function index(Request $request)
     {
         $merchants = Merchant::query()
-            ->with(['tags', 'merchant_activities' => function (Relation $query) {
-                /** @var MerchantActivity $query */
-                $query->maxActivityId();
-            }])
+            ->with(['tags'])
             ->filterRequest($request, [
                 QMerchantFilter::class,
                 ActiveFilter::class,

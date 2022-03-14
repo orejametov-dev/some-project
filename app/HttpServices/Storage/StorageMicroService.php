@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\HttpServices\Storage;
 
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
 
 class StorageMicroService
 {
-    public static function uploadFile(UploadedFile $file, $type)
+    public static function uploadFile(UploadedFile $file, string $type): mixed
     {
         return static::http()
             ->attach(
@@ -26,7 +27,7 @@ class StorageMicroService
             ->json();
     }
 
-    public static function destroy(string $url)
+    public static function destroy(string $url): mixed
     {
         return static::http()
             ->delete($url)
@@ -34,7 +35,7 @@ class StorageMicroService
             ->json();
     }
 
-    protected static function http()
+    protected static function http(): PendingRequest
     {
         return Http::baseUrl(config('local_services.services_storage.domain') . '/')
             ->withHeaders([

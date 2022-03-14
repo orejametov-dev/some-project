@@ -35,7 +35,7 @@ class File extends Model
 
     public $timestamps = false;
     protected $table = 'merchant_files';
-    public static $file_types = [
+    public static array $file_types = [
         'passport' => 'Паспорт',
         'law_registration_doc' => 'Свидетельство о регистрации юр лица',
         'director_order' => 'Приказ о становлении директором',
@@ -46,7 +46,7 @@ class File extends Model
         'order_agreement_file' => 'файл договор поручения',
     ];
 
-    public static $registration_file_types = [
+    public static array $registration_file_types = [
         'passport' => [
             'name' => 'Скан паспорта директора',
             'lang' => [
