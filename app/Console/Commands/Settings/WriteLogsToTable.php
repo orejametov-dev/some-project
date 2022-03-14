@@ -29,7 +29,6 @@ class WriteLogsToTable extends Command
      *
      * @return void
      */
-    private $logs;
 
     public function __construct()
     {
