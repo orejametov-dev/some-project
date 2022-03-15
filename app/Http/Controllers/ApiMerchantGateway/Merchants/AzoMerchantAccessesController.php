@@ -6,8 +6,8 @@ namespace App\Http\Controllers\ApiMerchantGateway\Merchants;
 
 use App\Exceptions\ApiBusinessException;
 use App\Http\Controllers\ApiMerchantGateway\ApiBaseController;
+use App\HttpRepositories\Auth\AuthHttpRepository;
 use App\HttpRepositories\Notify\NotifyHttpRepository;
-use App\HttpServices\Auth\AuthMicroService;
 use App\HttpServices\Company\CompanyService;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
@@ -112,7 +112,7 @@ class AzoMerchantAccessesController extends ApiBaseController
             ], ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, AuthHttpRepository $authHttpRepository)
     {
         $this->validate($request, [
             'code' => 'required|digits:4',
@@ -120,12 +120,12 @@ class AzoMerchantAccessesController extends ApiBaseController
             'store_id' => 'required|integer',
         ]);
 
-        $user = AuthMicroService::getUserById($request->input('user_id'));
+        $user = $authHttpRepository->getUserById($request->input('user_id'));
 
         $protector = new OtpProtector('new_azo_merchant_user_' . $user['data']['phone']);
         $protector->verifyOtp((int) $request->input('code'));
 
-        if (array_search(AuthMicroService::AZO_MERCHANT_ROLE, array_column($user['data']['roles'], 'name'))) {
+        if (array_search(AuthHttpRepository::AZO_MERCHANT_ROLE, array_column($user['data']['roles'], 'name'))) {
             throw new ApiBusinessException('Пользователь уже является сотрудником мерчанта', 'merchant_exists', [
                 'ru' => 'Пользователь уже является сотрудником мерчанта',
                 'uz' => 'Foydalanuvchi merchant tizimiga bog\'langan',
@@ -190,9 +190,9 @@ class AzoMerchantAccessesController extends ApiBaseController
             created_by_str: $this->user->getName(),
         ));
 
-        (new AuthMicroService)->store($azo_merchant_access->user_id);
+        (new AuthHttpRepository())->store($azo_merchant_access->user_id);
 
-        ToggleMerchantRoleOfUser::dispatch($azo_merchant_access->user_id, AuthMicroService::ACTIVATE_MERCHANT_ROLE);
+        ToggleMerchantRoleOfUser::dispatch($azo_merchant_access->user_id, AuthHttpRepository::ACTIVATE_MERCHANT_ROLE);
 
         Cache::tags('azo_merchants')->forget('azo_merchant_user_id_' . $azo_merchant_access->user_id);
         Cache::tags('azo_merchants')->forget('active_merchant_by_user_id_' . $azo_merchant_access->user_id);
@@ -228,7 +228,7 @@ class AzoMerchantAccessesController extends ApiBaseController
         Cache::tags('azo_merchants')->forget('active_merchant_by_user_id_' . $azo_merchant_access->user_id);
         Cache::tags($merchant->id)->flush();
 
-        ToggleMerchantRoleOfUser::dispatch($azo_merchant_access->user_id, AuthMicroService::DEACTIVATE_MERCHANT_ROLE);
+        ToggleMerchantRoleOfUser::dispatch($azo_merchant_access->user_id, AuthHttpRepository::DEACTIVATE_MERCHANT_ROLE);
 
         return response()->json(['message' => [
             'ru' => 'Сотрудник удален',

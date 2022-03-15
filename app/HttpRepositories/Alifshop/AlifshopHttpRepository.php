@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace App\HttpRepositories\Alifshop;
 
 use GuzzleHttp\Client as HttpClient;
+use Illuminate\Support\Collection;
 
 class AlifshopHttpRepository
 {
-    public function storeOrUpdateConditions(int $company_id, mixed $conditions): mixed
+    public function storeOrUpdateConditions(int $company_id, Collection $conditions): mixed
     {
         $client = self::getHttpClient();
         $response = $client->request('POST', '/gate/service-merchants/companies/' . $company_id . '/conditions', [

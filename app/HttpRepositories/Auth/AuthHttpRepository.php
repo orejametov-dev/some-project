@@ -14,18 +14,19 @@ class AuthHttpRepository
     const DEACTIVATE_MERCHANT_ROLE = 'DEACTIVATE';
     const AZO_MERCHANT_ROLE = 'Merchant';
 
-    public function store(int $user_id): mixed
+    public function store(int $user_id): AuthHttpResponse
     {
         $response = $this->getHttpClient()
             ->post('users/' . $user_id . '/role', [
                 'role_id' => 'Merchant',
             ])
-            ->throw();
+            ->throw()
+            ->json();
 
-        return $response->json();
+        return  AuthHttpResponse::fromArray($response);
     }
 
-    public function remove(int $user_id): mixed
+    public function remove(int $user_id): AuthHttpResponse
     {
         $response = $this->getHttpClient()
             ->delete('users/' . $user_id . '/role', [
@@ -33,7 +34,7 @@ class AuthHttpRepository
             ])
             ->throw();
 
-        return $response->json();
+        return AuthHttpResponse::fromArray($response->json());
     }
 
     public function checkUserToExistById(int $user_id): bool
@@ -54,28 +55,6 @@ class AuthHttpRepository
         }
 
         return AuthHttpResponse::fromArray($result->json());
-    }
-
-    public function getUserByPhone(string $phone): mixed
-    {
-        return $this->getHttpClient()->get('users/exists', [
-            'phone' => $phone,
-            'role' => 'Merchant',
-        ])
-            ->throw()
-            ->json();
-    }
-
-    public function createUser(string $name, string $phone, string $password): mixed
-    {
-        return $this->getHttpClient()->post('users', [
-            'phone' => $phone,
-            'name' => $name,
-            'password' => $password,
-            'roles' => 'Merchant',
-        ])
-            ->throw()
-            ->json();
     }
 
     private function getHttpClient(): PendingRequest

@@ -4,18 +4,23 @@ declare(strict_types=1);
 
 namespace App\UseCases\Merchants;
 
-use App\HttpServices\Core\CoreService;
+use App\HttpRepositories\Core\CoreHttpRepository;
 use App\Modules\Merchants\Models\Merchant;
 
 class UpdateMerchantCurrentSalesUseCase
 {
+    public function __construct(
+        private CoreHttpRepository $coreHttpRepository
+    ) {
+    }
+
     public function execute(): void
     {
         $percentage_of_limit = Merchant::$percentage_of_limit;
 
-        $amount_of_merchants = CoreService::getAmountOfMerchantSales();
+        $amount_of_merchants = $this->coreHttpRepository->getAmountOfMerchantSales();
 
-        foreach ($amount_of_merchants as $amount_of_merchant) {
+        foreach ($amount_of_merchants->array as $amount_of_merchant) {
             $merchant = Merchant::findOrFail($amount_of_merchant['merchant_id']);
             $merchant->current_sales = $amount_of_merchant['discounted_amount'];
             if ($merchant_info = $merchant->merchant_info) {

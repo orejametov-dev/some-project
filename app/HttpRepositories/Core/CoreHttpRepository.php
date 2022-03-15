@@ -2,6 +2,7 @@
 
 namespace App\HttpRepositories\Core;
 
+use App\HttpRepositories\HttpResponses\Core\AmountOfMerchantSalesResponse;
 use App\HttpRepositories\HttpResponses\Core\ApplicationIdApplicationDataResponse;
 use App\HttpRepositories\HttpResponses\Core\CreditNumberApplicationDataResponse;
 use App\HttpRepositories\HttpResponses\Core\MerchantApplicationsAndClientsCountByRangeDataResponse;
@@ -21,13 +22,15 @@ class CoreHttpRepository
         return MerchantApplicationsAndClientsCountByRangeDataResponse::fromArray($result['data']);
     }
 
-    public function getStoreApplicationsAndClientsCountByRange(int $store_id, string $from_date, string $to_date): mixed
+    public function getStoreApplicationsAndClientsCountByRange(int $store_id, string $from_date, string $to_date): MerchantApplicationsAndClientsCountByRangeDataResponse
     {
-        return $this->getHttpClient()->get('merchant-activity', [
+        $result = $this->getHttpClient()->get('merchant-activity', [
             'from_date' => $from_date,
             'to_date' => $to_date,
             'store_id' => $store_id,
         ])->json();
+
+        return MerchantApplicationsAndClientsCountByRangeDataResponse::fromArray($result);
     }
 
     public function getApplicationDataByContractNumber(string $contract_number): ?CreditNumberApplicationDataResponse
@@ -52,9 +55,11 @@ class CoreHttpRepository
         return ApplicationIdApplicationDataResponse::fromArray($data);
     }
 
-    public function getAmountOfMerchantSales(): mixed
+    public function getAmountOfMerchantSales(): AmountOfMerchantSalesResponse
     {
-        return $this->getHttpClient()->get('merchant-sales')->throw()->json();
+        $result = $this->getHttpClient()->get('merchant-sales')->throw()->json();
+
+        return AmountOfMerchantSalesResponse::fromArray($result);
     }
 
     public function getApplicationConditionId(int $condition_id): mixed

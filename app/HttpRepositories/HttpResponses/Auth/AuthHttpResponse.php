@@ -13,7 +13,8 @@ class AuthHttpResponse
     public function __construct(
         public int $id,
         public string $name,
-        public string $phone
+        public string $phone,
+        public array $roles,
     ) {
     }
 
@@ -24,7 +25,8 @@ class AuthHttpResponse
         return new self(
             self::parseInt($data['id']),
             self::parseString($data['name']),
-            self::parseString($data['phone'])
+            self::parseString($data['phone']),
+            self::parseArray($data['phone']),
         );
     }
 }
