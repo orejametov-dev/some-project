@@ -13,13 +13,14 @@ class ActivityReasonIdFilter extends AbstractExactFilter
         $builder->whereHas('merchant_activities', function (Builder $builder) use ($value) {
             $builder->join(
                 DB::raw('(select merchant_activities.merchant_id as merchant_id, max(merchant_activities.id) as max_id from merchant_activities group by merchant_id) as sub_query'),
-                DB::raw('true'), '=', DB::raw('true')
+                DB::raw('true'),
+                '=',
+                DB::raw('true')
             )
                 ->whereRaw('sub_query.merchant_id = merchants.id')
                 ->whereRaw('sub_query.max_id = merchant_activities.id')
                 ->where('merchant_activities.activity_reason_id', $value);
         });
-
     }
 
     public function getBindingName(): string
