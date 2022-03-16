@@ -49,7 +49,7 @@ class WordService
             wordwrap(mb_strcut($merchant_info->phone, 8), 2, '-', true));
         $contract_template->setValue('vat_number', $merchant_info->vat_number);
         $contract_template->setValue('mfo', $merchant_info->mfo);
-        /* @phpstan-ignore-next-line  */
+        /* @phpstan-ignore-next-line */
         $contract_template->setValue('tin', number_format($merchant_info->tin, 0, '', ' '));
         $contract_template->setValue('oked', wordwrap($merchant_info->oked, 2, '.', true));
         $contract_template->setValue('address', $merchant_info->address);
@@ -100,7 +100,7 @@ class WordService
             wordwrap(mb_strcut($merchant_info->phone, 8), 2, '-', true));
         $contract_template->setValue('vat_number', $merchant_info->vat_number);
         $contract_template->setValue('mfo', $merchant_info->mfo);
-        /* @phpstan-ignore-next-line  */
+        /* @phpstan-ignore-next-line */
         $contract_template->setValue('tin', number_format($merchant_info->tin, 0, '', ' '));
         $contract_template->setValue('oked', wordwrap($merchant_info->oked, 2, '.', true));
         $contract_template->setValue('address', $merchant_info->address);
