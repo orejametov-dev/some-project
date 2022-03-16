@@ -6,20 +6,19 @@ namespace App\HttpRepositories\Alifshop;
 
 use GuzzleHttp\Client as HttpClient;
 use Illuminate\Support\Collection;
+use Psr\Http\Message\ResponseInterface;
 
 class AlifshopHttpRepository
 {
-    public function storeOrUpdateConditions(int $company_id, Collection $conditions): mixed
+    public function storeOrUpdateConditions(int $company_id, Collection $conditions): void
     {
         $client = self::getHttpClient();
-        $response = $client->request('POST', '/gate/service-merchants/companies/' . $company_id . '/conditions', [
+        $client->request('POST', '/gate/service-merchants/companies/' . $company_id . '/conditions', [
             'json' => compact('conditions'),
         ]);
-
-        return self::parseResponse($response);
     }
 
-    protected function parseResponse(mixed $response): mixed
+    protected function parseResponse(ResponseInterface $response): mixed
     {
         return json_decode($response->getBody()->getContents(), true);
     }
