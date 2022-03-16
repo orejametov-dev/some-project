@@ -86,6 +86,8 @@ Route::prefix('merchants/additional-agreements')
         Route::post('/', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\AdditionalAgreementsController::class, 'store']);
         Route::put('/{id}', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\AdditionalAgreementsController::class, 'update']);
         Route::post('/{id}/documents', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\AdditionalAgreementsController::class, 'getAdditionalAgreementDoc']);
+        Route::post('/{id}/vat-documents', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\AdditionalAgreementsController::class, 'getAdditionalAgreementVatDoc']);
+        Route::post('/{id}/delivery-documents', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\AdditionalAgreementsController::class, 'getAdditionalAgreementDeliveryDoc']);
         Route::delete('/{id}', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\AdditionalAgreementsController::class, 'delete']);
     });
 

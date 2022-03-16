@@ -13,6 +13,7 @@ use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\MerchantInfo;
 use App\Services\WordService;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class AdditionalAgreementsController extends Controller
 {
@@ -67,6 +68,34 @@ class AdditionalAgreementsController extends Controller
         $additional_agreement = AdditionalAgreement::findOrFail($id);
         $merchant_info = MerchantInfo::query()->where('merchant_id', $additional_agreement->merchant_id)->firstOrFail();
         $additional_agreement_file = $wordService->createAdditionalAgreement($additional_agreement, $merchant_info, 'app/additional_agreement.docx');
+
+        return response()->download(storage_path($additional_agreement_file))->deleteFileAfterSend();
+    }
+
+    public function getAdditionalAgreementVatDoc($id, WordService $wordService)
+    {
+        $additional_agreement = AdditionalAgreement::query()->find($id);
+
+        if ($additional_agreement === null) {
+            throw new BusinessException('Дополнительное соглашение не найдено', 'object_not_found', 404);
+        }
+
+        $merchant_info = MerchantInfo::query()->where('merchant_id', $additional_agreement->merchant_id)->firstOrFail();
+        $additional_agreement_file = $wordService->createAdditionalAgreement($additional_agreement, $merchant_info, 'app/additional_agreement_vat.docx');
+
+        return response()->download(storage_path($additional_agreement_file))->deleteFileAfterSend();
+    }
+
+    public function getAdditionalAgreementDeliveryDoc($id, WordService $wordService): BinaryFileResponse
+    {
+        $additional_agreement = AdditionalAgreement::query()->find($id);
+
+        if ($additional_agreement === null) {
+            throw new BusinessException('Дополнительное соглашение не найдено', 'object_not_found', 404);
+        }
+
+        $merchant_info = MerchantInfo::query()->where('merchant_id', $additional_agreement->merchant_id)->firstOrFail();
+        $additional_agreement_file = $wordService->createAdditionalAgreement($additional_agreement, $merchant_info, 'app/additional_agreement_delivery.docx');
 
         return response()->download(storage_path($additional_agreement_file))->deleteFileAfterSend();
     }
