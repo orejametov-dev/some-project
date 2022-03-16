@@ -85,12 +85,12 @@ class Condition extends Model
         return $this->belongsTo(Merchant::class);
     }
 
-    public function scopeActive($builder)
+    public function scopeActive(Builder $builder): Builder
     {
         return $builder->where('active', true);
     }
 
-    public function scopePostMerchant($builder)
+    public function scopePostMerchant(Builder $builder): Builder
     {
         return $builder->where('post_merchant', true);
     }
@@ -100,7 +100,7 @@ class Condition extends Model
         return $this->duration . 'м' . ' / ' . $this->commission . '%';
     }
 
-    public function scopeByMerchant(Builder $query, $merchant_id): Builder
+    public function scopeByMerchant(Builder $query, int $merchant_id): Builder
     {
         return $query->where('merchant_id', $merchant_id);
     }

@@ -125,7 +125,7 @@ class ProblemCase extends Model implements SimpleStateMachinable
         ],
     ];
 
-    public static function getOneById(int $id)
+    public static function getOneById(int $id): mixed
     {
         return json_decode(json_encode(self::$statuses[$id]));
     }
@@ -200,7 +200,7 @@ class ProblemCase extends Model implements SimpleStateMachinable
         return $this->morphMany(Comment::class, 'commentable');
     }
 
-    public function scopeOnlyNew(Builder $query)
+    public function scopeOnlyNew(Builder $query): Builder
     {
         return $query->where('status_id', self::NEW);
     }
@@ -210,7 +210,7 @@ class ProblemCase extends Model implements SimpleStateMachinable
         return $query->where('merchant_id', $merchant_id);
     }
 
-    public function scopeByStore(Builder $query, $store_id): Builder
+    public function scopeByStore(Builder $query, int $store_id): Builder
     {
         return $query->where('store_id', $store_id);
     }

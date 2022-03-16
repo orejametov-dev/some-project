@@ -74,7 +74,7 @@ class MerchantInfo extends Model
         return $this->belongsTo(Merchant::class);
     }
 
-    public static function getMaxContractNumber()
+    public static function getMaxContractNumber(): int
     {
         return self::max('contract_number');
     }

@@ -122,7 +122,7 @@ class Request extends Model
         'documents_completed',
     ];
 
-    private static $statuses = [
+    private static array $statuses = [
         self::NEW => [
             'id' => self::NEW,
             'name' => 'новый',
@@ -145,7 +145,7 @@ class Request extends Model
         ],
     ];
 
-    public function checkToMainCompleted()
+    public function checkToMainCompleted(): void
     {
         $main = $this->user_name && $this->legal_name && $this->legal_name_prefix && $this->user_phone && $this->name && $this->region
             && $this->categories && $this->approximate_sales;
@@ -156,7 +156,7 @@ class Request extends Model
         }
     }
 
-    public function checkToDocumentsCompleted()
+    public function checkToDocumentsCompleted(): void
     {
         $documents = $this->director_name && $this->phone && $this->vat_number && $this->mfo
             && $this->tin && $this->oked && $this->bank_account && $this->bank_name && $this->address;
@@ -167,7 +167,7 @@ class Request extends Model
         }
     }
 
-    public function checkToFileCompleted()
+    public function checkToFileCompleted(): void
     {
         $exist_file_type = $this->files->pluck('file_type')->toArray();
         $file_checker = true;
@@ -185,7 +185,7 @@ class Request extends Model
         }
     }
 
-    public static function getOneById(int $id)
+    public static function getOneById(int $id): mixed
     {
         return json_decode(json_encode(self::$statuses[$id]));
     }
@@ -195,7 +195,7 @@ class Request extends Model
         return $this->status_id;
     }
 
-    public function getStatusAttribute()
+    public function getStatusAttribute(): object
     {
         return self::getOneById($this->status_id);
     }
@@ -239,12 +239,12 @@ class Request extends Model
         return $this->belongsTo(CancelReason::class);
     }
 
-    public function scopeOnlyByToken(Builder $query, $token)
+    public function scopeOnlyByToken(Builder $query, string $token): Builder
     {
-        $query->where('token', $token);
+        return $query->where('token', $token);
     }
 
-    public function uploadFile(UploadedFile $uploadedFile, $type)
+    public function uploadFile(UploadedFile $uploadedFile, string $type): File
     {
         $storage_file = (new StorageHttpRepository)->uploadFile($uploadedFile, 'merchants');
         $merchant_request_file = new File();
@@ -258,7 +258,7 @@ class Request extends Model
         return $merchant_request_file;
     }
 
-    public function deleteFile($file_id)
+    public function deleteFile(int $file_id): void
     {
         $file = $this->files()->find($file_id);
         if (!$file) {
@@ -269,11 +269,13 @@ class Request extends Model
         $file->delete();
     }
 
-    public function setEngage($user)
+    public function setEngage(array $user): self
     {
         $this->engaged_by_id = $user['data']['id'];
         $this->engaged_by_name = $user['data']['name'];
         $this->engaged_at = now();
+
+        return $this;
     }
 
     public function scopeFilterRequest(Builder $builder, \Illuminate\Http\Request $request, array $filters = []): Builder

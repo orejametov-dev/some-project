@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Settings;
 
-use App\Modules\Merchants\Models\Log;
-use App\Services\TimeLogger;
+use App\UseCases\Logs\WriteLogsToMongoUseCase;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class WriteLogsToTable extends Command
 {
@@ -30,8 +29,6 @@ class WriteLogsToTable extends Command
      *
      * @return void
      */
-    private $logs;
-
     public function __construct()
     {
         parent::__construct();
@@ -42,28 +39,13 @@ class WriteLogsToTable extends Command
      *
      * @return int
      */
-    public function handle()
+    public function handle(WriteLogsToMongoUseCase $writeLogsToMongoUseCase)
     {
-        $this->logs = Cache::get(TimeLogger::CACHE_KEY);
-        \Log::channel('command')->info(self::class . '|' . now() . ':' . 'started');
+        Log::channel('command')->info(self::class . '|' . now() . ':' . 'started');
 
-        try {
-            if (!empty($this->logs)) {
-                foreach (array_chunk($this->logs, 10000) as $chunk_logs) {
-                    Log::query()->insert($chunk_logs);
-                }
+        $writeLogsToMongoUseCase->execute();
 
-                Cache::forget(TimeLogger::CACHE_KEY);
-            }
-        } catch (\Exception $e) {
-            if (app()->bound('sentry')) {
-                app('sentry')->captureException($e);
-            }
-
-            Cache::forget(TimeLogger::CACHE_KEY);
-        }
-
-        \Log::channel('command')->info(self::class . '|' . now() . ':' . 'finished');
+        Log::channel('command')->info(self::class . '|' . now() . ':' . 'finished');
 
         return 0;
     }
