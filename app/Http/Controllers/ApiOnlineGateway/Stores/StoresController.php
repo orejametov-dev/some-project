@@ -10,6 +10,7 @@ use App\Filters\Store\RegionFilter;
 use App\Filters\Store\StoreIdFilter;
 use App\Filters\Store\StoreIdsFilter;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ApiOnlineGateway\StoresResource;
 use App\Modules\Merchants\Models\Store;
 use Illuminate\Http\Request;
 
@@ -28,9 +29,9 @@ class StoresController extends Controller
             ]);
 
         if ($request->has('object') and $request->query('object') == true) {
-            return $stores->first();
+            return new StoresResource($stores->first());
         }
 
-        return $stores->paginate($request->query('per_page') ?? 15);
+        return StoresResource::collection($stores->paginate($request->query('per_page') ?? 15));
     }
 }
