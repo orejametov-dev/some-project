@@ -6,13 +6,13 @@ namespace App\Http\Controllers\ApiComplianceGateway\Stores;
 
 use App\Filters\Store\QStoreFilter;
 use App\Filters\Store\StoreIdsFilter;
-use App\Http\Controllers\ApiComplianceGateway\ApiBaseController;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiComplianceGateway\Stores\StoresResource;
 use App\Modules\Merchants\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
-class StoresController extends ApiBaseController
+class StoresController extends Controller
 {
     public function index(Request $request)
     {

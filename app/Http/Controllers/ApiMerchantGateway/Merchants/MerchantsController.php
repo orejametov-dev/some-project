@@ -4,24 +4,25 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\ApiMerchantGateway\Merchants;
 
-use App\Http\Controllers\ApiMerchantGateway\ApiBaseController;
+use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
+use App\DTOs\Auth\AzoAccessDto;
+use App\Http\Controllers\Controller;
 use App\Modules\Merchants\Models\AzoMerchantAccess;
 use App\Modules\Merchants\Models\Condition;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Store;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
-class MerchantsController extends ApiBaseController
+class MerchantsController extends Controller
 {
     //роут для фронт мерчанта
-    public function getMerchantDetailsWithRelations(Request $request)
+    public function getMerchantDetailsWithRelations(AzoAccessDto $azoAccessDto, GatewayAuthUser $gatewayAuthUser)
     {
-        $merchant = Cache::tags($this->merchant_id)->remember('cache_of_merchant', 60 * 60, function () {
-            return Merchant::findOrFail($this->merchant_id);
+        $merchant = Cache::tags($azoAccessDto->merchant_id)->remember('cache_of_merchant', 60 * 60, function () use ($azoAccessDto) {
+            return Merchant::findOrFail($azoAccessDto->merchant_id);
         });
 
-        $conditions = Cache::tags($this->merchant_id)->remember('cache_of_merchant_conditions', 60 * 60, function () use ($merchant) {
+        $conditions = Cache::tags($azoAccessDto->merchant_id)->remember('cache_of_merchant_conditions', 60 * 60, function () use ($merchant) {
             return Condition::query()
                 ->active()
                 ->byMerchant($merchant->id)
@@ -29,19 +30,21 @@ class MerchantsController extends ApiBaseController
                 ->get();
         });
 
-        $stores = Cache::tags($this->merchant_id)->remember('cache_of_merchant_stores', 60 * 60, function () use ($merchant) {
+        $stores = Cache::tags($azoAccessDto->merchant_id)->remember('cache_of_merchant_stores', 60 * 60, function () use ($merchant) {
             return Store::query()
                 ->byMerchant($merchant->id)->get();
         });
 
-        $azo_merchant_access = $this->azo_merchant_access;
+        $store = Cache::tags($azoAccessDto->merchant_id)->remember(
+            $azoAccessDto->id . 'detail_cache_of_merchant_stores',
+            60 * 60,
+            function () use ($gatewayAuthUser) {
+                $azo_merchant_access = AzoMerchantAccess::query()->byUserId($gatewayAuthUser->getId())->firstOrFail();
 
-        $store = Cache::tags($this->merchant_id)->remember($azo_merchant_access->id . 'detail_cache_of_merchant_stores', 60 * 60, function () {
-            $azo_merchant_access = AzoMerchantAccess::query()->byUserId($this->user->getId())->firstOrFail();
-
-            return Store::query()
-                ->findOrFail($azo_merchant_access->store_id);
-        });
+                return Store::query()
+                    ->findOrFail($azo_merchant_access->store_id);
+            }
+        );
 
         return [
             'merchant' => $merchant,
@@ -49,24 +52,5 @@ class MerchantsController extends ApiBaseController
             'stores' => $stores,
             'store' => $store,
         ];
-    }
-
-    public function getMerchantDetailsWithRelations2(Request $request)
-    {
-        return Cache::tags($this->merchant_id)->remember('merchant_with_details', 60 * 60, function () {
-            $merchant = Merchant::findOrFail($this->merchant_id);
-            $conditions = Condition::query()->active()->byMerchant($merchant->id)->get();
-            $stores = Store::query()->byMerchant($merchant->id)->get();
-
-            $azo_merchant_access = AzoMerchantAccess::query()->byUserId($this->user->getId())->firstOrFail();
-            $store = Store::query()->findOrFail($azo_merchant_access->store_id);
-
-            return [
-                'merchant' => $merchant,
-                'conditions' => $conditions,
-                'stores' => $stores,
-                'store' => $store,
-            ];
-        });
     }
 }

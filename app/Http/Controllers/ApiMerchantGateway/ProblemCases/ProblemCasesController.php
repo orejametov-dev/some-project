@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\ApiMerchantGateway\ProblemCases;
 
+use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
+use App\DTOs\Auth\AzoAccessDto;
 use App\Exceptions\BusinessException;
 use App\Filters\CommonFilters\StatusIdFilter;
-use App\Http\Controllers\ApiMerchantGateway\ApiBaseController;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiMerchantGateway\ProblemCases\ProblemCaseResource;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
@@ -16,12 +18,12 @@ use App\Services\SMS\SmsMessages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
-class ProblemCasesController extends ApiBaseController
+class ProblemCasesController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, AzoAccessDto $azoAccessDto)
     {
         $problemCases = ProblemCase::query()->with('before_tags')
-            ->byMerchant($this->merchant_id)
+            ->byMerchant($azoAccessDto->merchant_id)
             ->filterRequest($request, [
                 StatusIdFilter::class,
             ]);
@@ -33,7 +35,7 @@ class ProblemCasesController extends ApiBaseController
         return ProblemCaseResource::collection($problemCases->paginate($request->query('per_page') ?? 15));
     }
 
-    public function show($id, Request $request)
+    public function show($id)
     {
         $problemCase = ProblemCase::with('before_tags')
             ->find($id);
@@ -58,7 +60,7 @@ class ProblemCasesController extends ApiBaseController
         return new ProblemCaseResource($problemCase);
     }
 
-    public function setStatus($id, Request $request)
+    public function setStatus($id, Request $request, GatewayAuthUser $gatewayAuthUser)
     {
         $this->validate($request, [
             'status_id' => 'required|integer',
@@ -82,24 +84,24 @@ class ProblemCasesController extends ApiBaseController
             hookable_type: $problemCase->getTable(),
             hookable_id: $problemCase->id,
             created_from_str: 'MERCHANT',
-            created_by_id: $this->user->getId(),
+            created_by_id: $gatewayAuthUser->getId(),
             body: 'Обновлен на статус',
             keyword: ProblemCase::$statuses[$problemCase->status_id]['name'],
             action: 'create',
             class: 'info',
             action_at: null,
-            created_by_str: $this->user->getName(),
+            created_by_str: $gatewayAuthUser->getName(),
         ));
 
         return new ProblemCaseResource($problemCase);
     }
 
-    public function setEngage($id)
+    public function setEngage($id, GatewayAuthUser $gatewayAuthUser)
     {
         $problemCase = ProblemCase::findOrFail($id);
 
-        $problemCase->engaged_by_id = $this->user->getId();
-        $problemCase->engaged_by_name = $this->user->getName();
+        $problemCase->engaged_by_id = $gatewayAuthUser->getId();
+        $problemCase->engaged_by_name = $gatewayAuthUser->getName();
         $problemCase->engaged_at = now();
 
         $problemCase->save();
@@ -112,13 +114,13 @@ class ProblemCasesController extends ApiBaseController
         return array_values(ProblemCase::$statuses);
     }
 
-    public function getNewProblemCasesCounter()
+    public function getNewProblemCasesCounter(GatewayAuthUser $gatewayAuthUser, AzoAccessDto $azoAccessDto)
     {
-        $counter = Cache::remember('new-problem-cases-counter_' . $this->merchant_id, 10 * 60, function () {
+        $counter = Cache::remember('new-problem-cases-counter_' . $azoAccessDto->merchant_id, 10 * 60, function () use ($azoAccessDto) {
             return ProblemCase::query()
                 ->whereNull('engaged_by_id')
                 ->whereNull('engaged_by_name')
-                ->byMerchant($this->merchant_id)
+                ->byMerchant($azoAccessDto->merchant_id)
                 ->onlyNew()->count();
         });
 
