@@ -1,4 +1,4 @@
-1. не возращать response json в use case 
+1. не возращать response json в use case - **done**
 2. Возвращать везде api resource в контроллерах
 3. Переписать SortableByQueryParams
 4. Почистить лишние команды и вынести логику в UseCase - **done**
