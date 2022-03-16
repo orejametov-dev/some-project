@@ -15,7 +15,7 @@ use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestStoreDocuments;
 use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestUpdateRequest;
 use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestUploadFile;
 use App\Http\Resources\ApiPrmGateway\Merchants\MerchantRequestsResource;
-use App\HttpServices\Auth\AuthMicroService;
+use App\HttpRepositories\Auth\AuthHttpRepository;
 use App\HttpServices\Company\CompanyService;
 use App\Modules\Merchants\Models\CancelReason;
 use App\Modules\Merchants\Models\Request as MerchantRequest;
@@ -125,19 +125,19 @@ class MerchantRequestsController extends ApiBaseController
         return response()->json(['message' => 'Файл успешно удалён.']);
     }
 
-    public function setEngage(Request $request, $id)
+    public function setEngage($id, Request $request, AuthHttpRepository $authHttpRepository)
     {
         $this->validate($request, [
             'engaged_by_id' => 'required|integer',
         ]);
 
-        $user = AuthMicroService::getUserById($request->input('engaged_by_id'));
+        $user = $authHttpRepository->getUserById($request->input('engaged_by_id'));
 
         if (!$user) {
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
         }
 
-        $merchant_request = MerchantRequest::findOrFail($id);
+        $merchant_request = MerchantRequest::query()->findOrFail($id);
 
         if ($merchant_request->isStatusNew() || $merchant_request->isInProcess()) {
             $merchant_request->setEngage($user);
