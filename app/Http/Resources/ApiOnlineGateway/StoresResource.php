@@ -22,7 +22,9 @@ class StoresResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'address_phone' => $this->address . ' ' . $this->phone,
             'address' => $this->address,
+            'phone' => $this->phone,
         ];
     }
 }
