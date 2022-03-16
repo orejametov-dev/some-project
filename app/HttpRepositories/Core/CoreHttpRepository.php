@@ -2,7 +2,7 @@
 
 namespace App\HttpRepositories\Core;
 
-use App\HttpRepositories\HttpResponses\Core\AmountOfMerchantSalesResponse;
+use App\HttpRepositories\HttpResponses\Core\AmountOfMerchantSalesListResponse;
 use App\HttpRepositories\HttpResponses\Core\ApplicationIdApplicationDataResponse;
 use App\HttpRepositories\HttpResponses\Core\CreditNumberApplicationDataResponse;
 use App\HttpRepositories\HttpResponses\Core\MerchantApplicationsAndClientsCountByRangeDataResponse;
@@ -55,11 +55,11 @@ class CoreHttpRepository
         return ApplicationIdApplicationDataResponse::fromArray($data);
     }
 
-    public function getAmountOfMerchantSales(): AmountOfMerchantSalesResponse
+    public function getAmountOfMerchantSales(): AmountOfMerchantSalesListResponse
     {
         $result = $this->getHttpClient()->get('merchant-sales')->throw()->json();
 
-        return AmountOfMerchantSalesResponse::fromArray($result);
+        return AmountOfMerchantSalesListResponse::fromArray($result);
     }
 
     public function getApplicationConditionId(int $condition_id): mixed

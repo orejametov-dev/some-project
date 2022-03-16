@@ -26,7 +26,7 @@ class AuthHttpResponse
             self::parseInt($data['id']),
             self::parseString($data['name']),
             self::parseString($data['phone']),
-            self::parseArray($data['phone']),
+            self::parseArray($data['roles']),
         );
     }
 }

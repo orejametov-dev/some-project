@@ -2,15 +2,16 @@
 
 namespace App\HttpRepositories\Storage;
 
+use App\HttpRepositories\HttpResponses\Storage\UploadFileResponse;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
 
 class StorageHttpRepository
 {
-    public function uploadFile(UploadedFile $file, string $type): mixed
+    public function uploadFile(UploadedFile $file, string $type): UploadFileResponse
     {
-        return $this->getHttpClient()
+        $response = $this->getHttpClient()
             ->attach(
                 'file',
                 file_get_contents($file->path()),
@@ -23,11 +24,13 @@ class StorageHttpRepository
             ->post('files')
             ->throw()
             ->json();
+
+        return UploadFileResponse::fromArray($response);
     }
 
-    public function destroy(string $url): mixed
+    public function destroy(string $url): void
     {
-        return $this->getHttpClient()
+        $this->getHttpClient()
             ->delete($url)
             ->throw()
             ->json();
