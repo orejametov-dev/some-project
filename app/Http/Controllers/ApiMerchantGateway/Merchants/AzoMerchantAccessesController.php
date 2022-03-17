@@ -124,10 +124,10 @@ class AzoMerchantAccessesController extends Controller
 
         $user = $authHttpRepository->getUserById($request->input('user_id'));
 
-        $protector = new OtpProtector('new_azo_merchant_user_' . $user['data']['phone']);
+        $protector = new OtpProtector('new_azo_merchant_user_' . $user->phone);
         $protector->verifyOtp((int) $request->input('code'));
 
-        if (array_search(AuthHttpRepository::AZO_MERCHANT_ROLE, array_column($user['data']['roles'], 'name'))) {
+        if (array_search(AuthHttpRepository::AZO_MERCHANT_ROLE, array_column($user->roles, 'name'))) {
             throw new ApiBusinessException('Пользователь уже является сотрудником мерчанта', 'merchant_exists', [
                 'ru' => 'Пользователь уже является сотрудником мерчанта',
                 'uz' => 'Foydalanuvchi merchant tizimiga bog\'langan',
@@ -143,7 +143,7 @@ class AzoMerchantAccessesController extends Controller
 
         $store = Store::query()->findOrFail($request->input('store_id'));
 
-        $company_user = CompanyService::getCompanyUserByUserId($user['data']['id']);
+        $company_user = CompanyService::getCompanyUserByUserId($user->id);
 
         if (empty($company_user)) {
             $company_user = CompanyService::createCompanyUser(
