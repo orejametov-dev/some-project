@@ -134,7 +134,7 @@ class AzoMerchantAccessesController extends Controller
             ], 400);
         }
 
-        if (AzoMerchantAccess::query()->where('phone', $user['data']['phone'])->exists()) {
+        if (AzoMerchantAccess::query()->where('phone', $user->phone)->exists()) {
             throw new ApiBusinessException('Пользователь с данным номером существует', 'phone_exists', [
                 'ru' => 'Пользователь с данным номером существует',
                 'uz' => 'Bunday raqam egasi tizimda mavjud',
@@ -147,10 +147,10 @@ class AzoMerchantAccessesController extends Controller
 
         if (empty($company_user)) {
             $company_user = CompanyService::createCompanyUser(
-                user_id: $user['data']['id'],
+                user_id: $user->id,
                 company_id: $store->merchant->company_id,
-                phone: $user['data']['phone'],
-                full_name: $user['data']['name']
+                phone: $user->phone,
+                full_name: $user->name
             );
         }
 
@@ -169,9 +169,9 @@ class AzoMerchantAccessesController extends Controller
             $azo_merchant_access = new AzoMerchantAccess();
         }
 
-        $azo_merchant_access->user_id = $user['data']['id'];
-        $azo_merchant_access->user_name = $user['data']['name'];
-        $azo_merchant_access->phone = $user['data']['phone'];
+        $azo_merchant_access->user_id = $user->id;
+        $azo_merchant_access->user_name = $user->name;
+        $azo_merchant_access->phone = $user->phone;
         $azo_merchant_access->company_user_id = $company_user['id'];
         $azo_merchant_access->merchant()->associate($merchant);
         $azo_merchant_access->store()->associate($store->id);
