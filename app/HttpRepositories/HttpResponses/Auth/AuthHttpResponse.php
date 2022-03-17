@@ -20,8 +20,6 @@ class AuthHttpResponse
 
     public static function fromArray(array $data): self
     {
-        $data = $data['data'];
-
         return new self(
             self::parseInt($data['id']),
             self::parseString($data['name']),

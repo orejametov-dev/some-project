@@ -6,23 +6,24 @@ use App\HttpRepositories\HttpResponses\Core\AmountOfMerchantSalesListResponse;
 use App\HttpRepositories\HttpResponses\Core\ApplicationIdApplicationDataResponse;
 use App\HttpRepositories\HttpResponses\Core\CreditNumberApplicationDataResponse;
 use App\HttpRepositories\HttpResponses\Core\MerchantApplicationsAndClientsCountByRangeDataResponse;
+use Carbon\Carbon;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 
 class CoreHttpRepository
 {
-    public function getMerchantApplicationsAndClientsCountByRange(int $merchant_id, string $from_date, string $to_date): MerchantApplicationsAndClientsCountByRangeDataResponse
+    public function getMerchantApplicationsAndClientsCountByRange(int $merchant_id, Carbon $from_date, Carbon $to_date): MerchantApplicationsAndClientsCountByRangeDataResponse
     {
         $result = $this->getHttpClient()->get('merchant-activity', [
-            'from_date' => $from_date,
-            'to_date' => $to_date,
+            'from_date' => Carbon::parse($from_date)->format('Y-m-d'),
+            'to_date' => Carbon::parse($to_date)->format('Y-m-d'),
             'merchant_id' => $merchant_id,
         ])->json();
 
         return MerchantApplicationsAndClientsCountByRangeDataResponse::fromArray($result['data']);
     }
 
-    public function getStoreApplicationsAndClientsCountByRange(int $store_id, string $from_date, string $to_date): MerchantApplicationsAndClientsCountByRangeDataResponse
+    public function getStoreApplicationsAndClientsCountByRange(int $store_id, Carbon $from_date, Carbon $to_date): MerchantApplicationsAndClientsCountByRangeDataResponse
     {
         $result = $this->getHttpClient()->get('merchant-activity', [
             'from_date' => $from_date,

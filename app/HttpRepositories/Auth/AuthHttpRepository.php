@@ -20,10 +20,9 @@ class AuthHttpRepository
             ->post('users/' . $user_id . '/role', [
                 'role_id' => 'Merchant',
             ])
-            ->throw()
-            ->json();
+            ->throw();
 
-        return  AuthHttpResponse::fromArray($response);
+        return  AuthHttpResponse::fromArray($response->json()['data']);
     }
 
     public function remove(int $user_id): AuthHttpResponse
@@ -34,7 +33,7 @@ class AuthHttpRepository
             ])
             ->throw();
 
-        return AuthHttpResponse::fromArray($response->json());
+        return AuthHttpResponse::fromArray($response->json()['data']);
     }
 
     public function checkUserToExistById(int $user_id): bool
@@ -54,7 +53,7 @@ class AuthHttpRepository
             return null;
         }
 
-        return AuthHttpResponse::fromArray($result->json());
+        return AuthHttpResponse::fromArray($result->json()['data']);
     }
 
     private function getHttpClient(): PendingRequest
