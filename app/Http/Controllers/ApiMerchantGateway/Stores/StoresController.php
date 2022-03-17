@@ -4,20 +4,21 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\ApiMerchantGateway\Stores;
 
-use App\Http\Controllers\ApiMerchantGateway\ApiBaseController;
+use App\DTOs\Auth\AzoAccessDto;
+use App\Http\Controllers\Controller;
 use App\Modules\Merchants\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
-class StoresController extends ApiBaseController
+class StoresController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, AzoAccessDto $azoAccessDto)
     {
         $stores = Store::query()
             ->with(['merchant'])
-            ->byMerchant($this->merchant_id);
+            ->byMerchant($azoAccessDto->merchant_id);
 
-        return Cache::remember($request->fullUrl() . '_' . $this->merchant_id, 5 * 60, function () use ($stores, $request) {
+        return Cache::remember($request->fullUrl() . '_' . $azoAccessDto->merchant_id, 5 * 60, function () use ($stores, $request) {
             return $stores->paginate($request->query('per_page') ?? 15);
         });
     }

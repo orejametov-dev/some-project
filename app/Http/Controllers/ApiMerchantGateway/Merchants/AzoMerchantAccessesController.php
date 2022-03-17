@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\ApiMerchantGateway\Merchants;
 
+use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
+use App\DTOs\Auth\AzoAccessDto;
 use App\Exceptions\ApiBusinessException;
-use App\Http\Controllers\ApiMerchantGateway\ApiBaseController;
+use App\Http\Controllers\Controller;
 use App\HttpRepositories\Auth\AuthHttpRepository;
 use App\HttpRepositories\Notify\NotifyHttpRepository;
 use App\HttpServices\Company\CompanyService;
@@ -20,29 +22,29 @@ use App\Services\SMS\SmsMessages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
-class AzoMerchantAccessesController extends ApiBaseController
+class AzoMerchantAccessesController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, AzoAccessDto $azoAccessDto)
     {
         $merchantUsersQuery = AzoMerchantAccess::query()
             ->with(['merchant', 'store'])
-            ->byMerchant($this->merchant_id)
+            ->byMerchant($azoAccessDto->merchant_id)
             ->filterRequest($request, [])
             ->orderByDesc('updated_at');
 
         return $merchantUsersQuery->paginate($request->query('per_page') ?? 15);
     }
 
-    public function show($id)
+    public function show($id, AzoAccessDto $azoAccessDto)
     {
         $merchantUser = AzoMerchantAccess::query()
-            ->byMerchant($this->merchant_id)
+            ->byMerchant($azoAccessDto->merchant_id)
             ->findOrFail($id);
 
         return $merchantUser;
     }
 
-    public function update($id, Request $request)
+    public function update($id, Request $request, AzoAccessDto $azoAccessDto, GatewayAuthUser $gatewayAuthUser)
     {
         $this->validate($request, [
             'store_id' => 'required|integer',
@@ -62,13 +64,13 @@ class AzoMerchantAccessesController extends ApiBaseController
             hookable_type: $azo_merchant_access->getTable(),
             hookable_id: $azo_merchant_access->id,
             created_from_str: 'MERCHANT',
-            created_by_id: $this->user->getId(),
+            created_by_id: $gatewayAuthUser->getId(),
             body: 'Сотрудник обновлен',
             keyword: 'old_store: (' . $old_store->id . ', ' . $old_store->name . ') -> ' . 'store: (' . $store->id . ', ' . $store->name . ')',
             action: 'update',
             class: 'warning',
             action_at: null,
-            created_by_str: $this->user->getName(),
+            created_by_str: $gatewayAuthUser->getName(),
         ));
 
         Cache::tags('azo_merchants')->forget('azo_merchant_user_id_' . $azo_merchant_access->user_id);
@@ -112,7 +114,7 @@ class AzoMerchantAccessesController extends ApiBaseController
             ], ]);
     }
 
-    public function store(Request $request, AuthHttpRepository $authHttpRepository)
+    public function store(Request $request, GatewayAuthUser $gatewayAuthUser, AuthHttpRepository $authHttpRepository)
     {
         $this->validate($request, [
             'code' => 'required|digits:4',
@@ -181,13 +183,13 @@ class AzoMerchantAccessesController extends ApiBaseController
             hookable_type: $azo_merchant_access->getTable(),
             hookable_id: $azo_merchant_access->id,
             created_from_str: 'PRM',
-            created_by_id: $this->user->getId(),
+            created_by_id: $gatewayAuthUser->getId(),
             body: 'Сотрудник создан',
             keyword: 'Сотрудник добавлен в магазин: (store_id: ' . $store->id . ', store_name: ' . $store->name . ')',
             action: 'create',
             class: 'info',
             action_at: null,
-            created_by_str: $this->user->getName(),
+            created_by_str: $gatewayAuthUser->getName(),
         ));
 
         (new AuthHttpRepository())->store($azo_merchant_access->user_id);
@@ -201,7 +203,7 @@ class AzoMerchantAccessesController extends ApiBaseController
         return $azo_merchant_access;
     }
 
-    public function destroy($id)
+    public function destroy($id, GatewayAuthUser $gatewayAuthUser)
     {
         $azo_merchant_access = AzoMerchantAccess::query()->findOrFail($id);
         $store = $azo_merchant_access->store;
@@ -215,13 +217,13 @@ class AzoMerchantAccessesController extends ApiBaseController
             hookable_type: $azo_merchant_access->getTable(),
             hookable_id: $azo_merchant_access->id,
             created_from_str: 'PRM',
-            created_by_id: $this->user->getId(),
+            created_by_id: $gatewayAuthUser->getId(),
             body: 'Сотрудник удален',
             keyword: 'Сотрудник удален из магазина: (' . $store->id . ', ' . $azo_merchant_access->store->name . ')',
             action: 'delete',
             class: 'danger',
             action_at: null,
-            created_by_str: $this->user->getName(),
+            created_by_str: $gatewayAuthUser->getName(),
         ));
 
         Cache::tags('azo_merchants')->forget('azo_merchant_user_id_' . $azo_merchant_access->user_id);
