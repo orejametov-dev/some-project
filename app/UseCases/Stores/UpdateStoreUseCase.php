@@ -3,7 +3,7 @@
 namespace App\UseCases\Stores;
 
 use App\DTOs\Stores\UpdateStoresDTO;
-use App\Modules\Merchants\Models\Store;
+use App\Models\Store;
 use App\UseCases\Cache\FlushCacheUseCase;
 
 class UpdateStoreUseCase

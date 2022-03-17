@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\ApiPrm\MerchantRequests;
 
-use App\Modules\Merchants\Models\File;
+use App\Models\File;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 

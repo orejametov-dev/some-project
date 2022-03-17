@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Merchants\Models;
+namespace App\Models;
 
 use App\Filters\Tag\TagFilters;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
 /**
- * App\Modules\Merchants\Models\Tag.
+ * App\Models\Tag.
  *
  * @property int $id
  * @property string $title

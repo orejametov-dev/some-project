@@ -6,8 +6,8 @@ namespace App\Http\Controllers\ApiGate\Conditions;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiGate\Conditions\ConditionsResource;
-use App\Modules\Merchants\Models\Condition;
-use App\Modules\Merchants\Models\Merchant;
+use App\Models\Condition;
+use App\Models\Merchant;
 
 class ConditionsController extends Controller
 {

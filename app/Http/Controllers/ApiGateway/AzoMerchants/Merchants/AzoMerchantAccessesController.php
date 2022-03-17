@@ -12,7 +12,7 @@ use App\Filters\Merchant\MerchantIdFilter;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\MerchantUsers\StoreMerchantUsers;
 use App\Http\Requests\ApiPrm\MerchantUsers\UpdateMerchantUserRequest;
-use App\Modules\Merchants\Models\AzoMerchantAccess;
+use App\Models\AzoMerchantAccess;
 use App\UseCases\MerchantUsers\DestroyMerchantUserUseCase;
 use App\UseCases\MerchantUsers\StoreMerchantUserUseCase;
 use App\UseCases\MerchantUsers\UpdateMerchantUserUseCase;

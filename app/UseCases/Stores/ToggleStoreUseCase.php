@@ -4,8 +4,8 @@ namespace App\UseCases\Stores;
 
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\Exceptions\BusinessException;
-use App\Modules\Merchants\Models\ActivityReason;
-use App\Modules\Merchants\Models\Store;
+use App\Models\ActivityReason;
+use App\Models\Store;
 use App\UseCases\Cache\FlushCacheUseCase;
 
 class ToggleStoreUseCase

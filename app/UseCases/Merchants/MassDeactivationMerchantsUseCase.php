@@ -6,8 +6,8 @@ namespace App\UseCases\Merchants;
 
 use App\HttpRepositories\Core\CoreHttpRepository;
 use App\HttpRepositories\Prm\CompanyHttpRepository;
-use App\Modules\Merchants\Models\ActivityReason;
-use App\Modules\Merchants\Models\Merchant;
+use App\Models\ActivityReason;
+use App\Models\Merchant;
 use App\UseCases\Cache\FlushCacheUseCase;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;

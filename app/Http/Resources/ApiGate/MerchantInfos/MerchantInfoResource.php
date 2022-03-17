@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources\ApiGate\MerchantInfos;
 
-use App\Modules\Merchants\Models\MerchantInfo;
+use App\Models\MerchantInfo;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class MerchantInfoResource extends JsonResource

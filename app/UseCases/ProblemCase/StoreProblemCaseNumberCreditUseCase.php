@@ -9,7 +9,7 @@ use Alifuz\Utils\Gateway\Entities\GatewayApplication;
 use App\Exceptions\ApiBusinessException;
 use App\Exceptions\BusinessException;
 use App\HttpRepositories\Core\CoreHttpRepository;
-use App\Modules\Merchants\Models\ProblemCase;
+use App\Models\ProblemCase;
 
 class StoreProblemCaseNumberCreditUseCase extends AbstractStoreProblemCaseUseCase
 {

@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Merchants\Traits;
+namespace App\Traits;
 
-use App\Modules\Merchants\Models\Request;
+use App\Models\MerchantRequest;
 use Illuminate\Database\Eloquent\Builder;
+use function now;
 
 trait MerchantRequestStatusesTrait
 {
@@ -59,7 +60,7 @@ trait MerchantRequestStatusesTrait
         return $builder->where('status_id', self::TRASH);
     }
 
-    public function setStatusNew(): Request
+    public function setStatusNew(): MerchantRequest
     {
         $status = self::getOneById(self::NEW);
         $this->status_updated_at = now();
@@ -88,7 +89,7 @@ trait MerchantRequestStatusesTrait
         return $this->setStatus(self::TRASH);
     }
 
-    public function setStatus(int $status_id): Request
+    public function setStatus(int $status_id): MerchantRequest
     {
         $status = self::getOneById($status_id);
         $this->assertStateSwitchTo($status->id);

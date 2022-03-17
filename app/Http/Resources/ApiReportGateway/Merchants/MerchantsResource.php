@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Resources\ApiReportGateway\Merchants;
 
-use App\Modules\Merchants\Models\Merchant;
+use App\Models\Merchant;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class MerchantsResource extends JsonResource

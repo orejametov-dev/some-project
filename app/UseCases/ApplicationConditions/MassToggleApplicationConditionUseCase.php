@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\UseCases\ApplicationConditions;
 
-use App\Modules\Merchants\Models\Condition;
+use App\Models\Condition;
 use Carbon\Carbon;
 
 class MassToggleApplicationConditionUseCase

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Resources\ApiMerchantGateway\ProblemCases;
 
 use App\Http\Resources\ApiMerchantGateway\Stores\StoresResource;
-use App\Modules\Merchants\Models\ProblemCase;
+use App\Models\ProblemCase;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProblemCaseResource extends JsonResource

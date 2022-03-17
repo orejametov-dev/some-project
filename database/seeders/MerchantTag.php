@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Modules\Merchants\Models\Merchant;
+use App\Models\Merchant;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;

@@ -10,7 +10,7 @@ use App\DTOs\ProblemCases\ProblemCaseDTO;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Jobs\SendSmsJob;
-use App\Modules\Merchants\Models\ProblemCase;
+use App\Models\ProblemCase;
 use App\Services\SMS\SmsMessages;
 
 abstract class AbstractStoreProblemCaseUseCase

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Merchants\Models;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
 /**
- * App\Modules\Merchants\Models\ConditionTemplate.
+ * App\Models\ConditionTemplate.
  *
  * @method static Builder|ConditionTemplate query()
  * @property int $id

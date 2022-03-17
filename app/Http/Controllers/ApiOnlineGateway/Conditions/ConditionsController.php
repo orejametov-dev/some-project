@@ -7,7 +7,7 @@ namespace App\Http\Controllers\ApiOnlineGateway\Conditions;
 use App\Filters\Merchant\MerchantIdFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiOnlineGateway\ConditionsResource;
-use App\Modules\Merchants\Models\Condition;
+use App\Models\Condition;
 use Illuminate\Http\Request;
 
 class ConditionsController extends Controller

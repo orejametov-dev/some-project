@@ -6,7 +6,7 @@ use App\Filters\CommonFilters\IdFilter;
 use App\Filters\Complaint\AzoMerchantAccessByAccessIdFilter;
 use App\Filters\Complaint\AzoMerchantAccessIdByUserIdFilter;
 use App\Http\Controllers\Controller;
-use App\Modules\Merchants\Models\Complaint;
+use App\Models\Complaint;
 use Illuminate\Http\Request;
 
 class ComplaintsController extends Controller

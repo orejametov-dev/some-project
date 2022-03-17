@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Monitoring;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Merchants\Models\Merchant;
-use Illuminate\Support\Facades\Log;
+use App\Models\Merchant;
 
 class MonitoringController extends Controller
 {

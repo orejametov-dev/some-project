@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Merchants\Traits;
+namespace App\Traits;
 
-use App\Modules\Merchants\Models\ProblemCase;
+use App\Models\ProblemCase;
 use Illuminate\Database\Eloquent\Builder;
+use function now;
 
 trait ProblemCaseStatuses
 {
