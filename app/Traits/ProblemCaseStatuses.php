@@ -6,7 +6,6 @@ namespace App\Traits;
 
 use App\Models\ProblemCase;
 use Illuminate\Database\Eloquent\Builder;
-use function now;
 
 trait ProblemCaseStatuses
 {
