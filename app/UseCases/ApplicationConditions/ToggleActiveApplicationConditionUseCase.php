@@ -6,7 +6,7 @@ namespace App\UseCases\ApplicationConditions;
 
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\HttpRepositories\Alifshop\AlifshopHttpRepository;
-use App\HttpServices\Hooks\DTO\HookData;
+use App\HttpRepositories\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Modules\Merchants\Models\Condition;
 use App\UseCases\Cache\FlushCacheUseCase;
