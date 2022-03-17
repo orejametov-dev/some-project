@@ -10,6 +10,8 @@ use App\Exceptions\ApiBusinessException;
 use App\Http\Controllers\Controller;
 use App\HttpRepositories\Auth\AuthHttpRepository;
 use App\HttpRepositories\Notify\NotifyHttpRepository;
+use App\HttpRepositories\Prm\CompanyHttpRepository;
+use App\HttpRepositories\Prm\CompanyUserHttpRepository;
 use App\HttpServices\Company\CompanyService;
 use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
@@ -114,7 +116,7 @@ class AzoMerchantAccessesController extends Controller
             ], ]);
     }
 
-    public function store(Request $request, GatewayAuthUser $gatewayAuthUser, AuthHttpRepository $authHttpRepository)
+    public function store(Request $request, GatewayAuthUser $gatewayAuthUser, AuthHttpRepository $authHttpRepository, CompanyUserHttpRepository $companyUserHttpRepository)
     {
         $this->validate($request, [
             'code' => 'required|digits:4',
@@ -122,7 +124,7 @@ class AzoMerchantAccessesController extends Controller
             'store_id' => 'required|integer',
         ]);
 
-        $user = $authHttpRepository->getUserById($request->input('user_id'));
+        $user = $authHttpRepository->getUserById((int) $request->input('user_id'));
 
         $protector = new OtpProtector('new_azo_merchant_user_' . $user->phone);
         $protector->verifyOtp((int) $request->input('code'));
@@ -143,10 +145,10 @@ class AzoMerchantAccessesController extends Controller
 
         $store = Store::query()->findOrFail($request->input('store_id'));
 
-        $company_user = CompanyService::getCompanyUserByUserId($user->id);
+        $company_user = $companyUserHttpRepository->getCompanyUserByUserId($user->id);
 
         if (empty($company_user)) {
-            $company_user = CompanyService::createCompanyUser(
+            $company_user = $companyUserHttpRepository->createCompanyUser(
                 user_id: $user->id,
                 company_id: $store->merchant->company_id,
                 phone: $user->phone,

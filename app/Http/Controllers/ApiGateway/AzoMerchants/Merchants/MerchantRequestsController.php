@@ -16,6 +16,7 @@ use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestUpdateRequest;
 use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestUploadFile;
 use App\Http\Resources\ApiPrmGateway\Merchants\MerchantRequestsResource;
 use App\HttpRepositories\Auth\AuthHttpRepository;
+use App\HttpRepositories\Prm\CompanyHttpRepository;
 use App\HttpServices\Company\CompanyService;
 use App\Modules\Merchants\Models\CancelReason;
 use App\Modules\Merchants\Models\Request as MerchantRequest;
@@ -58,7 +59,7 @@ class MerchantRequestsController extends ApiBaseController
         return $storeMerchantRequestUseCase->execute(StoreMerchantRequestDTO::fromArray($request->validated()), true);
     }
 
-    public function update($id, MerchantRequestUpdateRequest $request)
+    public function update($id, MerchantRequestUpdateRequest $request, CompanyHttpRepository $companyHttpRepository)
     {
         $merchant_request = MerchantRequest::query()->find($id);
 
@@ -66,7 +67,7 @@ class MerchantRequestsController extends ApiBaseController
             throw new BusinessException('Запрос не мерчанта не найден', 'merchant_request_not_found', 404);
         }
 
-        if (CompanyService::getCompanyByName($request->input('name'))) {
+        if ($companyHttpRepository->getCompanyByName($request->input('name'))) {
             throw new BusinessException('Указанное имя компании уже занято', 'object_not_found', 400);
         }
 
@@ -131,7 +132,7 @@ class MerchantRequestsController extends ApiBaseController
             'engaged_by_id' => 'required|integer',
         ]);
 
-        $user = $authHttpRepository->getUserById($request->input('engaged_by_id'));
+        $user = $authHttpRepository->getUserById((int) $request->input('engaged_by_id'));
 
         if (!$user) {
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);

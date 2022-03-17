@@ -18,6 +18,7 @@ use App\Http\Requests\ApiPrm\Merchants\SetMainStoreRequest;
 use App\Http\Requests\ApiPrm\Merchants\SetResponsibleUserRequest;
 use App\Http\Requests\ApiPrm\Merchants\StoreMerchantRequest;
 use App\Http\Requests\ApiPrm\Merchants\UpdateMerchantRequest;
+use App\HttpRepositories\Prm\CompanyHttpRepository;
 use App\HttpRepositories\Warehouse\WarehouseHttpRepository;
 use App\HttpServices\Company\CompanyService;
 use App\Modules\Merchants\Models\ActivityReason;
@@ -155,7 +156,7 @@ class MerchantsController extends ApiBaseController
             ])->whereRaw("(IFNULL(sub_query.limit, 0) + IFNULL(sub_query.agreement_sum, 0)) $percentage_of_limit <= sub_query.current_sales")->get();
     }
 
-    public function toggle($id, Request $request, FlushCacheUseCase $flushCacheUseCase)
+    public function toggle($id, Request $request, FlushCacheUseCase $flushCacheUseCase, CompanyHttpRepository $companyHttpRepository)
     {
         $this->validate($request, [
             'activity_reason_id' => 'integer|required',
@@ -174,7 +175,7 @@ class MerchantsController extends ApiBaseController
             'created_by_name' => $this->user->getName(),
         ]);
 
-        CompanyService::setStatusNotActive($merchant->company_id);
+        $companyHttpRepository->setStatusNotActive($merchant->company_id);
 
         $flushCacheUseCase->execute($merchant->id);
 
