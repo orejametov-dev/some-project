@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Modules\Merchants\Models;
 
 use App\Filters\MerchantRequest\MerchantRequestFilters;
-use App\HttpRepositories\HttpResponses\Auth\AuthHttpResponse;
 use App\HttpRepositories\Storage\StorageHttpRepository;
 use App\Modules\Merchants\Traits\MerchantRequestStatusesTrait;
 use App\Services\SimpleStateMachine\SimpleStateMachineTrait;

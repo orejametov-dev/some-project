@@ -39,7 +39,7 @@ class MassDeactivationMerchantsUseCase
                         continue;
                     }
 
-                    $result = $this->coreHttpService->getMerchantApplicationsAndClientsCountByRange($merchant->id, $from_date, $to_date);
+                    $result = $this->coreHttpService->getMerchantApplicationsAndClientsCountByRange((int) $merchant->id, $from_date, $to_date);
                     if ($result->applications_count === 0 && $result->clients_count === 0) {
                         $merchant->active = false;
                         $merchant->save();

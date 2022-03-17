@@ -9,11 +9,9 @@ use App\DTOs\Auth\AzoAccessDto;
 use App\Exceptions\ApiBusinessException;
 use App\Http\Controllers\Controller;
 use App\HttpRepositories\Auth\AuthHttpRepository;
+use App\HttpRepositories\Hooks\DTO\HookData;
 use App\HttpRepositories\Notify\NotifyHttpRepository;
-use App\HttpRepositories\Prm\CompanyHttpRepository;
 use App\HttpRepositories\Prm\CompanyUserHttpRepository;
-use App\HttpServices\Company\CompanyService;
-use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Jobs\ToggleMerchantRoleOfUser;
 use App\Modules\Merchants\Models\AzoMerchantAccess;
@@ -194,7 +192,7 @@ class AzoMerchantAccessesController extends Controller
             created_by_str: $gatewayAuthUser->getName(),
         ));
 
-        (new AuthHttpRepository())->store($azo_merchant_access->user_id);
+        (new AuthHttpRepository())->store((int) $azo_merchant_access->user_id);
 
         ToggleMerchantRoleOfUser::dispatch($azo_merchant_access->user_id, AuthHttpRepository::ACTIVATE_MERCHANT_ROLE);
 

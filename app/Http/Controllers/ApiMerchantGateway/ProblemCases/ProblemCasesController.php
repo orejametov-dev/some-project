@@ -10,7 +10,7 @@ use App\Exceptions\BusinessException;
 use App\Filters\CommonFilters\StatusIdFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiMerchantGateway\ProblemCases\ProblemCaseResource;
-use App\HttpServices\Hooks\DTO\HookData;
+use App\HttpRepositories\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Jobs\SendSmsJob;
 use App\Modules\Merchants\Models\ProblemCase;

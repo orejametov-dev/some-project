@@ -20,7 +20,6 @@ use App\Http\Requests\ApiPrm\Merchants\StoreMerchantRequest;
 use App\Http\Requests\ApiPrm\Merchants\UpdateMerchantRequest;
 use App\HttpRepositories\Prm\CompanyHttpRepository;
 use App\HttpRepositories\Warehouse\WarehouseHttpRepository;
-use App\HttpServices\Company\CompanyService;
 use App\Modules\Merchants\Models\ActivityReason;
 use App\Modules\Merchants\Models\Merchant;
 use App\Modules\Merchants\Models\Tag;
@@ -165,7 +164,7 @@ class MerchantsController extends ApiBaseController
         $activity_reason = ActivityReason::query()->where('type', 'MERCHANT')
             ->findOrFail($request->input('activity_reason_id'));
 
-        $merchant = Merchant::findOrFail($id);
+        $merchant = Merchant::query()->findOrFail($id);
         $merchant->active = !$merchant->active;
         $merchant->save();
 
@@ -175,7 +174,7 @@ class MerchantsController extends ApiBaseController
             'created_by_name' => $this->user->getName(),
         ]);
 
-        $companyHttpRepository->setStatusNotActive($merchant->company_id);
+        $companyHttpRepository->setStatusNotActive((int) $merchant->company_id);
 
         $flushCacheUseCase->execute($merchant->id);
 

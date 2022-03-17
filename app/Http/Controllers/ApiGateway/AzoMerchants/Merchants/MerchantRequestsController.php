@@ -17,7 +17,6 @@ use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestUploadFile;
 use App\Http\Resources\ApiPrmGateway\Merchants\MerchantRequestsResource;
 use App\HttpRepositories\Auth\AuthHttpRepository;
 use App\HttpRepositories\Prm\CompanyHttpRepository;
-use App\HttpServices\Company\CompanyService;
 use App\Modules\Merchants\Models\CancelReason;
 use App\Modules\Merchants\Models\Request as MerchantRequest;
 use App\UseCases\MerchantRequests\AllowMerchantRequestUseCase;
