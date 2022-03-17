@@ -63,18 +63,9 @@ class AdditionalAgreementsController extends Controller
         return $additional_agreement;
     }
 
-    public function getAdditionalAgreementDoc($id, Request $request, WordService $wordService): BinaryFileResponse
+    public function getAdditionalAgreementDoc($id, WordService $wordService): BinaryFileResponse
     {
-        $request->validate([
-            'document_type'  => 'required|string|in:'
-                . AdditionalAgreement::LIMIT . ','
-                . AdditionalAgreement::VAT . ','
-                . AdditionalAgreement::DELIVERY,
-        ]);
-
-        $additional_agreement = AdditionalAgreement::query()
-            ->where('document_type', $request->input('document_type'))
-            ->find($id);
+        $additional_agreement = AdditionalAgreement::query()->find($id);
 
         if ($additional_agreement === null) {
             throw new BusinessException('Дополнительное соглашение не найдено', 'object_not_found', 404);
