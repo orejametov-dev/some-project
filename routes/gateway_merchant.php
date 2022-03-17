@@ -47,7 +47,8 @@ Route::prefix('merchants/tags')
 Route::prefix('merchants/users')
     ->group(function () {
         Route::get('/', [App\Http\Controllers\ApiMerchantGateway\Merchants\AzoMerchantAccessesController::class, 'index']);
-        Route::get('/check-to-active-merchant', [\App\Http\Controllers\ApiMerchantGateway\MerchantAccess\MerchantAccessController::class, 'checkToActiveMerchant']);
+        Route::get('/check-to-active-merchant', [\App\Http\Controllers\ApiMerchantGateway\MerchantAccess\MerchantAccessController::class, 'checkToActiveMerchant'])
+            ->withoutMiddleware([AzoMerchantAccessMiddleware::class]);
         Route::get('/{id}', [App\Http\Controllers\ApiMerchantGateway\Merchants\AzoMerchantAccessesController::class, 'show']);
         Route::match(['put', 'patch'], '/{id}', [App\Http\Controllers\ApiMerchantGateway\Merchants\AzoMerchantAccessesController::class, 'update']);
         Route::post('/request-store', [App\Http\Controllers\ApiMerchantGateway\Merchants\AzoMerchantAccessesController::class, 'requestStore']);
