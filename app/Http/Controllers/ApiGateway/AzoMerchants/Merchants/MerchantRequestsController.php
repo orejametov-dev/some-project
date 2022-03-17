@@ -140,7 +140,9 @@ class MerchantRequestsController extends ApiBaseController
         $merchant_request = MerchantRequest::query()->findOrFail($id);
 
         if ($merchant_request->isStatusNew() || $merchant_request->isInProcess()) {
-            $merchant_request->setEngage($user);
+            $merchant_request->engaged_by_id = $user->id;
+            $merchant_request->engaged_by_name = $user->name;
+            $merchant_request->engaged_at = now();
             $merchant_request->setStatusInProcess();
             $merchant_request->save();
 

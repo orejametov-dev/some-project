@@ -269,15 +269,6 @@ class Request extends Model
         $file->delete();
     }
 
-    public function setEngage(AuthHttpResponse $user): self
-    {
-        $this->engaged_by_id = $user->id;
-        $this->engaged_by_name = $user->name;
-        $this->engaged_at = now();
-
-        return $this;
-    }
-
     public function scopeFilterRequest(Builder $builder, \Illuminate\Http\Request $request, array $filters = []): Builder
     {
         return (new MerchantRequestFilters($request, $builder))->execute($filters);
