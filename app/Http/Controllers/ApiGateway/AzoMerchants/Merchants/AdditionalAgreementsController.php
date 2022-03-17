@@ -72,10 +72,8 @@ class AdditionalAgreementsController extends Controller
                 . AdditionalAgreement::DELIVERY,
         ]);
 
-        $document_type = $request->input('document_type');
-
         $additional_agreement = AdditionalAgreement::query()
-            ->where('document_type', $document_type)
+            ->where('document_type', $request->input('document_type'))
             ->find($id);
 
         if ($additional_agreement === null) {
@@ -86,15 +84,15 @@ class AdditionalAgreementsController extends Controller
 
         $additional_agreement_file = '';
 
-        if ($document_type === AdditionalAgreement::LIMIT) {
+        if ($additional_agreement->document_type === AdditionalAgreement::LIMIT) {
             $additional_agreement_file = $wordService->createAdditionalAgreement($additional_agreement, $merchant_info, 'app/additional_agreement.docx');
         }
 
-        if ($document_type === AdditionalAgreement::VAT) {
+        if ($additional_agreement->document_type === AdditionalAgreement::VAT) {
             $additional_agreement_file = $wordService->createAdditionalAgreement($additional_agreement, $merchant_info, 'app/additional_agreement_vat.docx');
         }
 
-        if ($document_type === AdditionalAgreement::DELIVERY) {
+        if ($additional_agreement->document_type === AdditionalAgreement::DELIVERY) {
             $additional_agreement_file = $wordService->createAdditionalAgreement($additional_agreement, $merchant_info, 'app/additional_agreement_delivery.docx');
         }
 
