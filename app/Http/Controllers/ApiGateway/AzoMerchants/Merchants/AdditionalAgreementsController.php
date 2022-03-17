@@ -73,7 +73,7 @@ class AdditionalAgreementsController extends Controller
 
         $merchant_info = MerchantInfo::query()->where('merchant_id', $additional_agreement->merchant_id)->firstOrFail();
 
-        $additional_agreement_file = '';
+        $additional_agreement_file = null;
 
         if ($additional_agreement->document_type === AdditionalAgreement::LIMIT) {
             $additional_agreement_file = $wordService->createAdditionalAgreement($additional_agreement, $merchant_info, 'app/additional_agreement.docx');
@@ -85,6 +85,10 @@ class AdditionalAgreementsController extends Controller
 
         if ($additional_agreement->document_type === AdditionalAgreement::DELIVERY) {
             $additional_agreement_file = $wordService->createAdditionalAgreement($additional_agreement, $merchant_info, 'app/additional_agreement_delivery.docx');
+        }
+
+        if ($additional_agreement_file === null) {
+            throw new  BusinessException('Не правильный тип документа', 'type_not_exists', 400);
         }
 
         return response()->download(storage_path($additional_agreement_file))->deleteFileAfterSend();
