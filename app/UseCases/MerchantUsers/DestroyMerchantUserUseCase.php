@@ -6,8 +6,8 @@ namespace App\UseCases\MerchantUsers;
 
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\Exceptions\BusinessException;
+use App\HttpRepositories\Hooks\DTO\HookData;
 use App\HttpServices\Auth\AuthMicroService;
-use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Jobs\ToggleMerchantRoleOfUser;
 use App\Models\Store;

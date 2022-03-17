@@ -7,7 +7,7 @@ namespace App\UseCases\ProblemCase;
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use Alifuz\Utils\Gateway\Entities\GatewayApplication;
 use App\DTOs\ProblemCases\ProblemCaseDTO;
-use App\HttpServices\Hooks\DTO\HookData;
+use App\HttpRepositories\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Jobs\SendSmsJob;
 use App\Models\ProblemCase;

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Http;
 
 class HooksMicroService
 {
-    public function store(HookData $data)
+    public function store(HookData $data): mixed
     {
         $response = Http::baseUrl(config('local_services.service_hook.domain'))
             ->acceptJson()

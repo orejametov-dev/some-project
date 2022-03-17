@@ -6,7 +6,6 @@ namespace App\Models;
 
 use App\Filters\MerchantRequest\MerchantRequestFilters;
 use App\HttpRepositories\Storage\StorageHttpRepository;
-use App\HttpServices\Storage\StorageMicroService;
 use App\Services\SimpleStateMachine\SimpleStateMachineTrait;
 use App\Traits\MerchantRequestStatusesTrait;
 use App\Traits\SortableByQueryParams;
@@ -249,9 +248,9 @@ class MerchantRequest extends Model
         $storage_file = (new StorageHttpRepository)->uploadFile($uploadedFile, 'merchants');
         $merchant_request_file = new File();
         $merchant_request_file->file_type = $type;
-        $merchant_request_file->mime_type = $storage_file['mime_type'];
-        $merchant_request_file->size = $storage_file['size'];
-        $merchant_request_file->url = $storage_file['url'];
+        $merchant_request_file->mime_type = $storage_file->getMimeType();
+        $merchant_request_file->size = $storage_file->getSize();
+        $merchant_request_file->url = $storage_file->getUrl();
         $merchant_request_file->request_id = $this->id;
         $merchant_request_file->save();
 
@@ -265,17 +264,8 @@ class MerchantRequest extends Model
             return;
         }
 
-        StorageMicroService::destroy($file->url);
+        (new StorageHttpRepository)->destroy($file->url);
         $file->delete();
-    }
-
-    public function setEngage(array $user): self
-    {
-        $this->engaged_by_id = $user['data']['id'];
-        $this->engaged_by_name = $user['data']['name'];
-        $this->engaged_at = now();
-
-        return $this;
     }
 
     public function scopeFilterRequest(Builder $builder, \Illuminate\Http\Request $request, array $filters = []): Builder

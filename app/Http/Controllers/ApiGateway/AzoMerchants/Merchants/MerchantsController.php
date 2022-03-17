@@ -18,8 +18,8 @@ use App\Http\Requests\ApiPrm\Merchants\SetMainStoreRequest;
 use App\Http\Requests\ApiPrm\Merchants\SetResponsibleUserRequest;
 use App\Http\Requests\ApiPrm\Merchants\StoreMerchantRequest;
 use App\Http\Requests\ApiPrm\Merchants\UpdateMerchantRequest;
+use App\HttpRepositories\Prm\CompanyHttpRepository;
 use App\HttpRepositories\Warehouse\WarehouseHttpRepository;
-use App\HttpServices\Company\CompanyService;
 use App\Models\ActivityReason;
 use App\Models\Merchant;
 use App\Models\Tag;
@@ -155,7 +155,7 @@ class MerchantsController extends ApiBaseController
             ])->whereRaw("(IFNULL(sub_query.limit, 0) + IFNULL(sub_query.agreement_sum, 0)) $percentage_of_limit <= sub_query.current_sales")->get();
     }
 
-    public function toggle($id, Request $request, FlushCacheUseCase $flushCacheUseCase)
+    public function toggle($id, Request $request, FlushCacheUseCase $flushCacheUseCase, CompanyHttpRepository $companyHttpRepository)
     {
         $this->validate($request, [
             'activity_reason_id' => 'integer|required',
@@ -164,7 +164,7 @@ class MerchantsController extends ApiBaseController
         $activity_reason = ActivityReason::query()->where('type', 'MERCHANT')
             ->findOrFail($request->input('activity_reason_id'));
 
-        $merchant = Merchant::findOrFail($id);
+        $merchant = Merchant::query()->findOrFail($id);
         $merchant->active = !$merchant->active;
         $merchant->save();
 
@@ -174,7 +174,7 @@ class MerchantsController extends ApiBaseController
             'created_by_name' => $this->user->getName(),
         ]);
 
-        CompanyService::setStatusNotActive($merchant->company_id);
+        $companyHttpRepository->setStatusNotActive((int) $merchant->company_id);
 
         $flushCacheUseCase->execute($merchant->id);
 

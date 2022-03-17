@@ -14,7 +14,7 @@ class AuthHttpRepository
     const DEACTIVATE_MERCHANT_ROLE = 'DEACTIVATE';
     const AZO_MERCHANT_ROLE = 'Merchant';
 
-    public function store($user_id)
+    public function store(int $user_id): AuthHttpResponse
     {
         $response = $this->getHttpClient()
             ->post('users/' . $user_id . '/role', [
@@ -22,10 +22,10 @@ class AuthHttpRepository
             ])
             ->throw();
 
-        return $response->json();
+        return  AuthHttpResponse::fromArray($response->json()['data']);
     }
 
-    public function remove($user_id)
+    public function remove(int $user_id): AuthHttpResponse
     {
         $response = $this->getHttpClient()
             ->delete('users/' . $user_id . '/role', [
@@ -33,10 +33,10 @@ class AuthHttpRepository
             ])
             ->throw();
 
-        return $response->json();
+        return AuthHttpResponse::fromArray($response->json()['data']);
     }
 
-    public function checkUserToExistById($user_id): bool
+    public function checkUserToExistById(int $user_id): bool
     {
         $result = $this->getHttpClient()->get("users/$user_id");
         if ($result->status() === 404) {
@@ -46,36 +46,14 @@ class AuthHttpRepository
         return (bool) $result->json();
     }
 
-    public function getUserById($user_id): ?AuthHttpResponse
+    public function getUserById(int $user_id): ?AuthHttpResponse
     {
         $result = $this->getHttpClient()->get("users/$user_id");
         if ($result->status() === 404) {
             return null;
         }
 
-        return AuthHttpResponse::fromArray($result->json());
-    }
-
-    public function getUserByPhone($phone)
-    {
-        return $this->getHttpClient()->get('users/exists', [
-            'phone' => $phone,
-            'role' => 'Merchant',
-        ])
-            ->throw()
-            ->json();
-    }
-
-    public function createUser(string $name, string $phone, string $password)
-    {
-        return $this->getHttpClient()->post('users', [
-            'phone' => $phone,
-            'name' => $name,
-            'password' => $password,
-            'roles' => 'Merchant',
-        ])
-            ->throw()
-            ->json();
+        return AuthHttpResponse::fromArray($result->json()['data']);
     }
 
     private function getHttpClient(): PendingRequest
