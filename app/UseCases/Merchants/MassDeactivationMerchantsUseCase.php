@@ -23,8 +23,8 @@ class MassDeactivationMerchantsUseCase
 
     public function execute(): void
     {
-        $from_date = Carbon::now()->subWeeks(2)->format('Y-m-d');
-        $to_date = Carbon::now()->format('Y-m-d');
+        $from_date = Carbon::now()->subWeeks(2);
+        $to_date = Carbon::now();
 
         Merchant::query()->where('active', true)
             ->where('created_at', '<', $from_date)

@@ -124,17 +124,17 @@ class AzoMerchantAccessesController extends Controller
 
         $user = $authHttpRepository->getUserById($request->input('user_id'));
 
-        $protector = new OtpProtector('new_azo_merchant_user_' . $user['data']['phone']);
+        $protector = new OtpProtector('new_azo_merchant_user_' . $user->phone);
         $protector->verifyOtp((int) $request->input('code'));
 
-        if (array_search(AuthHttpRepository::AZO_MERCHANT_ROLE, array_column($user['data']['roles'], 'name'))) {
+        if (array_search(AuthHttpRepository::AZO_MERCHANT_ROLE, array_column($user->roles, 'name'))) {
             throw new ApiBusinessException('Пользователь уже является сотрудником мерчанта', 'merchant_exists', [
                 'ru' => 'Пользователь уже является сотрудником мерчанта',
                 'uz' => 'Foydalanuvchi merchant tizimiga bog\'langan',
             ], 400);
         }
 
-        if (AzoMerchantAccess::query()->where('phone', $user['data']['phone'])->exists()) {
+        if (AzoMerchantAccess::query()->where('phone', $user->phone)->exists()) {
             throw new ApiBusinessException('Пользователь с данным номером существует', 'phone_exists', [
                 'ru' => 'Пользователь с данным номером существует',
                 'uz' => 'Bunday raqam egasi tizimda mavjud',
@@ -143,14 +143,14 @@ class AzoMerchantAccessesController extends Controller
 
         $store = Store::query()->findOrFail($request->input('store_id'));
 
-        $company_user = CompanyService::getCompanyUserByUserId($user['data']['id']);
+        $company_user = CompanyService::getCompanyUserByUserId($user->id);
 
         if (empty($company_user)) {
             $company_user = CompanyService::createCompanyUser(
-                user_id: $user['data']['id'],
+                user_id: $user->id,
                 company_id: $store->merchant->company_id,
-                phone: $user['data']['phone'],
-                full_name: $user['data']['name']
+                phone: $user->phone,
+                full_name: $user->name
             );
         }
 
@@ -169,9 +169,9 @@ class AzoMerchantAccessesController extends Controller
             $azo_merchant_access = new AzoMerchantAccess();
         }
 
-        $azo_merchant_access->user_id = $user['data']['id'];
-        $azo_merchant_access->user_name = $user['data']['name'];
-        $azo_merchant_access->phone = $user['data']['phone'];
+        $azo_merchant_access->user_id = $user->id;
+        $azo_merchant_access->user_name = $user->name;
+        $azo_merchant_access->phone = $user->phone;
         $azo_merchant_access->company_user_id = $company_user['id'];
         $azo_merchant_access->merchant()->associate($merchant);
         $azo_merchant_access->store()->associate($store->id);
