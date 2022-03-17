@@ -23,8 +23,8 @@ class MassDeactivationMerchantsUseCase
 
     public function execute(): void
     {
-        $from_date = Carbon::now()->subWeeks(2)->format('Y-m-d');
-        $to_date = Carbon::now()->format('Y-m-d');
+        $from_date = Carbon::now()->subWeeks(2);
+        $to_date = Carbon::now();
 
         Merchant::query()->where('active', true)
             ->where('created_at', '<', $from_date)
@@ -39,7 +39,7 @@ class MassDeactivationMerchantsUseCase
                         continue;
                     }
 
-                    $result = $this->coreHttpService->getMerchantApplicationsAndClientsCountByRange($merchant->id, $from_date, $to_date);
+                    $result = $this->coreHttpService->getMerchantApplicationsAndClientsCountByRange((int) $merchant->id, $from_date, $to_date);
                     if ($result->applications_count === 0 && $result->clients_count === 0) {
                         $merchant->active = false;
                         $merchant->save();

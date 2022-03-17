@@ -14,7 +14,7 @@ class NotifyHttpRepository
     public const COMMON = 'COMMON';
     public const PROBLEM_CASE = 'PROBLEM_CASE';
 
-    public function sendSms($phone, $body, $tag = self::COMMON): array
+    public function sendSms(string $phone, string $body, string $tag = self::COMMON): array
     {
         return $this->getHttpClient()
             ->post('api/notification-by-sms', compact('phone', 'body', 'tag'))
@@ -22,7 +22,7 @@ class NotifyHttpRepository
             ->json();
     }
 
-    public function sendDistribution($phone, $body, $tag = self::COMMON): array
+    public function sendDistribution(string $phone, string $body, string $tag = self::COMMON): array
     {
         return $this->getHttpClient()
             ->post('/api/notification-by-distribution', compact('phone', 'body', 'tag'))
@@ -30,7 +30,7 @@ class NotifyHttpRepository
             ->json();
     }
 
-    public function call($phone, $body, $tag = self::COMMON): array
+    public function call(string $phone, string $body, string $tag = self::COMMON): array
     {
         return $this->getHttpClient()
             ->post('api/notification-by-call', compact('phone', 'body', 'tag'))

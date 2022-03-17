@@ -4,23 +4,24 @@ declare(strict_types=1);
 
 namespace App\HttpServices\Company;
 
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 
 class CompanyService
 {
-    public static function getCompanyById($company_id)
+    public static function getCompanyById(int $company_id): mixed
     {
         return static::http()->get("companies/$company_id")->throw()->json();
     }
 
-    public static function getCompanyByName($name)
+    public static function getCompanyByName(string $name): mixed
     {
         return static::http()->get('companies/company-by-name', [
             'name' => $name,
         ])->throw()->json();
     }
 
-    public static function createCompany(string $name, string $legal_name, string $legal_name_prefix)
+    public static function createCompany(string $name, string $legal_name, string $legal_name_prefix): mixed
     {
         return static::http()->post('companies', [
             'name' => $name,
@@ -37,7 +38,7 @@ class CompanyService
         string $status,
         string $created_at,
         string $updated_at
-    ) {
+    ): mixed {
         return static::http()->post('companies/special', [
             'id' => $id,
             'name' => $name,
@@ -49,21 +50,21 @@ class CompanyService
         ])->throw()->json();
     }
 
-    public static function setStatusExist(int $id, string $company_module = null)
+    public static function setStatusExist(int $id, string $company_module = null): mixed
     {
         return static::http()->post('companies/' . $id . '/status-exists', [
             'company_module' => is_null($company_module) ? 'azo' : $company_module,
         ])->throw()->json();
     }
 
-    public static function setStatusNotActive(int $id, string $company_module = null)
+    public static function setStatusNotActive(int $id, string $company_module = null): mixed
     {
         return static::http()->post('companies/' . $id . '/status-not-active', [
             'company_module' => is_null($company_module) ? 'azo' : $company_module,
         ])->throw()->json();
     }
 
-    public static function createCompanyUser(int $user_id, int $company_id, string $phone, string $full_name)
+    public static function createCompanyUser(int $user_id, int $company_id, string $phone, string $full_name): mixed
     {
         return static::http()->post('companies/users', [
             'user_id' => $user_id,
@@ -73,7 +74,7 @@ class CompanyService
         ])->throw()->json();
     }
 
-    public static function createCompanyUserSpecial(int $id, int $user_id, int $company_id, string $phone, string $full_name)
+    public static function createCompanyUserSpecial(int $id, int $user_id, int $company_id, string $phone, string $full_name): mixed
     {
         return static::http()->post('companies/users/special', [
             'id' => $id,
@@ -84,14 +85,14 @@ class CompanyService
         ])->throw()->json();
     }
 
-    public static function getCompanyUserByUserId($user_id)
+    public static function getCompanyUserByUserId(int $user_id): mixed
     {
         return static::http()->get('companies/users/get-user-id', [
             'user_id' => $user_id,
         ])->throw()->json();
     }
 
-    public static function updateCompany($company_id, $name, $legal_name_prefix)
+    public static function updateCompany(int $company_id, string $name, string $legal_name_prefix): mixed
     {
         return static::http()->put("companies/$company_id", [
             'name' => $name,
@@ -99,7 +100,7 @@ class CompanyService
         ])->throw()->json();
     }
 
-    protected static function http()
+    protected static function http(): PendingRequest
     {
         return Http::baseUrl(config('local_services.service_prm.domain') . '/api/gate/')
             ->withHeaders([

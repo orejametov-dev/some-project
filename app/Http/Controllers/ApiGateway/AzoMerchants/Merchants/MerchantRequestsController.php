@@ -15,8 +15,8 @@ use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestStoreDocuments;
 use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestUpdateRequest;
 use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestUploadFile;
 use App\Http\Resources\ApiPrmGateway\Merchants\MerchantRequestsResource;
-use App\HttpServices\Auth\AuthMicroService;
-use App\HttpServices\Company\CompanyService;
+use App\HttpRepositories\Auth\AuthHttpRepository;
+use App\HttpRepositories\Prm\CompanyHttpRepository;
 use App\Modules\Merchants\Models\CancelReason;
 use App\Modules\Merchants\Models\Request as MerchantRequest;
 use App\UseCases\MerchantRequests\AllowMerchantRequestUseCase;
@@ -58,7 +58,7 @@ class MerchantRequestsController extends ApiBaseController
         return $storeMerchantRequestUseCase->execute(StoreMerchantRequestDTO::fromArray($request->validated()), true);
     }
 
-    public function update($id, MerchantRequestUpdateRequest $request)
+    public function update($id, MerchantRequestUpdateRequest $request, CompanyHttpRepository $companyHttpRepository)
     {
         $merchant_request = MerchantRequest::query()->find($id);
 
@@ -66,7 +66,7 @@ class MerchantRequestsController extends ApiBaseController
             throw new BusinessException('Запрос не мерчанта не найден', 'merchant_request_not_found', 404);
         }
 
-        if (CompanyService::getCompanyByName($request->input('name'))) {
+        if ($companyHttpRepository->getCompanyByName($request->input('name'))) {
             throw new BusinessException('Указанное имя компании уже занято', 'object_not_found', 400);
         }
 
@@ -125,22 +125,24 @@ class MerchantRequestsController extends ApiBaseController
         return response()->json(['message' => 'Файл успешно удалён.']);
     }
 
-    public function setEngage(Request $request, $id)
+    public function setEngage($id, Request $request, AuthHttpRepository $authHttpRepository)
     {
         $this->validate($request, [
             'engaged_by_id' => 'required|integer',
         ]);
 
-        $user = AuthMicroService::getUserById($request->input('engaged_by_id'));
+        $user = $authHttpRepository->getUserById((int) $request->input('engaged_by_id'));
 
         if (!$user) {
             throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
         }
 
-        $merchant_request = MerchantRequest::findOrFail($id);
+        $merchant_request = MerchantRequest::query()->findOrFail($id);
 
         if ($merchant_request->isStatusNew() || $merchant_request->isInProcess()) {
-            $merchant_request->setEngage($user);
+            $merchant_request->engaged_by_id = $user->id;
+            $merchant_request->engaged_by_name = $user->name;
+            $merchant_request->engaged_at = now();
             $merchant_request->setStatusInProcess();
             $merchant_request->save();
 

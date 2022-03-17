@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\UseCases\MerchantUsers;
 
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
-use App\HttpServices\Hooks\DTO\HookData;
+use App\HttpRepositories\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Modules\Merchants\Models\AzoMerchantAccess;
 use App\UseCases\Merchants\FindMerchantByIdUseCase;
