@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\ApiPrm\Merchants;
 
+use App\Modules\Merchants\Models\AdditionalAgreement;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreAdditionalAgreements extends FormRequest
@@ -26,9 +27,14 @@ class StoreAdditionalAgreements extends FormRequest
     public function rules()
     {
         return [
-            'limit' => 'required|integer',
+            'limit' => 'nullable|integer',
             'registration_date' => 'required|date_format:Y-m-d',
             'number' => 'required',
+            'merchant_id' => 'required|integer',
+            'document_type' => 'required|string|in:'
+                . AdditionalAgreement::LIMIT . ','
+                . AdditionalAgreement::VAT . ','
+                . AdditionalAgreement::DELIVERY,
         ];
     }
 }

@@ -36,9 +36,9 @@ class AdditionalAgreementsController extends Controller
 
     public function store(StoreAdditionalAgreements $request)
     {
-        $this->validate($request, [
-            'merchant_id' => 'required|integer',
-        ]);
+        if ($request->input('document_type') === AdditionalAgreement::LIMIT && $request->input('limit') === null) {
+            throw new BusinessException('Лимит должен быть передан', 'params_not_exists', 400);
+        }
 
         if (!MerchantInfo::query()->where('merchant_id', $request->input('merchant_id'))->exists()) {
             throw new BusinessException('Нет основного договора');
@@ -63,39 +63,40 @@ class AdditionalAgreementsController extends Controller
         return $additional_agreement;
     }
 
-    public function getAdditionalAgreementDoc(WordService $wordService, $id)
+    public function getAdditionalAgreementDoc($id, Request $request, WordService $wordService): BinaryFileResponse
     {
-        $additional_agreement = AdditionalAgreement::findOrFail($id);
-        $merchant_info = MerchantInfo::query()->where('merchant_id', $additional_agreement->merchant_id)->firstOrFail();
-        $additional_agreement_file = $wordService->createAdditionalAgreement($additional_agreement, $merchant_info, 'app/additional_agreement.docx');
+        $request->validate([
+            'document_type'  => 'required|string|in:'
+                . AdditionalAgreement::LIMIT . ','
+                . AdditionalAgreement::VAT . ','
+                . AdditionalAgreement::DELIVERY,
+        ]);
 
-        return response()->download(storage_path($additional_agreement_file))->deleteFileAfterSend();
-    }
+        $document_type = $request->input('document_type');
 
-    public function getAdditionalAgreementVatDoc($id, WordService $wordService)
-    {
-        $additional_agreement = AdditionalAgreement::query()->find($id);
+        $additional_agreement = AdditionalAgreement::query()
+            ->where('document_type', $document_type)
+            ->find($id);
 
         if ($additional_agreement === null) {
             throw new BusinessException('Дополнительное соглашение не найдено', 'object_not_found', 404);
         }
 
         $merchant_info = MerchantInfo::query()->where('merchant_id', $additional_agreement->merchant_id)->firstOrFail();
-        $additional_agreement_file = $wordService->createAdditionalAgreement($additional_agreement, $merchant_info, 'app/additional_agreement_vat.docx');
 
-        return response()->download(storage_path($additional_agreement_file))->deleteFileAfterSend();
-    }
+        $additional_agreement_file = '';
 
-    public function getAdditionalAgreementDeliveryDoc($id, WordService $wordService): BinaryFileResponse
-    {
-        $additional_agreement = AdditionalAgreement::query()->find($id);
-
-        if ($additional_agreement === null) {
-            throw new BusinessException('Дополнительное соглашение не найдено', 'object_not_found', 404);
+        if ($document_type === AdditionalAgreement::LIMIT) {
+            $additional_agreement_file = $wordService->createAdditionalAgreement($additional_agreement, $merchant_info, 'app/additional_agreement.docx');
         }
 
-        $merchant_info = MerchantInfo::query()->where('merchant_id', $additional_agreement->merchant_id)->firstOrFail();
-        $additional_agreement_file = $wordService->createAdditionalAgreement($additional_agreement, $merchant_info, 'app/additional_agreement_delivery.docx');
+        if ($document_type === AdditionalAgreement::VAT) {
+            $additional_agreement_file = $wordService->createAdditionalAgreement($additional_agreement, $merchant_info, 'app/additional_agreement_vat.docx');
+        }
+
+        if ($document_type === AdditionalAgreement::DELIVERY) {
+            $additional_agreement_file = $wordService->createAdditionalAgreement($additional_agreement, $merchant_info, 'app/additional_agreement_delivery.docx');
+        }
 
         return response()->download(storage_path($additional_agreement_file))->deleteFileAfterSend();
     }
