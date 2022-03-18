@@ -3,7 +3,7 @@
 namespace App\UseCases\MerchantUsers;
 
 use App\Exceptions\BusinessException;
-use App\Modules\Merchants\Models\AzoMerchantAccess;
+use App\Models\AzoMerchantAccess;
 
 class FindMerchantUserByIdUseCase
 {

@@ -11,8 +11,8 @@ use App\HttpRepositories\Hooks\DTO\HookData;
 use App\HttpRepositories\Prm\CompanyUserHttpRepository;
 use App\Jobs\SendHook;
 use App\Jobs\ToggleMerchantRoleOfUser;
-use App\Modules\Merchants\Models\AzoMerchantAccess;
-use App\Modules\Merchants\Models\Store;
+use App\Models\AzoMerchantAccess;
+use App\Models\Store;
 
 class StoreMerchantUserUseCase
 {

@@ -13,7 +13,7 @@ use App\Http\Resources\ApiMerchantGateway\ProblemCases\ProblemCaseResource;
 use App\HttpRepositories\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Jobs\SendSmsJob;
-use App\Modules\Merchants\Models\ProblemCase;
+use App\Models\ProblemCase;
 use App\Services\SMS\SmsMessages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;

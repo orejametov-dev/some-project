@@ -3,8 +3,8 @@
 namespace App\UseCases\Competitors;
 
 use App\Exceptions\BusinessException;
-use App\Modules\Merchants\Models\Competitor;
-use App\Modules\Merchants\Models\Merchant;
+use App\Models\Competitor;
+use App\Models\Merchant;
 
 class FindMerchantCompetitorUseCase
 {

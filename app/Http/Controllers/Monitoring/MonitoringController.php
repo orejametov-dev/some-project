@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Monitoring;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Merchants\Models\Merchant;
+use App\Models\Merchant;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 

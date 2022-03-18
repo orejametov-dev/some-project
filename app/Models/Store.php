@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Merchants\Models;
+namespace App\Models;
 
 use App\Filters\Store\StoreFilters;
 use App\Traits\SortableByQueryParams;

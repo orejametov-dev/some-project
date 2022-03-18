@@ -4,8 +4,8 @@ namespace App\UseCases\Complaints;
 
 use App\DTOs\Complaints\StoreComplaintDTO;
 use App\Exceptions\BusinessException;
-use App\Modules\Merchants\Models\AzoMerchantAccess;
-use App\Modules\Merchants\Models\Complaint;
+use App\Models\AzoMerchantAccess;
+use App\Models\Complaint;
 
 class StoreComplaintUseCase
 {

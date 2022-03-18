@@ -3,7 +3,7 @@
 namespace App\UseCases\Stores;
 
 use App\Exceptions\BusinessException;
-use App\Modules\Merchants\Models\Store;
+use App\Models\Store;
 
 class FindStoreByIdUseCase
 {

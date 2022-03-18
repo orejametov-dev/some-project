@@ -10,8 +10,8 @@ use App\Exceptions\BusinessException;
 use App\HttpRepositories\Core\CoreHttpRepository;
 use App\HttpRepositories\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
-use App\Modules\Merchants\Models\Condition;
-use App\Modules\Merchants\Models\Store;
+use App\Models\Condition;
+use App\Models\Store;
 use App\UseCases\Cache\FlushCacheUseCase;
 
 class UpdateApplicationConditionUseCase

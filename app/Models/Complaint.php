@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Merchants\Models;
+namespace App\Models;
 
 use App\Filters\Complaint\ComplaintFilters;
 use App\Traits\SortableByQueryParams;
@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Http\Request;
 
 /**
- * App\Modules\Merchants\Models\Complaint.
+ * App\Models\Complaint.
  *
  * @property int $id
  * @property int $azo_merchant_access_id

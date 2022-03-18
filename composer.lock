@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d92bd8e60445a2292917609328a55085",
+    "content-hash": "7f7bf5a333010c5d17048de12236d99d",
     "packages": [
         {
             "name": "alifuz/utils",

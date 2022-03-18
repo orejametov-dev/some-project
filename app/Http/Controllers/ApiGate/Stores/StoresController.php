@@ -6,7 +6,7 @@ namespace App\Http\Controllers\ApiGate\Stores;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiGate\Stores\StoresResource;
-use App\Modules\Merchants\Models\Store;
+use App\Models\Store;
 
 class StoresController extends Controller
 {

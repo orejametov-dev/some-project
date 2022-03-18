@@ -6,8 +6,8 @@ namespace App\Http\Resources\ApiGate\Merchants;
 
 use App\Http\Resources\ApiGate\Conditions\ConditionsResource;
 use App\Http\Resources\ApiGate\Stores\StoresResource;
-use App\Modules\Merchants\Models\Merchant;
-use App\Modules\Merchants\Models\Store;
+use App\Models\Merchant;
+use App\Models\Store;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class MerchantsResource extends JsonResource

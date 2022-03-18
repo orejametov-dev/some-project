@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Merchants\Models;
+namespace App\Models;
 
 use App\Filters\ProblemCase\ProblemCaseFilters;
-use App\Modules\Merchants\Traits\ProblemCaseStatuses;
 use App\Services\SimpleStateMachine\SimpleStateMachinable;
 use App\Services\SimpleStateMachine\SimpleStateMachineTrait;
+use App\Traits\ProblemCaseStatuses;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Http\Request;
 
 /**
- * App\Modules\Merchants\Models\ProblemCase.
+ * App\Models\ProblemCase.
  *
  * @property int $id
  * @property int $merchant_id

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Merchants\Models;
+namespace App\Models;
 
 use App\Filters\MerchantRequest\MerchantRequestFilters;
 use App\HttpRepositories\Storage\StorageHttpRepository;
-use App\Modules\Merchants\Traits\MerchantRequestStatusesTrait;
 use App\Services\SimpleStateMachine\SimpleStateMachineTrait;
+use App\Traits\MerchantRequestStatusesTrait;
 use App\Traits\SortableByQueryParams;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,7 +19,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
 /**
- * App\Modules\Merchants\Models\Request.
+ * App\Models\MerchantRequest.
  *
  * @property int $id
  * @property string $name
@@ -45,16 +45,16 @@ use Illuminate\Support\Collection;
  * @property string $created_from_name
  * @property-read Collection|File[] $files
  * @property-read mixed $status
- * @method static Builder|Request allowed()
- * @method static Builder|Request filterRequest(\Illuminate\Http\Request $request, array $filters = [])
- * @method static Builder|Request inProcess()
- * @method static Builder|Request onTraining()
- * @method static Builder|Request new()
- * @method static Builder|Request newModelQuery()
- * @method static Builder|Request newQuery()
- * @method static Builder|Request orderRequest(\Illuminate\Http\Request $request, string $default_order_str = 'id:desc')
- * @method static Builder|Request query()
- * @method static Builder|Request trash()
+ * @method static Builder|MerchantRequest allowed()
+ * @method static Builder|MerchantRequest filterRequest(\Illuminate\Http\Request $request, array $filters = [])
+ * @method static Builder|MerchantRequest inProcess()
+ * @method static Builder|MerchantRequest onTraining()
+ * @method static Builder|MerchantRequest new()
+ * @method static Builder|MerchantRequest newModelQuery()
+ * @method static Builder|MerchantRequest newQuery()
+ * @method static Builder|MerchantRequest orderRequest(\Illuminate\Http\Request $request, string $default_order_str = 'id:desc')
+ * @method static Builder|MerchantRequest query()
+ * @method static Builder|MerchantRequest trash()
  * @property int|null $stores_count
  * @property int|null $merchant_users_count
  * @property string|null $director_name
@@ -70,9 +70,9 @@ use Illuminate\Support\Collection;
  * @property-read CancelReason|null $cancel_reason
  * @property-read int|null $files_count
  * @property-read mixed $state
- * @method static Builder|Request onlyByToken($token)
+ * @method static Builder|MerchantRequest onlyByToken($token)
  */
-class Request extends Model
+class MerchantRequest extends Model
 {
     use HasFactory;
     use MerchantRequestStatusesTrait;

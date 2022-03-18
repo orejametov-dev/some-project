@@ -7,7 +7,7 @@ use Alifuz\Utils\Gateway\Entities\GatewayApplication;
 use App\DTOs\MerchantRequest\StoreMerchantRequestDTO;
 use App\Exceptions\BusinessException;
 use App\HttpRepositories\Prm\CompanyHttpRepository;
-use App\Modules\Merchants\Models\Request as MerchantRequest;
+use App\Models\MerchantRequest;
 
 class StoreMerchantRequestUseCase
 {

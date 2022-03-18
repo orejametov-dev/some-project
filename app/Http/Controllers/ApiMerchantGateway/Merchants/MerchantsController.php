@@ -7,10 +7,10 @@ namespace App\Http\Controllers\ApiMerchantGateway\Merchants;
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\DTOs\Auth\AzoAccessDto;
 use App\Http\Controllers\Controller;
-use App\Modules\Merchants\Models\AzoMerchantAccess;
-use App\Modules\Merchants\Models\Condition;
-use App\Modules\Merchants\Models\Merchant;
-use App\Modules\Merchants\Models\Store;
+use App\Models\AzoMerchantAccess;
+use App\Models\Condition;
+use App\Models\Merchant;
+use App\Models\Store;
 use Illuminate\Support\Facades\Cache;
 
 class MerchantsController extends Controller

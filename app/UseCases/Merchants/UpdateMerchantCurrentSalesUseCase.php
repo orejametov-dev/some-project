@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\UseCases\Merchants;
 
 use App\HttpRepositories\Core\CoreHttpRepository;
-use App\Modules\Merchants\Models\Merchant;
+use App\Models\Merchant;
 
 class UpdateMerchantCurrentSalesUseCase
 {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\ApiGate\Merchants;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Merchants\Models\AzoMerchantAccess;
+use App\Models\AzoMerchantAccess;
 use Illuminate\Support\Facades\Cache;
 
 class AzoMerchantAccesses extends Controller

@@ -10,7 +10,7 @@ use App\HttpRepositories\Hooks\DTO\HookData;
 use App\HttpServices\Auth\AuthMicroService;
 use App\Jobs\SendHook;
 use App\Jobs\ToggleMerchantRoleOfUser;
-use App\Modules\Merchants\Models\Store;
+use App\Models\Store;
 
 class DestroyMerchantUserUseCase
 {

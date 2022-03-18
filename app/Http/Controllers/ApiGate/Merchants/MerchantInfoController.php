@@ -5,7 +5,7 @@ namespace App\Http\Controllers\ApiGate\Merchants;
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiGate\MerchantInfos\MerchantInfoResource;
-use App\Modules\Merchants\Models\MerchantInfo;
+use App\Models\MerchantInfo;
 
 class MerchantInfoController extends Controller
 {

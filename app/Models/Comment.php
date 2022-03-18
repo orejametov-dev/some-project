@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Merchants\Models;
+namespace App\Models;
 
 use App\Traits\SortableByQueryParams;
 use Illuminate\Database\Eloquent\Builder;
@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
 /**
- * App\Modules\Merchants\Models\Comment.
+ * App\Models\Comment.
  *
  * @property string $body
  * @property string $commentable_type

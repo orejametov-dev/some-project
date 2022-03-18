@@ -2,13 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Merchants\Models;
+namespace App\Models;
 
 use App\Filters\Merchant\MerchantFilters;
 use App\HttpRepositories\HttpResponses\Prm\CompanyHttpResponse;
-use App\Modules\Merchants\Traits\MerchantFileTrait;
+use App\HttpRepositories\Storage\StorageHttpRepository;
+use App\HttpServices\Storage\StorageMicroService;
 use App\Traits\SortableByQueryParams;
 use Carbon\Carbon;
+use function config;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,9 +20,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 
 /**
- * App\Modules\Merchants\Models\Merchant.
+ * App\Models\Merchant.
  *
  * @property int $id
  * @property string $name
@@ -64,13 +67,11 @@ use Illuminate\Http\Request;
  * @method static Builder|Merchant orderRequest(Request $request, string $default_order_str = 'id:desc')
  * @method static Builder|Merchant query()
  * @method static Builder|Merchant active()
- * @method static Builder|Merchant filterRequest(\Illuminate\Http\Request $request, array $filters = [])
+ * @method static Builder|Merchant filterRequest(Request $request, array $filters = [])
  */
 class Merchant extends Model
 {
     use HasFactory;
-
-    use MerchantFileTrait;
     use SortableByQueryParams;
 
     protected $table = 'merchants';
@@ -181,5 +182,54 @@ class Merchant extends Model
     public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder
     {
         return (new MerchantFilters($request, $builder))->execute($filters);
+    }
+
+    public function uploadLogo(UploadedFile $uploadedAvatar): self
+    {
+        if ($this->logo_url) {
+            StorageMicroService::destroy($this->logo_url);
+        }
+        $storage_file = (new StorageHttpRepository)->uploadFile($uploadedAvatar, 'merchants');
+
+        $this->logo_url = $storage_file['url'];
+        $this->save();
+
+        return $this;
+    }
+
+    public function deleteLogo(): void
+    {
+        if (!$this->logo_url) {
+            return;
+        }
+        StorageMicroService::destroy($this->logo_url);
+
+        $this->logo_url = null;
+        $this->save();
+    }
+
+    public function uploadFile(UploadedFile $uploadedFile, string $type): File
+    {
+        $storage_file = (new StorageHttpRepository)->uploadFile($uploadedFile, 'merchants');
+        $merchant_file = new File();
+        $merchant_file->file_type = $type;
+        $merchant_file->mime_type = $storage_file['mime_type'];
+        $merchant_file->size = $storage_file['size'];
+        $merchant_file->url = $storage_file['url'];
+        $merchant_file->merchant_id = $this->id;
+        $merchant_file->save();
+
+        return $merchant_file;
+    }
+
+    public function deleteFile(int $file_id): void
+    {
+        $file = $this->files()->find($file_id);
+        if (!$file) {
+            return;
+        }
+
+        StorageMicroService::destroy($file->url);
+        $file->delete();
     }
 }

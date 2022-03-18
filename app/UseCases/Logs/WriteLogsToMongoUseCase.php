@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\UseCases\Logs;
 
-use App\Modules\Merchants\Models\Log;
+use App\Models\Log;
 use App\Services\TimeLogger;
 use Illuminate\Support\Facades\Cache;
 

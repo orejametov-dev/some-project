@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\UseCases\Merchants;
 
 use App\Exceptions\BusinessException;
-use App\Modules\Merchants\Models\Merchant;
-use App\Modules\Merchants\Models\Store;
+use App\Models\Merchant;
+use App\Models\Store;
 
 class SetMerchantMainStoreUseCase
 {

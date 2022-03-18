@@ -8,7 +8,7 @@ use App\DTOs\MerchantRequest\StoreMerchantRequestDTO;
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiMerchantsGateway\Merchants\MerchantRequestStoreMain;
-use App\Modules\Merchants\Models\Request as MerchantRequest;
+use App\Models\MerchantRequest;
 use App\Services\DistrictService;
 use App\Services\LegalNameService;
 use App\Services\RegionService;
