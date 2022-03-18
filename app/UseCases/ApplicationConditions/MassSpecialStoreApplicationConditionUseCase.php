@@ -9,10 +9,10 @@ use App\DTOs\Conditions\MassSpecialStoreConditionDTO;
 use App\Exceptions\ApiBusinessException;
 use App\Exceptions\BusinessException;
 use App\HttpRepositories\Alifshop\AlifshopHttpRepository;
-use App\HttpServices\Hooks\DTO\HookData;
+use App\HttpRepositories\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
-use App\Modules\Merchants\Models\Condition;
-use App\Modules\Merchants\Models\Merchant;
+use App\Models\Condition;
+use App\Models\Merchant;
 use App\UseCases\Cache\FlushCacheUseCase;
 use Carbon\Carbon;
 
@@ -89,7 +89,7 @@ class MassSpecialStoreApplicationConditionUseCase
                 ];
             });
 
-            $this->alifshopHttpRepository->storeOrUpdateConditions($merchant->company_id, $conditions);
+            $this->alifshopHttpRepository->storeOrUpdateConditions((int) $merchant->company_id, $conditions);
             $this->flushCacheUseCase->execute($merchant->id);
         }
     }

@@ -6,7 +6,7 @@ namespace App\Http\Controllers\ApiGateway\AzoMerchants\Comments;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiPrm\Comments\IndexComments;
-use App\Modules\Merchants\Models\Comment;
+use App\Models\Comment;
 
 class CommentsController extends Controller
 {

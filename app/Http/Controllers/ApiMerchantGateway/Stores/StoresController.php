@@ -6,7 +6,7 @@ namespace App\Http\Controllers\ApiMerchantGateway\Stores;
 
 use App\DTOs\Auth\AzoAccessDto;
 use App\Http\Controllers\Controller;
-use App\Modules\Merchants\Models\Store;
+use App\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 

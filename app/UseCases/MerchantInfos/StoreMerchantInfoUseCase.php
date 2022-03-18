@@ -6,7 +6,7 @@ namespace App\UseCases\MerchantInfos;
 
 use App\DTOs\MerchantInfos\StoreMerchantInfoDTO;
 use App\Exceptions\BusinessException;
-use App\Modules\Merchants\Models\MerchantInfo;
+use App\Models\MerchantInfo;
 use App\UseCases\Merchants\FindMerchantByIdUseCase;
 
 class StoreMerchantInfoUseCase

@@ -7,7 +7,7 @@ namespace App\Http\Middleware;
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\DTOs\Auth\AzoAccessDto;
 use App\Exceptions\BusinessException;
-use App\Modules\Merchants\Models\AzoMerchantAccess;
+use App\Models\AzoMerchantAccess;
 use Closure;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Request;

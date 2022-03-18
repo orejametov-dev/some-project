@@ -8,7 +8,7 @@ use App\Filters\Merchant\QMerchantFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiCredtisGateway\Merchants\MerchantsResource;
 use App\Http\Resources\ApiCredtisGateway\Merchants\SpecialMerchantResource;
-use App\Modules\Merchants\Models\Merchant;
+use App\Models\Merchant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 

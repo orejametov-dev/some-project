@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\ApiPrm\Merchants;
 
-use App\Modules\Merchants\Models\AdditionalAgreement;
+use App\Models\AdditionalAgreement;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreAdditionalAgreements extends FormRequest

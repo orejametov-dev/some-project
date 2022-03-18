@@ -9,7 +9,7 @@ use App\Filters\CommonFilters\CreatedAtFilter;
 use App\Filters\Notification\FreshFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiMerchantGateway\Notifications\NotificationsResource;
-use App\Modules\Merchants\Models\Notification;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 

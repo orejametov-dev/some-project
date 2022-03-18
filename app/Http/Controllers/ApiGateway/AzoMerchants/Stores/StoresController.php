@@ -13,8 +13,8 @@ use App\Filters\Store\RegionFilter;
 use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Http\Requests\ApiPrm\Stores\StoreStoresRequest;
 use App\Http\Requests\ApiPrm\Stores\UpdateStoresRequest;
-use App\Modules\Merchants\Models\Condition;
-use App\Modules\Merchants\Models\Store;
+use App\Models\Condition;
+use App\Models\Store;
 use App\UseCases\Stores\SaveStoreUseCase;
 use App\UseCases\Stores\SetTypeRegisterStoreUseCase;
 use App\UseCases\Stores\ToggleStoreUseCase;
@@ -87,7 +87,7 @@ class StoresController extends ApiBaseController
 
     public function getConditions($id, Request $request)
     {
-        $store = Store::findOrFail($id);
+        $store = Store::query()->findOrFail($id);
         $special_conditions = $store->conditions()->active()->get();
 
         $conditionQuery = Condition::query()

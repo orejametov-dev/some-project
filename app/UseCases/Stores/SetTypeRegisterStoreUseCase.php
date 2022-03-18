@@ -2,7 +2,7 @@
 
 namespace App\UseCases\Stores;
 
-use App\Modules\Merchants\Models\Store;
+use App\Models\Store;
 use App\Services\ClientTypeRegisterService;
 use App\UseCases\Cache\FlushCacheUseCase;
 

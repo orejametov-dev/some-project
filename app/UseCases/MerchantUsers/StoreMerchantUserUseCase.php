@@ -7,12 +7,12 @@ namespace App\UseCases\MerchantUsers;
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\Exceptions\BusinessException;
 use App\HttpRepositories\Auth\AuthHttpRepository;
+use App\HttpRepositories\Hooks\DTO\HookData;
 use App\HttpRepositories\Prm\CompanyUserHttpRepository;
-use App\HttpServices\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Jobs\ToggleMerchantRoleOfUser;
-use App\Modules\Merchants\Models\AzoMerchantAccess;
-use App\Modules\Merchants\Models\Store;
+use App\Models\AzoMerchantAccess;
+use App\Models\Store;
 
 class StoreMerchantUserUseCase
 {

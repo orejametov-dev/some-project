@@ -5,15 +5,17 @@ declare(strict_types=1);
 namespace App\Http\Controllers\ApiGateway\App;
 
 use App\Http\Controllers\ApiGateway\ApiBaseController;
-use App\Modules\Merchants\Models\ActivityReason;
-use App\Modules\Merchants\Models\CancelReason;
-use App\Modules\Merchants\Models\Competitor;
-use App\Modules\Merchants\Models\ConditionTemplate;
-use App\Modules\Merchants\Models\File;
-use App\Modules\Merchants\Models\Merchant;
-use App\Modules\Merchants\Models\ProblemCase;
-use App\Modules\Merchants\Models\Request;
-use App\Modules\Merchants\Models\Store;
+use App\Mappings\MerchantRequestStatusMapping;
+use App\Mappings\ProblemCaseStatusMapping;
+use App\Models\ActivityReason;
+use App\Models\CancelReason;
+use App\Models\Competitor;
+use App\Models\ConditionTemplate;
+use App\Models\File;
+use App\Models\Merchant;
+use App\Models\MerchantRequest;
+use App\Models\ProblemCase;
+use App\Models\Store;
 use App\Services\ClientTypeRegisterService;
 use App\Services\DistrictService;
 use App\Services\LegalNameService;
@@ -22,13 +24,13 @@ use Illuminate\Support\Facades\Cache;
 
 class AppController extends ApiBaseController
 {
-    public function index()
+    public function index(MerchantRequestStatusMapping $merchantRequestStatusMapping, ProblemCaseStatusMapping $problemCaseStatusMapping)
     {
-        $merchant_requests_count = Request::query()->new()->count();
+        $merchant_requests_count = MerchantRequest::query()->new()->count();
         $merchants_count = Merchant::query()->count();
         $stores_count = Store::query()->count();
-        $merchant_request_statuses = Request::statusLists();
-        $problem_case_statuses = array_values(ProblemCase::$statuses);
+        $merchant_request_statuses = $merchantRequestStatusMapping->getMappings();
+        $problem_case_statuses = array_values($problemCaseStatusMapping->getMappings());
         $problem_case_sources = ProblemCase::$sources;
         $merchant_activity_reasons = ActivityReason::query()->where('type', 'MERCHANT')->get();
         $store_activity_reasons = ActivityReason::query()->where('type', 'STORE')->get();

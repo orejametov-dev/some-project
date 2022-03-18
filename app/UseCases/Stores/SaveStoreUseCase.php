@@ -4,7 +4,7 @@ namespace App\UseCases\Stores;
 
 use App\DTOs\Stores\StoreStoresDTO;
 use App\Exceptions\BusinessException;
-use App\Modules\Merchants\Models\Store;
+use App\Models\Store;
 use App\UseCases\Cache\FlushCacheUseCase;
 use App\UseCases\Merchants\FindMerchantByIdUseCase;
 

@@ -6,7 +6,7 @@ namespace App\UseCases\ApplicationConditions;
 
 use App\Exceptions\BusinessException;
 use App\HttpRepositories\Alifshop\AlifshopHttpRepository;
-use App\Modules\Merchants\Models\Condition;
+use App\Models\Condition;
 use App\UseCases\Cache\FlushCacheUseCase;
 
 class TogglePostsApplicationConditionUseCase

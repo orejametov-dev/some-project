@@ -15,7 +15,7 @@ use App\Http\Requests\ApiPrm\Applications\MassStoreApplicationConditionsRequest;
 use App\Http\Requests\ApiPrm\Applications\StoreApplicationConditions;
 use App\Http\Requests\ApiPrm\Applications\TogglePostsApplicationConditionRequest;
 use App\Http\Requests\ApiPrm\Applications\UpdateApplicationConditions;
-use App\Modules\Merchants\Models\Condition;
+use App\Models\Condition;
 use App\UseCases\ApplicationConditions\DeleteApplicationConditionUseCase;
 use App\UseCases\ApplicationConditions\MassSpecialStoreApplicationConditionUseCase;
 use App\UseCases\ApplicationConditions\MassStoreApplicationConditionUseCase;
@@ -39,24 +39,6 @@ class ApplicationConditionsController extends ApiBaseController
         }
 
         if ($request->has('paginate') and $request->query('paginate') == false) {
-            return $conditionQuery->get();
-        }
-
-        return $conditionQuery->paginate($request->query('per_page') ?? 15);
-    }
-
-    public function activeIndex(Request $request)
-    {
-        $conditionQuery = Condition::query()
-            ->active()
-            ->filterRequest($request, [])
-            ->orderRequest($request);
-
-        if ($request->query('object') == true) {
-            return $conditionQuery->first();
-        }
-
-        if ($request->has('paginate') && $request->query('paginate') == false) {
             return $conditionQuery->get();
         }
 

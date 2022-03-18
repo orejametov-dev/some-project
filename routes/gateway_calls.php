@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\ApiCallsGateway\Comments\CommentsController;
+use App\Http\Controllers\ApiCallsGateway\Merchants\MerchantsController;
 use App\Http\Controllers\ApiCallsGateway\ProblemCases\ProblemCasesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,3 +23,5 @@ Route::prefix('merchants/problem-cases')
         Route::get('/{id}', [ProblemCasesController::class, 'show']);
         Route::post('/', [ProblemCasesController::class, 'store']);
     });
+
+Route::get('merchants/{merchant_id}/store', [MerchantsController::class, 'getMerchantStores']);

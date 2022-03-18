@@ -6,8 +6,8 @@ namespace App\UseCases\Merchants;
 
 use App\HttpRepositories\Core\CoreHttpRepository;
 use App\HttpRepositories\Prm\CompanyHttpRepository;
-use App\Modules\Merchants\Models\ActivityReason;
-use App\Modules\Merchants\Models\Merchant;
+use App\Models\ActivityReason;
+use App\Models\Merchant;
 use App\UseCases\Cache\FlushCacheUseCase;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -23,8 +23,8 @@ class MassDeactivationMerchantsUseCase
 
     public function execute(): void
     {
-        $from_date = Carbon::now()->subWeeks(2)->format('Y-m-d');
-        $to_date = Carbon::now()->format('Y-m-d');
+        $from_date = Carbon::now()->subWeeks(2);
+        $to_date = Carbon::now();
 
         Merchant::query()->where('active', true)
             ->where('created_at', '<', $from_date)
@@ -39,7 +39,7 @@ class MassDeactivationMerchantsUseCase
                         continue;
                     }
 
-                    $result = $this->coreHttpService->getMerchantApplicationsAndClientsCountByRange($merchant->id, $from_date, $to_date);
+                    $result = $this->coreHttpService->getMerchantApplicationsAndClientsCountByRange((int) $merchant->id, $from_date, $to_date);
                     if ($result->applications_count === 0 && $result->clients_count === 0) {
                         $merchant->active = false;
                         $merchant->save();

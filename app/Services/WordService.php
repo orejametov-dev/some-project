@@ -4,8 +4,8 @@
 
 namespace App\Services;
 
-use App\Modules\Merchants\Models\AdditionalAgreement;
-use App\Modules\Merchants\Models\MerchantInfo;
+use App\Models\AdditionalAgreement;
+use App\Models\MerchantInfo;
 use Carbon\Carbon;
 use NumberFormatter;
 use PhpOffice\PhpWord\Exception\CopyFileException;

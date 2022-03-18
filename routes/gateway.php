@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use App\Http\Controllers\ApiGateway\AzoMerchants\Comments\CommentsController;
 use App\Http\Controllers\ApiGateway\AzoMerchants\Complaints\ComplaintsController;
-use App\Http\Controllers\ApiGateway\AzoMerchants\ExtraServices\MerchantsController as ExtraMerchantsController;
 use App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\MerchantsController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,10 +16,6 @@ Route::prefix('comments')->group(function () {
 });
 
 //Azo-Merchants
-Route::prefix('extra-services')->group(function () {
-    Route::get('merchants', [ExtraMerchantsController::class, 'index']);
-    Route::get('merchants/{merchant_id}/store', [ExtraMerchantsController::class, 'merchantStoreInfo']);
-});
 
 Route::prefix('merchants/requests')
     ->group(function () {
@@ -134,7 +129,6 @@ Route::prefix('districts')
 Route::prefix('application-conditions')
     ->group(function () {
         Route::get('/', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class, 'index']);
-        Route::get('/actives', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class, 'activeIndex']);
         Route::post('/', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class, 'store']);
         Route::post('/special-store', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class, 'storeSpecial']);
         Route::post('/mass-store', [App\Http\Controllers\ApiGateway\AzoMerchants\Merchants\ApplicationConditionsController::class, 'massStore']);

@@ -8,7 +8,7 @@ use App\DTOs\MerchantRequest\StoreMerchantRequestDTO;
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiMerchantsGateway\Merchants\MerchantRequestStoreMain;
-use App\Modules\Merchants\Models\Request as MerchantRequest;
+use App\Models\MerchantRequest;
 use App\Services\DistrictService;
 use App\Services\LegalNameService;
 use App\Services\RegionService;
@@ -30,7 +30,7 @@ class MerchantRequestsController extends Controller
 
     public function show($id)
     {
-        $merchant_request = MerchantRequest::with('files')->find($id);
+        $merchant_request = MerchantRequest::query()->with('files')->find($id);
 
         if ($merchant_request === null) {
             throw new BusinessException('Запрос мерчанта не найден', 'merchant_request_not_found', 404);

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\UseCases\ProblemCase;
 
 use App\Exceptions\BusinessException;
-use App\Modules\Merchants\Models\ProblemCase;
+use App\Models\ProblemCase;
 
 class SetAssignedProblemCaseUseCase
 {

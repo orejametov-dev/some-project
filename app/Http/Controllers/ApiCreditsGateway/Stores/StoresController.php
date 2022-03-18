@@ -9,7 +9,7 @@ use App\Filters\Store\StoreIdFilter;
 use App\Filters\Store\StoreIdsFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiCredtisGateway\Stores\StoresResource;
-use App\Modules\Merchants\Models\Store;
+use App\Models\Store;
 use Illuminate\Http\Request;
 
 class StoresController extends Controller

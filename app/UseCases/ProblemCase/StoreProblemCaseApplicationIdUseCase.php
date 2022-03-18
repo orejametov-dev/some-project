@@ -6,28 +6,32 @@ namespace App\UseCases\ProblemCase;
 
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use Alifuz\Utils\Gateway\Entities\GatewayApplication;
+use App\Enums\ProblemCaseStatusEnum;
 use App\Exceptions\ApiBusinessException;
 use App\Exceptions\BusinessException;
 use App\HttpRepositories\Core\CoreHttpRepository;
-use App\Modules\Merchants\Models\ProblemCase;
+use App\Mappings\ProblemCaseStatusMapping;
+use App\Models\ProblemCase;
 
 class StoreProblemCaseApplicationIdUseCase extends AbstractStoreProblemCaseUseCase
 {
     public function __construct(
         private CoreHttpRepository $coreHttpRepository,
         private GatewayAuthUser $gatewayAuthUser,
-        private GatewayApplication $gatewayApplication
+        private GatewayApplication $gatewayApplication,
+        private ProblemCaseStatusMapping $problemCaseStatusMapping
     ) {
         parent::__construct(
             $this->gatewayApplication,
-            $this->gatewayAuthUser
+            $this->gatewayAuthUser,
+            $this->problemCaseStatusMapping
         );
     }
 
     protected function checkStatusToFinished(string|int $identifier): void
     {
         if (ProblemCase::query()->where('application_id', $identifier)
-            ->where('status_id', '!=', ProblemCase::FINISHED)
+            ->where('status_id', '!=', ProblemCaseStatusEnum::FINISHED())
             ->orderByDesc('id')->exists()) {
             throw new ApiBusinessException('На данную заявку был уже создан проблемный кейс', 'problem_case_exist', [
                 'ru' => 'На данную заявку был уже создан проблемный кейс',

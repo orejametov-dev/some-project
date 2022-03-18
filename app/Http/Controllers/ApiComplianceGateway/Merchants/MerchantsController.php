@@ -8,7 +8,7 @@ use App\Filters\Merchant\QMerchantFilter;
 use App\Filters\Merchant\SpecialMerchantIdFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiComplianceGateway\Merchants\MerchantsResource;
-use App\Modules\Merchants\Models\Merchant;
+use App\Models\Merchant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 

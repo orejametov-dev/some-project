@@ -8,9 +8,9 @@ use App\Exceptions\BusinessException;
 use App\Filters\Merchant\MerchantIdFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiPrm\Merchants\StoreAdditionalAgreements;
-use App\Modules\Merchants\Models\AdditionalAgreement;
-use App\Modules\Merchants\Models\Merchant;
-use App\Modules\Merchants\Models\MerchantInfo;
+use App\Models\AdditionalAgreement;
+use App\Models\Merchant;
+use App\Models\MerchantInfo;
 use App\Services\WordService;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -31,7 +31,7 @@ class AdditionalAgreementsController extends Controller
 
     public function show($id)
     {
-        return AdditionalAgreement::findOrFail($id);
+        return AdditionalAgreement::query()->findOrFail($id);
     }
 
     public function store(StoreAdditionalAgreements $request)
@@ -96,7 +96,7 @@ class AdditionalAgreementsController extends Controller
 
     public function delete($id)
     {
-        $additional_agreement = AdditionalAgreement::findOrFail($id);
+        $additional_agreement = AdditionalAgreement::query()->findOrFail($id);
         $additional_agreement->delete();
 
         return response()->json(['message' => 'Успешно удалено']);

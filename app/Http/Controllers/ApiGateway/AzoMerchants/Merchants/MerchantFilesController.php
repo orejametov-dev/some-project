@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Merchants\Models\File;
-use App\Modules\Merchants\Models\Merchant;
+use App\Models\File;
+use App\Models\Merchant;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 

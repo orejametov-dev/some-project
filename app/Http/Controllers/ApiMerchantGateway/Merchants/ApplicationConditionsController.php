@@ -6,8 +6,8 @@ namespace App\Http\Controllers\ApiMerchantGateway\Merchants;
 
 use App\DTOs\Auth\AzoAccessDto;
 use App\Http\Controllers\Controller;
-use App\Modules\Merchants\Models\Condition;
-use App\Modules\Merchants\Models\Store;
+use App\Models\Condition;
+use App\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -19,7 +19,7 @@ class ApplicationConditionsController extends Controller
             $request->fullUrl() . $azoAccessDto->store_id,
             24 * 60,
             function () use ($request, $azoAccessDto) {
-                $store = Store::findOrFail($azoAccessDto->store_id);
+                $store = Store::query()->findOrFail($azoAccessDto->store_id);
 
                 if ($request->has('post_alifshop') and $request->query('post_alifshop') == true) {
                     $special_conditions = $store->conditions()

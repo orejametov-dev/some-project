@@ -12,7 +12,8 @@ use App\Filters\ProblemCase\QProblemCaseFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiPrm\ProblemCases\ProblemCaseStoreRequest;
 use App\Http\Resources\ApiCallsGateway\ProblemCases\ProblemCaseResource;
-use App\Modules\Merchants\Models\ProblemCase;
+use App\Mappings\ProblemCaseStatusMapping;
+use App\Models\ProblemCase;
 use App\UseCases\ProblemCase\StoreProblemCaseNumberCreditUseCase;
 use Illuminate\Http\Request;
 
@@ -53,8 +54,8 @@ class ProblemCasesController extends Controller
         return $storeProblemCasesUseCase->execute($problemCaseDTO);
     }
 
-    public function getStatusList()
+    public function getStatusList(ProblemCaseStatusMapping $problemCaseStatusMapping)
     {
-        return array_values(ProblemCase::$statuses);
+        return $problemCaseStatusMapping->getMappings();
     }
 }
