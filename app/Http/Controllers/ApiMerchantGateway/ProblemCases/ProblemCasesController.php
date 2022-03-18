@@ -6,6 +6,7 @@ namespace App\Http\Controllers\ApiMerchantGateway\ProblemCases;
 
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\DTOs\Auth\AzoAccessDto;
+use App\Enums\ProblemCaseStatusEnum;
 use App\Exceptions\BusinessException;
 use App\Filters\CommonFilters\StatusIdFilter;
 use App\Http\Controllers\Controller;
@@ -13,6 +14,7 @@ use App\Http\Resources\ApiMerchantGateway\ProblemCases\ProblemCaseResource;
 use App\HttpRepositories\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Jobs\SendSmsJob;
+use App\Mappings\ProblemCaseStatusMapping;
 use App\Models\ProblemCase;
 use App\Services\SMS\SmsMessages;
 use Illuminate\Http\Request;
@@ -53,24 +55,24 @@ class ProblemCasesController extends Controller
             'body' => 'string|required',
         ]);
 
-        $problemCase = ProblemCase::findOrFail($id);
+        $problemCase = ProblemCase::query()->findOrFail($id);
         $problemCase->comment_from_merchant = $request->input('body');
         $problemCase->save();
 
         return new ProblemCaseResource($problemCase);
     }
 
-    public function setStatus($id, Request $request, GatewayAuthUser $gatewayAuthUser)
+    public function setStatus($id, Request $request, GatewayAuthUser $gatewayAuthUser, ProblemCaseStatusMapping $problemCaseStatusMapping)
     {
         $this->validate($request, [
             'status_id' => 'required|integer',
         ]);
 
-        $problemCase = ProblemCase::findOrFail($id);
+        $problemCase = ProblemCase::query()->findOrFail($id);
         $problemCase->setStatus($request->input('status_id'));
         $problemCase->save();
 
-        if ($problemCase->status_id === ProblemCase::FINISHED) {
+        if ($problemCase->status_id === ProblemCaseStatusEnum::FINISHED()->getValue()) {
             preg_match('/' . preg_quote('9989') . '(.*)/', $problemCase->search_index, $phone);
 
             if (!empty($phone)) {
@@ -86,7 +88,7 @@ class ProblemCasesController extends Controller
             created_from_str: 'MERCHANT',
             created_by_id: $gatewayAuthUser->getId(),
             body: 'Обновлен на статус',
-            keyword: ProblemCase::$statuses[$problemCase->status_id]['name'],
+            keyword: $problemCaseStatusMapping->getMappedValue(ProblemCaseStatusEnum::from($problemCase->status_id))['name'],
             action: 'create',
             class: 'info',
             action_at: null,
@@ -98,7 +100,7 @@ class ProblemCasesController extends Controller
 
     public function setEngage($id, GatewayAuthUser $gatewayAuthUser)
     {
-        $problemCase = ProblemCase::findOrFail($id);
+        $problemCase = ProblemCase::query()->findOrFail($id);
 
         $problemCase->engaged_by_id = $gatewayAuthUser->getId();
         $problemCase->engaged_by_name = $gatewayAuthUser->getName();
@@ -109,9 +111,9 @@ class ProblemCasesController extends Controller
         return new ProblemCaseResource($problemCase);
     }
 
-    public function getStatuses()
+    public function getStatuses(ProblemCaseStatusMapping $problemCaseStatusMapping)
     {
-        return array_values(ProblemCase::$statuses);
+        return $problemCaseStatusMapping->getMappings();
     }
 
     public function getNewProblemCasesCounter(GatewayAuthUser $gatewayAuthUser, AzoAccessDto $azoAccessDto)
@@ -121,7 +123,8 @@ class ProblemCasesController extends Controller
                 ->whereNull('engaged_by_id')
                 ->whereNull('engaged_by_name')
                 ->byMerchant($azoAccessDto->merchant_id)
-                ->onlyNew()->count();
+                ->onlyNew()
+                ->count();
         });
 
         return response()->json(['count' => (int) $counter]);

@@ -19,7 +19,7 @@ class ApplicationConditionsController extends Controller
             $request->fullUrl() . $azoAccessDto->store_id,
             24 * 60,
             function () use ($request, $azoAccessDto) {
-                $store = Store::findOrFail($azoAccessDto->store_id);
+                $store = Store::query()->findOrFail($azoAccessDto->store_id);
 
                 if ($request->has('post_alifshop') and $request->query('post_alifshop') == true) {
                     $special_conditions = $store->conditions()
