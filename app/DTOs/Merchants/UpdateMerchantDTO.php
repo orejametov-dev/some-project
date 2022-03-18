@@ -16,7 +16,6 @@ class UpdateMerchantDTO
         public ?string $legal_name,
         public ?string $legal_name_prefix,
         public string $token,
-        public int $min_application_price
     ) {
     }
 
@@ -28,7 +27,6 @@ class UpdateMerchantDTO
             self::parseString($data['legal_name']),
             self::parseString($data['legal_name_prefix']),
             self::parseString($data['token']),
-            self::parseInt($data['min_application_price'])
         );
     }
 }

@@ -36,7 +36,6 @@ use Illuminate\Http\UploadedFile;
  * @property int|null $maintainer_id
  * @property int|null $current_sales
  * @property int $company_id
- * @property int|null $min_application_price
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Collection|AdditionalAgreement[] $additional_agreements
@@ -82,7 +81,6 @@ class Merchant extends Model
         'token',
         'logo_url',
         'has_general_goods',
-        'min_application_price',
         'active',
     ];
     protected $appends = ['logo_path'];

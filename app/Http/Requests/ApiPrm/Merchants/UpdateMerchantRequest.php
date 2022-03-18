@@ -30,7 +30,6 @@ class UpdateMerchantRequest extends FormRequest
             'legal_name' => 'required|max:255',
             'legal_name_prefix' => 'required|string',
             'token' => 'required|max:255',
-            'min_application_price' => 'required|integer',
         ];
     }
 }

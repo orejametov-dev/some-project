@@ -21,7 +21,6 @@ class UpdateMerchantUseCaseTest extends TestCase
 //            'legal_name' => 'test',
 //            'legal_name_prefix' => 'test',
 //            'token' => 'test',
-//            'min_application_price' => 12321312
 //        ]);
 //
 //        $updated_name = 'hello_masha';
@@ -32,7 +31,6 @@ class UpdateMerchantUseCaseTest extends TestCase
 //            legal_name: 'test',
 //            legal_name_prefix: 'test',
 //            token: 'test',
-//            min_application_price: 12321312
 //        );
 //
 //        $this->expectException(BusinessException::class);
@@ -46,7 +44,6 @@ class UpdateMerchantUseCaseTest extends TestCase
 //            'legal_name' => 'test',
 //            'legal_name_prefix' => 'test',
 //            'token' => 'test',
-//            'min_application_price' => 12321312
 //        ]);
 //
 //        $updated_name = 'hello_masha';
@@ -57,7 +54,6 @@ class UpdateMerchantUseCaseTest extends TestCase
 //            legal_name: 'test',
 //            legal_name_prefix: 'test',
 //            token: 'test',
-//            min_application_price: 12321312
 //        );
 //
 //        $merchant = $this->updateMerchantUseCase->execute($dto);
