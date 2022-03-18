@@ -45,24 +45,6 @@ class ApplicationConditionsController extends ApiBaseController
         return $conditionQuery->paginate($request->query('per_page') ?? 15);
     }
 
-    public function activeIndex(Request $request)
-    {
-        $conditionQuery = Condition::query()
-            ->active()
-            ->filterRequest($request, [])
-            ->orderRequest($request);
-
-        if ($request->query('object') == true) {
-            return $conditionQuery->first();
-        }
-
-        if ($request->has('paginate') && $request->query('paginate') == false) {
-            return $conditionQuery->get();
-        }
-
-        return $conditionQuery->paginate($request->query('per_page') ?? 15);
-    }
-
     public function store(StoreApplicationConditions $request, StoreApplicationConditionUseCase $storeApplicationConditionUseCase)
     {
         $conditionDTO = StoreConditionDTO::fromArray($request->validated());
