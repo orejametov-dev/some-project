@@ -16,4 +16,3 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('monitoring/status/health', [\App\Http\Controllers\Monitoring\MonitoringController::class, 'general']);
-Route::get('monitoring/test', [\App\Http\Controllers\Monitoring\MonitoringController::class, 'test']);
