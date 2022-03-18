@@ -8,7 +8,7 @@ use App\Exceptions\BusinessException;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiGate\Merchants\MerchantDetailForCredits;
 use App\Http\Resources\ApiGate\Merchants\MerchantsResource;
-use App\Modules\Merchants\Models\Merchant;
+use App\Models\Merchant;
 use Illuminate\Http\Request;
 
 class MerchantsController extends Controller

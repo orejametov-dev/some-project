@@ -10,8 +10,8 @@ use App\Filters\Merchant\RegionMerchantFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiOnlineGateway\MerchantResource;
 use App\Http\Resources\ApiOnlineGateway\MerchantTagResource;
-use App\Modules\Merchants\Models\Merchant;
-use App\Modules\Merchants\Models\Tag;
+use App\Models\Merchant;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 
 class MerchantsController extends Controller

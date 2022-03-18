@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\ApiPrm\ProblemCases;
 
-use App\Modules\Merchants\Models\ProblemCase;
+use App\Models\ProblemCase;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ProblemCaseSetStatusRequest extends FormRequest

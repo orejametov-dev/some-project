@@ -6,7 +6,7 @@ namespace App\UseCases\Merchants;
 
 use App\DTOs\Merchants\UpdateMerchantDTO;
 use App\Exceptions\BusinessException;
-use App\Modules\Merchants\Models\Merchant;
+use App\Models\Merchant;
 use App\UseCases\Cache\FlushCacheUseCase;
 
 class UpdateMerchantUseCase

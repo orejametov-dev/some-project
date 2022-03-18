@@ -8,7 +8,7 @@ use App\Filters\Store\QStoreFilter;
 use App\Filters\Store\StoreIdsFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiComplianceGateway\Stores\StoresResource;
-use App\Modules\Merchants\Models\Store;
+use App\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 

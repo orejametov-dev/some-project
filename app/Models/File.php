@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Merchants\Models;
+namespace App\Models;
 
+use function config;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -24,7 +25,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $updated_at
  * @property-read mixed $link
  * @property-read Merchant $merchant
- * @property-read Request $request
+ * @property-read MerchantRequest $request
  * @method static Builder|File newModelQuery()
  * @method static Builder|File newQuery()
  * @method static Builder|File query()
@@ -107,7 +108,7 @@ class File extends Model
 
     public function request(): BelongsTo
     {
-        return $this->belongsTo(Request::class);
+        return $this->belongsTo(MerchantRequest::class);
     }
 
     public function getLinkAttribute(): string

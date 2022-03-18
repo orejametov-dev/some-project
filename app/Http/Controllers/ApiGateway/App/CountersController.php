@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\ApiGateway\App;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Merchants\Models\Request;
+use App\Models\MerchantRequest;
 use Illuminate\Support\Facades\Cache;
 
 class CountersController extends Controller
@@ -13,7 +13,7 @@ class CountersController extends Controller
     public function merchantRequests()
     {
         $count = Cache::remember('prm_merchant_requests', 60, function () {
-            return Request::new()
+            return MerchantRequest::new()
                 ->count();
         });
 

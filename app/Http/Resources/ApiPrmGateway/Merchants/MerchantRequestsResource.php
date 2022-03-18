@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Resources\ApiPrmGateway\Merchants;
 
-use App\Modules\Merchants\Models\Request;
+use App\Models\MerchantRequest;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class MerchantRequestsResource extends JsonResource
@@ -17,7 +17,7 @@ class MerchantRequestsResource extends JsonResource
      */
     public function toArray($request)
     {
-        /** @var Request|MerchantRequestsResource $this */
+        /** @var MerchantRequest|MerchantRequestsResource $this */
         return [
             'id' => $this->id,
             'name' => $this->name,

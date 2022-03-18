@@ -15,7 +15,7 @@ use App\Http\Requests\ApiPrm\Applications\MassStoreApplicationConditionsRequest;
 use App\Http\Requests\ApiPrm\Applications\StoreApplicationConditions;
 use App\Http\Requests\ApiPrm\Applications\TogglePostsApplicationConditionRequest;
 use App\Http\Requests\ApiPrm\Applications\UpdateApplicationConditions;
-use App\Modules\Merchants\Models\Condition;
+use App\Models\Condition;
 use App\UseCases\ApplicationConditions\DeleteApplicationConditionUseCase;
 use App\UseCases\ApplicationConditions\MassSpecialStoreApplicationConditionUseCase;
 use App\UseCases\ApplicationConditions\MassStoreApplicationConditionUseCase;

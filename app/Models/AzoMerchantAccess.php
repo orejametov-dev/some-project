@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Merchants\Models;
+namespace App\Models;
 
 use App\Filters\AzoMerchantAccess\AzoMerchantAccessFilters;
 use App\Traits\SortableByQueryParams;
@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 
 /**
- * App\Modules\Merchants\Models\MerchantUser.
+ * App\Models\MerchantUser.
  *
  * @property int $id
  * @property int $merchant_id

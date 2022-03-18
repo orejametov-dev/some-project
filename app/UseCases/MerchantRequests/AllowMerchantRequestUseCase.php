@@ -7,11 +7,11 @@ namespace App\UseCases\MerchantRequests;
 use App\DTOs\MerchantInfos\StoreMerchantInfoDTO;
 use App\Exceptions\BusinessException;
 use App\HttpRepositories\Prm\CompanyHttpRepository;
-use App\Modules\Merchants\Models\File;
-use App\Modules\Merchants\Models\Merchant;
-use App\Modules\Merchants\Models\MerchantInfo;
-use App\Modules\Merchants\Models\Request as MerchantRequest;
-use App\Modules\Merchants\Models\Tag;
+use App\Models\File;
+use App\Models\Merchant;
+use App\Models\MerchantInfo;
+use App\Models\MerchantRequest;
+use App\Models\Tag;
 use Illuminate\Support\Facades\DB;
 
 class AllowMerchantRequestUseCase
