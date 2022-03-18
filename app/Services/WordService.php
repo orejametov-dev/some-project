@@ -78,7 +78,7 @@ class WordService
 
         $contract_file = storage_path($additional_agreement_path);
         $contract_template = new TemplateProcessor($contract_file);
-        $current_date = $merchant_info->contract_date;
+        $current_date = $additional_agreement->registration_date;
         $limit = $additional_agreement->limit / 100;
         $legal_name_prefix = LegalNameService::findNamePrefix($merchant_info->merchant->legal_name_prefix);
 
