@@ -23,7 +23,8 @@
         "laravel/tinker": "^2.5",
         "myclabs/php-enum": "^1.8",
         "phpoffice/phpword": "^0.18.1",
-        "sentry/sentry-laravel": "^2.7"
+        "sentry/sentry-laravel": "^2.7",
+        "ext-intl": "*"
     },
     "repositories": [
         {

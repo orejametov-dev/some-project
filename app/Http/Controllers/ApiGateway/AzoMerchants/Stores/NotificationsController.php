@@ -86,7 +86,7 @@ class NotificationsController extends ApiBaseController
                 $notification->save();
 
                 foreach ($request->input('recipients') as $recipient) {
-                    $merchant = Merchant::findOrFail($recipient['merchant_id']);
+                    $merchant = Merchant::query()->findOrFail($recipient['merchant_id']);
                     if (array_key_exists('store_ids', $recipient) and !empty($recipient['store_ids'])) {
                         $all_store_ids = $merchant->stores()->pluck('id');
                         foreach ($recipient['store_ids'] as $store_id) {

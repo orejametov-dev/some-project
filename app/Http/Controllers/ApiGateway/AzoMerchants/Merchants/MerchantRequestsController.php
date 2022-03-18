@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
 use App\DTOs\MerchantRequest\StoreMerchantRequestDTO;
+use App\Enums\MerchantRequestStatusEnum;
 use App\Exceptions\BusinessException;
 use App\Filters\CommonFilters\StatusIdFilter;
 use App\Filters\MerchantRequest\CreatedFromNameFilter;
@@ -143,7 +144,7 @@ class MerchantRequestsController extends ApiBaseController
             $merchant_request->engaged_by_id = $user->id;
             $merchant_request->engaged_by_name = $user->name;
             $merchant_request->engaged_at = now();
-            $merchant_request->setStatusInProcess();
+            $merchant_request->setStatus(MerchantRequestStatusEnum::IN_PROCESS());
             $merchant_request->save();
 
             return $merchant_request;
@@ -166,13 +167,16 @@ class MerchantRequestsController extends ApiBaseController
         ]);
 
         $cancelReason = CancelReason::query()->findOrFail($request->input('cancel_reason_id'));
-        $merchant_request = MerchantRequest::findOrFail($id);
+        /**
+         * @var MerchantRequest $merchant_request
+         */
+        $merchant_request = MerchantRequest::query()->findOrFail($id);
 
         if (!$merchant_request->isInProcess()) {
             return response()->json(['message' => 'Статус заявки должен быть "На переговорах"'], 400);
         }
 
-        $merchant_request->setStatusTrash();
+        $merchant_request->setStatus(MerchantRequestStatusEnum::TRASH());
         $merchant_request->cancel_reason()->associate($cancelReason);
         $merchant_request->save();
 
@@ -191,7 +195,7 @@ class MerchantRequestsController extends ApiBaseController
             throw new BusinessException('Не все данные были заполнены для одобрения', 'data_not_completed', 400);
         }
 
-        $merchant_request->setStatusOnTraining();
+        $merchant_request->setStatus(MerchantRequestStatusEnum::ON_TRAINING());
         $merchant_request->save();
 
         return $merchant_request;

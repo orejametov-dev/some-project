@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\ProblemCaseStatusEnum;
 use App\Filters\ProblemCase\ProblemCaseFilters;
-use App\Services\SimpleStateMachine\SimpleStateMachinable;
-use App\Services\SimpleStateMachine\SimpleStateMachineTrait;
-use App\Traits\ProblemCaseStatuses;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -17,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Http\Request;
+use InvalidArgumentException;
 
 /**
  * App\Models\ProblemCase.
@@ -66,91 +65,17 @@ use Illuminate\Http\Request;
  * @property-read int|null $tags_count
  * @method static Builder|ProblemCase byMerchant($merchant_id)
  * @method static Builder|ProblemCase byStore($store_id)
- * @method static Builder|ProblemCase done()
  * @method static Builder|ProblemCase filterRequest(Request $request, array $filters = [])
- * @method static Builder|ProblemCase filterRequests(Request $request)
- * @method static Builder|ProblemCase finished()
- * @method static Builder|ProblemCase inProcess()
- * @method static Builder|ProblemCase new()
  * @method static Builder|ProblemCase newModelQuery()
  * @method static Builder|ProblemCase newQuery()
  * @method static Builder|ProblemCase onlyNew()
  * @method static Builder|ProblemCase query()
  */
-class ProblemCase extends Model implements SimpleStateMachinable
+class ProblemCase extends Model
 {
     use HasFactory;
-    use ProblemCaseStatuses;
-    use SimpleStateMachineTrait;
-
-    public const NEW = 1;
-    public const IN_PROCESS = 2;
-    public const DONE = 3;
-    public const FINISHED = 4;
 
     public static array $sources = ['CALLS', 'LAW', 'COMPLIANCE'];
-
-    public static array $statuses = [
-        self::NEW => [
-            'id' => self::NEW,
-            'name' => 'Новый',
-            'lang' => [
-                'uz' => 'Yangi',
-                'ru' => 'Новый',
-            ],
-        ],
-        self::IN_PROCESS => [
-            'id' => self::IN_PROCESS,
-            'name' => 'В процессе',
-            'lang' => [
-                'uz' => 'Ko\'rib chiqilmoqda',
-                'ru' => 'В процессе',
-            ],
-        ],
-        self::DONE => [
-            'id' => self::DONE,
-            'name' => 'Выполнено',
-            'lang' => [
-                'uz' => 'Bajarildi',
-                'ru' => 'Выполнено',
-            ],
-        ],
-        self::FINISHED => [
-            'id' => self::FINISHED,
-            'name' => 'Завершен',
-            'lang' => [
-                'uz' => 'Tugatildi',
-                'ru' => 'Завершен',
-            ],
-        ],
-    ];
-
-    public static function getOneById(int $id): mixed
-    {
-        return json_decode(json_encode(self::$statuses[$id]));
-    }
-
-    public function getStateAttribute(): ?int
-    {
-        return $this->status_id;
-    }
-
-    public function getSimpleStateMachineMap(): array
-    {
-        return [
-            self::NEW => [
-                self::IN_PROCESS,
-            ],
-            self::IN_PROCESS => [
-                self::DONE,
-            ],
-            self::DONE => [
-                self::IN_PROCESS,
-                self::FINISHED,
-            ],
-            self::FINISHED => [],
-        ];
-    }
 
     protected $fillable = [
         'status_id',
@@ -200,11 +125,6 @@ class ProblemCase extends Model implements SimpleStateMachinable
         return $this->morphMany(Comment::class, 'commentable');
     }
 
-    public function scopeOnlyNew(Builder $query): Builder
-    {
-        return $query->where('status_id', self::NEW);
-    }
-
     public function scopeByMerchant(Builder $query, int $merchant_id): Builder
     {
         return $query->where('merchant_id', $merchant_id);
@@ -218,5 +138,68 @@ class ProblemCase extends Model implements SimpleStateMachinable
     public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder
     {
         return (new ProblemCaseFilters($request, $builder))->execute($filters);
+    }
+
+    public function scopeOnlyNew(Builder $query): Builder
+    {
+        return $query->where('status_id', ProblemCaseStatusEnum::NEW());
+    }
+
+    public function isStatusNew(): bool
+    {
+        return $this->status_id === ProblemCaseStatusEnum::NEW()->getValue();
+    }
+
+    public function isStatusInProcess(): bool
+    {
+        return $this->status_id === ProblemCaseStatusEnum::IN_PROCESS()->getValue();
+    }
+
+    public function isStatusDone(): bool
+    {
+        return $this->status_id === ProblemCaseStatusEnum::DONE()->getValue();
+    }
+
+    public function isStatusFinished(): bool
+    {
+        return $this->status_id === ProblemCaseStatusEnum::FINISHED()->getValue();
+    }
+
+    public function setStatus(ProblemCaseStatusEnum $statusEnum): self
+    {
+        $this->assertStatusSwitch($statusEnum);
+
+        $this->status_updated_at = Carbon::now();
+        $this->status_id = $statusEnum->getValue();
+
+        return $this;
+    }
+
+    private function getStatusMachineMapping(): array
+    {
+        return [
+            ProblemCaseStatusEnum::NEW()->getValue() => [
+                ProblemCaseStatusEnum::IN_PROCESS(),
+            ],
+            ProblemCaseStatusEnum::IN_PROCESS()->getValue() => [
+                ProblemCaseStatusEnum::DONE(),
+            ],
+            ProblemCaseStatusEnum::DONE()->getValue() => [
+                ProblemCaseStatusEnum::IN_PROCESS(),
+                ProblemCaseStatusEnum::FINISHED(),
+            ],
+            ProblemCaseStatusEnum::FINISHED()->getValue() => [],
+        ];
+    }
+
+    public function assertStatusSwitch(ProblemCaseStatusEnum $statusEnum): void
+    {
+        if (array_key_exists($this->status_id, $this->getStatusMachineMapping()) === false) {
+            throw new InvalidArgumentException('Initial status does not mapped');
+        }
+
+        if (in_array($statusEnum, $this->getStatusMachineMapping()[$this->status_id]) === false) {
+            throw new InvalidArgumentException('Assigned status does not mapped');
+        }
     }
 }

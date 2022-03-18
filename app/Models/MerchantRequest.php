@@ -4,19 +4,21 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\MerchantRequestStatusEnum;
 use App\Filters\MerchantRequest\MerchantRequestFilters;
 use App\HttpRepositories\Storage\StorageHttpRepository;
-use App\Services\SimpleStateMachine\SimpleStateMachineTrait;
-use App\Traits\MerchantRequestStatusesTrait;
+use App\Mappings\MerchantRequestStatusMapping;
 use App\Traits\SortableByQueryParams;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use InvalidArgumentException;
 
 /**
  * App\Models\MerchantRequest.
@@ -45,16 +47,12 @@ use Illuminate\Support\Collection;
  * @property string $created_from_name
  * @property-read Collection|File[] $files
  * @property-read mixed $status
- * @method static Builder|MerchantRequest allowed()
- * @method static Builder|MerchantRequest filterRequest(\Illuminate\Http\Request $request, array $filters = [])
- * @method static Builder|MerchantRequest inProcess()
- * @method static Builder|MerchantRequest onTraining()
+ * @method static Builder|MerchantRequest filterRequest(Request $request, array $filters = [])
  * @method static Builder|MerchantRequest new()
  * @method static Builder|MerchantRequest newModelQuery()
  * @method static Builder|MerchantRequest newQuery()
- * @method static Builder|MerchantRequest orderRequest(\Illuminate\Http\Request $request, string $default_order_str = 'id:desc')
+ * @method static Builder|MerchantRequest orderRequest(Request $request, string $default_order_str = 'id:desc')
  * @method static Builder|MerchantRequest query()
- * @method static Builder|MerchantRequest trash()
  * @property int|null $stores_count
  * @property int|null $merchant_users_count
  * @property string|null $director_name
@@ -70,27 +68,19 @@ use Illuminate\Support\Collection;
  * @property-read CancelReason|null $cancel_reason
  * @property-read int|null $files_count
  * @property-read mixed $state
- * @method static Builder|MerchantRequest onlyByToken($token)
  */
 class MerchantRequest extends Model
 {
     use HasFactory;
-    use MerchantRequestStatusesTrait;
-    use SimpleStateMachineTrait;
     use SortableByQueryParams;
 
-    public const NEW = 1;
-    public const ALLOWED = 2;
-    public const TRASH = 3;
-    public const IN_PROCESS = 4;
-    public const ON_TRAINING = 5;
-
-    protected $table = 'merchant_requests';
     protected $appends = ['status'];
+
     protected $dates = [
         'status_updated_at',
         'engaged_at',
     ];
+
     protected $casts = ['categories' => 'array'];
     protected $fillable = [
         'name',
@@ -121,28 +111,84 @@ class MerchantRequest extends Model
         'documents_completed',
     ];
 
-    private static array $statuses = [
-        self::NEW => [
-            'id' => self::NEW,
-            'name' => 'новый',
-        ],
-        self::ALLOWED => [
-            'id' => self::ALLOWED,
-            'name' => 'Одобрено',
-        ],
-        self::TRASH => [
-            'id' => self::TRASH,
-            'name' => 'В корзине',
-        ],
-        self::IN_PROCESS => [
-            'id' => self::IN_PROCESS,
-            'name' => 'На переговорах',
-        ],
-        self::ON_TRAINING => [
-            'id' => self::ON_TRAINING,
-            'name' => 'На обучении',
-        ],
-    ];
+    private function getStatusMachineMapping(): array
+    {
+        return [
+            MerchantRequestStatusEnum::NEW()->getValue() => [
+                MerchantRequestStatusEnum::IN_PROCESS(),
+            ],
+            MerchantRequestStatusEnum::IN_PROCESS()->getValue() => [
+                MerchantRequestStatusEnum::ON_TRAINING(),
+                MerchantRequestStatusEnum::TRASH(),
+            ],
+            MerchantRequestStatusEnum::ON_TRAINING()->getValue() => [
+                MerchantRequestStatusEnum::ALLOWED(),
+            ],
+            MerchantRequestStatusEnum::ALLOWED()->getValue() => [],
+            MerchantRequestStatusEnum::TRASH()->getValue() => [],
+        ];
+    }
+
+    public function getStatusAttribute(): array
+    {
+        $mapping = new MerchantRequestStatusMapping();
+
+        return $mapping->getMappedValue(MerchantRequestStatusEnum::from($this->status_id));
+    }
+
+    public function isStatusNew(): bool
+    {
+        return $this->status_id === MerchantRequestStatusEnum::NEW()->getValue();
+    }
+
+    public function isInProcess(): bool
+    {
+        return $this->status_id === MerchantRequestStatusEnum::IN_PROCESS()->getValue();
+    }
+
+    public function isOnTraining(): bool
+    {
+        return $this->status_id === MerchantRequestStatusEnum::ON_TRAINING()->getValue();
+    }
+
+    public function scopeNew(Builder $builder): Builder
+    {
+        return $builder->where('status_id', MerchantRequestStatusEnum::NEW());
+    }
+
+    public function setStatus(MerchantRequestStatusEnum $statusEnum)
+    {
+        $this->assertStatusSwitch($statusEnum);
+
+        $this->status_updated_at = Carbon::now();
+        $this->status_id = $statusEnum->getValue();
+    }
+
+    public function assertStatusSwitch(MerchantRequestStatusEnum $statusEnum): void
+    {
+        if (array_key_exists($this->status_id, $this->getStatusMachineMapping()) === false) {
+            throw new InvalidArgumentException('Initial status does not mapped');
+        }
+
+        if (in_array($statusEnum, $this->getStatusMachineMapping()[$this->status_id]) === false) {
+            throw new InvalidArgumentException('Assigned status does not mapped');
+        }
+    }
+
+    public function files(): HasMany
+    {
+        return $this->hasMany(File::class, 'request_id', 'id');
+    }
+
+    public function cancel_reason(): BelongsTo
+    {
+        return $this->belongsTo(CancelReason::class);
+    }
+
+    public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder
+    {
+        return (new MerchantRequestFilters($request, $builder))->execute($filters);
+    }
 
     public function checkToMainCompleted(): void
     {
@@ -184,65 +230,6 @@ class MerchantRequest extends Model
         }
     }
 
-    public static function getOneById(int $id): mixed
-    {
-        return json_decode(json_encode(self::$statuses[$id]));
-    }
-
-    public function getStateAttribute(): ?int
-    {
-        return $this->status_id;
-    }
-
-    public function getStatusAttribute(): object
-    {
-        return self::getOneById($this->status_id);
-    }
-
-    public function getSimpleStateMachineMap(): array
-    {
-        return [
-            self::NEW => [
-                self::IN_PROCESS,
-            ],
-            self::IN_PROCESS => [
-                self::ON_TRAINING,
-                self::TRASH,
-            ],
-            self::ON_TRAINING => [
-                self::ALLOWED,
-            ],
-            self::ALLOWED => [],
-            self::TRASH => [],
-        ];
-    }
-
-    public static function statusLists(): array
-    {
-        return [
-            ['id' => self::NEW, 'name' => 'Новый'],
-            ['id' => self::IN_PROCESS, 'name' => 'На переговорах'],
-            ['id' => self::ON_TRAINING, 'name' => 'На обучении'],
-            ['id' => self::ALLOWED, 'name' => 'Одобрено'],
-            ['id' => self::TRASH, 'name' => 'В корзине'],
-        ];
-    }
-
-    public function files(): HasMany
-    {
-        return $this->hasMany(File::class, 'request_id', 'id');
-    }
-
-    public function cancel_reason(): BelongsTo
-    {
-        return $this->belongsTo(CancelReason::class);
-    }
-
-    public function scopeOnlyByToken(Builder $query, string $token): Builder
-    {
-        return $query->where('token', $token);
-    }
-
     public function uploadFile(UploadedFile $uploadedFile, string $type): File
     {
         $storage_file = (new StorageHttpRepository)->uploadFile($uploadedFile, 'merchants');
@@ -266,10 +253,5 @@ class MerchantRequest extends Model
 
         (new StorageHttpRepository)->destroy($file->url);
         $file->delete();
-    }
-
-    public function scopeFilterRequest(Builder $builder, \Illuminate\Http\Request $request, array $filters = []): Builder
-    {
-        return (new MerchantRequestFilters($request, $builder))->execute($filters);
     }
 }
