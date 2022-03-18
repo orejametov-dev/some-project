@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Controllers\ApiCallsGateway\Merchants;
-
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiCallsGateway\Stores\StoreResource;

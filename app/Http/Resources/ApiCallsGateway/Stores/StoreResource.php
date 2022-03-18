@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Resources\ApiCallsGateway\Stores;
 
-use App\Models\Merchant;
 use App\Models\Store;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -25,7 +24,7 @@ class StoreResource extends JsonResource
             'merchant_id' => $this->merchant_id,
             'address' => $this->address,
             'phone' => $this->phone,
-            'responsible_person' => $this->responsible_person
+            'responsible_person' => $this->responsible_person,
         ];
     }
 }
