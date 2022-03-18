@@ -16,10 +16,10 @@ use Illuminate\Support\Facades\Cache;
 class MerchantsController extends Controller
 {
     //роут для фронт мерчанта
-    public function getMerchantDetailsWithRelations(AzoAccessDto $azoAccessDto, GatewayAuthUser $gatewayAuthUser)
+    public function getMerchantDetailsWithRelations(AzoAccessDto $azoAccessDto, GatewayAuthUser $gatewayAuthUser): array
     {
         $merchant = Cache::tags($azoAccessDto->merchant_id)->remember('cache_of_merchant', 60 * 60, function () use ($azoAccessDto) {
-            return Merchant::findOrFail($azoAccessDto->merchant_id);
+            return Merchant::query()->findOrFail($azoAccessDto->merchant_id);
         });
 
         $conditions = Cache::tags($azoAccessDto->merchant_id)->remember('cache_of_merchant_conditions', 60 * 60, function () use ($merchant) {

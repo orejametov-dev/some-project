@@ -19,12 +19,14 @@ use App\Modules\Merchants\Models\Store;
 use App\Services\Helpers\Randomizr;
 use App\Services\SMS\OtpProtector;
 use App\Services\SMS\SmsMessages;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
 class AzoMerchantAccessesController extends Controller
 {
-    public function index(Request $request, AzoAccessDto $azoAccessDto)
+    public function index(Request $request, AzoAccessDto $azoAccessDto): LengthAwarePaginator
     {
         $merchantUsersQuery = AzoMerchantAccess::query()
             ->with(['merchant', 'store'])
@@ -35,7 +37,7 @@ class AzoMerchantAccessesController extends Controller
         return $merchantUsersQuery->paginate($request->query('per_page') ?? 15);
     }
 
-    public function show($id, AzoAccessDto $azoAccessDto)
+    public function show(int $id, AzoAccessDto $azoAccessDto): AzoMerchantAccess
     {
         $merchantUser = AzoMerchantAccess::query()
             ->byMerchant($azoAccessDto->merchant_id)
@@ -44,7 +46,7 @@ class AzoMerchantAccessesController extends Controller
         return $merchantUser;
     }
 
-    public function update($id, Request $request, AzoAccessDto $azoAccessDto, GatewayAuthUser $gatewayAuthUser)
+    public function update(int $id, Request $request, AzoAccessDto $azoAccessDto, GatewayAuthUser $gatewayAuthUser): AzoMerchantAccess
     {
         $this->validate($request, [
             'store_id' => 'required|integer',
@@ -81,7 +83,7 @@ class AzoMerchantAccessesController extends Controller
         return $azo_merchant_access;
     }
 
-    public function requestStore(Request $request, NotifyHttpRepository $notifyHttpRepository)
+    public function requestStore(Request $request, NotifyHttpRepository $notifyHttpRepository): JsonResponse
     {
         $this->validate($request, [
             'phone' => 'required|string|digits:12',
@@ -114,7 +116,7 @@ class AzoMerchantAccessesController extends Controller
             ], ]);
     }
 
-    public function store(Request $request, GatewayAuthUser $gatewayAuthUser, AuthHttpRepository $authHttpRepository, CompanyUserHttpRepository $companyUserHttpRepository)
+    public function store(Request $request, GatewayAuthUser $gatewayAuthUser, AuthHttpRepository $authHttpRepository, CompanyUserHttpRepository $companyUserHttpRepository): AzoMerchantAccess
     {
         $this->validate($request, [
             'code' => 'required|digits:4',
@@ -203,7 +205,7 @@ class AzoMerchantAccessesController extends Controller
         return $azo_merchant_access;
     }
 
-    public function destroy($id, GatewayAuthUser $gatewayAuthUser)
+    public function destroy(int $id, GatewayAuthUser $gatewayAuthUser): JsonResponse
     {
         $azo_merchant_access = AzoMerchantAccess::query()->findOrFail($id);
         $store = $azo_merchant_access->store;

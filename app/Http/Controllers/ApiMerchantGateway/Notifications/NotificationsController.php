@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiMerchantGateway\Notifications\NotificationsResource;
 use App\Modules\Merchants\Models\Notification;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\Cache;
 
 class NotificationsController extends Controller
@@ -20,7 +21,7 @@ class NotificationsController extends Controller
 //    ) {
 //    }
 
-    public function index(Request $request, AzoAccessDto $azoAccessDto)
+    public function index(Request $request, AzoAccessDto $azoAccessDto): ResourceCollection|NotificationsResource
     {
         $notifications = Notification::query()
             ->filterRequest($request, [
@@ -40,7 +41,7 @@ class NotificationsController extends Controller
         return NotificationsResource::collection($notifications->paginate($request->query('per_page') ?? 15));
     }
 
-    public function getCounter(AzoAccessDto $azoAccessDto)
+    public function getCounter(AzoAccessDto $azoAccessDto): array
     {
         $notifications = Cache::tags('notifications')->remember('fresh_notifications_by_store_' . $azoAccessDto->store_id, 5 * 60, function () use ($azoAccessDto) {
             return Notification::query()
