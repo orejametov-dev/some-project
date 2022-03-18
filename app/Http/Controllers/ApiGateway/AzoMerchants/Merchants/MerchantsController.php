@@ -183,7 +183,7 @@ class MerchantsController extends ApiBaseController
 
     public function toggleGeneralGoods($id, Request $request, WarehouseHttpRepository $warehouseHttpRepository)
     {
-        $merchant = Merchant::findOrFail($id);
+        $merchant = Merchant::query()->findOrFail($id);
         $merchant->has_general_goods = !$merchant->has_general_goods;
 
         $warehouseHttpRepository->checkDuplicateSKUs($merchant->id);
@@ -199,7 +199,7 @@ class MerchantsController extends ApiBaseController
 
     public function toggleRecommend($id)
     {
-        $merchant = Merchant::findOrFail($id);
+        $merchant = Merchant::query()->findOrFail($id);
         $merchant->recommend = !$merchant->recommend;
         $merchant->save();
 

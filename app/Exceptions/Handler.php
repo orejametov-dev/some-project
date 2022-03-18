@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Exceptions;
 
-use App\Services\SimpleStateMachine\SimpleStateMachineException;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -62,10 +61,6 @@ class Handler extends ExceptionHandler
             $message = isset($response['message']) ? $response['message'] : 'Ошибка сервиса';
 
             return response()->json(['error' => true, 'message' => $message], 400);
-        }
-
-        if ($exception instanceof SimpleStateMachineException) {
-            return response()->json(['message' => $exception->getMessage(), 'code' => $exception->getErrorCode()], $exception->getCode());
         }
 
         if (config('app.env') == 'production' && $exception instanceof ModelNotFoundException && $request->expectsJson()) {

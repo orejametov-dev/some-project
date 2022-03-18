@@ -87,7 +87,7 @@ class StoresController extends ApiBaseController
 
     public function getConditions($id, Request $request)
     {
-        $store = Store::findOrFail($id);
+        $store = Store::query()->findOrFail($id);
         $special_conditions = $store->conditions()->active()->get();
 
         $conditionQuery = Condition::query()

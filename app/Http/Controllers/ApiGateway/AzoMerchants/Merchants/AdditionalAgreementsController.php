@@ -30,7 +30,7 @@ class AdditionalAgreementsController extends Controller
 
     public function show($id)
     {
-        return AdditionalAgreement::findOrFail($id);
+        return AdditionalAgreement::query()->findOrFail($id);
     }
 
     public function store(StoreAdditionalAgreements $request)
@@ -64,7 +64,7 @@ class AdditionalAgreementsController extends Controller
 
     public function getAdditionalAgreementDoc(WordService $wordService, $id)
     {
-        $additional_agreement = AdditionalAgreement::findOrFail($id);
+        $additional_agreement = AdditionalAgreement::query()->findOrFail($id);
         $merchant_info = MerchantInfo::query()->where('merchant_id', $additional_agreement->merchant_id)->firstOrFail();
         $additional_agreement_file = $wordService->createAdditionalAgreement($additional_agreement, $merchant_info, 'app/additional_agreement.docx');
 
@@ -73,7 +73,7 @@ class AdditionalAgreementsController extends Controller
 
     public function delete($id)
     {
-        $additional_agreement = AdditionalAgreement::findOrFail($id);
+        $additional_agreement = AdditionalAgreement::query()->findOrFail($id);
         $additional_agreement->delete();
 
         return response()->json(['message' => 'Успешно удалено']);

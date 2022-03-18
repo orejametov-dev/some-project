@@ -13,7 +13,7 @@ class CountersController extends Controller
     public function merchantRequests()
     {
         $count = Cache::remember('prm_merchant_requests', 60, function () {
-            return MerchantRequest::new()
+            return MerchantRequest::query()->new()
                 ->count();
         });
 

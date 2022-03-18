@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Log;
 
 class MonitoringController extends Controller
 {
+    public function test()
+    {
+    }
+
     public function general(): JsonResponse
     {
 //        Log::channel('urgent')->debug('start_service', [

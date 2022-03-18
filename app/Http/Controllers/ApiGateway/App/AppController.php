@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers\ApiGateway\App;
 
 use App\Http\Controllers\ApiGateway\ApiBaseController;
+use App\Mappings\MerchantRequestStatusMapping;
+use App\Mappings\ProblemCaseStatusMapping;
 use App\Models\ActivityReason;
 use App\Models\CancelReason;
 use App\Models\Competitor;
@@ -22,13 +24,13 @@ use Illuminate\Support\Facades\Cache;
 
 class AppController extends ApiBaseController
 {
-    public function index()
+    public function index(MerchantRequestStatusMapping $merchantRequestStatusMapping, ProblemCaseStatusMapping $problemCaseStatusMapping)
     {
         $merchant_requests_count = MerchantRequest::query()->new()->count();
         $merchants_count = Merchant::query()->count();
         $stores_count = Store::query()->count();
-        $merchant_request_statuses = MerchantRequest::statusLists();
-        $problem_case_statuses = array_values(ProblemCase::$statuses);
+        $merchant_request_statuses = $merchantRequestStatusMapping->getMappings();
+        $problem_case_statuses = array_values($problemCaseStatusMapping->getMappings());
         $problem_case_sources = ProblemCase::$sources;
         $merchant_activity_reasons = ActivityReason::query()->where('type', 'MERCHANT')->get();
         $store_activity_reasons = ActivityReason::query()->where('type', 'STORE')->get();

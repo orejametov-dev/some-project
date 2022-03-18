@@ -5,6 +5,7 @@ namespace App\UseCases\MerchantRequests;
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use Alifuz\Utils\Gateway\Entities\GatewayApplication;
 use App\DTOs\MerchantRequest\StoreMerchantRequestDTO;
+use App\Enums\MerchantRequestStatusEnum;
 use App\Exceptions\BusinessException;
 use App\HttpRepositories\Prm\CompanyHttpRepository;
 use App\Models\MerchantRequest;
@@ -25,9 +26,9 @@ class StoreMerchantRequestUseCase
             ->orderByDesc('id')
             ->first();
 
-        if ($merchant_request && $merchant_request->status_id !== MerchantRequest::TRASH) {
-            throw new BusinessException('Запрос с таким номером телефона уже существует, статус запроса '
-                . MerchantRequest::getOneById((int) $merchant_request->status_id)->name);
+        if ($merchant_request && $merchant_request->status_id !== MerchantRequestStatusEnum::TRASH()->getValue()) {
+            throw new BusinessException('Запрос с таким номером телефона уже существует, статус запроса');
+            //MerchantRequest::getOneById((int) $merchant_request->status_id)->name
         }
 
         if ($this->companyHttpRepository->checkCompanyToExistByName($storeMerchantRequestDTO->name) === true) {
@@ -52,7 +53,7 @@ class StoreMerchantRequestUseCase
         }
 
         $merchant_request->created_from_name = $this->gatewayApplication->getApplication()->getValue();
-        $merchant_request->setStatusNew();
+        $merchant_request->setStatus(MerchantRequestStatusEnum::NEW());
 
         $merchant_request->save();
         $merchant_request->checkToMainCompleted();
