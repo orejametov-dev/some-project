@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Cache;
 
 class ApplicationConditionsController extends Controller
 {
-    public function index(Request $request, AzoAccessDto $azoAccessDto): Store
+    public function index(Request $request, AzoAccessDto $azoAccessDto): array
     {
         return Cache::tags($azoAccessDto->merchant_id)->remember(
             $request->fullUrl() . $azoAccessDto->store_id,

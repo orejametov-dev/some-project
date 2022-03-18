@@ -19,14 +19,14 @@ use App\Models\Store;
 use App\Services\Helpers\Randomizr;
 use App\Services\SMS\OtpProtector;
 use App\Services\SMS\SmsMessages;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Cache;
 
 class AzoMerchantAccessesController extends Controller
 {
-    public function index(Request $request, AzoAccessDto $azoAccessDto): LengthAwarePaginator
+    public function index(Request $request, AzoAccessDto $azoAccessDto): JsonResource
     {
         $merchantUsersQuery = AzoMerchantAccess::query()
             ->with(['merchant', 'store'])
@@ -34,25 +34,25 @@ class AzoMerchantAccessesController extends Controller
             ->filterRequest($request, [])
             ->orderByDesc('updated_at');
 
-        return $merchantUsersQuery->paginate($request->query('per_page') ?? 15);
+        return JsonResource::collection($merchantUsersQuery->paginate($request->query('per_page') ?? 15));
     }
 
-    public function show(int $id, AzoAccessDto $azoAccessDto): AzoMerchantAccess
+    public function show($id, AzoAccessDto $azoAccessDto): AzoMerchantAccess
     {
         $merchantUser = AzoMerchantAccess::query()
             ->byMerchant($azoAccessDto->merchant_id)
-            ->findOrFail($id);
+            ->findOrFail((int) $id);
 
         return $merchantUser;
     }
 
-    public function update(int $id, Request $request, AzoAccessDto $azoAccessDto, GatewayAuthUser $gatewayAuthUser): AzoMerchantAccess
+    public function update($id, Request $request, AzoAccessDto $azoAccessDto, GatewayAuthUser $gatewayAuthUser): AzoMerchantAccess
     {
         $this->validate($request, [
             'store_id' => 'required|integer',
         ]);
 
-        $azo_merchant_access = AzoMerchantAccess::query()->findOrFail($id);
+        $azo_merchant_access = AzoMerchantAccess::query()->findOrFail((int) $id);
         $merchant = $azo_merchant_access->merchant;
         $old_store = $azo_merchant_access->store;
         $store = $merchant->stores()->where(['id' => $request->input('store_id')])->firstOrFail();

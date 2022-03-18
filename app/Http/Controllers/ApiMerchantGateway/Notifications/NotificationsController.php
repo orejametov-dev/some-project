@@ -11,7 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiMerchantGateway\Notifications\NotificationsResource;
 use App\Models\Notification;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Cache;
 
 class NotificationsController extends Controller
@@ -21,7 +21,7 @@ class NotificationsController extends Controller
 //    ) {
 //    }
 
-    public function index(Request $request, AzoAccessDto $azoAccessDto): ResourceCollection|NotificationsResource
+    public function index(Request $request, AzoAccessDto $azoAccessDto): JsonResource
     {
         $notifications = Notification::query()
             ->filterRequest($request, [
