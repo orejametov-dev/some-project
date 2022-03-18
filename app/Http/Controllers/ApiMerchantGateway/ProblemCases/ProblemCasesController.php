@@ -17,12 +17,12 @@ use App\Modules\Merchants\Models\ProblemCase;
 use App\Services\SMS\SmsMessages;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Cache;
 
 class ProblemCasesController extends Controller
 {
-    public function index(Request $request, AzoAccessDto $azoAccessDto): ResourceCollection
+    public function index(Request $request, AzoAccessDto $azoAccessDto): JsonResource
     {
         $problemCases = ProblemCase::query()->with('before_tags')
             ->byMerchant($azoAccessDto->merchant_id)
@@ -37,10 +37,10 @@ class ProblemCasesController extends Controller
         return ProblemCaseResource::collection($problemCases->paginate($request->query('per_page') ?? 15));
     }
 
-    public function show(int $id): ProblemCaseResource
+    public function show($id): ProblemCaseResource
     {
         $problemCase = ProblemCase::with('before_tags')
-            ->find($id);
+            ->find((int) $id);
 
         if ($problemCase === null) {
             throw new BusinessException('Проблемный кейс не найден', 'object_not_found', 404);

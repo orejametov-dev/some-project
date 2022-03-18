@@ -13,11 +13,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiOnlineGateway\StoresResource;
 use App\Modules\Merchants\Models\Store;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class StoresController extends Controller
 {
-    public function index(Request $request): ResourceCollection|StoresResource
+    public function index(Request $request): JsonResource
     {
         $stores = Store::query()
             ->active()

@@ -9,11 +9,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiOnlineGateway\ConditionsResource;
 use App\Modules\Merchants\Models\Condition;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class ConditionsController extends Controller
 {
-    public function index(Request $request): ResourceCollection
+    public function index(Request $request): JsonResource
     {
         $conditionQuery = Condition::query()
             ->active()
