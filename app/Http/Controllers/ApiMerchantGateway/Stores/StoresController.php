@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Cache;
 
 class StoresController extends Controller
 {
-    public function index(Request $request, AzoAccessDto $azoAccessDto)
+    public function index(Request $request, AzoAccessDto $azoAccessDto): Store
     {
         $stores = Store::query()
             ->with(['merchant'])

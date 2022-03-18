@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 
 class MerchantRequestsController extends Controller
 {
-    public function app()
+    public function app(): array
     {
         $regions = RegionService::getRegions();
         $legal_name_prefixes = LegalNameService::getNamePrefixes();
@@ -28,7 +28,7 @@ class MerchantRequestsController extends Controller
         ];
     }
 
-    public function show($id)
+    public function show(int $id): MerchantRequest
     {
         $merchant_request = MerchantRequest::query()->with('files')->find($id);
 
@@ -39,12 +39,12 @@ class MerchantRequestsController extends Controller
         return $merchant_request;
     }
 
-    public function storeMain(MerchantRequestStoreMain $request, StoreMerchantRequestUseCase $storeMerchantRequestUseCase)
+    public function storeMain(MerchantRequestStoreMain $request, StoreMerchantRequestUseCase $storeMerchantRequestUseCase): MerchantRequest
     {
         return $storeMerchantRequestUseCase->execute(StoreMerchantRequestDTO::fromArray($request->validated()), false);
     }
 
-    public function getDistricts(Request $request)
+    public function getDistricts(Request $request): array
     {
         if ($request->query('region')) {
             return DistrictService::getDistrictsByRegion($request->query('region'));

@@ -13,10 +13,11 @@ use App\Http\Resources\ApiOnlineGateway\MerchantTagResource;
 use App\Models\Merchant;
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class MerchantsController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): ResourceCollection
     {
         $query = Merchant::query()
             ->whereHas('application_conditions', function ($query) {
@@ -35,7 +36,7 @@ class MerchantsController extends Controller
         return MerchantResource::collection($query->paginate($request->query('per_page') ?? 15));
     }
 
-    public function show($id)
+    public function show(int $id): MerchantResource
     {
         $merchant = Merchant::query()
             ->with('tags')
@@ -45,7 +46,7 @@ class MerchantsController extends Controller
         return new MerchantResource($merchant);
     }
 
-    public function tags(Request $request)
+    public function tags(Request $request): ResourceCollection
     {
         $query = Tag::query();
 

@@ -19,11 +19,14 @@ use App\UseCases\Stores\SaveStoreUseCase;
 use App\UseCases\Stores\SetTypeRegisterStoreUseCase;
 use App\UseCases\Stores\ToggleStoreUseCase;
 use App\UseCases\Stores\UpdateStoreUseCase;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class StoresController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): LengthAwarePaginator|Store|Collection
     {
         $stores = Store::query()->with(['merchant'])
             ->filterRequest($request, [
@@ -45,7 +48,7 @@ class StoresController extends Controller
         return $stores->paginate($request->query('per_page') ?? 15);
     }
 
-    public function show($store_id)
+    public function show(int $store_id): Model
     {
         $store = Store::with(['merchant', 'activity_reasons'])
             ->findOrFail($store_id);
@@ -53,39 +56,39 @@ class StoresController extends Controller
         return $store;
     }
 
-    public function store(StoreStoresRequest $request, SaveStoreUseCase $storeStoresUseCase)
+    public function store(StoreStoresRequest $request, SaveStoreUseCase $storeStoresUseCase): Store
     {
         $storeStoresDTO = StoreStoresDTO::fromArray($request->validated());
 
         return $storeStoresUseCase->execute($storeStoresDTO);
     }
 
-    public function update($store_id, UpdateStoresRequest $request, UpdateStoreUseCase $updateStoresUseCase)
+    public function update(int $store_id, UpdateStoresRequest $request, UpdateStoreUseCase $updateStoresUseCase): Store
     {
-        $updateStoresDTO = UpdateStoresDTO::fromArray((int) $store_id, $request->validated());
+        $updateStoresDTO = UpdateStoresDTO::fromArray($store_id, $request->validated());
 
         return $updateStoresUseCase->execute($updateStoresDTO);
     }
 
-    public function toggle($id, Request $request, ToggleStoreUseCase $toggleStoresUseCase)
+    public function toggle(int $id, Request $request, ToggleStoreUseCase $toggleStoresUseCase): Store
     {
         $this->validate($request, [
             'activity_reason_id' => 'integer|required',
         ]);
 
-        return $toggleStoresUseCase->execute((int) $id, (int) $request->input('activity_reason_id'));
+        return $toggleStoresUseCase->execute($id, (int) $request->input('activity_reason_id'));
     }
 
-    public function setTypeRegister($id, Request $request, SetTypeRegisterStoreUseCase $setTypeRegisterStoresUseCase)
+    public function setTypeRegister(int $id, Request $request, SetTypeRegisterStoreUseCase $setTypeRegisterStoresUseCase): Store
     {
         $request->validate([
             'client_type_register' => 'required|string',
         ]);
 
-        return $setTypeRegisterStoresUseCase->execute((int) $id, (string) $request->input('client_type_register'));
+        return $setTypeRegisterStoresUseCase->execute($id, (string) $request->input('client_type_register'));
     }
 
-    public function getConditions($id, Request $request)
+    public function getConditions(int $id, Request $request): Collection
     {
         $store = Store::query()->findOrFail($id);
         $special_conditions = $store->conditions()->active()->get();

@@ -57,7 +57,7 @@ use InvalidArgumentException;
  * @property int|null $assigned_to_id
  * @property string|null $assigned_to_name
  * @property string|null $manager_comment
- * @property string|null $engaged_at
+ * @property Carbon $engaged_at
  * @property-read int|null $before_tags_count
  * @property-read Collection|Comment[] $comments
  * @property-read int|null $comments_count

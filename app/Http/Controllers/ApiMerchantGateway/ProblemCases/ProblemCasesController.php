@@ -17,12 +17,14 @@ use App\Jobs\SendSmsJob;
 use App\Mappings\ProblemCaseStatusMapping;
 use App\Models\ProblemCase;
 use App\Services\SMS\SmsMessages;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\Cache;
 
 class ProblemCasesController extends Controller
 {
-    public function index(Request $request, AzoAccessDto $azoAccessDto)
+    public function index(Request $request, AzoAccessDto $azoAccessDto): ResourceCollection
     {
         $problemCases = ProblemCase::query()->with('before_tags')
             ->byMerchant($azoAccessDto->merchant_id)
@@ -37,7 +39,7 @@ class ProblemCasesController extends Controller
         return ProblemCaseResource::collection($problemCases->paginate($request->query('per_page') ?? 15));
     }
 
-    public function show($id)
+    public function show(int $id): ProblemCaseResource
     {
         $problemCase = ProblemCase::with('before_tags')
             ->find($id);
@@ -49,7 +51,7 @@ class ProblemCasesController extends Controller
         return new ProblemCaseResource($problemCase);
     }
 
-    public function setCommentFromMerchant($id, Request $request)
+    public function setCommentFromMerchant(int $id, Request $request): ProblemCaseResource
     {
         $this->validate($request, [
             'body' => 'string|required',
@@ -62,7 +64,7 @@ class ProblemCasesController extends Controller
         return new ProblemCaseResource($problemCase);
     }
 
-    public function setStatus($id, Request $request, GatewayAuthUser $gatewayAuthUser, ProblemCaseStatusMapping $problemCaseStatusMapping)
+    public function setStatus($id, Request $request, GatewayAuthUser $gatewayAuthUser, ProblemCaseStatusMapping $problemCaseStatusMapping): ProblemCaseResource
     {
         $this->validate($request, [
             'status_id' => 'required|integer',
@@ -98,7 +100,7 @@ class ProblemCasesController extends Controller
         return new ProblemCaseResource($problemCase);
     }
 
-    public function setEngage($id, GatewayAuthUser $gatewayAuthUser)
+    public function setEngage(int $id, GatewayAuthUser $gatewayAuthUser): ProblemCaseResource
     {
         $problemCase = ProblemCase::query()->findOrFail($id);
 
@@ -111,12 +113,12 @@ class ProblemCasesController extends Controller
         return new ProblemCaseResource($problemCase);
     }
 
-    public function getStatuses(ProblemCaseStatusMapping $problemCaseStatusMapping)
+    public function getStatuses(ProblemCaseStatusMapping $problemCaseStatusMapping): array
     {
         return $problemCaseStatusMapping->getMappings();
     }
 
-    public function getNewProblemCasesCounter(GatewayAuthUser $gatewayAuthUser, AzoAccessDto $azoAccessDto)
+    public function getNewProblemCasesCounter(GatewayAuthUser $gatewayAuthUser, AzoAccessDto $azoAccessDto): JsonResponse
     {
         $counter = Cache::remember('new-problem-cases-counter_' . $azoAccessDto->merchant_id, 10 * 60, function () use ($azoAccessDto) {
             return ProblemCase::query()
