@@ -194,11 +194,11 @@ class ProblemCase extends Model
 
     public function assertStatusSwitch(ProblemCaseStatusEnum $statusEnum): void
     {
-        if (array_key_exists($this->status_id, $this->getStatusMachineMapping()) === false) {
+        if ($this->status_id !== null and array_key_exists($this->status_id, $this->getStatusMachineMapping()) === false) {
             throw new InvalidArgumentException('Initial status does not mapped');
         }
 
-        if (in_array($statusEnum, $this->getStatusMachineMapping()[$this->status_id]) === false) {
+        if ($this->status_id !== null and in_array($statusEnum, $this->getStatusMachineMapping()[$this->status_id]) === false) {
             throw new InvalidArgumentException('Assigned status does not mapped');
         }
     }
