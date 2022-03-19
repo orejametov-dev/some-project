@@ -21,6 +21,10 @@ class CompanyHttpRepository
     {
         $result = $this->getHttpClient()->get('companies/company-by-name', ['name' => $name])->throw()->json();
 
+        if($result === null) {
+            return null;
+        }
+
         return CompanyHttpResponse::fromArray($result);
     }
 
