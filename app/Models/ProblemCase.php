@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Enums\ProblemCaseStatusEnum;
 use App\Filters\ProblemCase\ProblemCaseFilters;
+use App\Mappings\ProblemCaseStatusMapping;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -171,6 +172,7 @@ class ProblemCase extends Model
 
         $this->status_updated_at = Carbon::now();
         $this->status_id = $statusEnum->getValue();
+        $this->status_key = (new ProblemCaseStatusMapping())->getMappedValue($statusEnum)['name'];
 
         return $this;
     }

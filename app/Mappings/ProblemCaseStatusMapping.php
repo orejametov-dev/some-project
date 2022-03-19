@@ -36,7 +36,7 @@ final class ProblemCaseStatusMapping
             ],
             ProblemCaseStatusEnum::FINISHED()->getValue() => [
                 'id' => ProblemCaseStatusEnum::FINISHED(),
-                'name' => 'Завершено',
+                'name' => 'Завершен',
                 'lang' => [
                     'uz' => 'Tugatildi',
                     'ru' => 'Завершено',
