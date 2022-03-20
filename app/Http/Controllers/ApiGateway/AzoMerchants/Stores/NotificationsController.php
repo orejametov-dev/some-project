@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Stores;
 
+use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\Exceptions\BusinessException;
 use App\Filters\CommonFilters\CreatedAtFilter;
 use App\Filters\CommonFilters\CreatedByIdFilter;
 use App\Filters\Notification\MerchantIdNotificationFilter;
 use App\Filters\Notification\PublishedFilter;
 use App\Filters\Notification\QNotificationFilter;
-use App\Http\Controllers\ApiGateway\ApiBaseController;
+use App\Http\Controllers\Controller;
 use App\Models\Merchant;
 use App\Models\Notification;
 use App\Models\Store;
@@ -19,7 +20,7 @@ use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
-class NotificationsController extends ApiBaseController
+class NotificationsController extends Controller
 {
     public function index(Request $request)
     {
@@ -68,7 +69,7 @@ class NotificationsController extends ApiBaseController
 
         $notification = new Notification();
         $notification->fill($validatedData);
-        $notification->setCreatedBy($this->user);
+        $notification->setCreatedBy(app(GatewayAuthUser::class));
         $notification->start_schedule = Carbon::parse($request->input('start_schedule') ?? now());
         $notification->end_schedule = Carbon::parse($request->input('end_schedule') ?? now()->addDay());
 

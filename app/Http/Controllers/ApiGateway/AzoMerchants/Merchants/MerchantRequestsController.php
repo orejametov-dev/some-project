@@ -10,7 +10,7 @@ use App\DTOs\MerchantRequest\UpdateMerchantRequestDTO;
 use App\Filters\CommonFilters\StatusIdFilter;
 use App\Filters\MerchantRequest\CreatedFromNameFilter;
 use App\Filters\MerchantRequest\QMerchantRequestFilter;
-use App\Http\Controllers\ApiGateway\ApiBaseController;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestStoreDocumentsRequest;
 use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestStoreRequest;
 use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestUpdateRequest;
@@ -19,6 +19,7 @@ use App\Http\Resources\ApiPrmGateway\Merchants\MerchantRequestsResource;
 use App\Models\MerchantRequest;
 use App\UseCases\MerchantRequests\AllowMerchantRequestUseCase;
 use App\UseCases\MerchantRequests\DeleteMerchantRequestFileUseCase;
+use App\UseCases\MerchantRequests\FindMerchantRequestByIdUseCase;
 use App\UseCases\MerchantRequests\RejectMerchantRequestUseCase;
 use App\UseCases\MerchantRequests\SetMerchantRequestEngagedUseCase;
 use App\UseCases\MerchantRequests\SetMerchantRequestOnBoardingUseCase;
@@ -28,7 +29,7 @@ use App\UseCases\MerchantRequests\UpdateMerchantRequestUseCase;
 use App\UseCases\MerchantRequests\UploadMerchantRequestFileUseCase;
 use Illuminate\Http\Request;
 
-class MerchantRequestsController extends ApiBaseController
+class MerchantRequestsController extends Controller
 {
     public function index(Request $request)
     {
@@ -51,11 +52,9 @@ class MerchantRequestsController extends ApiBaseController
         return MerchantRequestsResource::collection($merchantRequests->paginate($request->query('per_page') ?? 15));
     }
 
-    public function show($id)
+    public function show($id, FindMerchantRequestByIdUseCase $findMerchantRequestByIdUseCase)
     {
-        $merchant_request = MerchantRequest::query()->with('files')->findOrFail($id);
-
-        return $merchant_request;
+        return $findMerchantRequestByIdUseCase->execute((int) $id);
     }
 
     public function store(MerchantRequestStoreRequest $request, StoreMerchantRequestUseCase $storeMerchantRequestUseCase)

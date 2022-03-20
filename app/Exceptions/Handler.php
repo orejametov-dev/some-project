@@ -4,11 +4,7 @@ declare(strict_types=1);
 
 namespace App\Exceptions;
 
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\ServerException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Http\Client\RequestException;
 use Throwable;
 
 class Handler extends ExceptionHandler

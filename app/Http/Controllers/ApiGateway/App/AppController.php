@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\ApiGateway\App;
 
-use App\Http\Controllers\ApiGateway\ApiBaseController;
+use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
+use App\Http\Controllers\Controller;
 use App\Mappings\MerchantRequestStatusMapping;
 use App\Mappings\ProblemCaseStatusMapping;
 use App\Models\ActivityReason;
@@ -22,7 +23,7 @@ use App\Services\LegalNameService;
 use App\Services\RegionService;
 use Illuminate\Support\Facades\Cache;
 
-class AppController extends ApiBaseController
+class AppController extends Controller
 {
     public function index(MerchantRequestStatusMapping $merchantRequestStatusMapping, ProblemCaseStatusMapping $problemCaseStatusMapping)
     {
@@ -42,7 +43,7 @@ class AppController extends ApiBaseController
             return ConditionTemplate::query()->get();
         });
 
-        $authUser = $this->user;
+        $authUser = app(GatewayAuthUser::class);
 
         $file_types = File::$file_types;
         $registration_file_types = File::$registration_file_types;

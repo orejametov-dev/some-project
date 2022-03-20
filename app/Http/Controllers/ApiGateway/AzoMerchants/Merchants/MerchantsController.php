@@ -4,6 +4,7 @@
 
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
+use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\DTOs\Competitors\CompetitorDTO;
 use App\DTOs\Merchants\UpdateMerchantDTO;
 use App\Filters\CommonFilters\ActiveFilter;
@@ -11,7 +12,7 @@ use App\Filters\CommonFilters\TagsFilter;
 use App\Filters\Merchant\ActivityReasonIdFilter;
 use App\Filters\Merchant\MaintainerIdFilter;
 use App\Filters\Merchant\QMerchantFilter;
-use App\Http\Controllers\ApiGateway\ApiBaseController;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiPrm\Competitors\CompetitorsRequest;
 use App\Http\Requests\ApiPrm\Files\StoreFileRequest;
 use App\Http\Requests\ApiPrm\Merchants\SetMainStoreRequest;
@@ -35,7 +36,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
-class MerchantsController extends ApiBaseController
+class MerchantsController extends Controller
 {
     public function index(Request $request)
     {
@@ -170,8 +171,8 @@ class MerchantsController extends ApiBaseController
 
         $merchant->activity_reasons()->attach($activity_reason->id, [
             'active' => $merchant->active,
-            'created_by_id' => $this->user->getId(),
-            'created_by_name' => $this->user->getName(),
+            'created_by_id' => app(GatewayAuthUser::class)->getId(),
+            'created_by_name' => app(GatewayAuthUser::class)->getName(),
         ]);
 
         $companyHttpRepository->setStatusNotActive((int) $merchant->company_id);
