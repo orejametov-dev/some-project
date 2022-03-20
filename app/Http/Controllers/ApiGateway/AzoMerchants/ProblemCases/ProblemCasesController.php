@@ -13,7 +13,7 @@ use App\Filters\ProblemCase\AssignedToIdFilter;
 use App\Filters\ProblemCase\CreatedFromNameFilter;
 use App\Filters\ProblemCase\ProblemCaseTagIdFilter;
 use App\Filters\ProblemCase\QProblemCaseFilter;
-use App\Http\Controllers\ApiGateway\ApiBaseController;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiPrm\Comments\StoreCommentRequest;
 use App\Http\Requests\ApiPrm\ProblemCases\ProblemCaseAttachTagsRequest;
 use App\Http\Requests\ApiPrm\ProblemCases\ProblemCaseSetAssignedRequest;
@@ -29,7 +29,7 @@ use App\UseCases\ProblemCase\UpdateProblemCaseUseCase;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class ProblemCasesController extends ApiBaseController
+class ProblemCasesController extends Controller
 {
     public function index(Request $request)
     {

@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
+use App\Exceptions\BusinessException;
 use App\Filters\AzoMerchantAccess\QAzoMerchantAccessFilter;
 use App\Filters\CommonFilters\DateFilter;
 use App\Filters\CommonFilters\StoreIdFilter;
 use App\Filters\CommonFilters\UserIdsFilter;
 use App\Filters\Merchant\MerchantIdFilter;
-use App\Http\Controllers\ApiGateway\ApiBaseController;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiPrm\MerchantUsers\StoreMerchantUsers;
 use App\Http\Requests\ApiPrm\MerchantUsers\UpdateMerchantUserRequest;
 use App\Models\AzoMerchantAccess;
@@ -18,7 +19,7 @@ use App\UseCases\MerchantUsers\StoreMerchantUserUseCase;
 use App\UseCases\MerchantUsers\UpdateMerchantUserUseCase;
 use Illuminate\Http\Request;
 
-class AzoMerchantAccessesController extends ApiBaseController
+class AzoMerchantAccessesController extends Controller
 {
     public function index(Request $request)
     {
@@ -42,7 +43,12 @@ class AzoMerchantAccessesController extends ApiBaseController
 
     public function show($id)
     {
-        return AzoMerchantAccess::with(['merchant', 'store'])->findOrFail($id);
+        $azo_merchant_access = AzoMerchantAccess::query()->with(['merchant', 'store'])->find($id);
+        if ($azo_merchant_access === null) {
+            throw new BusinessException('Доступ к юзеру не найден', 'not_found', 404);
+        }
+
+        return $azo_merchant_access;
     }
 
     public function store(StoreMerchantUsers $request, StoreMerchantUserUseCase $storeMerchantUserUseCase)
