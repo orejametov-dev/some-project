@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Traits\SortableByQueryParams;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 
 /**
  * App\Models\Comment.

@@ -6,7 +6,7 @@ namespace App\Http\Requests\ApiPrm\MerchantRequests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class MerchantRequestStoreDocuments extends FormRequest
+class MerchantRequestStoreDocumentsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,7 +26,7 @@ class MerchantRequestStoreDocuments extends FormRequest
     public function rules()
     {
         return [
-            'director_name' => 'required|max:255',
+            'director_name' => 'required|max:255|string',
             'phone' => 'required|digits:12',
             'vat_number' => 'required|digits:12',
             'mfo' => 'required|digits:5',

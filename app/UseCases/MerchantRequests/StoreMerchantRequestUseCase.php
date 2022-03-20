@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\UseCases\MerchantRequests;
 
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
@@ -22,7 +24,7 @@ class StoreMerchantRequestUseCase
     public function execute(StoreMerchantRequestDTO $storeMerchantRequestDTO, bool $fromPrm): MerchantRequest
     {
         $merchant_request = MerchantRequest::query()
-            ->where('user_phone', $storeMerchantRequestDTO->user_phone)
+            ->where('user_phone', $storeMerchantRequestDTO->getUserPhone())
             ->orderByDesc('id')
             ->first();
 
@@ -31,23 +33,23 @@ class StoreMerchantRequestUseCase
             //MerchantRequest::getOneById((int) $merchant_request->status_id)->name
         }
 
-        if ($this->companyHttpRepository->checkCompanyToExistByName($storeMerchantRequestDTO->name) === true) {
+        if ($this->companyHttpRepository->checkCompanyToExistByName($storeMerchantRequestDTO->getName()) === true) {
             throw new BusinessException('Указанное имя компании уже занято', 'object_not_found', 400);
         }
 
         $merchant_request = new MerchantRequest();
-        $merchant_request->user_name = $storeMerchantRequestDTO->user_name;
-        $merchant_request->user_phone = $storeMerchantRequestDTO->user_phone;
-        $merchant_request->name = $storeMerchantRequestDTO->name;
-        $merchant_request->legal_name = $storeMerchantRequestDTO->legal_name;
-        $merchant_request->legal_name_prefix = $storeMerchantRequestDTO->legal_name_prefix;
-        $merchant_request->categories = $storeMerchantRequestDTO->categories;
-        $merchant_request->approximate_sales = $storeMerchantRequestDTO->approximate_sales;
-        $merchant_request->region = $storeMerchantRequestDTO->region;
-        $merchant_request->district = $storeMerchantRequestDTO->district;
+        $merchant_request->user_name = $storeMerchantRequestDTO->getUserName();
+        $merchant_request->user_phone = $storeMerchantRequestDTO->getUserPhone();
+        $merchant_request->name = $storeMerchantRequestDTO->getName();
+        $merchant_request->legal_name = $storeMerchantRequestDTO->getLegalName();
+        $merchant_request->legal_name_prefix = $storeMerchantRequestDTO->getLegalNamePrefix();
+        $merchant_request->categories = $storeMerchantRequestDTO->getCategories();
+        $merchant_request->approximate_sales = $storeMerchantRequestDTO->getApproximateSales();
+        $merchant_request->region = $storeMerchantRequestDTO->getRegion();
+        $merchant_request->district = $storeMerchantRequestDTO->getDistrict();
 
         if ($fromPrm === true) {
-            $merchant_request->address = $storeMerchantRequestDTO->address;
+            $merchant_request->address = $storeMerchantRequestDTO->getAddress();
             $merchant_request->engaged_by_id = $this->gatewayAuthUser->getId();
             $merchant_request->engaged_by_name = $this->gatewayAuthUser->getName();
         }

@@ -14,9 +14,9 @@ use App\Http\Controllers\ApiGateway\ApiBaseController;
 use App\Models\Merchant;
 use App\Models\Notification;
 use App\Models\Store;
+use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 
 class NotificationsController extends ApiBaseController

@@ -6,7 +6,7 @@ namespace App\Http\Requests\ApiPrm\MerchantRequests;
 
 use App\Http\Requests\ApiMerchantsGateway\Merchants\MerchantRequestStoreMain;
 
-class MerchantRequestStore extends MerchantRequestStoreMain
+class MerchantRequestStoreRequest extends MerchantRequestStoreMain
 {
     /**
      * Determine if the user is authorized to make this request.

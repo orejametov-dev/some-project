@@ -130,7 +130,7 @@ class AzoMerchantAccessesController extends Controller
         if (array_search(AuthHttpRepository::AZO_MERCHANT_ROLE, array_column($user->roles, 'name'))) {
             throw new ApiBusinessException('Пользователь уже является сотрудником мерчанта', 'merchant_exists', [
                 'ru' => 'Пользователь уже является сотрудником мерчанта',
-                'uz' => 'Foydalanuvchi merchant tizimiga bog\'langan',
+                'uz' => 'Foydalanuvchi merchant tizimiga bog`langan',
             ], 400);
         }
 
@@ -234,7 +234,7 @@ class AzoMerchantAccessesController extends Controller
 
         return response()->json(['message' => [
             'ru' => 'Сотрудник удален',
-            'uz' => 'Xodim o\'chirildi',
+            'uz' => 'Xodim o`chirildi',
         ]]);
     }
 }
