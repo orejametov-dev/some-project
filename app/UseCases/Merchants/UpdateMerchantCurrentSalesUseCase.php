@@ -53,7 +53,7 @@ class UpdateMerchantCurrentSalesUseCase
         Merchant::query()
             ->leftJoin('merchant_infos', 'merchants.id', '=', 'merchant_infos.merchant_id')
             ->leftJoin('merchant_additional_agreements', 'merchants.id', '=', 'merchant_additional_agreements.merchant_id')
-            ->whereRaw('merchant_additional_agreements.document_type = ' . AdditionalAgreement::LIMIT)
+            ->whereRaw('merchant_additional_agreements.document_type = ' . '"' . AdditionalAgreement::LIMIT . '"')
             ->whereRaw("(IFNULL(merchant_infos.limit, 0) + IFNULL(merchant_additional_agreements.limit, 0)) $percentage_of_limit <= merchants.current_sales")
             ->whereNull('merchant_additional_agreements.limit_expired_at')
             ->update(['merchant_additional_agreements.limit_expired_at' => now()]);
