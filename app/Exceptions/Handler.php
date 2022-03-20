@@ -53,33 +53,4 @@ class Handler extends ExceptionHandler
 
         parent::report($exception);
     }
-
-    public function render($request, Throwable $exception)
-    {
-        if (config('app.env') == 'production' && $exception instanceof RequestException) {
-            $response = $exception->response->json();
-            $message = isset($response['message']) ? $response['message'] : 'Ошибка сервиса';
-
-            return response()->json(['error' => true, 'message' => $message], 400);
-        }
-
-        if (config('app.env') == 'production' && $exception instanceof ModelNotFoundException && $request->expectsJson()) {
-            return response()->json(['code' => 'object_not_found', 'message' => 'Объект не найден'], 404);
-        }
-
-        if (config('app.env') == 'production' && $exception instanceof ClientException) {
-            $response = $exception->getResponse();
-            $content = json_decode($response->getBody()->getContents(), true);
-
-            $message = isset($content['message']) ? $content['message'] : 'Ошибка сервиса';
-
-            return response()->json(['error' => true, 'message' => $message], 400);
-        }
-
-        if (config('app.env') == 'production' && $exception instanceof ServerException) {
-            return response()->json(['error' => true, 'message' => 'Ошибка во внутренних сервисах'], 400);
-        }
-
-        return parent::render($request, $exception);
-    }
 }
