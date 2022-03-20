@@ -18,17 +18,14 @@ use Illuminate\Support\Facades\DB;
 class AllowMerchantRequestUseCase
 {
     public function __construct(
+        private FindMerchantRequestByIdUseCase $findMerchantRequestByIdUseCase,
         private CompanyHttpRepository $companyHttpRepository,
     ) {
     }
 
     public function execute(int $id): MerchantRequest
     {
-        $merchant_request = MerchantRequest::query()->find($id);
-
-        if ($merchant_request === null) {
-            throw new BusinessException('Запрос на регистарцию не найден', 'object_not_found', 404);
-        }
+        $merchant_request = $this->findMerchantRequestByIdUseCase->execute($id);
 
         if ($merchant_request->isOnTraining() === false) {
             throw new BusinessException('Статус заявки должен быть "На обучении"');

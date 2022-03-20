@@ -23,7 +23,7 @@ class AttachCompetitorUseCase
         if ($merchant->competitors()->find($competitor->id) !== null) {
             throw new ApiBusinessException('Информация о данном конкуренте на этого мерчанта уже была создана', 'merchant_competitor_exists', [
                 'ru' => 'Информация о данном конкуренте на этого мерчанта уже была создана',
-                'uz' => 'Merchantdagi bu konkurent haqidagi ma\'lumot qo\'shib bo\'lingan ekan',
+                'uz' => 'Merchantdagi bu konkurent haqidagi ma`lumot qo`shib bo`lingan ekan',
             ], 400);
         }
 

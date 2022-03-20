@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Filters\Store\StoreFilters;
 use App\Traits\SortableByQueryParams;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,7 +16,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 
 /**
  * Class Store.
