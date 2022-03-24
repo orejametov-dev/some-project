@@ -227,7 +227,7 @@ class Merchant extends Model
             return;
         }
 
-        (new StorageHttpRepository())->destroy($this->logo_url);
+        (new StorageHttpRepository())->destroy($file->url);
         $file->delete();
     }
 }
