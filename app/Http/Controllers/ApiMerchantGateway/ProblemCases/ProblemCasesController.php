@@ -51,13 +51,13 @@ class ProblemCasesController extends Controller
         return new ProblemCaseResource($problemCase);
     }
 
-    public function setCommentFromMerchant(int $id, Request $request): ProblemCaseResource
+    public function setCommentFromMerchant($id, Request $request): ProblemCaseResource
     {
         $this->validate($request, [
             'body' => 'string|required',
         ]);
 
-        $problemCase = ProblemCase::query()->findOrFail($id);
+        $problemCase = ProblemCase::query()->findOrFail((int) $id);
         $problemCase->comment_from_merchant = $request->input('body');
         $problemCase->save();
 
@@ -100,9 +100,9 @@ class ProblemCasesController extends Controller
         return new ProblemCaseResource($problemCase);
     }
 
-    public function setEngage(int $id, GatewayAuthUser $gatewayAuthUser): ProblemCaseResource
+    public function setEngage($id, GatewayAuthUser $gatewayAuthUser): ProblemCaseResource
     {
-        $problemCase = ProblemCase::query()->findOrFail($id);
+        $problemCase = ProblemCase::query()->findOrFail((int) $id);
 
         $problemCase->engaged_by_id = $gatewayAuthUser->getId();
         $problemCase->engaged_by_name = $gatewayAuthUser->getName();
