@@ -4,26 +4,32 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
+use App\DTOs\MerchantRequest\StoreMerchantRequestDocumentsDTO;
 use App\DTOs\MerchantRequest\StoreMerchantRequestDTO;
-use App\Exceptions\BusinessException;
+use App\DTOs\MerchantRequest\UpdateMerchantRequestDTO;
 use App\Filters\CommonFilters\StatusIdFilter;
 use App\Filters\MerchantRequest\CreatedFromNameFilter;
 use App\Filters\MerchantRequest\QMerchantRequestFilter;
-use App\Http\Controllers\ApiGateway\ApiBaseController;
-use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestStore;
-use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestStoreDocuments;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestStoreDocumentsRequest;
+use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestStoreRequest;
 use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestUpdateRequest;
-use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestUploadFile;
+use App\Http\Requests\ApiPrm\MerchantRequests\MerchantRequestUploadFileRequest;
 use App\Http\Resources\ApiPrmGateway\Merchants\MerchantRequestsResource;
-use App\HttpRepositories\Auth\AuthHttpRepository;
-use App\HttpRepositories\Prm\CompanyHttpRepository;
-use App\Models\CancelReason;
 use App\Models\MerchantRequest;
 use App\UseCases\MerchantRequests\AllowMerchantRequestUseCase;
+use App\UseCases\MerchantRequests\DeleteMerchantRequestFileUseCase;
+use App\UseCases\MerchantRequests\FindMerchantRequestByIdUseCase;
+use App\UseCases\MerchantRequests\RejectMerchantRequestUseCase;
+use App\UseCases\MerchantRequests\SetMerchantRequestEngagedUseCase;
+use App\UseCases\MerchantRequests\SetMerchantRequestOnBoardingUseCase;
+use App\UseCases\MerchantRequests\StoreMerchantRequestDocumentsUseCase;
 use App\UseCases\MerchantRequests\StoreMerchantRequestUseCase;
+use App\UseCases\MerchantRequests\UpdateMerchantRequestUseCase;
+use App\UseCases\MerchantRequests\UploadMerchantRequestFileUseCase;
 use Illuminate\Http\Request;
 
-class MerchantRequestsController extends ApiBaseController
+class MerchantRequestsController extends Controller
 {
     public function index(Request $request)
     {
@@ -46,154 +52,69 @@ class MerchantRequestsController extends ApiBaseController
         return MerchantRequestsResource::collection($merchantRequests->paginate($request->query('per_page') ?? 15));
     }
 
-    public function show($id)
+    public function show($id, FindMerchantRequestByIdUseCase $findMerchantRequestByIdUseCase)
     {
-        $merchant_request = MerchantRequest::query()->with('files')->findOrFail($id);
+        $merchant_request = $findMerchantRequestByIdUseCase->execute((int) $id);
 
-        return $merchant_request;
+        return $merchant_request->load('files');
     }
 
-    public function store(MerchantRequestStore $request, StoreMerchantRequestUseCase $storeMerchantRequestUseCase)
+    public function store(MerchantRequestStoreRequest $request, StoreMerchantRequestUseCase $storeMerchantRequestUseCase)
     {
         return $storeMerchantRequestUseCase->execute(StoreMerchantRequestDTO::fromArray($request->validated()), true);
     }
 
-    public function update($id, MerchantRequestUpdateRequest $request, CompanyHttpRepository $companyHttpRepository)
+    public function update($id, MerchantRequestUpdateRequest $request, UpdateMerchantRequestUseCase $updateMerchantRequestUseCase)
     {
-        $merchant_request = MerchantRequest::query()->find($id);
-
-        if ($merchant_request === null) {
-            throw new BusinessException('Запрос не мерчанта не найден', 'merchant_request_not_found', 404);
-        }
-
-        if ($companyHttpRepository->getCompanyByName($request->input('name'))) {
-            throw new BusinessException('Указанное имя компании уже занято', 'object_not_found', 400);
-        }
-
-        $merchant_request->fill($request->validated());
-
-        $merchant_request->save();
-        $merchant_request->checkToMainCompleted();
-
-        return $merchant_request;
+        return $updateMerchantRequestUseCase->execute((int) $id, UpdateMerchantRequestDTO::fromArray($request->validated()));
     }
 
-    public function storeDocuments($id, MerchantRequestStoreDocuments $request)
+    public function storeDocuments($id, MerchantRequestStoreDocumentsRequest $request, StoreMerchantRequestDocumentsUseCase $merchantRequestDocumentsUseCase)
     {
-        $merchant_request = MerchantRequest::query()->find($id);
-
-        if ($merchant_request === null) {
-            throw new BusinessException('Запрос на мерчанта не найден', 'merchant_request_not_found', 404);
-        }
-
-        $merchant_request->fill($request->validated());
-
-        $merchant_request->save();
-        $merchant_request->checkToDocumentsCompleted();
-
-        return $merchant_request;
+        return $merchantRequestDocumentsUseCase->execute((int) $id, StoreMerchantRequestDocumentsDTO::fromArray($request->validated()));
     }
 
-    public function upload($id, MerchantRequestUploadFile $request)
+    public function upload($id, MerchantRequestUploadFileRequest $request, UploadMerchantRequestFileUseCase $uploadMerchantRequestFileUseCase)
     {
-        $merchant_request = MerchantRequest::query()->find($id);
-
-        if ($merchant_request === null) {
-            throw new BusinessException('Запрос на мерчанта не найден', 'merchant_request_not_found', 404);
-        }
-
-        $merchant_request_file = $merchant_request->uploadFile($request->file('file'), $request->input('file_type'));
-        $merchant_request->checkToFileCompleted();
-
-        return $merchant_request_file;
+        return $uploadMerchantRequestFileUseCase->execute((int) $id, $request->input('file_type'), $request->file('file'));
     }
 
-    public function deleteFile($id, Request $request)
+    public function deleteFile($id, Request $request, DeleteMerchantRequestFileUseCase $deleteMerchantRequestFileUseCase)
     {
         $this->validate($request, [
             'file_id' => 'required|integer',
         ]);
 
-        $merchant_request = MerchantRequest::query()->find($id);
-
-        if ($merchant_request === null) {
-            throw new BusinessException('Запрос не мерчанта не найден', 'merchant_request_not_found', 404);
-        }
-
-        $merchant_request->deleteFile($request->input('file_id'));
+        $deleteMerchantRequestFileUseCase->execute((int) $id, (int) $request->input('file_id'));
 
         return response()->json(['message' => 'Файл успешно удалён.']);
     }
 
-    public function setEngage($id, Request $request, AuthHttpRepository $authHttpRepository)
+    public function setEngage($id, Request $request, SetMerchantRequestEngagedUseCase $setMerchantRequestEngagedUseCase)
     {
         $this->validate($request, [
             'engaged_by_id' => 'required|integer',
         ]);
 
-        $user = $authHttpRepository->getUserById((int) $request->input('engaged_by_id'));
-
-        if (!$user) {
-            throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
-        }
-
-        $merchant_request = MerchantRequest::query()->findOrFail($id);
-
-        if ($merchant_request->isStatusNew() || $merchant_request->isInProcess()) {
-            $merchant_request->engaged_by_id = $user->id;
-            $merchant_request->engaged_by_name = $user->name;
-            $merchant_request->engaged_at = now();
-            $merchant_request->setStatusInProcess();
-            $merchant_request->save();
-
-            return $merchant_request;
-        }
-
-        return response()->json(['message' => 'Не возможно менять статус']);
+        return $setMerchantRequestEngagedUseCase->execute((int) $id, (int) $request->input('engaged_by_id'));
     }
 
     public function allow($id, AllowMerchantRequestUseCase $allowMerchantRequestUseCase)
     {
-        $merchant_request = $allowMerchantRequestUseCase->execute((int) $id);
-
-        return $merchant_request;
+        return $allowMerchantRequestUseCase->execute((int) $id);
     }
 
-    public function reject(Request $request, $id)
+    public function reject(Request $request, $id, RejectMerchantRequestUseCase $rejectMerchantRequestUseCase)
     {
         $this->validate($request, [
             'cancel_reason_id' => 'required|integer',
         ]);
 
-        $cancelReason = CancelReason::query()->findOrFail($request->input('cancel_reason_id'));
-        $merchant_request = MerchantRequest::findOrFail($id);
-
-        if (!$merchant_request->isInProcess()) {
-            return response()->json(['message' => 'Статус заявки должен быть "На переговорах"'], 400);
-        }
-
-        $merchant_request->setStatusTrash();
-        $merchant_request->cancel_reason()->associate($cancelReason);
-        $merchant_request->save();
-
-        return $merchant_request;
+        return $rejectMerchantRequestUseCase->execute((int) $id, (int) $request->input('cancel_reason_id'));
     }
 
-    public function setOnBoarding($id)
+    public function setOnBoarding($id, SetMerchantRequestOnBoardingUseCase $setMerchantRequestOnBoardingUseCase)
     {
-        $merchant_request = MerchantRequest::query()->find($id);
-
-        if ($merchant_request === null) {
-            throw new BusinessException('Запрос не найден', 'object_not_found', 404);
-        }
-
-        if (($merchant_request->main_completed == true && $merchant_request->documents_completed == true && $merchant_request->file_completed == true) === false) {
-            throw new BusinessException('Не все данные были заполнены для одобрения', 'data_not_completed', 400);
-        }
-
-        $merchant_request->setStatusOnTraining();
-        $merchant_request->save();
-
-        return $merchant_request;
+        return $setMerchantRequestOnBoardingUseCase->execute((int) $id);
     }
 }

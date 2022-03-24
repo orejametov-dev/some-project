@@ -10,9 +10,12 @@ use App\Filters\CommonFilters\ClientIdFilter;
 use App\Filters\CommonFilters\StatusIdFilter;
 use App\Filters\ProblemCase\QProblemCaseFilter;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ApiPrm\ProblemCases\ProblemCaseNewAttachTagsRequest;
 use App\Http\Requests\ApiPrm\ProblemCases\ProblemCaseStoreRequest;
 use App\Http\Resources\ApiCallsGateway\ProblemCases\ProblemCaseResource;
+use App\Mappings\ProblemCaseStatusMapping;
 use App\Models\ProblemCase;
+use App\UseCases\ProblemCase\NewAttachTagsProblemCaseUseCase;
 use App\UseCases\ProblemCase\StoreProblemCaseNumberCreditUseCase;
 use Illuminate\Http\Request;
 
@@ -53,8 +56,13 @@ class ProblemCasesController extends Controller
         return $storeProblemCasesUseCase->execute($problemCaseDTO);
     }
 
-    public function getStatusList()
+    public function attachTags($id, ProblemCaseNewAttachTagsRequest $request, NewAttachTagsProblemCaseUseCase $newAttachTagsProblemCaseUseCase)
     {
-        return array_values(ProblemCase::$statuses);
+        return $newAttachTagsProblemCaseUseCase->execute((int) $id, (array) $request->input('tags'));
+    }
+
+    public function getStatusList(ProblemCaseStatusMapping $problemCaseStatusMapping)
+    {
+        return $problemCaseStatusMapping->getMappings();
     }
 }

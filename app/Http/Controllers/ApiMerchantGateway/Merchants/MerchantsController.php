@@ -19,7 +19,7 @@ class MerchantsController extends Controller
     public function getMerchantDetailsWithRelations(AzoAccessDto $azoAccessDto, GatewayAuthUser $gatewayAuthUser)
     {
         $merchant = Cache::tags($azoAccessDto->merchant_id)->remember('cache_of_merchant', 60 * 60, function () use ($azoAccessDto) {
-            return Merchant::findOrFail($azoAccessDto->merchant_id);
+            return Merchant::query()->findOrFail($azoAccessDto->merchant_id);
         });
 
         $conditions = Cache::tags($azoAccessDto->merchant_id)->remember('cache_of_merchant_conditions', 60 * 60, function () use ($merchant) {

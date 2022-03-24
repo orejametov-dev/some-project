@@ -5,17 +5,20 @@ declare(strict_types=1);
 namespace App\UseCases\ProblemCase;
 
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
+use App\Enums\ProblemCaseStatusEnum;
 use App\Exceptions\BusinessException;
 use App\HttpRepositories\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Jobs\SendSmsJob;
+use App\Mappings\ProblemCaseStatusMapping;
 use App\Models\ProblemCase;
 use App\Services\SMS\SmsMessages;
 
 class SetStatusProblemCaseUseCase
 {
     public function __construct(
-        private GatewayAuthUser $gatewayAuthUser
+        private GatewayAuthUser $gatewayAuthUser,
+        private ProblemCaseStatusMapping $problemCaseStatusMapping
     ) {
     }
 
@@ -27,7 +30,7 @@ class SetStatusProblemCaseUseCase
             throw new BusinessException('Проблемный кейс не найден', 'problem_case_not_exists', 404);
         }
 
-        $problemCase->setStatus($status_id);
+        $problemCase->setStatus(ProblemCaseStatusEnum::from($status_id));
         $problemCase->save();
 
         if ($problemCase->isStatusFinished()) {
@@ -42,7 +45,7 @@ class SetStatusProblemCaseUseCase
             created_from_str: 'PRM',
             created_by_id: $this->gatewayAuthUser->getId(),
             body: 'Обновлен на статус',
-            keyword: ProblemCase::$statuses[$problemCase->status_id]['name'],
+            keyword: $this->problemCaseStatusMapping->getMappedValue(ProblemCaseStatusEnum::from($problemCase->status_id))['name'],
             action: 'update',
             class: 'info',
             action_at: null,

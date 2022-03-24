@@ -35,11 +35,16 @@ class AdditionalAgreement extends Model
 {
     use HasFactory;
 
+    const LIMIT = 'limit';
+    const VAT = 'vat';
+    const DELIVERY = 'delivery';
+
     protected $table = 'merchant_additional_agreements';
     protected $fillable = [
         'limit',
         'registration_date',
         'number',
+        'document_type',
     ];
 
     /**

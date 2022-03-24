@@ -93,7 +93,7 @@ class File extends Model
         'store_photo' => [
             'name' => 'Фото магазина',
             'lang' => [
-                'uz' => 'Do\'kon fotosuratlari',
+                'uz' => 'Do`kon fotosuratlari',
                 'ru' => 'Фото магазина',
             ],
         ],

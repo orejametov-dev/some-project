@@ -9,7 +9,7 @@ use App\DTOs\Conditions\MassStoreConditionDTO;
 use App\DTOs\Conditions\StoreConditionDTO;
 use App\DTOs\Conditions\UpdateConditionDTO;
 use App\Filters\Merchant\MerchantIdFilter;
-use App\Http\Controllers\ApiGateway\ApiBaseController;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiPrm\Applications\MassSpecialStoreApplicationConditionRequest;
 use App\Http\Requests\ApiPrm\Applications\MassStoreApplicationConditionsRequest;
 use App\Http\Requests\ApiPrm\Applications\StoreApplicationConditions;
@@ -25,7 +25,7 @@ use App\UseCases\ApplicationConditions\TogglePostsApplicationConditionUseCase;
 use App\UseCases\ApplicationConditions\UpdateApplicationConditionUseCase;
 use Illuminate\Http\Request;
 
-class ApplicationConditionsController extends ApiBaseController
+class ApplicationConditionsController extends Controller
 {
     public function index(Request $request)
     {
@@ -39,24 +39,6 @@ class ApplicationConditionsController extends ApiBaseController
         }
 
         if ($request->has('paginate') and $request->query('paginate') == false) {
-            return $conditionQuery->get();
-        }
-
-        return $conditionQuery->paginate($request->query('per_page') ?? 15);
-    }
-
-    public function activeIndex(Request $request)
-    {
-        $conditionQuery = Condition::query()
-            ->active()
-            ->filterRequest($request, [])
-            ->orderRequest($request);
-
-        if ($request->query('object') == true) {
-            return $conditionQuery->first();
-        }
-
-        if ($request->has('paginate') && $request->query('paginate') == false) {
             return $conditionQuery->get();
         }
 
@@ -88,23 +70,23 @@ class ApplicationConditionsController extends ApiBaseController
         return response()->json(['message' => 'Условия изменены']);
     }
 
-    public function update($condition_id, UpdateApplicationConditions $request, UpdateApplicationConditionUseCase $updateApplicationConditionUseCase)
+    public function update($id, UpdateApplicationConditions $request, UpdateApplicationConditionUseCase $updateApplicationConditionUseCase)
     {
-        $updateConditionDTO = UpdateConditionDTO::fromArray((int) $condition_id, $request->validated());
+        $updateConditionDTO = UpdateConditionDTO::fromArray((int) $id, $request->validated());
 
         return $updateApplicationConditionUseCase->execute($updateConditionDTO);
     }
 
-    public function delete($condition_id, DeleteApplicationConditionUseCase $deleteApplicationConditionUseCase)
+    public function delete($id, DeleteApplicationConditionUseCase $deleteApplicationConditionUseCase)
     {
-        $deleteApplicationConditionUseCase->execute((int) $condition_id);
+        $deleteApplicationConditionUseCase->execute((int) $id);
 
         return response()->json(['message' => 'Условие удалено']);
     }
 
-    public function toggle($condition_id, ToggleActiveApplicationConditionUseCase $toggleActiveApplicationConditionUseCase)
+    public function toggle($id, ToggleActiveApplicationConditionUseCase $toggleActiveApplicationConditionUseCase)
     {
-        return $toggleActiveApplicationConditionUseCase->execute((int) $condition_id);
+        return $toggleActiveApplicationConditionUseCase->execute((int) $id);
     }
 
     public function togglePosts($id, TogglePostsApplicationConditionRequest $request, TogglePostsApplicationConditionUseCase $togglePostsApplicationConditionUseCase)

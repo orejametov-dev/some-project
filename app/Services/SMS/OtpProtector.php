@@ -62,7 +62,7 @@ class OtpProtector
         if (!in_array($otp, $this->cached_info['otps'])) {
             throw new ApiBusinessException('Неверный код подтверждения', 'wrong_otp', [
                 'ru' => 'Неверный код подтверждения',
-                'uz' => 'Tasdiqlash kodi noto\'g\'ri',
+                'uz' => 'Tasdiqlash kodi noto`g`ri',
             ], 400);
         }
 

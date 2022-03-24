@@ -7,10 +7,8 @@ namespace App\Models;
 use App\Filters\Merchant\MerchantFilters;
 use App\HttpRepositories\HttpResponses\Prm\CompanyHttpResponse;
 use App\HttpRepositories\Storage\StorageHttpRepository;
-use App\HttpServices\Storage\StorageMicroService;
 use App\Traits\SortableByQueryParams;
 use Carbon\Carbon;
-use function config;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -185,7 +183,7 @@ class Merchant extends Model
     public function uploadLogo(UploadedFile $uploadedAvatar): self
     {
         if ($this->logo_url) {
-            StorageMicroService::destroy($this->logo_url);
+            (new StorageHttpRepository())->destroy($this->logo_url);
         }
         $storage_file = (new StorageHttpRepository)->uploadFile($uploadedAvatar, 'merchants');
 
@@ -200,7 +198,7 @@ class Merchant extends Model
         if (!$this->logo_url) {
             return;
         }
-        StorageMicroService::destroy($this->logo_url);
+        (new StorageHttpRepository())->destroy($this->logo_url);
 
         $this->logo_url = null;
         $this->save();
@@ -227,7 +225,7 @@ class Merchant extends Model
             return;
         }
 
-        StorageMicroService::destroy($file->url);
+        (new StorageHttpRepository())->destroy($this->logo_url);
         $file->delete();
     }
 }

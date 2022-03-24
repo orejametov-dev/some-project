@@ -3,7 +3,9 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\ApiCallsGateway\Comments\CommentsController;
+use App\Http\Controllers\ApiCallsGateway\Merchants\MerchantsController;
 use App\Http\Controllers\ApiCallsGateway\ProblemCases\ProblemCasesController;
+use App\Http\Controllers\ApiCallsGateway\ProblemCases\ProblemCaseTagsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,7 +20,11 @@ Route::prefix('comments')->group(function () {
 Route::prefix('merchants/problem-cases')
     ->group(function () {
         Route::get('/', [ProblemCasesController::class, 'index']);
+        Route::get('/tags', [ProblemCaseTagsController::class, 'index']);
         Route::get('/statuses', [ProblemCasesController::class, 'getStatusList']);
         Route::get('/{id}', [ProblemCasesController::class, 'show']);
+        Route::match(['put', 'patch'], '/{id}/attach-tags', [ProblemCasesController::class, 'attachTags']);
         Route::post('/', [ProblemCasesController::class, 'store']);
     });
+
+Route::get('merchants/{merchant_id}/store', [MerchantsController::class, 'getMerchantStores']);
