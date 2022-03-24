@@ -36,16 +36,16 @@ class AdditionalAgreementsController extends Controller
 
     public function store(StoreAdditionalAgreements $request, StoreAdditionalAgreementUseCase $storeAdditionalAgreementUseCase): StoreAdditionalAgreementResource
     {
-        $response = $storeAdditionalAgreementUseCase->execute(StoreAdditionalAgreementDTO::fromArray($request->validated()));
+        $additional_agreement = $storeAdditionalAgreementUseCase->execute(StoreAdditionalAgreementDTO::fromArray($request->validated()));
 
-        return new StoreAdditionalAgreementResource($response);
+        return new StoreAdditionalAgreementResource($additional_agreement);
     }
 
     public function update($id, StoreAdditionalAgreements $request, UpdateAdditionalAgreementUseCase $updateAdditionalAgreementUseCase): UpdateAdditionalAgreementResource
     {
-        $response = $updateAdditionalAgreementUseCase->execute((int) $id, StoreAdditionalAgreementDTO::fromArray($request->validated()));
+        $additional_agreement = $updateAdditionalAgreementUseCase->execute((int) $id, StoreAdditionalAgreementDTO::fromArray($request->validated()));
 
-        return new UpdateAdditionalAgreementResource($response);
+        return new UpdateAdditionalAgreementResource($additional_agreement);
     }
 
     public function getAdditionalAgreementDoc($id, GenerateAdditionalAgreementDocUseCase $generateAdditionalAgreementDocUseCase): BinaryFileResponse
