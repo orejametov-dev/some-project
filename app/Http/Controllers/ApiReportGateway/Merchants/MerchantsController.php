@@ -6,12 +6,13 @@ namespace App\Http\Controllers\ApiReportGateway\Merchants;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiReportGateway\Merchants\MerchantsResource;
-use App\Modules\Merchants\Models\Merchant;
+use App\Models\Merchant;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class MerchantsController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): AnonymousResourceCollection
     {
         $query = Merchant::query();
 

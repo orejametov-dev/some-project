@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Http\Controllers\ApiCreditsGateway\Merchants;
 
 use App\Filters\Merchant\QMerchantFilter;
-use App\Http\Controllers\ApiCreditsGateway\ApiBaseController;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiCredtisGateway\Merchants\MerchantsResource;
 use App\Http\Resources\ApiCredtisGateway\Merchants\SpecialMerchantResource;
-use App\Modules\Merchants\Models\Merchant;
-use DB;
+use App\Models\Merchant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
-class MerchantsController extends ApiBaseController
+class MerchantsController extends Controller
 {
     public function index(Request $request)
     {

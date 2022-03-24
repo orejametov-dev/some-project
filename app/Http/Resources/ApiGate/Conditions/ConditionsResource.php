@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Resources\ApiGate\Conditions;
 
-use App\Modules\Merchants\Models\Condition;
+use App\Models\Condition;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ConditionsResource extends JsonResource

@@ -6,13 +6,13 @@ namespace App\Http\Controllers\ApiComplianceGateway\Merchants;
 
 use App\Filters\Merchant\QMerchantFilter;
 use App\Filters\Merchant\SpecialMerchantIdFilter;
-use App\Http\Controllers\ApiComplianceGateway\ApiBaseController;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiComplianceGateway\Merchants\MerchantsResource;
-use App\Modules\Merchants\Models\Merchant;
+use App\Models\Merchant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
-class MerchantsController extends ApiBaseController
+class MerchantsController extends Controller
 {
     public function index(Request $request)
     {

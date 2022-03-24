@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\ApiCallsGateway\Comments\CommentsController;
+use App\Http\Controllers\ApiCallsGateway\Merchants\MerchantsController;
 use App\Http\Controllers\ApiCallsGateway\ProblemCases\ProblemCasesController;
 use App\Http\Controllers\ApiCallsGateway\ProblemCases\ProblemCaseTagsController;
 use Illuminate\Http\Request;
@@ -25,3 +26,5 @@ Route::prefix('merchants/problem-cases')
         Route::match(['put', 'patch'], '/{id}/attach-tags', [ProblemCasesController::class, 'attachTags']);
         Route::post('/', [ProblemCasesController::class, 'store']);
     });
+
+Route::get('merchants/{merchant_id}/store', [MerchantsController::class, 'getMerchantStores']);

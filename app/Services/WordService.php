@@ -4,8 +4,8 @@
 
 namespace App\Services;
 
-use App\Modules\Merchants\Models\AdditionalAgreement;
-use App\Modules\Merchants\Models\MerchantInfo;
+use App\Models\AdditionalAgreement;
+use App\Models\MerchantInfo;
 use Carbon\Carbon;
 use NumberFormatter;
 use PhpOffice\PhpWord\Exception\CopyFileException;
@@ -49,7 +49,7 @@ class WordService
             wordwrap(mb_strcut($merchant_info->phone, 8), 2, '-', true));
         $contract_template->setValue('vat_number', $merchant_info->vat_number);
         $contract_template->setValue('mfo', $merchant_info->mfo);
-        /* @phpstan-ignore-next-line  */
+        /* @phpstan-ignore-next-line */
         $contract_template->setValue('tin', number_format($merchant_info->tin, 0, '', ' '));
         $contract_template->setValue('oked', wordwrap($merchant_info->oked, 2, '.', true));
         $contract_template->setValue('address', $merchant_info->address);
@@ -78,7 +78,7 @@ class WordService
 
         $contract_file = storage_path($additional_agreement_path);
         $contract_template = new TemplateProcessor($contract_file);
-        $current_date = $merchant_info->contract_date;
+        $current_date = $additional_agreement->registration_date;
         $limit = $additional_agreement->limit / 100;
         $legal_name_prefix = LegalNameService::findNamePrefix($merchant_info->merchant->legal_name_prefix);
 
@@ -100,7 +100,7 @@ class WordService
             wordwrap(mb_strcut($merchant_info->phone, 8), 2, '-', true));
         $contract_template->setValue('vat_number', $merchant_info->vat_number);
         $contract_template->setValue('mfo', $merchant_info->mfo);
-        /* @phpstan-ignore-next-line  */
+        /* @phpstan-ignore-next-line */
         $contract_template->setValue('tin', number_format($merchant_info->tin, 0, '', ' '));
         $contract_template->setValue('oked', wordwrap($merchant_info->oked, 2, '.', true));
         $contract_template->setValue('address', $merchant_info->address);

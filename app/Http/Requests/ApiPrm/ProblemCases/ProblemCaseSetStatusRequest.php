@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\ApiPrm\ProblemCases;
 
-use App\Modules\Merchants\Models\ProblemCase;
+use App\Enums\ProblemCaseStatusEnum;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ProblemCaseSetStatusRequest extends FormRequest
@@ -28,10 +28,10 @@ class ProblemCaseSetStatusRequest extends FormRequest
     {
         return [
             'status_id' => 'required|integer|in:'
-                . ProblemCase::NEW . ','
-                . ProblemCase::IN_PROCESS . ','
-                . ProblemCase::DONE . ','
-                . ProblemCase::FINISHED,
+                . ProblemCaseStatusEnum::NEW()->getValue() . ','
+                . ProblemCaseStatusEnum::IN_PROCESS()->getValue() . ','
+                . ProblemCaseStatusEnum::DONE()->getValue() . ','
+                . ProblemCaseStatusEnum::FINISHED()->getValue(),
         ];
     }
 }

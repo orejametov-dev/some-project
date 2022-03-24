@@ -4,7 +4,7 @@ namespace App\Http\Controllers\ApiLawGateway\ProblemCases;
 
 use App\Filters\ProblemCaseTag\QProblemCaseTagFilter;
 use App\Http\Controllers\Controller;
-use App\Modules\Merchants\Models\ProblemCaseTag;
+use App\Models\ProblemCaseTag;
 use Illuminate\Http\Request;
 
 class ProblemCaseTagsController extends Controller

@@ -4,45 +4,47 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\ApiMerchantGateway\Merchants;
 
+use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
+use App\DTOs\Auth\AzoAccessDto;
 use App\Exceptions\ApiBusinessException;
-use App\Http\Controllers\ApiMerchantGateway\ApiBaseController;
+use App\Http\Controllers\Controller;
+use App\HttpRepositories\Auth\AuthHttpRepository;
+use App\HttpRepositories\Hooks\DTO\HookData;
 use App\HttpRepositories\Notify\NotifyHttpRepository;
-use App\HttpServices\Auth\AuthMicroService;
-use App\HttpServices\Company\CompanyService;
-use App\HttpServices\Hooks\DTO\HookData;
+use App\HttpRepositories\Prm\CompanyUserHttpRepository;
 use App\Jobs\SendHook;
 use App\Jobs\ToggleMerchantRoleOfUser;
-use App\Modules\Merchants\Models\AzoMerchantAccess;
-use App\Modules\Merchants\Models\Store;
+use App\Models\AzoMerchantAccess;
+use App\Models\Store;
 use App\Services\Helpers\Randomizr;
 use App\Services\SMS\OtpProtector;
 use App\Services\SMS\SmsMessages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
-class AzoMerchantAccessesController extends ApiBaseController
+class AzoMerchantAccessesController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, AzoAccessDto $azoAccessDto)
     {
         $merchantUsersQuery = AzoMerchantAccess::query()
             ->with(['merchant', 'store'])
-            ->byMerchant($this->merchant_id)
+            ->byMerchant($azoAccessDto->merchant_id)
             ->filterRequest($request, [])
             ->orderByDesc('updated_at');
 
         return $merchantUsersQuery->paginate($request->query('per_page') ?? 15);
     }
 
-    public function show($id)
+    public function show($id, AzoAccessDto $azoAccessDto)
     {
         $merchantUser = AzoMerchantAccess::query()
-            ->byMerchant($this->merchant_id)
+            ->byMerchant($azoAccessDto->merchant_id)
             ->findOrFail($id);
 
         return $merchantUser;
     }
 
-    public function update($id, Request $request)
+    public function update($id, Request $request, AzoAccessDto $azoAccessDto, GatewayAuthUser $gatewayAuthUser)
     {
         $this->validate($request, [
             'store_id' => 'required|integer',
@@ -62,13 +64,13 @@ class AzoMerchantAccessesController extends ApiBaseController
             hookable_type: $azo_merchant_access->getTable(),
             hookable_id: $azo_merchant_access->id,
             created_from_str: 'MERCHANT',
-            created_by_id: $this->user->getId(),
+            created_by_id: $gatewayAuthUser->getId(),
             body: 'Сотрудник обновлен',
             keyword: 'old_store: (' . $old_store->id . ', ' . $old_store->name . ') -> ' . 'store: (' . $store->id . ', ' . $store->name . ')',
             action: 'update',
             class: 'warning',
             action_at: null,
-            created_by_str: $this->user->getName(),
+            created_by_str: $gatewayAuthUser->getName(),
         ));
 
         Cache::tags('azo_merchants')->forget('azo_merchant_user_id_' . $azo_merchant_access->user_id);
@@ -112,7 +114,7 @@ class AzoMerchantAccessesController extends ApiBaseController
             ], ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, GatewayAuthUser $gatewayAuthUser, AuthHttpRepository $authHttpRepository, CompanyUserHttpRepository $companyUserHttpRepository)
     {
         $this->validate($request, [
             'code' => 'required|digits:4',
@@ -120,19 +122,19 @@ class AzoMerchantAccessesController extends ApiBaseController
             'store_id' => 'required|integer',
         ]);
 
-        $user = AuthMicroService::getUserById($request->input('user_id'));
+        $user = $authHttpRepository->getUserById((int) $request->input('user_id'));
 
-        $protector = new OtpProtector('new_azo_merchant_user_' . $user['data']['phone']);
+        $protector = new OtpProtector('new_azo_merchant_user_' . $user->phone);
         $protector->verifyOtp((int) $request->input('code'));
 
-        if (array_search(AuthMicroService::AZO_MERCHANT_ROLE, array_column($user['data']['roles'], 'name'))) {
+        if (array_search(AuthHttpRepository::AZO_MERCHANT_ROLE, array_column($user->roles, 'name'))) {
             throw new ApiBusinessException('Пользователь уже является сотрудником мерчанта', 'merchant_exists', [
                 'ru' => 'Пользователь уже является сотрудником мерчанта',
-                'uz' => 'Foydalanuvchi merchant tizimiga bog\'langan',
+                'uz' => 'Foydalanuvchi merchant tizimiga bog`langan',
             ], 400);
         }
 
-        if (AzoMerchantAccess::query()->where('phone', $user['data']['phone'])->exists()) {
+        if (AzoMerchantAccess::query()->where('phone', $user->phone)->exists()) {
             throw new ApiBusinessException('Пользователь с данным номером существует', 'phone_exists', [
                 'ru' => 'Пользователь с данным номером существует',
                 'uz' => 'Bunday raqam egasi tizimda mavjud',
@@ -141,18 +143,18 @@ class AzoMerchantAccessesController extends ApiBaseController
 
         $store = Store::query()->findOrFail($request->input('store_id'));
 
-        $company_user = CompanyService::getCompanyUserByUserId($user['data']['id']);
+        $company_user = $companyUserHttpRepository->getCompanyUserByUserId($user->id);
 
         if (empty($company_user)) {
-            $company_user = CompanyService::createCompanyUser(
-                user_id: $user['data']['id'],
+            $company_user = $companyUserHttpRepository->createCompanyUser(
+                user_id: $user->id,
                 company_id: $store->merchant->company_id,
-                phone: $user['data']['phone'],
-                full_name: $user['data']['name']
+                phone: $user->phone,
+                full_name: $user->name
             );
         }
 
-        if (AzoMerchantAccess::query()->where('company_user_id', $company_user['id'])->exists()) {
+        if (AzoMerchantAccess::query()->where('company_user_id', $company_user->id)->exists()) {
             throw new ApiBusinessException('Пользователь уже существует', 'user_exists', [
                 'ru' => 'Пользователь уже существует',
                 'uz' => 'Foydalanuvchi tizimda mavjud',
@@ -161,16 +163,16 @@ class AzoMerchantAccessesController extends ApiBaseController
 
         $merchant = $store->merchant;
 
-        if ($azo_merchant_access = AzoMerchantAccess::withTrashed()->where('company_user_id', $company_user['id'])->first()) {
+        if ($azo_merchant_access = AzoMerchantAccess::withTrashed()->where('company_user_id', $company_user->id)->first()) {
             $azo_merchant_access->restore();
         } else {
             $azo_merchant_access = new AzoMerchantAccess();
         }
 
-        $azo_merchant_access->user_id = $user['data']['id'];
-        $azo_merchant_access->user_name = $user['data']['name'];
-        $azo_merchant_access->phone = $user['data']['phone'];
-        $azo_merchant_access->company_user_id = $company_user['id'];
+        $azo_merchant_access->user_id = $user->id;
+        $azo_merchant_access->user_name = $user->name;
+        $azo_merchant_access->phone = $user->phone;
+        $azo_merchant_access->company_user_id = $company_user->id;
         $azo_merchant_access->merchant()->associate($merchant);
         $azo_merchant_access->store()->associate($store->id);
 
@@ -181,18 +183,18 @@ class AzoMerchantAccessesController extends ApiBaseController
             hookable_type: $azo_merchant_access->getTable(),
             hookable_id: $azo_merchant_access->id,
             created_from_str: 'PRM',
-            created_by_id: $this->user->getId(),
+            created_by_id: $gatewayAuthUser->getId(),
             body: 'Сотрудник создан',
             keyword: 'Сотрудник добавлен в магазин: (store_id: ' . $store->id . ', store_name: ' . $store->name . ')',
             action: 'create',
             class: 'info',
             action_at: null,
-            created_by_str: $this->user->getName(),
+            created_by_str: $gatewayAuthUser->getName(),
         ));
 
-        (new AuthMicroService)->store($azo_merchant_access->user_id);
+        (new AuthHttpRepository())->store((int) $azo_merchant_access->user_id);
 
-        ToggleMerchantRoleOfUser::dispatch($azo_merchant_access->user_id, AuthMicroService::ACTIVATE_MERCHANT_ROLE);
+        ToggleMerchantRoleOfUser::dispatch($azo_merchant_access->user_id, AuthHttpRepository::ACTIVATE_MERCHANT_ROLE);
 
         Cache::tags('azo_merchants')->forget('azo_merchant_user_id_' . $azo_merchant_access->user_id);
         Cache::tags('azo_merchants')->forget('active_merchant_by_user_id_' . $azo_merchant_access->user_id);
@@ -201,7 +203,7 @@ class AzoMerchantAccessesController extends ApiBaseController
         return $azo_merchant_access;
     }
 
-    public function destroy($id)
+    public function destroy($id, GatewayAuthUser $gatewayAuthUser)
     {
         $azo_merchant_access = AzoMerchantAccess::query()->findOrFail($id);
         $store = $azo_merchant_access->store;
@@ -215,24 +217,24 @@ class AzoMerchantAccessesController extends ApiBaseController
             hookable_type: $azo_merchant_access->getTable(),
             hookable_id: $azo_merchant_access->id,
             created_from_str: 'PRM',
-            created_by_id: $this->user->getId(),
+            created_by_id: $gatewayAuthUser->getId(),
             body: 'Сотрудник удален',
             keyword: 'Сотрудник удален из магазина: (' . $store->id . ', ' . $azo_merchant_access->store->name . ')',
             action: 'delete',
             class: 'danger',
             action_at: null,
-            created_by_str: $this->user->getName(),
+            created_by_str: $gatewayAuthUser->getName(),
         ));
 
         Cache::tags('azo_merchants')->forget('azo_merchant_user_id_' . $azo_merchant_access->user_id);
         Cache::tags('azo_merchants')->forget('active_merchant_by_user_id_' . $azo_merchant_access->user_id);
         Cache::tags($merchant->id)->flush();
 
-        ToggleMerchantRoleOfUser::dispatch($azo_merchant_access->user_id, AuthMicroService::DEACTIVATE_MERCHANT_ROLE);
+        ToggleMerchantRoleOfUser::dispatch($azo_merchant_access->user_id, AuthHttpRepository::DEACTIVATE_MERCHANT_ROLE);
 
         return response()->json(['message' => [
             'ru' => 'Сотрудник удален',
-            'uz' => 'Xodim o\'chirildi',
+            'uz' => 'Xodim o`chirildi',
         ]]);
     }
 }

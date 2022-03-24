@@ -7,7 +7,7 @@ namespace App\UseCases\Merchants;
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\Exceptions\BusinessException;
 use App\HttpRepositories\Prm\CompanyHttpRepository;
-use App\Modules\Merchants\Models\Merchant;
+use App\Models\Merchant;
 use App\UseCases\Cache\FlushCacheUseCase;
 
 class StoreMerchantUseCase

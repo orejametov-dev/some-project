@@ -6,11 +6,11 @@ namespace App\UseCases\MerchantUsers;
 
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\Exceptions\BusinessException;
-use App\HttpServices\Auth\AuthMicroService;
-use App\HttpServices\Hooks\DTO\HookData;
+use App\HttpRepositories\Auth\AuthHttpRepository;
+use App\HttpRepositories\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Jobs\ToggleMerchantRoleOfUser;
-use App\Modules\Merchants\Models\Store;
+use App\Models\Store;
 
 class DestroyMerchantUserUseCase
 {
@@ -45,6 +45,6 @@ class DestroyMerchantUserUseCase
         ));
 
         $this->flushMerchantUserCacheUseCase->execute($azo_merchant_access->user_id, $azo_merchant_access->merchant_id);
-        ToggleMerchantRoleOfUser::dispatch($azo_merchant_access->user_id, AuthMicroService::DEACTIVATE_MERCHANT_ROLE);
+        ToggleMerchantRoleOfUser::dispatch($azo_merchant_access->user_id, AuthHttpRepository::DEACTIVATE_MERCHANT_ROLE);
     }
 }

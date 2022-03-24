@@ -7,17 +7,20 @@ namespace App\UseCases\ProblemCase;
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use Alifuz\Utils\Gateway\Entities\GatewayApplication;
 use App\DTOs\ProblemCases\ProblemCaseDTO;
-use App\HttpServices\Hooks\DTO\HookData;
+use App\Enums\ProblemCaseStatusEnum;
+use App\HttpRepositories\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Jobs\SendSmsJob;
-use App\Modules\Merchants\Models\ProblemCase;
+use App\Mappings\ProblemCaseStatusMapping;
+use App\Models\ProblemCase;
 use App\Services\SMS\SmsMessages;
 
 abstract class AbstractStoreProblemCaseUseCase
 {
     public function __construct(
         private GatewayApplication $gatewayApplication,
-        private GatewayAuthUser $gatewayAuthUser
+        private GatewayAuthUser $gatewayAuthUser,
+        private ProblemCaseStatusMapping $problemCaseStatusMapping
     ) {
     }
 
@@ -48,7 +51,7 @@ abstract class AbstractStoreProblemCaseUseCase
 
         $this->setIdentifierNumberAndDate($problemCase, $problemCaseDTO->getIdentifier(), $data);
 
-        $problemCase->setStatusNew();
+        $problemCase->setStatus(ProblemCaseStatusEnum::NEW());
         $problemCase->save();
 
         SendHook::dispatch(new HookData(
@@ -58,7 +61,7 @@ abstract class AbstractStoreProblemCaseUseCase
             created_from_str: $this->gatewayApplication->getApplication()->getValue(),
             created_by_id: $this->gatewayAuthUser->getId(),
             body: 'Создан проблемный кейс co статусом',
-            keyword: ProblemCase::$statuses[$problemCase->status_id]['name'],
+            keyword: $this->problemCaseStatusMapping->getMappedValue(ProblemCaseStatusEnum::from($problemCase->status_id))['name'],
             action: 'create',
             class: 'info',
             action_at: null,

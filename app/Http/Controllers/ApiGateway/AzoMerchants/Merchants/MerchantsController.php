@@ -4,6 +4,7 @@
 
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
+use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\DTOs\Competitors\CompetitorDTO;
 use App\DTOs\Merchants\UpdateMerchantDTO;
 use App\Filters\CommonFilters\ActiveFilter;
@@ -11,18 +12,18 @@ use App\Filters\CommonFilters\TagsFilter;
 use App\Filters\Merchant\ActivityReasonIdFilter;
 use App\Filters\Merchant\MaintainerIdFilter;
 use App\Filters\Merchant\QMerchantFilter;
-use App\Http\Controllers\ApiGateway\ApiBaseController;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiPrm\Competitors\CompetitorsRequest;
 use App\Http\Requests\ApiPrm\Files\StoreFileRequest;
 use App\Http\Requests\ApiPrm\Merchants\SetMainStoreRequest;
 use App\Http\Requests\ApiPrm\Merchants\SetResponsibleUserRequest;
 use App\Http\Requests\ApiPrm\Merchants\StoreMerchantRequest;
 use App\Http\Requests\ApiPrm\Merchants\UpdateMerchantRequest;
+use App\HttpRepositories\Prm\CompanyHttpRepository;
 use App\HttpRepositories\Warehouse\WarehouseHttpRepository;
-use App\HttpServices\Company\CompanyService;
-use App\Modules\Merchants\Models\ActivityReason;
-use App\Modules\Merchants\Models\Merchant;
-use App\Modules\Merchants\Models\Tag;
+use App\Models\ActivityReason;
+use App\Models\Merchant;
+use App\Models\Tag;
 use App\UseCases\Cache\FlushCacheUseCase;
 use App\UseCases\Competitors\AttachCompetitorUseCase;
 use App\UseCases\Competitors\DetachCompetitorUseCase;
@@ -35,7 +36,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
-class MerchantsController extends ApiBaseController
+class MerchantsController extends Controller
 {
     public function index(Request $request)
     {
@@ -155,7 +156,7 @@ class MerchantsController extends ApiBaseController
             ])->whereRaw("(IFNULL(sub_query.limit, 0) + IFNULL(sub_query.agreement_sum, 0)) $percentage_of_limit <= sub_query.current_sales")->get();
     }
 
-    public function toggle($id, Request $request, FlushCacheUseCase $flushCacheUseCase)
+    public function toggle($id, Request $request, FlushCacheUseCase $flushCacheUseCase, CompanyHttpRepository $companyHttpRepository)
     {
         $this->validate($request, [
             'activity_reason_id' => 'integer|required',
@@ -164,17 +165,17 @@ class MerchantsController extends ApiBaseController
         $activity_reason = ActivityReason::query()->where('type', 'MERCHANT')
             ->findOrFail($request->input('activity_reason_id'));
 
-        $merchant = Merchant::findOrFail($id);
+        $merchant = Merchant::query()->findOrFail($id);
         $merchant->active = !$merchant->active;
         $merchant->save();
 
         $merchant->activity_reasons()->attach($activity_reason->id, [
             'active' => $merchant->active,
-            'created_by_id' => $this->user->getId(),
-            'created_by_name' => $this->user->getName(),
+            'created_by_id' => app(GatewayAuthUser::class)->getId(),
+            'created_by_name' => app(GatewayAuthUser::class)->getName(),
         ]);
 
-        CompanyService::setStatusNotActive($merchant->company_id);
+        $companyHttpRepository->setStatusNotActive((int) $merchant->company_id);
 
         $flushCacheUseCase->execute($merchant->id);
 
@@ -183,7 +184,7 @@ class MerchantsController extends ApiBaseController
 
     public function toggleGeneralGoods($id, Request $request, WarehouseHttpRepository $warehouseHttpRepository)
     {
-        $merchant = Merchant::findOrFail($id);
+        $merchant = Merchant::query()->findOrFail($id);
         $merchant->has_general_goods = !$merchant->has_general_goods;
 
         $warehouseHttpRepository->checkDuplicateSKUs($merchant->id);
@@ -199,7 +200,7 @@ class MerchantsController extends ApiBaseController
 
     public function toggleRecommend($id)
     {
-        $merchant = Merchant::findOrFail($id);
+        $merchant = Merchant::query()->findOrFail($id);
         $merchant->recommend = !$merchant->recommend;
         $merchant->save();
 

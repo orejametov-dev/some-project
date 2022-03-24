@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
-use App\HttpServices\Auth\AuthMicroService;
+use App\HttpRepositories\Auth\AuthHttpRepository;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -33,15 +33,15 @@ class ToggleMerchantRoleOfUser implements ShouldQueue
     /**
      * Execute the job.
      *
-     * @param AuthMicroService $authMicroService
+     * @param AuthHttpRepository $authHttpRepository
      * @return void
      */
-    public function handle(AuthMicroService $authMicroService)
+    public function handle(AuthHttpRepository $authHttpRepository)
     {
-        if ($this->type === AuthMicroService::ACTIVATE_MERCHANT_ROLE) {
-            $authMicroService->store($this->user_id);
-        } elseif ($this->type === AuthMicroService::DEACTIVATE_MERCHANT_ROLE) {
-            $authMicroService->remove($this->user_id);
+        if ($this->type === AuthHttpRepository::ACTIVATE_MERCHANT_ROLE) {
+            $authHttpRepository->store($this->user_id);
+        } elseif ($this->type === AuthHttpRepository::DEACTIVATE_MERCHANT_ROLE) {
+            $authHttpRepository->remove($this->user_id);
         }
     }
 }

@@ -4,22 +4,23 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Stores;
 
+use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\Exceptions\BusinessException;
 use App\Filters\CommonFilters\CreatedAtFilter;
 use App\Filters\CommonFilters\CreatedByIdFilter;
 use App\Filters\Notification\MerchantIdNotificationFilter;
 use App\Filters\Notification\PublishedFilter;
 use App\Filters\Notification\QNotificationFilter;
-use App\Http\Controllers\ApiGateway\ApiBaseController;
-use App\Modules\Merchants\Models\Merchant;
-use App\Modules\Merchants\Models\Notification;
-use App\Modules\Merchants\Models\Store;
+use App\Http\Controllers\Controller;
+use App\Models\Merchant;
+use App\Models\Notification;
+use App\Models\Store;
+use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 
-class NotificationsController extends ApiBaseController
+class NotificationsController extends Controller
 {
     public function index(Request $request)
     {
@@ -68,7 +69,7 @@ class NotificationsController extends ApiBaseController
 
         $notification = new Notification();
         $notification->fill($validatedData);
-        $notification->setCreatedBy($this->user);
+        $notification->setCreatedBy(app(GatewayAuthUser::class));
         $notification->start_schedule = Carbon::parse($request->input('start_schedule') ?? now());
         $notification->end_schedule = Carbon::parse($request->input('end_schedule') ?? now()->addDay());
 
@@ -86,7 +87,7 @@ class NotificationsController extends ApiBaseController
                 $notification->save();
 
                 foreach ($request->input('recipients') as $recipient) {
-                    $merchant = Merchant::findOrFail($recipient['merchant_id']);
+                    $merchant = Merchant::query()->findOrFail($recipient['merchant_id']);
                     if (array_key_exists('store_ids', $recipient) and !empty($recipient['store_ids'])) {
                         $all_store_ids = $merchant->stores()->pluck('id');
                         foreach ($recipient['store_ids'] as $store_id) {

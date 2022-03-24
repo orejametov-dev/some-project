@@ -5,29 +5,27 @@ declare(strict_types=1);
 namespace App\UseCases\MerchantRequests;
 
 use App\DTOs\MerchantInfos\StoreMerchantInfoDTO;
+use App\Enums\MerchantRequestStatusEnum;
 use App\Exceptions\BusinessException;
 use App\HttpRepositories\Prm\CompanyHttpRepository;
-use App\Modules\Merchants\Models\File;
-use App\Modules\Merchants\Models\Merchant;
-use App\Modules\Merchants\Models\MerchantInfo;
-use App\Modules\Merchants\Models\Request as MerchantRequest;
-use App\Modules\Merchants\Models\Tag;
+use App\Models\File;
+use App\Models\Merchant;
+use App\Models\MerchantInfo;
+use App\Models\MerchantRequest;
+use App\Models\Tag;
 use Illuminate\Support\Facades\DB;
 
 class AllowMerchantRequestUseCase
 {
     public function __construct(
+        private FindMerchantRequestByIdUseCase $findMerchantRequestByIdUseCase,
         private CompanyHttpRepository $companyHttpRepository,
     ) {
     }
 
     public function execute(int $id): MerchantRequest
     {
-        $merchant_request = MerchantRequest::query()->find($id);
-
-        if ($merchant_request === null) {
-            throw new BusinessException('Запрос на регистарцию не найден', 'object_not_found', 404);
-        }
+        $merchant_request = $this->findMerchantRequestByIdUseCase->execute($id);
 
         if ($merchant_request->isOnTraining() === false) {
             throw new BusinessException('Статус заявки должен быть "На обучении"');
@@ -72,7 +70,7 @@ class AllowMerchantRequestUseCase
             File::query()->where('request_id', $merchant_request->id)->update(['merchant_id' => $merchant->id]);
             $ids = Tag::query()->whereIn('title', $merchant_request->categories)->pluck('id');
             $merchant->tags()->attach($ids);
-            $merchant_request->setStatusAllowed();
+            $merchant_request->setStatus(MerchantRequestStatusEnum::ALLOWED());
             $merchant_request->save();
         });
 

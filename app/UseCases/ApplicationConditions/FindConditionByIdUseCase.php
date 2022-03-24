@@ -3,7 +3,7 @@
 namespace App\UseCases\ApplicationConditions;
 
 use App\Exceptions\BusinessException;
-use App\Modules\Merchants\Models\Condition;
+use App\Models\Condition;
 
 class FindConditionByIdUseCase
 {

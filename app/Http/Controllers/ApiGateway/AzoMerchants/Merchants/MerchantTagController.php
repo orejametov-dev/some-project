@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Merchants\Models\Tag;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 
 class MerchantTagController extends Controller

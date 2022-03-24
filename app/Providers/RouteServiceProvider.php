@@ -7,6 +7,7 @@ namespace App\Providers;
 use Alifuz\Utils\Gateway\Middlewares\GatewayAuthMiddleware;
 use Alifuz\Utils\Gateway\Middlewares\GatewayMiddleware;
 use App\Http\Middleware\AccessTokenMiddleware;
+use App\Http\Middleware\AzoMerchantAccessMiddleware;
 use App\Http\Middleware\DetectTimeLoggerMiddleware;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
@@ -40,7 +41,7 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/gateway.php'));
 
             Route::prefix('gateway-merchant')
-                ->middleware(['api', GatewayMiddleware::class, GatewayAuthMiddleware::class])
+                ->middleware(['api', GatewayMiddleware::class, GatewayAuthMiddleware::class, AzoMerchantAccessMiddleware::class])
                 ->namespace($this->namespace)
                 ->group(base_path('routes/gateway_merchant.php'));
 

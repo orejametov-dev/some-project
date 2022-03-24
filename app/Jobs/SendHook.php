@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
-use App\HttpServices\Hooks\DTO\HookData;
-use App\HttpServices\Hooks\HooksMicroService;
+use App\HttpRepositories\Hooks\DTO\HookData;
+use App\HttpRepositories\Hooks\HooksHttpRepository;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -32,11 +32,11 @@ class SendHook implements ShouldQueue
     /**
      * Execute the job.
      *
-     * @param HooksMicroService $hooksMicroService
+     * @param HooksHttpRepository $hooksHttpRepository
      * @return void
      */
-    public function handle(HooksMicroService $hooksMicroService)
+    public function handle(HooksHttpRepository $hooksHttpRepository)
     {
-        $hooksMicroService->store($this->hookData);
+        $hooksHttpRepository->store($this->hookData);
     }
 }

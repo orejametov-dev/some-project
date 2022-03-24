@@ -7,7 +7,7 @@ namespace App\Http\Controllers\ApiMerchantGateway\MerchantAccess;
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\Controller;
-use App\Modules\Merchants\Models\AzoMerchantAccess;
+use App\Models\AzoMerchantAccess;
 use Illuminate\Support\Facades\Cache;
 
 class MerchantAccessController extends Controller

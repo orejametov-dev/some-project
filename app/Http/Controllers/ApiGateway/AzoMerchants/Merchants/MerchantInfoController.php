@@ -10,7 +10,7 @@ use App\Filters\Merchant\MerchantIdFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiPrm\Merchants\StoreMerchantInfo;
 use App\Http\Requests\ApiPrm\Merchants\UpdateMerchantInfo;
-use App\Modules\Merchants\Models\MerchantInfo;
+use App\Models\MerchantInfo;
 use App\Services\WordService;
 use App\UseCases\MerchantInfos\StoreMerchantInfoUseCase;
 use Illuminate\Http\Request;

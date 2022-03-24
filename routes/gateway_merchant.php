@@ -5,14 +5,10 @@ declare(strict_types=1);
 use Alifuz\Utils\Gateway\Middlewares\GatewayAuthMiddleware;
 use Alifuz\Utils\Gateway\Middlewares\GatewayMiddleware;
 use App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantsController;
-use Illuminate\Http\Request;
+use App\Http\Middleware\AzoMerchantAccessMiddleware;
 use Illuminate\Support\Facades\Route;
 
 //azo-merchant
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::prefix('application-conditions')
     ->group(function () {
         Route::get('/', [App\Http\Controllers\ApiMerchantGateway\Merchants\ApplicationConditionsController::class, 'index']);
@@ -32,21 +28,27 @@ Route::prefix('merchants/problem-cases')
 
 Route::prefix('merchants/requests')
     ->group(function () {
-        Route::get('/app', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'app'])->withoutMiddleware([GatewayMiddleware::class, GatewayAuthMiddleware::class]);
-        Route::get('/districts', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'getDistricts'])->withoutMiddleware([GatewayMiddleware::class, GatewayAuthMiddleware::class]);
-        Route::get('/{token}', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'show'])->withoutMiddleware([GatewayMiddleware::class, GatewayAuthMiddleware::class]);
-        Route::post('/store-main', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'storeMain'])->withoutMiddleware([GatewayAuthMiddleware::class]);
+        Route::get('/app', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'app'])
+            ->withoutMiddleware([GatewayMiddleware::class, GatewayAuthMiddleware::class, AzoMerchantAccessMiddleware::class]);
+        Route::get('/districts', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'getDistricts'])
+            ->withoutMiddleware([GatewayMiddleware::class, GatewayAuthMiddleware::class, AzoMerchantAccessMiddleware::class]);
+        Route::get('/{token}', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'show'])
+            ->withoutMiddleware([GatewayMiddleware::class, GatewayAuthMiddleware::class, AzoMerchantAccessMiddleware::class]);
+        Route::post('/store-main', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantRequestsController::class, 'storeMain'])
+            ->withoutMiddleware([GatewayMiddleware::class, GatewayAuthMiddleware::class, AzoMerchantAccessMiddleware::class]);
     });
 
 Route::prefix('merchants/tags')
     ->group(function () {
-        Route::get('/', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantTagsController::class, 'index'])->withoutMiddleware([GatewayMiddleware::class, GatewayAuthMiddleware::class]);
+        Route::get('/', [\App\Http\Controllers\ApiMerchantGateway\Merchants\MerchantTagsController::class, 'index'])
+            ->withoutMiddleware([GatewayMiddleware::class, GatewayAuthMiddleware::class, AzoMerchantAccessMiddleware::class]);
     });
 
 Route::prefix('merchants/users')
     ->group(function () {
         Route::get('/', [App\Http\Controllers\ApiMerchantGateway\Merchants\AzoMerchantAccessesController::class, 'index']);
-        Route::get('/check-to-active-merchant', [\App\Http\Controllers\ApiMerchantGateway\MerchantAccess\MerchantAccessController::class, 'checkToActiveMerchant']);
+        Route::get('/check-to-active-merchant', [\App\Http\Controllers\ApiMerchantGateway\MerchantAccess\MerchantAccessController::class, 'checkToActiveMerchant'])
+            ->withoutMiddleware([GatewayMiddleware::class, GatewayAuthMiddleware::class]);
         Route::get('/{id}', [App\Http\Controllers\ApiMerchantGateway\Merchants\AzoMerchantAccessesController::class, 'show']);
         Route::match(['put', 'patch'], '/{id}', [App\Http\Controllers\ApiMerchantGateway\Merchants\AzoMerchantAccessesController::class, 'update']);
         Route::post('/request-store', [App\Http\Controllers\ApiMerchantGateway\Merchants\AzoMerchantAccessesController::class, 'requestStore']);
@@ -67,6 +69,5 @@ Route::prefix('stores')
 
 Route::prefix('merchants')
     ->group(function () {
-        Route::get('/', [MerchantsController::class, 'index']);
         Route::get('/get-with-relations', [MerchantsController::class, 'getMerchantDetailsWithRelations']);
     });
