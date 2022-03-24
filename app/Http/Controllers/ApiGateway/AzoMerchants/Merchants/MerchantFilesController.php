@@ -50,7 +50,7 @@ class MerchantFilesController extends Controller
     {
         /** @var Merchant $merchant */
         $merchant = Merchant::query()->findOrFail($merchant_id);
-        $merchant->deleteFile($file_id);
+        $merchant->deleteFile((int) $file_id);
 
         return response()->json(['message' => 'Файл успешно удалён.']);
     }
