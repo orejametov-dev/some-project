@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\Filters\Notification\NotificationFilters;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -46,41 +45,9 @@ class Notification extends Model
     public const ALL_TYPE = 'ALL';
     public const CERTAIN_TYPE = 'CERTAIN';
 
-    protected $fillable = [
-        'title_uz',
-        'title_ru',
-        'body_ru',
-        'body_uz',
-        'start_schedule',
-        'end_schedule',
-        'type',
-    ];
-
-    public function setAllType(): self
-    {
-        $this->type = self::ALL_TYPE;
-
-        return $this;
-    }
-
-    public function setCertainType(): self
-    {
-        $this->type = self::CERTAIN_TYPE;
-
-        return $this;
-    }
-
     public function stores(): BelongsToMany
     {
         return $this->belongsToMany(Store::class, 'store_notification', 'notification_id', 'store_id');
-    }
-
-    public function setCreatedBy(GatewayAuthUser $user): self
-    {
-        $this->created_by_id = $user->getId();
-        $this->created_by_name = $user->getName();
-
-        return $this;
     }
 
     public function scopeOnlyByMerchant(Builder $query, int $merchant_id): Builder

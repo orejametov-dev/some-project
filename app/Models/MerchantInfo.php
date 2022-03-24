@@ -50,22 +50,6 @@ class MerchantInfo extends Model
     protected $dates = [
         'contract_date',
     ];
-    protected $fillable = [
-        'legal_name',
-        'director_name',
-        'phone',
-        'vat_number',
-        'mfo',
-        'tin',
-        'oked',
-        'address',
-        'bank_account',
-        'bank_name',
-        'contract_number',
-        'limit',
-        'contract_date',
-        'legal_name_prefix',
-    ];
 
     public $timestamps = false;
 
@@ -83,18 +67,18 @@ class MerchantInfo extends Model
     {
         $merchantInfo = new self();
 
-        $merchantInfo->merchant_id = $storeMerchantInfoDTO->merchant_id;
-        $merchantInfo->director_name = $storeMerchantInfoDTO->director_name;
-        $merchantInfo->phone = $storeMerchantInfoDTO->phone;
-        $merchantInfo->vat_number = $storeMerchantInfoDTO->vat_number;
-        $merchantInfo->mfo = $storeMerchantInfoDTO->mfo;
-        $merchantInfo->tin = $storeMerchantInfoDTO->tin;
-        $merchantInfo->oked = $storeMerchantInfoDTO->oked;
-        $merchantInfo->bank_account = $storeMerchantInfoDTO->bank_account;
-        $merchantInfo->bank_name = $storeMerchantInfoDTO->bank_name;
-        $merchantInfo->address = $storeMerchantInfoDTO->address;
+        $merchantInfo->merchant_id = $storeMerchantInfoDTO->getMerchantId();
+        $merchantInfo->director_name = $storeMerchantInfoDTO->getDirectorName();
+        $merchantInfo->phone = $storeMerchantInfoDTO->getPhone();
+        $merchantInfo->vat_number = $storeMerchantInfoDTO->getVatNumber();
+        $merchantInfo->mfo = $storeMerchantInfoDTO->getMfo();
+        $merchantInfo->tin = $storeMerchantInfoDTO->getTin();
+        $merchantInfo->oked = $storeMerchantInfoDTO->getOked();
+        $merchantInfo->bank_account = $storeMerchantInfoDTO->getBankAccount();
+        $merchantInfo->bank_name = $storeMerchantInfoDTO->getBankName();
+        $merchantInfo->address = $storeMerchantInfoDTO->getAddress();
         $merchantInfo->contract_number = self::getMaxContractNumber() + 1;
-        $merchantInfo->contract_date = now();
+        $merchantInfo->contract_date = Carbon::now();
         $merchantInfo->limit = self::LIMIT;
 
         return $merchantInfo;

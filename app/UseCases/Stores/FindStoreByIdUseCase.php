@@ -7,9 +7,9 @@ use App\Models\Store;
 
 class FindStoreByIdUseCase
 {
-    public function execute(int $store_id): Store
+    public function execute(int $id): Store
     {
-        $store = Store::query()->find($store_id);
+        $store = Store::query()->find($id);
 
         if ($store === null) {
             throw new BusinessException('Магазин не найден', 'object_not_found', 404);

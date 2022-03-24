@@ -4,21 +4,22 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Stores;
 
-use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
-use App\Exceptions\BusinessException;
+use App\DTOs\Notifications\StoreNotificationDTO;
+use App\DTOs\Notifications\UpdateNotificationDTO;
 use App\Filters\CommonFilters\CreatedAtFilter;
 use App\Filters\CommonFilters\CreatedByIdFilter;
 use App\Filters\Notification\MerchantIdNotificationFilter;
 use App\Filters\Notification\PublishedFilter;
 use App\Filters\Notification\QNotificationFilter;
 use App\Http\Controllers\Controller;
-use App\Models\Merchant;
+use App\Http\Requests\ApiPrm\Notifications\StoreNotificationRequest;
+use App\Http\Requests\ApiPrm\Notifications\UpdateNotificationRequest;
 use App\Models\Notification;
-use App\Models\Store;
-use Carbon\Carbon;
-use DB;
+use App\UseCases\Notifications\FindNotificationByIdUseCase;
+use App\UseCases\Notifications\RemoveNotificationUseCase;
+use App\UseCases\Notifications\StoreNotificationUseCase;
+use App\UseCases\Notifications\UpdateNotificationUseCase;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 class NotificationsController extends Controller
 {
@@ -45,100 +46,27 @@ class NotificationsController extends Controller
         return $notifications->paginate($request->query('per_page') ?? 15);
     }
 
-    public function show($id)
+    public function show($id, FindNotificationByIdUseCase $findNotificationByIdUseCase)
     {
-        $notification = Notification::query()->with('stores')->findOrFail($id);
+        $notification = $findNotificationByIdUseCase->execute((int) $id);
+        $notification->load(['stores']);
 
         return $notification;
     }
 
-    public function store(Request $request)
+    public function store(StoreNotificationRequest $request, StoreNotificationUseCase $storeNotificationUseCase)
     {
-        $validatedData = $this->validate($request, [
-            'title_uz' => 'required|string',
-            'title_ru' => 'required|string',
-            'body_uz' => 'required|string',
-            'body_ru' => 'required|string',
-            'start_schedule' => 'nullable|date_format:Y-m-d H:i',
-            'end_schedule' => 'nullable|date_format:Y-m-d H:i',
-            'all_merchants' => 'required_without:recipients|boolean',
-            'recipients' => 'required_without:all_merchants|array',
-            'recipients.*.merchant_id' => 'required|integer',
-            'recipients.*.store_ids' => 'nullable|array',
-        ]);
-
-        $notification = new Notification();
-        $notification->fill($validatedData);
-        $notification->setCreatedBy(app(GatewayAuthUser::class));
-        $notification->start_schedule = Carbon::parse($request->input('start_schedule') ?? now());
-        $notification->end_schedule = Carbon::parse($request->input('end_schedule') ?? now()->addDay());
-
-        if ($request->has('all_merchants') && $request->input('all_merchants')) {
-            DB::transaction(function () use ($notification) {
-                $notification->setAllType();
-                $notification->save();
-
-                $stores = Store::get();
-                $notification->stores()->attach($stores);
-            });
-        } elseif ($request->missing('all_merchants')) {
-            DB::transaction(function () use ($notification, $request) {
-                $notification->setCertainType();
-                $notification->save();
-
-                foreach ($request->input('recipients') as $recipient) {
-                    $merchant = Merchant::query()->findOrFail($recipient['merchant_id']);
-                    if (array_key_exists('store_ids', $recipient) and !empty($recipient['store_ids'])) {
-                        $all_store_ids = $merchant->stores()->pluck('id');
-                        foreach ($recipient['store_ids'] as $store_id) {
-                            $checker = $all_store_ids->contains($store_id);
-                            if (!$checker) {
-                                throw new BusinessException('Указан не правильный магазин ' . $merchant->name . ' мерчанта');
-                            }
-                        }
-                        $notification->stores()->attach($recipient['store_ids']);
-                    } else {
-                        $stores = $merchant->stores;
-                        $notification->stores()->attach($stores);
-                    }
-                }
-            });
-        }
-
-        Cache::tags('notifications')->flush();
-
-        return $notification;
+        return $storeNotificationUseCase->execute(StoreNotificationDTO::fromArray($request->validated()));
     }
 
-    public function update($id, Request $request)
+    public function update($id, UpdateNotificationRequest $request, UpdateNotificationUseCase $updateNotificationUseCase)
     {
-        $validatedData = $this->validate($request, [
-            'title_uz' => 'required|string',
-            'title_ru' => 'required|string',
-            'body_uz' => 'required|string',
-            'body_ru' => 'required|string',
-            'start_schedule' => 'nullable|date_format:Y-m-d H:i',
-            'end_schedule' => 'nullable|date_format:Y-m-d H:i',
-        ]);
-
-        $notification = Notification::query()->findOrFail($id);
-        $notification->fill($validatedData);
-        $notification->start_schedule = Carbon::parse($request->input('start_schedule') ?? now());
-        $notification->end_schedule = Carbon::parse($request->input('end_schedule') ?? now()->addDay());
-
-        $notification->save();
-
-        Cache::tags('notifications')->flush();
-
-        return $notification;
+        return $updateNotificationUseCase->execute((int) $id, UpdateNotificationDTO::fromArray($request->validated()));
     }
 
-    public function remove($id)
+    public function remove($id, RemoveNotificationUseCase $removeNotificationUseCase)
     {
-        $notification = Notification::query()->findOrFail($id);
-        $notification->stores()->detach();
-        $notification->delete();
-        Cache::tags('notifications')->flush();
+        $removeNotificationUseCase->execute((int) $id);
 
         return response()->json(['message' => 'Уведомление удалено успешно']);
     }

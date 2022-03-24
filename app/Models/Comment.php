@@ -38,14 +38,6 @@ class Comment extends Model
     use HasFactory;
     use SortableByQueryParams;
 
-    protected $table = 'comments';
-
-    protected $fillable = [
-        'body',
-        'commentable_type',
-        'created_by_name',
-    ];
-
     public function commentable(): MorphTo
     {
         return $this->morphTo();

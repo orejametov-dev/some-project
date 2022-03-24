@@ -4,25 +4,26 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8044910e4e3045a32d7c9b4d6278b220",
+    "content-hash": "b71986e5b45148b1c8c322903a81d548",
     "packages": [
         {
             "name": "alifuz/utils",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.alifshop.uz/packages/backend/backend-utils.git",
-                "reference": "1ca4278f7a832f8897f8a0513c0363ba04da5ad3"
+                "reference": "bd27a610f9b9ec16bc79729db270912ae0346f81"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.alifshop.uz/api/v4/projects/packages%2Fbackend%2Fbackend-utils/repository/archive.zip?sha=1ca4278f7a832f8897f8a0513c0363ba04da5ad3",
-                "reference": "1ca4278f7a832f8897f8a0513c0363ba04da5ad3",
+                "url": "https://gitlab.alifshop.uz/api/v4/projects/packages%2Fbackend%2Fbackend-utils/repository/archive.zip?sha=bd27a610f9b9ec16bc79729db270912ae0346f81",
+                "reference": "bd27a610f9b9ec16bc79729db270912ae0346f81",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "myclabs/php-enum": "^1.8",
+                "nesbot/carbon": "^2.57",
                 "php": "^8.0"
             },
             "require-dev": {
@@ -50,26 +51,26 @@
             ],
             "description": "Package for all necessary utility tools",
             "support": {
-                "source": "https://gitlab.alifshop.uz/packages/backend/backend-utils/-/tree/1.0.0"
+                "source": "https://gitlab.alifshop.uz/packages/backend/backend-utils/-/tree/1.1.0"
             },
-            "time": "2022-03-18T11:02:19+05:00"
+            "time": "2022-03-24T15:04:26+05:00"
         },
         {
             "name": "alifuz/utils-gateway",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.alifshop.uz/packages/backend/backend-utils-gateway.git",
-                "reference": "6ca664334dd70735d152be11fd60aaaad00a13e1"
+                "reference": "10ca6b643875334cf40c24e8155f4635398bf6f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.alifshop.uz/api/v4/projects/packages%2Fbackend%2Fbackend-utils-gateway/repository/archive.zip?sha=6ca664334dd70735d152be11fd60aaaad00a13e1",
-                "reference": "6ca664334dd70735d152be11fd60aaaad00a13e1",
+                "url": "https://gitlab.alifshop.uz/api/v4/projects/packages%2Fbackend%2Fbackend-utils-gateway/repository/archive.zip?sha=10ca6b643875334cf40c24e8155f4635398bf6f6",
+                "reference": "10ca6b643875334cf40c24e8155f4635398bf6f6",
                 "shasum": ""
             },
             "require": {
-                "alifuz/utils": "1.0.0",
+                "alifuz/utils": "1.1.0",
                 "ext-json": "*",
                 "illuminate/contracts": "^8.0|^9.0",
                 "illuminate/support": "^8.0|^9.0",
@@ -109,9 +110,9 @@
             ],
             "description": "Package for gateway required utility tools",
             "support": {
-                "source": "https://gitlab.alifshop.uz/packages/backend/backend-utils-gateway/-/tree/1.0.0"
+                "source": "https://gitlab.alifshop.uz/packages/backend/backend-utils-gateway/-/tree/1.1.0"
             },
-            "time": "2022-03-18T15:54:31+05:00"
+            "time": "2022-03-24T15:55:48+05:00"
         },
         {
             "name": "asm89/stack-cors",
@@ -1214,16 +1215,16 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "7.4.1",
+            "version": "7.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "ee0a041b1760e6a53d2a39c8c34115adc2af2c79"
+                "reference": "ac1ec1cd9b5624694c3a40be801d94137afb12b4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/ee0a041b1760e6a53d2a39c8c34115adc2af2c79",
-                "reference": "ee0a041b1760e6a53d2a39c8c34115adc2af2c79",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/ac1ec1cd9b5624694c3a40be801d94137afb12b4",
+                "reference": "ac1ec1cd9b5624694c3a40be801d94137afb12b4",
                 "shasum": ""
             },
             "require": {
@@ -1318,7 +1319,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/guzzle/issues",
-                "source": "https://github.com/guzzle/guzzle/tree/7.4.1"
+                "source": "https://github.com/guzzle/guzzle/tree/7.4.2"
             },
             "funding": [
                 {
@@ -1334,7 +1335,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-12-06T18:43:05+00:00"
+            "time": "2022-03-20T14:16:28+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -1422,16 +1423,16 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "2.1.0",
+            "version": "2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "089edd38f5b8abba6cb01567c2a8aaa47cec4c72"
+                "reference": "c94a94f120803a18554c1805ef2e539f8285f9a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/089edd38f5b8abba6cb01567c2a8aaa47cec4c72",
-                "reference": "089edd38f5b8abba6cb01567c2a8aaa47cec4c72",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/c94a94f120803a18554c1805ef2e539f8285f9a2",
+                "reference": "c94a94f120803a18554c1805ef2e539f8285f9a2",
                 "shasum": ""
             },
             "require": {
@@ -1455,7 +1456,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.1-dev"
+                    "dev-master": "2.2-dev"
                 }
             },
             "autoload": {
@@ -1517,7 +1518,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/psr7/issues",
-                "source": "https://github.com/guzzle/psr7/tree/2.1.0"
+                "source": "https://github.com/guzzle/psr7/tree/2.2.1"
             },
             "funding": [
                 {
@@ -1533,7 +1534,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-10-06T17:43:30+00:00"
+            "time": "2022-03-20T21:55:58+00:00"
         },
         {
             "name": "http-interop/http-factory-guzzle",
@@ -7869,16 +7870,16 @@
         },
         {
             "name": "composer/composer",
-            "version": "2.3.0-RC1",
+            "version": "2.3.0-RC2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "3b150d0ef6454694d074cac2807237894dfd6217"
+                "reference": "36dc875e1c6d5ce9411c78aae22b33ac24c86e13"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/3b150d0ef6454694d074cac2807237894dfd6217",
-                "reference": "3b150d0ef6454694d074cac2807237894dfd6217",
+                "url": "https://api.github.com/repos/composer/composer/zipball/36dc875e1c6d5ce9411c78aae22b33ac24c86e13",
+                "reference": "36dc875e1c6d5ce9411c78aae22b33ac24c86e13",
                 "shasum": ""
             },
             "require": {
@@ -7954,7 +7955,7 @@
             "support": {
                 "irc": "ircs://irc.libera.chat:6697/composer",
                 "issues": "https://github.com/composer/composer/issues",
-                "source": "https://github.com/composer/composer/tree/2.3.0-RC1"
+                "source": "https://github.com/composer/composer/tree/2.3.0-RC2"
             },
             "funding": [
                 {
@@ -7970,7 +7971,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-03-16T08:25:31+00:00"
+            "time": "2022-03-20T12:20:49+00:00"
         },
         {
             "name": "composer/metadata-minifier",

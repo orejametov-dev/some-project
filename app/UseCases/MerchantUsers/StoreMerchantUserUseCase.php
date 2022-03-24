@@ -12,12 +12,14 @@ use App\HttpRepositories\Prm\CompanyUserHttpRepository;
 use App\Jobs\SendHook;
 use App\Jobs\ToggleMerchantRoleOfUser;
 use App\Models\AzoMerchantAccess;
-use App\Models\Store;
+use App\UseCases\Auth\FindAuthUserByIdUseCase;
+use App\UseCases\Stores\FindStoreByIdUseCase;
 
 class StoreMerchantUserUseCase
 {
     public function __construct(
-        private AuthHttpRepository $authHttpRepository,
+        private FindAuthUserByIdUseCase $findAuthUserByIdUseCase,
+        private FindStoreByIdUseCase $findStoreByIdUseCase,
         private CompanyUserHttpRepository $companyUserHttpRepository,
         private GatewayAuthUser $authUser,
         private FlushMerchantUserCacheUseCase $flushMerchantUserCacheUseCase
@@ -26,15 +28,9 @@ class StoreMerchantUserUseCase
 
     public function execute(int $store_id, int $user_id): AzoMerchantAccess
     {
-        $user = $this->authHttpRepository->getUserById($user_id);
-        if ($user === null) {
-            throw new BusinessException('Пользователь не найден', 'object_not_found', 404);
-        }
+        $user = $this->findAuthUserByIdUseCase->execute($user_id);
 
-        $store = Store::query()->find($store_id);
-        if ($store === null) {
-            throw new BusinessException('Магазин не найден', 'object_not_found', 404);
-        }
+        $store = $this->findStoreByIdUseCase->execute($store_id);
 
         $company_user = $this->companyUserHttpRepository->getCompanyUserByUserId($user->id);
         if ($company_user === null) {
@@ -46,7 +42,7 @@ class StoreMerchantUserUseCase
             );
         }
 
-        if (AzoMerchantAccess::query()->where('company_user_id', $company_user->id)->exists()) {
+        if (AzoMerchantAccess::query()->where('company_user_id', $company_user->id)->exists() === true) {
             throw new BusinessException('Пользователь является сотрудником другого мерчанта.', 'user_already_exists');
         }
 
