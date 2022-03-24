@@ -78,21 +78,6 @@ class ProblemCase extends Model
 
     public static array $sources = ['CALLS', 'LAW', 'COMPLIANCE'];
 
-    protected $fillable = [
-        'status_id',
-        'status_key',
-        'created_by_id',
-        'created_by_name',
-        'created_from_name',
-        'credit_number',
-        'application_id',
-        'client_id',
-        'application_items',
-        'application_created_at',
-        'credit_contract_date',
-        'post_or_pre_created_by_id',
-        'post_or_pre_created_by_name',
-    ];
     protected $dates = [
         'status_updated_at',
     ];

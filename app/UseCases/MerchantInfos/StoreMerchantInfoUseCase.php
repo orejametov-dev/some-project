@@ -18,9 +18,9 @@ class StoreMerchantInfoUseCase
 
     public function execute(StoreMerchantInfoDTO $storeMerchantInfoDTO): MerchantInfo
     {
-        $merchant = $this->findMerchantUseCase->execute($storeMerchantInfoDTO->merchant_id);
+        $merchant = $this->findMerchantUseCase->execute($storeMerchantInfoDTO->getMerchantId());
 
-        if (MerchantInfo::query()->where('merchant_id', $merchant->id)->exists()) {
+        if (MerchantInfo::query()->where('merchant_id', $merchant->id)->exists() === true) {
             throw new BusinessException('Партнер уже имеет основной договор');
         }
 

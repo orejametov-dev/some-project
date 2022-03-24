@@ -22,6 +22,7 @@ use App\Http\Requests\ApiPrm\ProblemCases\ProblemCaseUpdateRequest;
 use App\Models\Comment;
 use App\Models\ProblemCase;
 use App\UseCases\ProblemCase\AttachTagsProblemCaseUseCase;
+use App\UseCases\ProblemCase\FindProblemCaseByIdUseCase;
 use App\UseCases\ProblemCase\SetAssignedProblemCaseUseCase;
 use App\UseCases\ProblemCase\SetStatusProblemCaseUseCase;
 use App\UseCases\ProblemCase\StoreCommentProblemCaseUseCase;
@@ -49,9 +50,10 @@ class ProblemCasesController extends Controller
         return $problemCases->paginate($request->query('per_page') ?? 15);
     }
 
-    public function show($id)
+    public function show($id, FindProblemCaseByIdUseCase $findProblemCaseByIdUseCase)
     {
-        $problemCase = ProblemCase::with(['tags', 'merchant', 'store'])->findOrFail($id);
+        $problemCase = $findProblemCaseByIdUseCase->execute((int) $id);
+        $problemCase->load(['tags', 'merchant', 'store']);
 
         return $problemCase;
     }

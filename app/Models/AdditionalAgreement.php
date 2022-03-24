@@ -22,8 +22,8 @@ use Illuminate\Http\Request;
  * @property int $number
  * @property Carbon $limit_expired_at
  * @property int|null $rest_limit
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property-read Merchant $merchant
  * @method static Builder|AdditionalAgreement filterRequest(Request $request, array $filters = []))
  * @method static Builder|AdditionalAgreement newModelQuery()
@@ -40,12 +40,6 @@ class AdditionalAgreement extends Model
     const DELIVERY = 'delivery';
 
     protected $table = 'merchant_additional_agreements';
-    protected $fillable = [
-        'limit',
-        'registration_date',
-        'number',
-        'document_type',
-    ];
 
     /**
      * @return BelongsTo
