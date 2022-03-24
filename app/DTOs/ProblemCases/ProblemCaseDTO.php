@@ -15,15 +15,17 @@ class ProblemCaseDTO
         public ?string $description,
         private ?int $application_id,
         private ?string $credit_number,
+        public ?array $tags,
     ) {
     }
 
-    public static function fromArray(array $data)
+    public static function fromArray(array $data): self
     {
         return new self(
             self::parseNullableString($data['description']),
             self::parseNullableInt($data['application_id']),
             self::parseNullableString($data['credit_number']),
+            self::parseNullableArray($data['tags'])
         );
     }
 
