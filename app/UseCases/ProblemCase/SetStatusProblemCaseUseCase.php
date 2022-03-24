@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\UseCases\ProblemCase;
 
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
+use Alifuz\Utils\Gateway\Entities\GatewayApplication;
 use App\Enums\ProblemCaseStatusEnum;
 use App\Exceptions\BusinessException;
 use App\HttpRepositories\Hooks\DTO\HookData;
@@ -18,7 +19,8 @@ class SetStatusProblemCaseUseCase
 {
     public function __construct(
         private GatewayAuthUser $gatewayAuthUser,
-        private ProblemCaseStatusMapping $problemCaseStatusMapping
+        private ProblemCaseStatusMapping $problemCaseStatusMapping,
+        private GatewayApplication $gatewayApplication,
     ) {
     }
 
@@ -42,7 +44,7 @@ class SetStatusProblemCaseUseCase
             service: 'merchants',
             hookable_type: $problemCase->getTable(),
             hookable_id: $problemCase->id,
-            created_from_str: 'PRM',
+            created_from_str: $this->gatewayApplication->getApplication()->getValue(),
             created_by_id: $this->gatewayAuthUser->getId(),
             body: 'Обновлен на статус',
             keyword: $this->problemCaseStatusMapping->getMappedValue(ProblemCaseStatusEnum::from($problemCase->status_id))['name'],
