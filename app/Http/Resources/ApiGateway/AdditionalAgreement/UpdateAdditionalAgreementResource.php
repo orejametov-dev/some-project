@@ -5,6 +5,9 @@ namespace App\Http\Resources\ApiGateway\AdditionalAgreement;
 use App\Models\AdditionalAgreement;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property AdditionalAgreement $resource
+ */
 class UpdateAdditionalAgreementResource extends JsonResource
 {
     /**
@@ -15,13 +18,12 @@ class UpdateAdditionalAgreementResource extends JsonResource
      */
     public function toArray($request)
     {
-        /** @var AdditionalAgreement|UpdateAdditionalAgreementResource $this */
         return [
-            'limit' => $this->limit,
-            'registration_date' => $this->registration_date,
-            'number' => $this->number,
-            'merchant_id' => $this->merchant_id,
-            'document_type' => $this->document_type,
+            'limit' => $this->resource->limit,
+            'registration_date' => $this->resource->registration_date,
+            'number' => $this->resource->number,
+            'merchant_id' => $this->resource->merchant_id,
+            'document_type' => $this->resource->document_type,
         ];
     }
 }

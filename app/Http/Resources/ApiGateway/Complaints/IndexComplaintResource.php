@@ -5,6 +5,9 @@ namespace App\Http\Resources\ApiGateway\Complaints;
 use App\Models\Complaint;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property Complaint $resource
+ */
 class IndexComplaintResource extends JsonResource
 {
     /**
@@ -15,10 +18,9 @@ class IndexComplaintResource extends JsonResource
      */
     public function toArray($request)
     {
-        /** @var Complaint|IndexComplaintResource $this */
         return [
-            'meta' => $this->meta,
-            'created_at' => $this->created_at,
+            'meta' => $this->resource->meta,
+            'created_at' => $this->resource->created_at,
         ];
     }
 }

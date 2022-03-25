@@ -5,6 +5,9 @@ namespace App\Http\Resources\ApiGateway\AdditionalAgreement;
 use App\Models\AdditionalAgreement;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property AdditionalAgreement $resource
+ */
 class IndexAdditionalAgreementResource extends JsonResource
 {
     /**
@@ -15,14 +18,13 @@ class IndexAdditionalAgreementResource extends JsonResource
      */
     public function toArray($request)
     {
-        /** @var AdditionalAgreement|IndexAdditionalAgreementResource $this */
         return [
-            'id' => $this->id,
-            'number' => $this->number,
-            'limit'  => $this->limit,
-            'limit_expired_at' => $this->limit_expired_at,
-            'document_type' => $this->document_type,
-            'created_at' => $this->created_at,
+            'id' => $this->resource->id,
+            'number' => $this->resource->number,
+            'limit'  => $this->resource->limit,
+            'limit_expired_at' => $this->resource->limit_expired_at,
+            'document_type' => $this->resource->document_type,
+            'created_at' => $this->resource->created_at,
         ];
     }
 }

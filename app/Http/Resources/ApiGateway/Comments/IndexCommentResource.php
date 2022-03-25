@@ -5,6 +5,9 @@ namespace App\Http\Resources\ApiGateway\Comments;
 use App\Models\Comment;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property Comment $resource
+ */
 class IndexCommentResource extends JsonResource
 {
     /**
@@ -15,12 +18,11 @@ class IndexCommentResource extends JsonResource
      */
     public function toArray($request)
     {
-        /** @var Comment|IndexCommentResource $this */
         return [
-            'id' => $this->id,
-            'created_by_name' => $this->created_by_name,
-            'body' => $this->body,
-            'created_at' => $this->created_at,
+            'id' => $this->resource->id,
+            'created_by_name' => $this->resource->created_by_name,
+            'body' => $this->resource->body,
+            'created_at' => $this->resource->created_at,
         ];
     }
 }
