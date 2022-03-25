@@ -24,7 +24,7 @@ class SetMerchantRequestEngagedUseCase
 
         $merchant_request = $this->findMerchantRequestByIdUseCase->execute($id);
 
-        if ($merchant_request->isStatusNew() === false || $merchant_request->isInProcess() === false) {
+        if ($merchant_request->isStatusNew() === false && $merchant_request->isInProcess() === false) {
             throw new BusinessException('Не валидный статус для указания отвественного');
         }
 
