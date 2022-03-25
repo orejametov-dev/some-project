@@ -28,12 +28,14 @@ use App\UseCases\Merchants\SetMerchantMainStoreUseCase;
 use App\UseCases\Merchants\SetMerchantTagsUseCase;
 use App\UseCases\Merchants\SetResponsibleUserUseCase;
 use App\UseCases\Merchants\StoreMerchantUseCase;
+use App\UseCases\Merchants\ToggleHoldingInitialPaymentUseCase;
 use App\UseCases\Merchants\ToggleMerchantActivityReasonUseCase;
 use App\UseCases\Merchants\ToggleMerchantGeneralGoodsUseCase;
 use App\UseCases\Merchants\ToggleMerchantRecommendUseCase;
 use App\UseCases\Merchants\UpdateMerchantUseCase;
 use App\UseCases\Merchants\UploadMerchantLogoUseCase;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 
 class MerchantsController extends Controller
@@ -160,6 +162,11 @@ class MerchantsController extends Controller
     public function toggleRecommend($id, ToggleMerchantRecommendUseCase $toggleMerchantRecommendUseCase)
     {
         return $toggleMerchantRecommendUseCase->execute((int) $id);
+    }
+
+    public function toggleHoldingInitialPayment($id, ToggleHoldingInitialPaymentUseCase $holdingInitialPaymentUseCase): JsonResource
+    {
+        return new JsonResource($holdingInitialPaymentUseCase->execute((int) $id));
     }
 
     public function attachCompetitor($id, CompetitorsRequest $request, AttachCompetitorUseCase $attachCompetitorUseCase)
