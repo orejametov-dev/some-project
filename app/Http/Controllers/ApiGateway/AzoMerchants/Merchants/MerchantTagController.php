@@ -6,6 +6,9 @@ namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
 use App\Http\Controllers\Controller;
 use App\Models\Tag;
+use App\UseCases\MerchantTags\FindMerchantTagByIdUseCase;
+use App\UseCases\MerchantTags\RemoveMerchantTagUseCase;
+use App\UseCases\MerchantTags\StoreMerchantTagUseCase;
 use Illuminate\Http\Request;
 
 class MerchantTagController extends Controller
@@ -20,35 +23,25 @@ class MerchantTagController extends Controller
         return $merchant_tag_query->paginate($request->query('per_page') ?? 15);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, StoreMerchantTagUseCase $storeMerchantTagUseCase)
     {
         $this->validate($request, [
             'title' => 'required|unique:merchant_tags,title|min:5|max:255',
         ]);
 
-        $merchant_tag = new Tag();
-        $merchant_tag->title = $request->input('title');
-        $merchant_tag->save();
-
-        return $merchant_tag;
+        return $storeMerchantTagUseCase->execute($request->input('title'));
     }
 
-    public function show($tag_id)
+    public function show($id, FindMerchantTagByIdUseCase $findMerchantTagByIdUseCase)
     {
-        $tag = Tag::query()->findOrFail($tag_id);
+        $tag = $findMerchantTagByIdUseCase->execute((int) $id);
 
         return $tag->merchants;
     }
 
-    public function removeTag($tag_id)
+    public function removeTag($id, RemoveMerchantTagUseCase $removeMerchantTagUseCase)
     {
-        $tag = Tag::query()->findOrFail($tag_id);
-
-        if ($tag->merchants()->count()) {
-            return response()->json(['message' => 'Тег невозможно удалить.']);
-        }
-
-        $tag->delete();
+        $removeMerchantTagUseCase->execute((int) $id);
 
         return response()->json(['message' => 'Тэг успешно удалён.']);
     }

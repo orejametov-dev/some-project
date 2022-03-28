@@ -15,6 +15,7 @@ use App\Http\Requests\ApiPrm\Stores\StoreStoresRequest;
 use App\Http\Requests\ApiPrm\Stores\UpdateStoresRequest;
 use App\Models\Condition;
 use App\Models\Store;
+use App\UseCases\Stores\FindStoreByIdUseCase;
 use App\UseCases\Stores\SaveStoreUseCase;
 use App\UseCases\Stores\SetTypeRegisterStoreUseCase;
 use App\UseCases\Stores\ToggleStoreUseCase;
@@ -47,10 +48,10 @@ class StoresController extends Controller
         return JsonResource::collection($stores->paginate($request->query('per_page') ?? 15));
     }
 
-    public function show($store_id): JsonResource
+    public function show($id, FindStoreByIdUseCase $findStoreByIdUseCase): JsonResource
     {
-        $store = Store::query()->with(['merchant', 'activity_reasons'])
-            ->findOrFail((int) $store_id);
+        $store = $findStoreByIdUseCase->execute((int) $id);
+        $store->load(['merchant', 'activity_reasons']);
 
         return new JsonResource($store);
     }
@@ -58,17 +59,17 @@ class StoresController extends Controller
     public function store(StoreStoresRequest $request, SaveStoreUseCase $storeStoresUseCase): JsonResource
     {
         $storeStoresDTO = StoreStoresDTO::fromArray($request->validated());
-        $response = $storeStoresUseCase->execute($storeStoresDTO);
+        $store = $storeStoresUseCase->execute($storeStoresDTO);
 
-        return JsonResource::collection($response);
+        return JsonResource::collection($store);
     }
 
-    public function update(int $store_id, UpdateStoresRequest $request, UpdateStoreUseCase $updateStoresUseCase): JsonResource
+    public function update($id, UpdateStoresRequest $request, UpdateStoreUseCase $updateStoresUseCase): JsonResource
     {
-        $updateStoresDTO = UpdateStoresDTO::fromArray($store_id, $request->validated());
-        $response = $updateStoresUseCase->execute($updateStoresDTO);
+        $updateStoresDTO = UpdateStoresDTO::fromArray((int) $id, $request->validated());
+        $store = $updateStoresUseCase->execute($updateStoresDTO);
 
-        return JsonResource::collection($response);
+        return JsonResource::collection($store);
     }
 
     public function toggle($id, Request $request, ToggleStoreUseCase $toggleStoresUseCase): JsonResource

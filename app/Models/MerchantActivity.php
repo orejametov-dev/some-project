@@ -14,8 +14,6 @@ class MerchantActivity extends Model
 {
     use HasFactory;
 
-    protected $table = 'merchant_activities';
-
     public function merchant(): BelongsTo
     {
         return $this->belongsTo(Merchant::class);

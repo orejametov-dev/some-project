@@ -36,6 +36,7 @@ class UpdateMerchantRequestUseCase
         $merchant_request->district = $merchantRequestDTO->getDistrict();
         $merchant_request->stores_count = $merchantRequestDTO->getStoresCount();
         $merchant_request->merchant_users_count = $merchantRequestDTO->getMerchantUsersCount();
+        $merchant_request->approximate_sales = $merchantRequestDTO->getApproximateSales();
         $merchant_request->save();
 
         $merchant_request->checkToMainCompleted();
