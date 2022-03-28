@@ -45,21 +45,21 @@ class MerchantInfoController extends Controller
 
     public function getContractTrust($id, GetMerchantInfoTrustContractUseCase $getMerchantInfoTrustContractUseCase)
     {
-        $file_path = $getMerchantInfoTrustContractUseCase->execute($id);
+        $file_path = $getMerchantInfoTrustContractUseCase->execute((int) $id);
 
         return response()->download(storage_path($file_path))->deleteFileAfterSend();
     }
 
     public function getContractProcuration($id, GetMerchantInfoProcurationContractUseCase $getMerchantInfoProcurationContractUseCase)
     {
-        $file_path = $getMerchantInfoProcurationContractUseCase->execute($id);
+        $file_path = $getMerchantInfoProcurationContractUseCase->execute((int) $id);
 
         return response()->download(storage_path($file_path))->deleteFileAfterSend();
     }
 
     public function getContract($id, GetMerchantInfoContractUseCase $getMerchantInfoContractUseCase)
     {
-        $file_path = $getMerchantInfoContractUseCase->execute($id);
+        $file_path = $getMerchantInfoContractUseCase->execute((int) $id);
 
         return response()->download(storage_path($file_path))->deleteFileAfterSend();
     }
