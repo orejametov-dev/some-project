@@ -8,42 +8,44 @@ use App\DTOs\AdditionalAgreements\StoreAdditionalAgreementDTO;
 use App\Filters\Merchant\MerchantIdFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiPrm\Merchants\StoreAdditionalAgreements;
+use App\Http\Resources\ApiGateway\AdditionalAgreement\IndexAdditionalAgreementResource;
+use App\Http\Resources\ApiGateway\AdditionalAgreement\StoreAdditionalAgreementResource;
+use App\Http\Resources\ApiGateway\AdditionalAgreement\UpdateAdditionalAgreementResource;
 use App\Models\AdditionalAgreement;
 use App\UseCases\AdditionalAgreements\DeleteAdditionalAgreementUseCase;
-use App\UseCases\AdditionalAgreements\FindAdditionalAgreementUseCase;
 use App\UseCases\AdditionalAgreements\GenerateAdditionalAgreementDocUseCase;
 use App\UseCases\AdditionalAgreements\StoreAdditionalAgreementUseCase;
 use App\UseCases\AdditionalAgreements\UpdateAdditionalAgreementUseCase;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class AdditionalAgreementsController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): JsonResource
     {
         $additional_agreements = AdditionalAgreement::query()
             ->filterRequest($request, [MerchantIdFilter::class]);
 
         if ($request->query('object') == 'true') {
-            return $additional_agreements->first();
+            return IndexAdditionalAgreementResource::collection($additional_agreements->first());
         }
 
-        return $additional_agreements->paginate($request->query('per_page') ?? 15);
+        return IndexAdditionalAgreementResource::collection($additional_agreements->paginate($request->query('per_page') ?? 15));
     }
 
-    public function show($id, FindAdditionalAgreementUseCase $findAdditionalAgreementUseCase)
+    public function store(StoreAdditionalAgreements $request, StoreAdditionalAgreementUseCase $storeAdditionalAgreementUseCase): StoreAdditionalAgreementResource
     {
-        return $findAdditionalAgreementUseCase->execute((int) $id);
+        $additional_agreement = $storeAdditionalAgreementUseCase->execute(StoreAdditionalAgreementDTO::fromArray($request->validated()));
+
+        return new StoreAdditionalAgreementResource($additional_agreement);
     }
 
-    public function store(StoreAdditionalAgreements $request, StoreAdditionalAgreementUseCase $storeAdditionalAgreementUseCase)
+    public function update($id, StoreAdditionalAgreements $request, UpdateAdditionalAgreementUseCase $updateAdditionalAgreementUseCase): UpdateAdditionalAgreementResource
     {
-        return $storeAdditionalAgreementUseCase->execute(StoreAdditionalAgreementDTO::fromArray($request->validated()));
-    }
+        $additional_agreement = $updateAdditionalAgreementUseCase->execute((int) $id, StoreAdditionalAgreementDTO::fromArray($request->validated()));
 
-    public function update($id, StoreAdditionalAgreements $request, UpdateAdditionalAgreementUseCase $updateAdditionalAgreementUseCase)
-    {
-        return $updateAdditionalAgreementUseCase->execute((int) $id, StoreAdditionalAgreementDTO::fromArray($request->validated()));
+        return new UpdateAdditionalAgreementResource($additional_agreement);
     }
 
     public function getAdditionalAgreementDoc($id, GenerateAdditionalAgreementDocUseCase $generateAdditionalAgreementDocUseCase): BinaryFileResponse
