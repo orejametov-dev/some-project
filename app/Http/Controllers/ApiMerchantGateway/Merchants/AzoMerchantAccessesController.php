@@ -7,6 +7,7 @@ namespace App\Http\Controllers\ApiMerchantGateway\Merchants;
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\DTOs\Auth\AzoAccessDto;
 use App\Exceptions\ApiBusinessException;
+use App\Filters\AzoMerchantAccess\QAzoMerchantAccessFilter;
 use App\Http\Controllers\Controller;
 use App\HttpRepositories\Auth\AuthHttpRepository;
 use App\HttpRepositories\Hooks\DTO\HookData;
@@ -29,7 +30,7 @@ class AzoMerchantAccessesController extends Controller
         $merchantUsersQuery = AzoMerchantAccess::query()
             ->with(['merchant', 'store'])
             ->byMerchant($azoAccessDto->merchant_id)
-            ->filterRequest($request, [])
+            ->filterRequest($request, [QAzoMerchantAccessFilter::class])
             ->orderByDesc('updated_at');
 
         return $merchantUsersQuery->paginate($request->query('per_page') ?? 15);
