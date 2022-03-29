@@ -36,7 +36,7 @@ class StoresController extends Controller
             ]);
 
         if ($request->query('object') == 'true') {
-            return JsonResource::collection($stores->first());
+            return new JsonResource($stores->first());
         }
 
         if ($request->has('paginate') && ($request->query('paginate') == 'false'
