@@ -17,7 +17,7 @@ class StoresResource extends JsonResource
      * Transform the resource into an array.
      *
      * @param Request $request
-     * @return array
+     * @return array|null
      */
     public function toArray($request)
     {
