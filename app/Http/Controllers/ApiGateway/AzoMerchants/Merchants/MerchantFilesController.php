@@ -35,7 +35,7 @@ class MerchantFilesController extends Controller
 
     public function delete($merchant_id, $file_id, DeleteMerchantFileUseCase $deleteMerchantFileUseCase)
     {
-        $deleteMerchantFileUseCase->execute($merchant_id, $file_id);
+        $deleteMerchantFileUseCase->execute((int) $merchant_id, (int) $file_id);
 
         return response()->json(['message' => 'Файл успешно удалён.']);
     }
