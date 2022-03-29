@@ -4,33 +4,92 @@ declare(strict_types=1);
 
 namespace App\DTOs\Conditions;
 
-use Alifuz\Utils\Parser\ParseDataTrait;
+use Alifuz\Utils\Entities\AbstractEntity;
 
-class UpdateConditionDTO
+final class UpdateConditionDTO extends AbstractEntity
 {
-    use ParseDataTrait;
-
+    /**
+     * @param int[] $store_ids
+     */
     public function __construct(
-        public int $condition_id,
-        public ?array $store_ids,
-        public ?int $duration,
-        public int $commission,
-        public ?string $special_offer,
-        public ?int $event_id,
-        public int $discount,
+        private array $store_ids,
+        private int $duration,
+        private int $commission,
+        private ?string $special_offer,
+        private ?int $event_id,
+        private int $discount,
     ) {
     }
 
-    public static function fromArray(int $condition_id, array $data): self
+    /**
+     * @return int[]
+     */
+    public function getStoreIds(): array
     {
-        return new self(
-            self::parseInt($condition_id),
-            self::parseNullableArray($data['store_ids']),
-            array_key_exists('duration', $data) ? self::parseNullableInt($data['duration']) : 0,
-            self::parseInt($data['commission']),
-            self::parseNullableString($data['special_offer']),
-            self::parseNullableInt($data['event_id']),
-            self::parseInt($data['discount'])
+        return $this->store_ids;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDuration(): int
+    {
+        return $this->duration;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCommission(): int
+    {
+        return $this->commission;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSpecialOffer(): ?string
+    {
+        return $this->special_offer;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getEventId(): ?int
+    {
+        return $this->event_id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDiscount(): int
+    {
+        return $this->discount;
+    }
+
+    public static function fromArray(array $data): static
+    {
+        return new static(
+            store_ids: self::parseArray($data['store_ids'], defaultValue: []),
+            duration: self::parseInt($data['duration'], defaultValue: 0),
+            commission:  self::parseInt($data['commission']),
+            special_offer:  self::parseNullableString($data['special_offer']),
+            event_id:  self::parseNullableInt($data['event_id']),
+            discount:  self::parseInt($data['discount'])
         );
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'store_ids' => $this->store_ids,
+            'duration' => $this->duration,
+            'commission' => $this->commission,
+            'special_offer' => $this->special_offer,
+            'event_id' => $this->event_id,
+            'discount' => $this->discount,
+        ];
     }
 }

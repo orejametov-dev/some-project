@@ -22,7 +22,7 @@ class ProblemCasesController extends Controller
     public function index(Request $request, AzoAccessDto $azoAccessDto)
     {
         $problemCases = ProblemCase::query()->with('before_tags')
-            ->byMerchant($azoAccessDto->merchant_id)
+            ->byMerchant($azoAccessDto->getMerchantId())
             ->filterRequest($request, [
                 StatusIdFilter::class,
             ]);
@@ -86,11 +86,11 @@ class ProblemCasesController extends Controller
 
     public function getNewProblemCasesCounter(GatewayAuthUser $gatewayAuthUser, AzoAccessDto $azoAccessDto)
     {
-        $counter = Cache::remember('new-problem-cases-counter_' . $azoAccessDto->merchant_id, 10 * 60, function () use ($azoAccessDto) {
+        $counter = Cache::remember('new-problem-cases-counter_' . $azoAccessDto->getMerchantId(), 10 * 60, function () use ($azoAccessDto) {
             return ProblemCase::query()
                 ->whereNull('engaged_by_id')
                 ->whereNull('engaged_by_name')
-                ->byMerchant($azoAccessDto->merchant_id)
+                ->byMerchant($azoAccessDto->getMerchantId())
                 ->onlyNew()
                 ->count();
         });

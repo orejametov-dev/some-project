@@ -56,16 +56,12 @@ class StoresController extends Controller
 
     public function store(StoreStoresRequest $request, SaveStoreUseCase $storeStoresUseCase)
     {
-        $storeStoresDTO = StoreStoresDTO::fromArray($request->validated());
-
-        return $storeStoresUseCase->execute($storeStoresDTO);
+        return $storeStoresUseCase->execute(StoreStoresDTO::fromArray($request->validated()));
     }
 
     public function update($id, UpdateStoresRequest $request, UpdateStoreUseCase $updateStoresUseCase)
     {
-        $updateStoresDTO = UpdateStoresDTO::fromArray((int) $id, $request->validated());
-
-        return $updateStoresUseCase->execute($updateStoresDTO);
+        return $updateStoresUseCase->execute((int) $id, UpdateStoresDTO::fromArray($request->validated()));
     }
 
     public function toggle($id, Request $request, ToggleStoreUseCase $toggleStoresUseCase)

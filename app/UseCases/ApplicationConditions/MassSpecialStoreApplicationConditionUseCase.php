@@ -14,7 +14,6 @@ use App\Jobs\SendHook;
 use App\Models\Condition;
 use App\Models\Merchant;
 use App\UseCases\Cache\FlushCacheUseCase;
-use Carbon\Carbon;
 
 class MassSpecialStoreApplicationConditionUseCase
 {
@@ -29,16 +28,16 @@ class MassSpecialStoreApplicationConditionUseCase
     public function execute(MassSpecialStoreConditionDTO $massSpecialStoreConditionDTO): void
     {
         $merchants = Merchant::query()
-            ->whereIn('id', $massSpecialStoreConditionDTO->merchant_ids)
+            ->whereIn('id', $massSpecialStoreConditionDTO->getMerchantIds())
             ->get();
 
-        if (array_diff($massSpecialStoreConditionDTO->merchant_ids, $merchants->pluck('id')->toArray()) != null) {
+        if (array_diff($massSpecialStoreConditionDTO->getMerchantIds(), $merchants->pluck('id')->toArray()) != null) {
             throw new ApiBusinessException('Мерчант не существует', 'merchant_not_exists', [
                 'ru' => 'Мерчант не существует',
             ], 400);
         }
 
-        $this->checkStartedAtAndFinishedAtConditionUseCase->execute($massSpecialStoreConditionDTO->started_at, $massSpecialStoreConditionDTO->finished_at);
+        $this->checkStartedAtAndFinishedAtConditionUseCase->execute($massSpecialStoreConditionDTO->getStartedAt(), $massSpecialStoreConditionDTO->getFinishedAt());
 
         foreach ($merchants as $merchant) {
             $main_store = $merchant->stores()->where('is_main', true)->first();
@@ -48,17 +47,17 @@ class MassSpecialStoreApplicationConditionUseCase
             }
 
             $condition = new Condition();
-            $condition->duration = $massSpecialStoreConditionDTO->duration;
-            $condition->commission = $massSpecialStoreConditionDTO->commission;
-            $condition->discount = $massSpecialStoreConditionDTO->discount;
-            $condition->post_merchant = $massSpecialStoreConditionDTO->post_merchant;
-            $condition->post_alifshop = $massSpecialStoreConditionDTO->post_alifshop;
-            $condition->event_id = $massSpecialStoreConditionDTO->event_id;
+            $condition->duration = $massSpecialStoreConditionDTO->getDuration();
+            $condition->commission = $massSpecialStoreConditionDTO->getCommission();
+            $condition->discount = $massSpecialStoreConditionDTO->getDiscount();
+            $condition->post_merchant = $massSpecialStoreConditionDTO->isPostMerchant();
+            $condition->post_alifshop = $massSpecialStoreConditionDTO->isPostAlifshop();
+            $condition->event_id = $massSpecialStoreConditionDTO->getEventId();
             $condition->merchant_id = $merchant->id;
             $condition->store_id = $main_store->id;
-            $condition->started_at = $massSpecialStoreConditionDTO->started_at ? Carbon::parse($massSpecialStoreConditionDTO->started_at) : null;
-            $condition->finished_at = $massSpecialStoreConditionDTO->finished_at ? Carbon::parse($massSpecialStoreConditionDTO->finished_at) : null;
-            $condition->active = $massSpecialStoreConditionDTO->started_at === null;
+            $condition->started_at = $massSpecialStoreConditionDTO->getStartedAt();
+            $condition->finished_at = $massSpecialStoreConditionDTO->getFinishedAt();
+            $condition->active = $massSpecialStoreConditionDTO->getStartedAt() === null;
 
             $condition->save();
 

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\UseCases\ProblemCase;
 
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
-use App\DTOs\Comments\CommentDTO;
 use App\Models\Comment;
 
 class StoreCommentProblemCaseUseCase
@@ -15,12 +14,12 @@ class StoreCommentProblemCaseUseCase
     ) {
     }
 
-    public function execute(CommentDTO $commentDTO): Comment
+    public function execute(int $id, string $body, string $type): Comment
     {
         $comment = new Comment();
-        $comment->commentable_type = $commentDTO->commentable_type;
-        $comment->commentable_id = $commentDTO->commentable_id;
-        $comment->body = $commentDTO->body;
+        $comment->commentable_type = $type;
+        $comment->commentable_id = $id;
+        $comment->body = $body;
         $comment->created_by_id = $this->gatewayAuthUser->getId();
         $comment->created_by_name = $this->gatewayAuthUser->getName();
         $comment->save();

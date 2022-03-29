@@ -4,42 +4,154 @@ declare(strict_types=1);
 
 namespace App\DTOs\Conditions;
 
-use Alifuz\Utils\Parser\ParseDataTrait;
+use Alifuz\Utils\Entities\AbstractEntity;
 use Carbon\Carbon;
 
-class StoreConditionDTO
+final class StoreConditionDTO extends AbstractEntity
 {
-    use ParseDataTrait;
-
+    /**
+     * @param int[] $store_ids
+     */
     public function __construct(
-        public ?int $merchant_id,
-        public ?array $store_ids,
-        public ?int $duration,
-        public int $commission,
-        public ?string $special_offer,
-        public ?int $event_id,
-        public int $discount,
-        public bool $post_merchant,
-        public bool $post_alifshop,
-        public ?Carbon $started_at,
-        public ?Carbon $finished_at,
+        private int $merchant_id,
+        private array $store_ids,
+        private int $duration,
+        private int $commission,
+        private ?string $special_offer,
+        private ?int $event_id,
+        private int $discount,
+        private bool $post_merchant,
+        private bool $post_alifshop,
+        private ?Carbon $started_at,
+        private ?Carbon $finished_at,
     ) {
     }
 
-    public static function fromArray(array $data): self
+    /**
+     * @return int
+     */
+    public function getMerchantId(): int
     {
-        return new self(
-            self::parseNullableInt($data['merchant_id']),
-            self::parseNullableArray($data['store_ids']),
-            array_key_exists('duration', $data) ? self::parseNullableInt($data['duration']) : 0,
-            self::parseInt($data['commission']),
-            self::parseNullableString($data['special_offer']),
-            self::parseNullableInt($data['event_id']),
-            self::parseInt($data['discount']),
-            self::parseBool($data['post_merchant']),
-            self::parseBool($data['post_alifshop']),
-            isset($data['started_at']) ? Carbon::parse($data['started_at']) : null,
-            isset($data['finished_at']) ? Carbon::parse($data['finished_at']) : null
+        return $this->merchant_id;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getStoreIds(): array
+    {
+        return $this->store_ids;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDuration(): int
+    {
+        return $this->duration;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCommission(): int
+    {
+        return $this->commission;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSpecialOffer(): ?string
+    {
+        return $this->special_offer;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getEventId(): ?int
+    {
+        return $this->event_id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDiscount(): int
+    {
+        return $this->discount;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPostMerchant(): bool
+    {
+        return $this->post_merchant;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPostAlifshop(): bool
+    {
+        return $this->post_alifshop;
+    }
+
+    /**
+     * @return Carbon|null
+     */
+    public function getStartedAt(): ?Carbon
+    {
+        return $this->started_at;
+    }
+
+    /**
+     * @return Carbon|null
+     */
+    public function getFinishedAt(): ?Carbon
+    {
+        return $this->finished_at;
+    }
+
+    /**
+     * @param array<mixed> $data
+     */
+    public static function fromArray(array $data): static
+    {
+        return new static(
+            merchant_id: self::parseInt($data['merchant_id']),
+            store_ids: self::parseArray($data['store_ids'], defaultValue: []),
+            duration: self::parseInt($data['duration'], defaultValue: 0),
+            commission: self::parseInt($data['commission']),
+            special_offer:  self::parseNullableString($data['special_offer']),
+            event_id:  self::parseNullableInt($data['event_id']),
+            discount:  self::parseInt($data['discount']),
+            post_merchant:  self::parseBool($data['post_merchant']),
+            post_alifshop:  self::parseBool($data['post_alifshop']),
+            started_at: self::parseNullableCarbon($data['started_at']),
+            finished_at:  self::parseNullableCarbon($data['finished_at']),
         );
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'merchant_id' => $this->merchant_id,
+            'store_ids' => $this->store_ids,
+            'duration' => $this->duration,
+            'commission' => $this->commission,
+            'special_offer' => $this->special_offer,
+            'event_id' => $this->event_id,
+            'discount' => $this->discount,
+            'post_merchant' => $this->post_merchant,
+            'post_alifshop' => $this->post_alifshop,
+            'started_at' => $this->started_at,
+            'finished_at' => $this->finished_at,
+        ];
     }
 }

@@ -4,7 +4,7 @@
 
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
-use App\DTOs\Competitors\CompetitorDTO;
+use App\DTOs\Competitors\SaveCompetitorDTO;
 use App\DTOs\Merchants\UpdateMerchantDTO;
 use App\Filters\CommonFilters\ActiveFilter;
 use App\Filters\CommonFilters\TagsFilter;
@@ -79,8 +79,7 @@ class MerchantsController extends Controller
 
     public function update($id, UpdateMerchantRequest $request, UpdateMerchantUseCase $updateMerchantUseCase)
     {
-        $updateMerchantDTO = UpdateMerchantDTO::fromArray((int) $id, $request->validated());
-        $merchant = $updateMerchantUseCase->execute($updateMerchantDTO);
+        $merchant = $updateMerchantUseCase->execute((int) $id, UpdateMerchantDTO::fromArray($request->validated()));
 
         return $merchant;
     }
@@ -171,16 +170,14 @@ class MerchantsController extends Controller
 
     public function attachCompetitor($id, CompetitorsRequest $request, AttachCompetitorUseCase $attachCompetitorUseCase)
     {
-        $competitorDTO = CompetitorDTO::fromArray((int) $id, $request->validated());
-        $response = $attachCompetitorUseCase->execute($competitorDTO);
+        $response = $attachCompetitorUseCase->execute((int) $id, SaveCompetitorDTO::fromArray($request->validated()));
 
         return $response;
     }
 
     public function updateCompetitor($id, CompetitorsRequest $request, UpdateCompetitorUseCase $updateCompetitorUseCase)
     {
-        $competitorDTO = CompetitorDTO::fromArray((int) $id, $request->validated());
-        $response = $updateCompetitorUseCase->execute($competitorDTO);
+        $response = $updateCompetitorUseCase->execute((int) $id, SaveCompetitorDTO::fromArray($request->validated()));
 
         return $response;
     }

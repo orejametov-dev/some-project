@@ -16,9 +16,9 @@ class StoresController extends Controller
     {
         $stores = Store::query()
             ->with(['merchant'])
-            ->byMerchant($azoAccessDto->merchant_id);
+            ->byMerchant($azoAccessDto->getMerchantId());
 
-        return Cache::remember($request->fullUrl() . '_' . $azoAccessDto->merchant_id, 5 * 60, function () use ($stores, $request) {
+        return Cache::remember($request->fullUrl() . '_' . $azoAccessDto->getMerchantId(), 5 * 60, function () use ($stores, $request) {
             return $stores->paginate($request->query('per_page') ?? 15);
         });
     }

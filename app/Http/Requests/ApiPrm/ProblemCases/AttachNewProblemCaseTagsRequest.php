@@ -6,7 +6,7 @@ namespace App\Http\Requests\ApiPrm\ProblemCases;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProblemCaseUpdateRequest extends FormRequest
+class AttachNewProblemCaseTagsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,7 +26,7 @@ class ProblemCaseUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'deadline' => 'nullable|date_format:Y-m-d',
+            'tags' => 'required|array',
         ];
     }
 }

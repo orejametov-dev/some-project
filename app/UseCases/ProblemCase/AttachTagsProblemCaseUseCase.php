@@ -25,7 +25,12 @@ class AttachTagsProblemCaseUseCase
 
         $tags = [];
         foreach ($tags_request as $item) {
-            $tag = ProblemCaseTag::query()->firstOrCreate(['body' => $item['name'], 'type_id' => $item['type_id']]);
+            $tag = ProblemCaseTag::query()->first();
+            if ($tag === null) {
+                $tag = new ProblemCaseTag();
+                $tag->body = $item['name'];
+                $tag->type_id = $item['type_id'];
+            }
             $tags[] = $tag->id;
         }
         $problemCase->tags()->attach($tags);

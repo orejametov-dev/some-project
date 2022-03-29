@@ -15,7 +15,6 @@ use App\Models\Condition;
 use App\Models\ConditionTemplate;
 use App\Models\Merchant;
 use App\UseCases\Cache\FlushCacheUseCase;
-use Carbon\Carbon;
 
 class MassStoreApplicationConditionUseCase
 {
@@ -30,26 +29,26 @@ class MassStoreApplicationConditionUseCase
     public function execute(MassStoreConditionDTO $massStoreConditionDTO) : void
     {
         $merchants = Merchant::query()
-            ->whereIn('id', $massStoreConditionDTO->merchant_ids)
+            ->whereIn('id', $massStoreConditionDTO->getMerchantIds())
             ->get();
 
-        if (array_diff($massStoreConditionDTO->merchant_ids, $merchants->pluck('id')->toArray()) != null) {
+        if (array_diff($massStoreConditionDTO->getMerchantIds(), $merchants->pluck('id')->toArray()) != null) {
             throw new ApiBusinessException('Мерчант не существует', 'merchant_not_exists', [
                 'ru' => 'Мерчант не существует',
             ], 400);
         }
 
         $templates = ConditionTemplate::query()
-            ->whereIn('id', $massStoreConditionDTO->template_ids)
+            ->whereIn('id', $massStoreConditionDTO->getTemplateIds())
             ->get();
 
-        if (array_diff($massStoreConditionDTO->template_ids, $templates->pluck('id')->toArray()) != null) {
+        if (array_diff($massStoreConditionDTO->getTemplateIds(), $templates->pluck('id')->toArray()) != null) {
             throw new ApiBusinessException('Условие не существует', 'merchant_not_exists', [
                 'ru' => 'Условие не существует',
             ], 400);
         }
 
-        $this->checkStartedAtAndFinishedAtConditionUseCase->execute($massStoreConditionDTO->started_at, $massStoreConditionDTO->finished_at);
+        $this->checkStartedAtAndFinishedAtConditionUseCase->execute($massStoreConditionDTO->getStartedAt(), $massStoreConditionDTO->getFinishedAt());
 
         foreach ($merchants as $merchant) {
             foreach ($templates as $template) {
@@ -79,14 +78,14 @@ class MassStoreApplicationConditionUseCase
                 $condition = new Condition();
                 $condition->duration = $template->duration;
                 $condition->commission = $template->commission;
-                $condition->post_merchant = $massStoreConditionDTO->post_merchant;
-                $condition->post_alifshop = $massStoreConditionDTO->post_alifshop;
-                $condition->event_id = $massStoreConditionDTO->event_id;
+                $condition->post_merchant = $massStoreConditionDTO->isPostMerchant();
+                $condition->post_alifshop = $massStoreConditionDTO->isPostAlifshop();
+                $condition->event_id = $massStoreConditionDTO->getEventId();
                 $condition->merchant_id = $merchant->id;
                 $condition->store_id = $main_store->id;
-                $condition->started_at = $massStoreConditionDTO->started_at ? Carbon::parse($massStoreConditionDTO->started_at) : null;
-                $condition->finished_at = $massStoreConditionDTO->finished_at ? Carbon::parse($massStoreConditionDTO->finished_at) : null;
-                $condition->active = $massStoreConditionDTO->started_at === null;
+                $condition->started_at = $massStoreConditionDTO->getStartedAt();
+                $condition->finished_at = $massStoreConditionDTO->getFinishedAt();
+                $condition->active = $massStoreConditionDTO->getStartedAt() === null;
 
                 $condition->save();
 

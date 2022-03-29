@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\ApiPrm\ProblemCases;
 
+use App\Enums\ProblemCaseStatusEnum;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProblemCaseNewAttachTagsRequest extends FormRequest
+class SetProblemCaseStatusRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,7 +27,11 @@ class ProblemCaseNewAttachTagsRequest extends FormRequest
     public function rules()
     {
         return [
-            'tags' => 'required|array',
+            'status_id' => 'required|integer|in:'
+                . ProblemCaseStatusEnum::NEW()->getValue() . ','
+                . ProblemCaseStatusEnum::IN_PROCESS()->getValue() . ','
+                . ProblemCaseStatusEnum::DONE()->getValue() . ','
+                . ProblemCaseStatusEnum::FINISHED()->getValue(),
         ];
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\UseCases\Competitors;
 
-use App\DTOs\Competitors\CompetitorDTO;
+use App\DTOs\Competitors\SaveCompetitorDTO;
 use App\Exceptions\ApiBusinessException;
 use App\Models\Merchant;
 use App\UseCases\Merchants\FindMerchantByIdUseCase;
@@ -15,10 +15,10 @@ class AttachCompetitorUseCase
     ) {
     }
 
-    public function execute(CompetitorDTO $competitorDTO): Merchant
+    public function execute(int $merchant_id, SaveCompetitorDTO $competitorDTO): Merchant
     {
-        $merchant = $this->findMerchantUseCase->execute($competitorDTO->merchant_id);
-        $competitor = $this->findCompetitorUseCase->execute($competitorDTO->competitor_id);
+        $merchant = $this->findMerchantUseCase->execute($merchant_id);
+        $competitor = $this->findCompetitorUseCase->execute($competitorDTO->getCompetitorId());
 
         if ($merchant->competitors()->find($competitor->id) !== null) {
             throw new ApiBusinessException('Информация о данном конкуренте на этого мерчанта уже была создана', 'merchant_competitor_exists', [
@@ -28,9 +28,9 @@ class AttachCompetitorUseCase
         }
 
         $merchant->competitors()->attach($competitor->id, [
-            'volume_sales' => $competitorDTO->volume_sales,
-            'percentage_approve' => $competitorDTO->percentage_approve,
-            'partnership_at' => $competitorDTO->partnership_at,
+            'volume_sales' => $competitorDTO->getVolumeSales(),
+            'percentage_approve' => $competitorDTO->getPercentageApprove(),
+            'partnership_at' => $competitorDTO->getPartnershipAt(),
         ]);
 
         return $merchant->load('competitors');
