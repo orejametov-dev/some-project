@@ -8,6 +8,9 @@ use App\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property Store $resource
+ */
 class StoresResource extends JsonResource
 {
     /**
@@ -18,13 +21,16 @@ class StoresResource extends JsonResource
      */
     public function toArray($request)
     {
-        /** @var Store|StoresResource $this */
+        if ($this->resource === null) {
+            return null;
+        }
+
         return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'address_phone' => $this->address . ' ' . $this->phone,
-            'address' => $this->address,
-            'phone' => $this->phone,
+            'id' => $this->resource->id,
+            'name' => $this->resource->name,
+            'address_phone' => $this->resource->address . ' ' . $this->resource->phone,
+            'address' => $this->resource->address,
+            'phone' => $this->resource->phone,
         ];
     }
 }
