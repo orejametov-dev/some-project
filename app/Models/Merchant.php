@@ -29,6 +29,7 @@ use Illuminate\Http\Request;
  * @property bool $has_general_goods
  * @property string|null $logo_url
  * @property bool $recommend
+ * @property bool $holding_initial_payment
  * @property int|null $maintainer_id
  * @property int|null $current_sales
  * @property int $company_id
