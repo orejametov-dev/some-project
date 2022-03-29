@@ -21,6 +21,13 @@ class AzoMerchantAccessMiddleware
     ) {
     }
 
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
+     */
     public function handle(Request $request, Closure $next)
     {
         $azo_merchant_access = Cache::tags('azo_merchants')->remember('azo_merchant_user_id_' . $this->gatewayAuthUser->getId(), 86400, function () {

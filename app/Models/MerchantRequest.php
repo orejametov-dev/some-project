@@ -129,7 +129,7 @@ class MerchantRequest extends Model
         return $builder->where('status_id', MerchantRequestStatusEnum::NEW());
     }
 
-    public function setStatus(MerchantRequestStatusEnum $statusEnum)
+    public function setStatus(MerchantRequestStatusEnum $statusEnum): void
     {
         $this->assertStatusSwitch($statusEnum);
         $this->status_updated_at = Carbon::now();
