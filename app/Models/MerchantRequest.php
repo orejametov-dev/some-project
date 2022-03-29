@@ -28,7 +28,7 @@ use InvalidArgumentException;
  * @property string $user_name
  * @property string $user_phone
  * @property string $address
- * @property int $status_id
+ * @property MerchantRequestStatusEnum $status_id
  * @property bool $main_completed
  * @property bool $documents_completed
  * @property bool $file_completed
@@ -79,7 +79,10 @@ class MerchantRequest extends Model
         'engaged_at',
     ];
 
-    protected $casts = ['categories' => 'array'];
+    protected $casts = [
+        'categories' => 'array',
+        'status_id' => MerchantRequestStatusEnum::class,
+    ];
 
     private function getStatusMachineMapping(): array
     {
@@ -103,22 +106,22 @@ class MerchantRequest extends Model
     {
         $mapping = new MerchantRequestStatusMapping();
 
-        return $mapping->getMappedValue(MerchantRequestStatusEnum::from($this->status_id));
+        return $mapping->getMappedValue($this->status_id);
     }
 
     public function isStatusNew(): bool
     {
-        return $this->status_id === MerchantRequestStatusEnum::NEW()->getValue();
+        return $this->status_id->equals(MerchantRequestStatusEnum::NEW());
     }
 
     public function isInProcess(): bool
     {
-        return $this->status_id === MerchantRequestStatusEnum::IN_PROCESS()->getValue();
+        return $this->status_id->equals(MerchantRequestStatusEnum::IN_PROCESS());
     }
 
     public function isOnTraining(): bool
     {
-        return $this->status_id === MerchantRequestStatusEnum::ON_TRAINING()->getValue();
+        return $this->status_id->equals(MerchantRequestStatusEnum::ON_TRAINING());
     }
 
     public function scopeNew(Builder $builder): Builder
@@ -129,18 +132,17 @@ class MerchantRequest extends Model
     public function setStatus(MerchantRequestStatusEnum $statusEnum)
     {
         $this->assertStatusSwitch($statusEnum);
-
         $this->status_updated_at = Carbon::now();
-        $this->status_id = $statusEnum->getValue();
+        $this->status_id = $statusEnum;
     }
 
     public function assertStatusSwitch(MerchantRequestStatusEnum $statusEnum): void
     {
-        if ($this->status_id !== null and array_key_exists($this->status_id, $this->getStatusMachineMapping()) === false) {
+        if ($this->status_id !== null and array_key_exists($this->status_id->getValue(), $this->getStatusMachineMapping()) === false) {
             throw new InvalidArgumentException('Initial status does not mapped');
         }
 
-        if ($this->status_id !== null and in_array($statusEnum, $this->getStatusMachineMapping()[$this->status_id]) === false) {
+        if ($this->status_id !== null and in_array($statusEnum, $this->getStatusMachineMapping()[$this->status_id->getValue()]) === false) {
             throw new InvalidArgumentException('Assigned status does not mapped');
         }
     }

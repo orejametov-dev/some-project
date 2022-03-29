@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\ProblemCaseTagTypeEnum;
 use App\Filters\ProblemCaseTag\ProblemCaseTagFilters;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -34,8 +35,9 @@ class ProblemCaseTag extends Model
 
     protected $fillable = ['body', 'type_id'];
 
-    public const BEFORE_TYPE = 1;
-    public const AFTER_TYPE = 2;
+    protected $casts = [
+        'type_id' => ProblemCaseTagTypeEnum::class,
+    ];
 
     public function problem_cases(): BelongsToMany
     {

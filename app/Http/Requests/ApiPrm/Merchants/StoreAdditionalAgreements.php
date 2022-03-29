@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\ApiPrm\Merchants;
 
-use App\Models\AdditionalAgreement;
+use App\Enums\AdditionalAgreementDocumentTypeEnum;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreAdditionalAgreements extends FormRequest
@@ -32,9 +32,9 @@ class StoreAdditionalAgreements extends FormRequest
             'number' => 'required',
             'merchant_id' => 'required|integer',
             'document_type' => 'required|string|in:'
-                . AdditionalAgreement::LIMIT . ','
-                . AdditionalAgreement::VAT . ','
-                . AdditionalAgreement::DELIVERY,
+                . AdditionalAgreementDocumentTypeEnum::LIMIT() . ','
+                . AdditionalAgreementDocumentTypeEnum::VAT() . ','
+                . AdditionalAgreementDocumentTypeEnum::DELIVERY(),
         ];
     }
 }

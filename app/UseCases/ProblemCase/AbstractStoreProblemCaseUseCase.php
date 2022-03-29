@@ -61,7 +61,7 @@ abstract class AbstractStoreProblemCaseUseCase
             created_from_str: $this->gatewayApplication->getApplication()->getValue(),
             created_by_id: $this->gatewayAuthUser->getId(),
             body: 'Создан проблемный кейс co статусом',
-            keyword: $this->problemCaseStatusMapping->getMappedValue(ProblemCaseStatusEnum::from($problemCase->status_id))['name'],
+            keyword: $this->problemCaseStatusMapping->getMappedValue($problemCase->status_id)['name'],
             action: 'create',
             class: 'info',
             action_at: null,

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\ApiComplianceGateway\ProblemCases;
 
+use App\Enums\ProblemCaseTagTypeEnum;
 use App\Filters\ProblemCaseTag\QProblemCaseTagFilter;
 use App\Http\Controllers\Controller;
 use App\Models\ProblemCaseTag;
@@ -12,7 +13,7 @@ class ProblemCaseTagsController extends Controller
     public function index(Request $request)
     {
         $tags = ProblemCaseTag::query()
-            ->where('type_id', ProblemCaseTag::BEFORE_TYPE)
+            ->where('type_id', ProblemCaseTagTypeEnum::BEFORE())
             ->filterRequest($request, [
                QProblemCaseTagFilter::class,
             ]);

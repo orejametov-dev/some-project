@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\DTOs\AdditionalAgreements;
 
 use Alifuz\Utils\Entities\AbstractEntity;
+use App\Enums\AdditionalAgreementDocumentTypeEnum;
 use Carbon\Carbon;
 
 final class StoreAdditionalAgreementDTO extends AbstractEntity
@@ -13,7 +14,7 @@ final class StoreAdditionalAgreementDTO extends AbstractEntity
         private Carbon $registration_date,
         private int $number,
         private int $merchant_id,
-        private string $document_type,
+        private AdditionalAgreementDocumentTypeEnum $document_type,
         private ?int $limit = null,
     ) {
     }
@@ -34,10 +35,7 @@ final class StoreAdditionalAgreementDTO extends AbstractEntity
         return $this->merchant_id;
     }
 
-    /**
-     * @return string
-     */
-    public function getDocumentType(): string
+    public function getDocumentType(): AdditionalAgreementDocumentTypeEnum
     {
         return $this->document_type;
     }
@@ -64,7 +62,7 @@ final class StoreAdditionalAgreementDTO extends AbstractEntity
             registration_date: Carbon::parse($data['registration_date']),
             number: self::parseInt($data['number']),
             merchant_id: self::parseInt($data['merchant_id']),
-            document_type: self::parseString($data['document_type']),
+            document_type: self::parseEnum(AdditionalAgreementDocumentTypeEnum::class, $data['document_type']),
             limit: self::parseNullableInt($data['limit']),
         );
     }

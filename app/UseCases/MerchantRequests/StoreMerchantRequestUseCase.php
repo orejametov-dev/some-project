@@ -28,7 +28,7 @@ class StoreMerchantRequestUseCase
             ->orderByDesc('id')
             ->first();
 
-        if ($merchant_request && $merchant_request->status_id !== MerchantRequestStatusEnum::TRASH()->getValue()) {
+        if ($merchant_request && $merchant_request->status_id !== MerchantRequestStatusEnum::TRASH()) {
             throw new BusinessException('Запрос с таким номером телефона уже существует, статус запроса');
             //MerchantRequest::getOneById((int) $merchant_request->status_id)->name
         }

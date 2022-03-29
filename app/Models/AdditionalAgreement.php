@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\AdditionalAgreementDocumentTypeEnum;
 use App\Filters\AdditionalAgreement\AdditionalAgreementFilters;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -29,17 +30,17 @@ use Illuminate\Http\Request;
  * @method static Builder|AdditionalAgreement newModelQuery()
  * @method static Builder|AdditionalAgreement newQuery()
  * @method static Builder|AdditionalAgreement query()
- * @property string|null $document_type
+ * @property AdditionalAgreementDocumentTypeEnum|null $document_type
  */
 class AdditionalAgreement extends Model
 {
     use HasFactory;
 
-    const LIMIT = 'limit';
-    const VAT = 'vat';
-    const DELIVERY = 'delivery';
-
     protected $table = 'merchant_additional_agreements';
+
+    protected $casts = [
+        'document_type' => AdditionalAgreementDocumentTypeEnum::class,
+    ];
 
     /**
      * @return BelongsTo
