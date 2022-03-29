@@ -97,6 +97,6 @@ class ProblemCasesController extends Controller
                 ->count();
         });
 
-        return response()->json(['count' => (int) $counter]);
+        return new JsonResponse(['count' => (int) $counter]);
     }
 }

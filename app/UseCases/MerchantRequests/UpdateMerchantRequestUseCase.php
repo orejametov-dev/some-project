@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace App\UseCases\MerchantRequests;
 
-use
-    App\DTOs\MerchantRequest\UpdateMerchantRequestDTO;
+use App\DTOs\MerchantRequest\UpdateMerchantRequestDTO;
 use App\Exceptions\BusinessException;
 use App\HttpRepositories\Prm\CompanyHttpRepository;
 use App\Models\MerchantRequest;
