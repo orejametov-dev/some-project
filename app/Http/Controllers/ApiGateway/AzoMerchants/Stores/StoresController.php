@@ -21,10 +21,11 @@ use App\UseCases\Stores\SetTypeRegisterStoreUseCase;
 use App\UseCases\Stores\ToggleStoreUseCase;
 use App\UseCases\Stores\UpdateStoreUseCase;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class StoresController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): JsonResource
     {
         $stores = Store::query()->with(['merchant'])
             ->filterRequest($request, [
@@ -35,56 +36,64 @@ class StoresController extends Controller
             ]);
 
         if ($request->query('object') == 'true') {
-            return $stores->first();
+            return new JsonResource($stores->first());
         }
 
         if ($request->has('paginate') && ($request->query('paginate') == 'false'
                 or $request->query('paginate') === '0')) {
-            return $stores->get();
+            return JsonResource::collection($stores->get());
         }
 
-        return $stores->paginate($request->query('per_page') ?? 15);
+        return JsonResource::collection($stores->paginate($request->query('per_page') ?? 15));
     }
 
-    public function show($id, FindStoreByIdUseCase $findStoreByIdUseCase)
+    public function show($id, FindStoreByIdUseCase $findStoreByIdUseCase): JsonResource
     {
         $store = $findStoreByIdUseCase->execute((int) $id);
         $store->load(['merchant', 'activity_reasons']);
 
-        return $store;
+        return new JsonResource($store);
     }
 
-    public function store(StoreStoresRequest $request, SaveStoreUseCase $storeStoresUseCase)
+    public function store(StoreStoresRequest $request, SaveStoreUseCase $storeStoresUseCase): JsonResource
     {
-        return $storeStoresUseCase->execute(StoreStoresDTO::fromArray($request->validated()));
+        $store = $storeStoresUseCase->execute(StoreStoresDTO::fromArray($request->validated()));
+
+        return JsonResource::collection($store);
     }
 
-    public function update($id, UpdateStoresRequest $request, UpdateStoreUseCase $updateStoresUseCase)
+    public function update($id, UpdateStoresRequest $request, UpdateStoreUseCase $updateStoresUseCase): JsonResource
     {
-        return $updateStoresUseCase->execute((int) $id, UpdateStoresDTO::fromArray($request->validated()));
+        $store = $updateStoresUseCase->execute((int) $id, UpdateStoresDTO::fromArray($request->validated()));
+
+        return JsonResource::collection($store);
     }
 
-    public function toggle($id, Request $request, ToggleStoreUseCase $toggleStoresUseCase)
+    public function toggle($id, Request $request, ToggleStoreUseCase $toggleStoresUseCase): JsonResource
     {
         $this->validate($request, [
             'activity_reason_id' => 'integer|required',
         ]);
 
-        return $toggleStoresUseCase->execute((int) $id, (int) $request->input('activity_reason_id'));
+        $response = $toggleStoresUseCase->execute((int) $id, (int) $request->input('activity_reason_id'));
+
+        return JsonResource::collection($response);
     }
 
-    public function setTypeRegister($id, Request $request, SetTypeRegisterStoreUseCase $setTypeRegisterStoresUseCase)
+    public function setTypeRegister($id, Request $request, SetTypeRegisterStoreUseCase $setTypeRegisterStoresUseCase): JsonResource
     {
         $request->validate([
             'client_type_register' => 'required|string',
         ]);
 
-        return $setTypeRegisterStoresUseCase->execute((int) $id, (string) $request->input('client_type_register'));
+        $response = $setTypeRegisterStoresUseCase->execute((int) $id, (string) $request->input('client_type_register'));
+
+        return JsonResource::collection($response);
     }
 
-    public function getConditions($id, Request $request)
+    public function getConditions($id, Request $request): JsonResource
     {
-        $store = Store::query()->findOrFail($id);
+        $store = Store::query()->findOrFail((int) $id);
         $special_conditions = $store->conditions()->active()->get();
 
         $conditionQuery = Condition::query()
@@ -94,6 +103,6 @@ class StoresController extends Controller
             ->filterRequest($request, [])
             ->orderRequest($request)->get();
 
-        return $conditionQuery->merge($special_conditions)->sortByDesc('updated_at');
+        return JsonResource::collection($conditionQuery->merge($special_conditions)->sortByDesc('updated_at'));
     }
 }
