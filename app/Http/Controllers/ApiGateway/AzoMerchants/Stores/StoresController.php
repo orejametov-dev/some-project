@@ -22,7 +22,6 @@ use App\UseCases\Stores\ToggleStoreUseCase;
 use App\UseCases\Stores\UpdateStoreUseCase;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Collection;
 
 class StoresController extends Controller
 {
@@ -94,7 +93,7 @@ class StoresController extends Controller
         return JsonResource::collection($response);
     }
 
-    public function getConditions($id, Request $request): Collection
+    public function getConditions($id, Request $request): JsonResource
     {
         $store = Store::query()->findOrFail((int) $id);
         $special_conditions = $store->conditions()->active()->get();
@@ -106,6 +105,6 @@ class StoresController extends Controller
             ->filterRequest($request, [])
             ->orderRequest($request)->get();
 
-        return $conditionQuery->merge($special_conditions)->sortByDesc('updated_at');
+        return JsonResource::collection($conditionQuery->merge($special_conditions)->sortByDesc('updated_at'));
     }
 }
