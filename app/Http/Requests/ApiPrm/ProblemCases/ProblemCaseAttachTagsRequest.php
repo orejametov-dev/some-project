@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\ApiPrm\ProblemCases;
 
-use App\Models\ProblemCaseTag;
+use App\Enums\ProblemCaseTagTypeEnum;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ProblemCaseAttachTagsRequest extends FormRequest
@@ -29,7 +29,7 @@ class ProblemCaseAttachTagsRequest extends FormRequest
         return [
             'tags' => 'required|array',
             'tags.*.name' => 'required|string',
-            'tags.*.type_id' => 'required|integer|in:' . ProblemCaseTag::BEFORE_TYPE . ', ' . ProblemCaseTag::AFTER_TYPE,
+            'tags.*.type_id' => 'required|integer|in:' . ProblemCaseTagTypeEnum::BEFORE() . ', ' . ProblemCaseTagTypeEnum::AFTER(),
         ];
     }
 }

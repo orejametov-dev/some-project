@@ -7,7 +7,6 @@ namespace App\Http\Controllers\Monitoring;
 use App\Http\Controllers\Controller;
 use App\Models\Merchant;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
 
 class MonitoringController extends Controller
 {

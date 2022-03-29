@@ -72,25 +72,9 @@ class Merchant extends Model
     use SortableByQueryParams;
 
     protected $table = 'merchants';
-    protected $fillable = [
-        'name',
-        'legal_name',
-        'legal_name_prefix',
-        'token',
-        'logo_url',
-        'has_general_goods',
-        'min_application_price',
-        'active',
-    ];
     protected $appends = ['logo_path'];
     protected $hidden = ['logo_url'];
     public static string $percentage_of_limit = '* 0.95';
-    /*Поля моделей используется в model_hooks*/
-    public static array $attributeLabels = [
-        'name' => 'Название партнёра',
-        'legal_name' => 'Юридическое имя',
-        'token' => 'Токен алифшопа',
-    ];
 
     public function getLogoPathAttribute(): string|null
     {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\NotificationTypeEnum;
 use App\Filters\Notification\NotificationFilters;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -23,7 +24,7 @@ use Illuminate\Http\Request;
  * @property string $body_ru
  * @property Carbon $start_schedule
  * @property Carbon $end_schedule
- * @property string $type
+ * @property NotificationTypeEnum $type
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @method static Builder|Notification filterRequest(Request $request, array $filters = [])
@@ -42,8 +43,9 @@ class Notification extends Model
 {
     use HasFactory;
 
-    public const ALL_TYPE = 'ALL';
-    public const CERTAIN_TYPE = 'CERTAIN';
+    protected $casts = [
+        'type' => NotificationTypeEnum::class,
+    ];
 
     public function stores(): BelongsToMany
     {

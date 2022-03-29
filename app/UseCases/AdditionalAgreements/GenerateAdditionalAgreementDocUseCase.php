@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\UseCases\AdditionalAgreements;
 
+use App\Enums\AdditionalAgreementDocumentTypeEnum;
 use App\Exceptions\BusinessException;
-use App\Models\AdditionalAgreement;
 use App\Models\MerchantInfo;
 use App\Services\WordService;
 
@@ -27,9 +27,9 @@ class GenerateAdditionalAgreementDocUseCase
         }
 
         $template_path = match ($additional_agreement->document_type) {
-            AdditionalAgreement::LIMIT => 'app/additional_agreement.docx',
-            AdditionalAgreement::VAT => 'app/additional_agreement_vat.docx',
-            AdditionalAgreement::DELIVERY => 'app/additional_agreement_delivery.docx',
+            AdditionalAgreementDocumentTypeEnum::LIMIT() => 'app/additional_agreement.docx',
+            AdditionalAgreementDocumentTypeEnum::VAT() => 'app/additional_agreement_vat.docx',
+            AdditionalAgreementDocumentTypeEnum::DELIVERY() => 'app/additional_agreement_delivery.docx',
             default => null
         };
 

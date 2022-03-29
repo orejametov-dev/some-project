@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
-use MyCLabs\Enum\Enum;
-
 /**
  * @method static self NEW()
  * @method static self ALLOWED()
@@ -13,7 +11,7 @@ use MyCLabs\Enum\Enum;
  * @method static self IN_PROCESS()
  * @method static self ON_TRAINING()
  */
-final class MerchantRequestStatusEnum extends Enum
+final class MerchantRequestStatusEnum extends CastableEnum
 {
     private const NEW = 1;
     private const ALLOWED = 2;
