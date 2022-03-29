@@ -4,29 +4,110 @@ declare(strict_types=1);
 
 namespace App\DTOs\MerchantInfos;
 
-use Alifuz\Utils\Parser\ParseDataTrait;
+use Alifuz\Utils\Entities\AbstractEntity;
 
-class StoreMerchantInfoDTO
+final class StoreMerchantInfoDTO extends AbstractEntity
 {
-    use ParseDataTrait;
-
     public function __construct(
-        public int $merchant_id,
-        public string $director_name,
-        public string $phone,
-        public string $vat_number,
-        public string $mfo,
-        public string $tin,
-        public string $oked,
-        public string $bank_account,
-        public string $bank_name,
-        public string $address,
+        private int $merchant_id,
+        private string $director_name,
+        private string $phone,
+        private string $vat_number,
+        private string $mfo,
+        private string $tin,
+        private string $oked,
+        private string $bank_account,
+        private string $bank_name,
+        private string $address,
     ) {
     }
 
-    public static function fromArray(array $data): self
+    /**
+     * @return int
+     */
+    public function getMerchantId(): int
     {
-        return new self(
+        return $this->merchant_id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDirectorName(): string
+    {
+        return $this->director_name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhone(): string
+    {
+        return $this->phone;
+    }
+
+    /**
+     * @return string
+     */
+    public function getVatNumber(): string
+    {
+        return $this->vat_number;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMfo(): string
+    {
+        return $this->mfo;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTin(): string
+    {
+        return $this->tin;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOked(): string
+    {
+        return $this->oked;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBankAccount(): string
+    {
+        return $this->bank_account;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBankName(): string
+    {
+        return $this->bank_name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddress(): string
+    {
+        return $this->address;
+    }
+
+    /**
+     * @param array<mixed> $data
+     */
+    public static function fromArray(array $data): static
+    {
+        return new static(
             self::parseInt($data['merchant_id']),
             self::parseString($data['director_name']),
             self::parseString($data['phone']),
@@ -38,5 +119,24 @@ class StoreMerchantInfoDTO
             self::parseString($data['bank_name']),
             self::parseString($data['address'])
         );
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'merchant_id' => $this->merchant_id,
+            'director_name' => $this->director_name,
+            'phone' => $this->phone,
+            'vat_number' => $this->vat_number,
+            'mfo' => $this->mfo,
+            'tin' => $this->tin,
+            'oked' => $this->oked,
+            'bank_account' => $this->bank_account,
+            'bank_name' => $this->bank_name,
+            'address' => $this->address,
+        ];
     }
 }

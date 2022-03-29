@@ -9,9 +9,9 @@ use App\Models\ProblemCase;
 
 class FindProblemCaseByIdUseCase
 {
-    public function execute(int $problem_case_id): ProblemCase
+    public function execute(int $id): ProblemCase
     {
-        $problemCase = ProblemCase::query()->find($problem_case_id);
+        $problemCase = ProblemCase::query()->find($id);
 
         if ($problemCase === null) {
             throw new BusinessException('Проблемный кейс не найден', 'problem_case_not_exists', 404);

@@ -4,7 +4,6 @@
 
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
-use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\DTOs\Competitors\CompetitorDTO;
 use App\DTOs\Merchants\UpdateMerchantDTO;
 use App\Filters\CommonFilters\ActiveFilter;
@@ -19,21 +18,24 @@ use App\Http\Requests\ApiPrm\Merchants\SetMainStoreRequest;
 use App\Http\Requests\ApiPrm\Merchants\SetResponsibleUserRequest;
 use App\Http\Requests\ApiPrm\Merchants\StoreMerchantRequest;
 use App\Http\Requests\ApiPrm\Merchants\UpdateMerchantRequest;
-use App\HttpRepositories\Prm\CompanyHttpRepository;
-use App\HttpRepositories\Warehouse\WarehouseHttpRepository;
-use App\Models\ActivityReason;
 use App\Models\Merchant;
-use App\Models\Tag;
-use App\UseCases\Cache\FlushCacheUseCase;
 use App\UseCases\Competitors\AttachCompetitorUseCase;
 use App\UseCases\Competitors\DetachCompetitorUseCase;
 use App\UseCases\Competitors\UpdateCompetitorUseCase;
+use App\UseCases\Merchants\DeleteMerchantLogoUseCase;
+use App\UseCases\Merchants\FindMerchantByIdUseCase;
 use App\UseCases\Merchants\SetMerchantMainStoreUseCase;
+use App\UseCases\Merchants\SetMerchantTagsUseCase;
 use App\UseCases\Merchants\SetResponsibleUserUseCase;
 use App\UseCases\Merchants\StoreMerchantUseCase;
+use App\UseCases\Merchants\ToggleHoldingInitialPaymentUseCase;
+use App\UseCases\Merchants\ToggleMerchantActivityReasonUseCase;
+use App\UseCases\Merchants\ToggleMerchantGeneralGoodsUseCase;
+use App\UseCases\Merchants\ToggleMerchantRecommendUseCase;
 use App\UseCases\Merchants\UpdateMerchantUseCase;
+use App\UseCases\Merchants\UploadMerchantLogoUseCase;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 
 class MerchantsController extends Controller
@@ -58,9 +60,12 @@ class MerchantsController extends Controller
         return $merchants->paginate($request->query('per_page') ?? 15);
     }
 
-    public function show($id)
+    public function show($id, FindMerchantByIdUseCase $findMerchantByIdUseCase)
     {
-        return Merchant::with(['stores', 'tags', 'activity_reasons', 'competitors'])->findOrFail($id);
+        $merchant = $findMerchantByIdUseCase->execute((int) $id);
+        $merchant->load(['stores', 'tags', 'activity_reasons', 'competitors']);
+
+        return $merchant;
     }
 
     public function store(StoreMerchantRequest $request, StoreMerchantUseCase $storeMerchantUseCase)
@@ -80,18 +85,14 @@ class MerchantsController extends Controller
         return $merchant;
     }
 
-    public function uploadLogo($merchant_id, StoreFileRequest $request)
+    public function uploadLogo($id, StoreFileRequest $request, UploadMerchantLogoUseCase $uploadMerchantLogoUseCase)
     {
-        $merchant = Merchant::query()->findOrFail($merchant_id);
-        $merchant->uploadLogo($request->file('file'));
-
-        return $merchant;
+        return $uploadMerchantLogoUseCase->execute((int) $id, $request->file('file'));
     }
 
-    public function removeLogo($merchant_id)
+    public function removeLogo($id, DeleteMerchantLogoUseCase $deleteMerchantLogoUseCase)
     {
-        $merchant = Merchant::query()->findOrFail($merchant_id);
-        $merchant->deleteLogo();
+        $deleteMerchantLogoUseCase->execute((int) $id);
 
         return response()->json(['message' => 'Логотип удалён']);
     }
@@ -106,25 +107,13 @@ class MerchantsController extends Controller
         return $setMainStoreUseCase->execute($id, $request->input('store_id'));
     }
 
-    public function setTags($id, Request $request)
+    public function setTags($id, Request $request, SetMerchantTagsUseCase $setMerchantTagsUseCase)
     {
         $this->validate($request, [
             'tags' => 'required|array',
         ]);
-        $merchant = Merchant::query()->findOrFail($id);
-        $tags = $request->input('tags');
 
-        $tags = Tag::query()->whereIn('id', $tags)->get();
-
-        foreach ($request->input('tags') as $tag) {
-            if (!$tags->contains('id', $tag)) {
-                return response()->json(['message' => 'Указан не правильный тег'], 400);
-            }
-        }
-
-        $merchant->tags()->sync($tags);
-
-        return $merchant;
+        return $setMerchantTagsUseCase->execute((int) $id, $request->input('tags'));
     }
 
     public function hotMerchants()
@@ -156,58 +145,28 @@ class MerchantsController extends Controller
             ])->whereRaw("(IFNULL(sub_query.limit, 0) + IFNULL(sub_query.agreement_sum, 0)) $percentage_of_limit <= sub_query.current_sales")->get();
     }
 
-    public function toggle($id, Request $request, FlushCacheUseCase $flushCacheUseCase, CompanyHttpRepository $companyHttpRepository)
+    public function toggle($id, Request $request, ToggleMerchantActivityReasonUseCase $toggleMerchantActivityReasonUseCase)
     {
         $this->validate($request, [
             'activity_reason_id' => 'integer|required',
         ]);
 
-        $activity_reason = ActivityReason::query()->where('type', 'MERCHANT')
-            ->findOrFail($request->input('activity_reason_id'));
-
-        $merchant = Merchant::query()->findOrFail($id);
-        $merchant->active = !$merchant->active;
-        $merchant->save();
-
-        $merchant->activity_reasons()->attach($activity_reason->id, [
-            'active' => $merchant->active,
-            'created_by_id' => app(GatewayAuthUser::class)->getId(),
-            'created_by_name' => app(GatewayAuthUser::class)->getName(),
-        ]);
-
-        $companyHttpRepository->setStatusNotActive((int) $merchant->company_id);
-
-        $flushCacheUseCase->execute($merchant->id);
-
-        return $merchant;
+        return $toggleMerchantActivityReasonUseCase->execute((int) $id, (int) $request->input('activity_reason_id'));
     }
 
-    public function toggleGeneralGoods($id, Request $request, WarehouseHttpRepository $warehouseHttpRepository)
+    public function toggleGeneralGoods($id, ToggleMerchantGeneralGoodsUseCase $toggleMerchantGeneralGoodsUseCase)
     {
-        $merchant = Merchant::query()->findOrFail($id);
-        $merchant->has_general_goods = !$merchant->has_general_goods;
-
-        $warehouseHttpRepository->checkDuplicateSKUs($merchant->id);
-
-        $merchant->save();
-
-        Cache::tags($merchant->id)->flush();
-        Cache::tags('azo_merchants')->flush();
-        Cache::tags('company')->flush();
-
-        return $merchant;
+        return $toggleMerchantGeneralGoodsUseCase->execute((int) $id);
     }
 
-    public function toggleRecommend($id)
+    public function toggleRecommend($id, ToggleMerchantRecommendUseCase $toggleMerchantRecommendUseCase)
     {
-        $merchant = Merchant::query()->findOrFail($id);
-        $merchant->recommend = !$merchant->recommend;
-        $merchant->save();
+        return $toggleMerchantRecommendUseCase->execute((int) $id);
+    }
 
-        Cache::tags($merchant->id)->flush();
-        Cache::tags('azo_merchants')->flush();
-
-        return $merchant;
+    public function toggleHoldingInitialPayment($id, ToggleHoldingInitialPaymentUseCase $holdingInitialPaymentUseCase): JsonResource
+    {
+        return new JsonResource($holdingInitialPaymentUseCase->execute((int) $id));
     }
 
     public function attachCompetitor($id, CompetitorsRequest $request, AttachCompetitorUseCase $attachCompetitorUseCase)

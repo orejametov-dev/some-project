@@ -15,6 +15,7 @@ use App\Http\Requests\ApiPrm\Stores\StoreStoresRequest;
 use App\Http\Requests\ApiPrm\Stores\UpdateStoresRequest;
 use App\Models\Condition;
 use App\Models\Store;
+use App\UseCases\Stores\FindStoreByIdUseCase;
 use App\UseCases\Stores\SaveStoreUseCase;
 use App\UseCases\Stores\SetTypeRegisterStoreUseCase;
 use App\UseCases\Stores\ToggleStoreUseCase;
@@ -45,10 +46,10 @@ class StoresController extends Controller
         return $stores->paginate($request->query('per_page') ?? 15);
     }
 
-    public function show($store_id)
+    public function show($id, FindStoreByIdUseCase $findStoreByIdUseCase)
     {
-        $store = Store::with(['merchant', 'activity_reasons'])
-            ->findOrFail($store_id);
+        $store = $findStoreByIdUseCase->execute((int) $id);
+        $store->load(['merchant', 'activity_reasons']);
 
         return $store;
     }
@@ -60,9 +61,9 @@ class StoresController extends Controller
         return $storeStoresUseCase->execute($storeStoresDTO);
     }
 
-    public function update($store_id, UpdateStoresRequest $request, UpdateStoreUseCase $updateStoresUseCase)
+    public function update($id, UpdateStoresRequest $request, UpdateStoreUseCase $updateStoresUseCase)
     {
-        $updateStoresDTO = UpdateStoresDTO::fromArray((int) $store_id, $request->validated());
+        $updateStoresDTO = UpdateStoresDTO::fromArray((int) $id, $request->validated());
 
         return $updateStoresUseCase->execute($updateStoresDTO);
     }

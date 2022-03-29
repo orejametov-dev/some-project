@@ -173,6 +173,7 @@ Route::prefix('merchants')
         Route::post('/{id}/set-responsible-user', [MerchantsController::class, 'setResponsibleUser']);
         Route::match(['put', 'patch'], '/{id}/toggle', [MerchantsController::class, 'toggle']);
         Route::match(['put', 'patch'], '/{id}/toggle-recommend', [MerchantsController::class, 'toggleRecommend']);
+        Route::match(['put', 'patch'], '/{id}/toggle-holding-initial-payment', [MerchantsController::class, 'toggleHoldingInitialPayment']);
         Route::post('/{id}/set-tags', [MerchantsController::class, 'setTags']);
 
         Route::match(['put', 'patch'], '/{id}/update-modules', [MerchantsController::class, 'updateModules']);

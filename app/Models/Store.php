@@ -64,21 +64,6 @@ class Store extends Model
 
     protected $table = 'stores';
 
-    protected $fillable = [
-        'name',
-        'is_main',
-        'phone',
-        'address',
-        'region',
-        'lat',
-        'long',
-        'responsible_person',
-        'responsible_person_phone',
-        'active',
-        'district',
-        'client_type_register',
-    ];
-
     public function notifications(): BelongsToMany
     {
         return $this->belongsToMany(Notification::class, 'store_notification', 'store_id', 'notification_id');
