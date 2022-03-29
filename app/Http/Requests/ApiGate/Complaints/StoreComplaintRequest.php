@@ -26,11 +26,11 @@ class StoreComplaintRequest extends FormRequest
         return [
             'user_id' => 'required|int',
             'meta' => 'required|array',
-            'meta*.client_id' => 'required|int',
-            'meta*.client_name' => 'required|string',
-            'meta*.client_surname' => 'required|string',
-            'meta*.client_patronymic' => 'required|string',
-            'meta*.reason_correction' => 'required|string',
+            'meta.client_id' => 'required|int',
+            'meta.client_name' => 'required|string',
+            'meta.client_surname' => 'required|string',
+            'meta.client_patronymic' => 'required|string',
+            'meta.reason_correction' => 'required|string',
 
         ];
     }

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\ApiCallsGateway\ProblemCases;
 
-use App\DTOs\ProblemCases\ProblemCaseDTO;
+use App\DTOs\ProblemCases\StoreProblemCaseDTO;
 use App\Exceptions\BusinessException;
 use App\Filters\CommonFilters\ClientIdFilter;
 use App\Filters\CommonFilters\StatusIdFilter;
 use App\Filters\ProblemCase\QProblemCaseFilter;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ApiPrm\ProblemCases\ProblemCaseNewAttachTagsRequest;
-use App\Http\Requests\ApiPrm\ProblemCases\ProblemCaseStoreRequest;
+use App\Http\Requests\ApiPrm\ProblemCases\AttachNewProblemCaseTagsRequest;
+use App\Http\Requests\ApiPrm\ProblemCases\StoreProblemCaseRequest;
 use App\Http\Resources\ApiCallsGateway\ProblemCases\ProblemCaseResource;
 use App\Mappings\ProblemCaseStatusMapping;
 use App\Models\ProblemCase;
@@ -49,14 +49,14 @@ class ProblemCasesController extends Controller
         return new ProblemCaseResource($problemCases);
     }
 
-    public function store(ProblemCaseStoreRequest $request, StoreProblemCaseNumberCreditUseCase $storeProblemCasesUseCase)
+    public function store(StoreProblemCaseRequest $request, StoreProblemCaseNumberCreditUseCase $storeProblemCasesUseCase)
     {
-        $problemCaseDTO = ProblemCaseDTO::fromArray($request->validated());
+        $problemCaseDTO = StoreProblemCaseDTO::fromArray($request->validated());
 
         return $storeProblemCasesUseCase->execute($problemCaseDTO);
     }
 
-    public function attachTags($id, ProblemCaseNewAttachTagsRequest $request, NewAttachTagsProblemCaseUseCase $newAttachTagsProblemCaseUseCase)
+    public function attachTags($id, AttachNewProblemCaseTagsRequest $request, NewAttachTagsProblemCaseUseCase $newAttachTagsProblemCaseUseCase)
     {
         return $newAttachTagsProblemCaseUseCase->execute((int) $id, (array) $request->input('tags'));
     }

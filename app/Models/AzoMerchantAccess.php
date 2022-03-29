@@ -51,10 +51,6 @@ class AzoMerchantAccess extends Model
     use SoftDeletes;
 
     protected $table = 'azo_merchant_accesses';
-    protected $fillable = [
-        'user_name',
-        'phone',
-    ];
 
     public function store(): BelongsTo
     {

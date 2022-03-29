@@ -3,16 +3,15 @@ include infra/local/.env
 #init:
 first-run:
 	docker login ginger.alifshop.uz:443
-	sudo ifconfig lo0 alias ${PROJECT_IP} || sudo ifconfig lo:0 ${PROJECT_IP} || netsh interface ip add address "Loopback" ${PROJECT_IP} 255.255.255.255
 	make build
 	chmod o+rw storage bootstrap/
 	make create-mysql-database
 	make setup-hooks
 up:
-	docker network create alif-infra || true
+	docker network create alif || true
 	make docker-compose COMMAND="up -d"
 build:
-	docker network create alif-infra || true
+	docker network create alif || true
 	make docker-compose COMMAND="up --build -d"
 down:
 	make docker-compose COMMAND="down"

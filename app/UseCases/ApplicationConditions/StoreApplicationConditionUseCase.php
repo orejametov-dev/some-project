@@ -13,7 +13,6 @@ use App\Models\Condition;
 use App\Models\Store;
 use App\UseCases\Cache\FlushCacheUseCase;
 use App\UseCases\Merchants\FindMerchantByIdUseCase;
-use Carbon\Carbon;
 
 class StoreApplicationConditionUseCase
 {
@@ -27,9 +26,9 @@ class StoreApplicationConditionUseCase
 
     public function execute(StoreConditionDTO $conditionDTO) : Condition
     {
-        $merchant = $this->findMerchantUseCase->execute($conditionDTO->merchant_id);
+        $merchant = $this->findMerchantUseCase->execute($conditionDTO->getMerchantId());
 
-        $store_ids = $conditionDTO->store_ids ?? [];
+        $store_ids = $conditionDTO->getStoreIds();
 
         $merchant_stores = Store::query()
             ->where('merchant_id', $merchant->id)
@@ -46,26 +45,26 @@ class StoreApplicationConditionUseCase
             throw new BusinessException('У данного мерчанта нет основного магазина ' . $merchant->name, 'main_store_not_exists', 400);
         }
 
-        if ($conditionDTO->post_alifshop === true and in_array($main_store->id, $store_ids) === false) {
+        if ($conditionDTO->isPostAlifshop() === true and in_array($main_store->id, $store_ids) === false) {
             $store_ids[] = $main_store->id;
         }
 
-        $this->checkStartedAtAndFinishedAtConditionUseCase->execute($conditionDTO->started_at, $conditionDTO->finished_at);
+        $this->checkStartedAtAndFinishedAtConditionUseCase->execute($conditionDTO->getStartedAt(), $conditionDTO->getFinishedAt());
 
         $condition = new Condition();
-        $condition->duration = $conditionDTO->duration;
-        $condition->commission = $conditionDTO->commission;
-        $condition->discount = $conditionDTO->discount;
+        $condition->duration = $conditionDTO->getDuration();
+        $condition->commission = $conditionDTO->getCommission();
+        $condition->discount = $conditionDTO->getDiscount();
         $condition->is_special = empty($store_ids) === false;
-        $condition->special_offer = $conditionDTO->special_offer;
-        $condition->event_id = $conditionDTO->event_id;
-        $condition->post_merchant = $conditionDTO->post_merchant;
-        $condition->post_alifshop = $conditionDTO->post_alifshop;
+        $condition->special_offer = $conditionDTO->getSpecialOffer();
+        $condition->event_id = $conditionDTO->getEventId();
+        $condition->post_merchant = $conditionDTO->isPostMerchant();
+        $condition->post_alifshop = $conditionDTO->isPostAlifshop();
         $condition->merchant_id = $merchant->id;
         $condition->store_id = $main_store->id;
-        $condition->started_at = $conditionDTO->started_at ? Carbon::parse($conditionDTO->started_at) : null;
-        $condition->finished_at = $conditionDTO->finished_at ? Carbon::parse($conditionDTO->finished_at) : null;
-        $condition->active = $conditionDTO->started_at === null;
+        $condition->started_at = $conditionDTO->getStartedAt();
+        $condition->finished_at = $conditionDTO->getFinishedAt();
+        $condition->active = $conditionDTO->getStartedAt() === null;
 
         $condition->save();
 

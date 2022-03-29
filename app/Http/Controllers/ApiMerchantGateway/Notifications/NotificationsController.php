@@ -29,7 +29,7 @@ class NotificationsController extends Controller
 
             ])
             ->latest()
-            ->onlyByStore($azoAccessDto->store_id)
+            ->onlyByStore($azoAccessDto->getStoreId())
             ->OnlyMoreThanStartSchedule()
             ->latest();
 
@@ -42,9 +42,9 @@ class NotificationsController extends Controller
 
     public function getCounter(AzoAccessDto $azoAccessDto)
     {
-        $notifications = Cache::tags('notifications')->remember('fresh_notifications_by_store_' . $azoAccessDto->store_id, 5 * 60, function () use ($azoAccessDto) {
+        $notifications = Cache::tags('notifications')->remember('fresh_notifications_by_store_' . $azoAccessDto->getStoreId(), 5 * 60, function () use ($azoAccessDto) {
             return Notification::query()
-                ->onlyByStore($azoAccessDto->store_id)
+                ->onlyByStore($azoAccessDto->getStoreId())
                 ->where('start_schedule', '<=', now())
                 ->where('end_schedule', '>=', now())->count();
         });

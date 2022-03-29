@@ -7,7 +7,7 @@ namespace App\Http\Requests\ApiPrm\ProblemCases;
 use App\Enums\ProblemCaseTagTypeEnum;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProblemCaseAttachTagsRequest extends FormRequest
+class AttachProblemCaseTagsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

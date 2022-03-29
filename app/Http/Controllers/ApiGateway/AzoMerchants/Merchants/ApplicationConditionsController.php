@@ -12,9 +12,9 @@ use App\Filters\Merchant\MerchantIdFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiPrm\Applications\MassSpecialStoreApplicationConditionRequest;
 use App\Http\Requests\ApiPrm\Applications\MassStoreApplicationConditionsRequest;
-use App\Http\Requests\ApiPrm\Applications\StoreApplicationConditions;
+use App\Http\Requests\ApiPrm\Applications\StoreApplicationConditionRequest;
 use App\Http\Requests\ApiPrm\Applications\TogglePostsApplicationConditionRequest;
-use App\Http\Requests\ApiPrm\Applications\UpdateApplicationConditions;
+use App\Http\Requests\ApiPrm\Applications\UpdateApplicationConditionRequest;
 use App\Models\Condition;
 use App\UseCases\ApplicationConditions\DeleteApplicationConditionUseCase;
 use App\UseCases\ApplicationConditions\MassSpecialStoreApplicationConditionUseCase;
@@ -45,36 +45,28 @@ class ApplicationConditionsController extends Controller
         return $conditionQuery->paginate($request->query('per_page') ?? 15);
     }
 
-    public function store(StoreApplicationConditions $request, StoreApplicationConditionUseCase $storeApplicationConditionUseCase)
+    public function store(StoreApplicationConditionRequest $request, StoreApplicationConditionUseCase $storeApplicationConditionUseCase)
     {
-        $conditionDTO = StoreConditionDTO::fromArray($request->validated());
-
-        return $storeApplicationConditionUseCase->execute($conditionDTO);
+        return $storeApplicationConditionUseCase->execute(StoreConditionDTO::fromArray($request->validated()));
     }
 
     public function massStore(MassStoreApplicationConditionsRequest $request, MassStoreApplicationConditionUseCase $massStoreApplicationConditionUseCase)
     {
-        $massStoreConditionDTO = MassStoreConditionDTO::fromArray($request->validated());
-
-        $massStoreApplicationConditionUseCase->execute($massStoreConditionDTO);
+        $massStoreApplicationConditionUseCase->execute(MassStoreConditionDTO::fromArray($request->validated()));
 
         return response()->json(['message' => 'Условия изменены']);
     }
 
     public function massSpecialStore(MassSpecialStoreApplicationConditionRequest $request, MassSpecialStoreApplicationConditionUseCase $massSpecialStoreApplicationConditionUseCase)
     {
-        $massSpecialStoreConditionDTO = MassSpecialStoreConditionDTO::fromArray($request->validated());
-
-        $massSpecialStoreApplicationConditionUseCase->execute($massSpecialStoreConditionDTO);
+        $massSpecialStoreApplicationConditionUseCase->execute(MassSpecialStoreConditionDTO::fromArray($request->validated()));
 
         return response()->json(['message' => 'Условия изменены']);
     }
 
-    public function update($id, UpdateApplicationConditions $request, UpdateApplicationConditionUseCase $updateApplicationConditionUseCase)
+    public function update($id, UpdateApplicationConditionRequest $request, UpdateApplicationConditionUseCase $updateApplicationConditionUseCase)
     {
-        $updateConditionDTO = UpdateConditionDTO::fromArray((int) $id, $request->validated());
-
-        return $updateApplicationConditionUseCase->execute($updateConditionDTO);
+        return $updateApplicationConditionUseCase->execute((int) $id, UpdateConditionDTO::fromArray($request->validated()));
     }
 
     public function delete($id, DeleteApplicationConditionUseCase $deleteApplicationConditionUseCase)

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\ProblemCases;
 
-use App\DTOs\Comments\CommentDTO;
 use App\Filters\CommonFilters\DateFilter;
 use App\Filters\CommonFilters\StatusIdFilter;
 use App\Filters\Merchant\MerchantIdFilter;
@@ -15,10 +14,10 @@ use App\Filters\ProblemCase\ProblemCaseTagIdFilter;
 use App\Filters\ProblemCase\QProblemCaseFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiPrm\Comments\StoreCommentRequest;
-use App\Http\Requests\ApiPrm\ProblemCases\ProblemCaseAttachTagsRequest;
-use App\Http\Requests\ApiPrm\ProblemCases\ProblemCaseSetAssignedRequest;
-use App\Http\Requests\ApiPrm\ProblemCases\ProblemCaseSetStatusRequest;
-use App\Http\Requests\ApiPrm\ProblemCases\ProblemCaseUpdateRequest;
+use App\Http\Requests\ApiPrm\ProblemCases\AttachProblemCaseTagsRequest;
+use App\Http\Requests\ApiPrm\ProblemCases\SetProblemCaseAssignedRequest;
+use App\Http\Requests\ApiPrm\ProblemCases\SetProblemCaseStatusRequest;
+use App\Http\Requests\ApiPrm\ProblemCases\UpdateProblemCaseRequest;
 use App\Models\Comment;
 use App\Models\ProblemCase;
 use App\UseCases\ProblemCase\AttachTagsProblemCaseUseCase;
@@ -58,36 +57,32 @@ class ProblemCasesController extends Controller
         return $problemCase;
     }
 
-    public function update($id, ProblemCaseUpdateRequest $request, UpdateProblemCaseUseCase $updateProblemCaseUseCase)
+    public function update($id, UpdateProblemCaseRequest $request, UpdateProblemCaseUseCase $updateProblemCaseUseCase)
     {
         return $updateProblemCaseUseCase->execute((int) $id, Carbon::parse($request->input('deadline')));
     }
 
     public function setManagerComment($id, StoreCommentRequest $request, StoreCommentProblemCaseUseCase $storeCommentProblemCaseUseCase)
     {
-        $commentDTO = CommentDTO::fromArray((int) $id, $request->validated(), Comment::PROBLEM_CASE_FOR_PRM);
-
-        return $storeCommentProblemCaseUseCase->execute($commentDTO);
+        return $storeCommentProblemCaseUseCase->execute((int) $id, $request->input('body'), Comment::PROBLEM_CASE_FOR_PRM);
     }
 
     public function setMerchantComment($id, StoreCommentRequest $request, StoreCommentProblemCaseUseCase $storeCommentProblemCaseUseCase)
     {
-        $commentDTO = CommentDTO::fromArray((int) $id, $request->validated(), Comment::PROBLEM_CASE_FOR_MERCHANT);
-
-        return $storeCommentProblemCaseUseCase->execute($commentDTO);
+        return $storeCommentProblemCaseUseCase->execute((int) $id, $request->input('body'), Comment::PROBLEM_CASE_FOR_MERCHANT);
     }
 
-    public function attachTags($id, ProblemCaseAttachTagsRequest $request, AttachTagsProblemCaseUseCase $attachTagsProblemCaseUseCase)
+    public function attachTags($id, AttachProblemCaseTagsRequest $request, AttachTagsProblemCaseUseCase $attachTagsProblemCaseUseCase)
     {
         return $attachTagsProblemCaseUseCase->execute((int) $id, (array) $request->input('tags'));
     }
 
-    public function setStatus($id, ProblemCaseSetStatusRequest $request, SetStatusProblemCaseUseCase $setStatusProblemCaseUseCase)
+    public function setStatus($id, SetProblemCaseStatusRequest $request, SetStatusProblemCaseUseCase $setStatusProblemCaseUseCase)
     {
         return $setStatusProblemCaseUseCase->execute((int) $id, (int) $request->input('status_id'));
     }
 
-    public function setAssigned($id, ProblemCaseSetAssignedRequest $request, SetAssignedProblemCaseUseCase $setAssignedProblemCaseUseCase)
+    public function setAssigned($id, SetProblemCaseAssignedRequest $request, SetAssignedProblemCaseUseCase $setAssignedProblemCaseUseCase)
     {
         return $setAssignedProblemCaseUseCase->execute((int) $id, (int) $request->input('assigned_to_id'), (string) $request->input('assigned_to_name'));
     }
