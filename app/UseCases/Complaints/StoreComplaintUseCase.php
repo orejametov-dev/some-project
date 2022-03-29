@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\UseCases\Complaints;
 
 use App\DTOs\Complaints\StoreComplaintDTO;
@@ -13,7 +15,7 @@ class StoreComplaintUseCase
     {
         $merchant_access = AzoMerchantAccess::query()
             ->withTrashed()
-            ->where('user_id', $storeComplaintDTO->user_id)
+            ->where('user_id', $storeComplaintDTO->getUserId())
             ->first();
 
         if ($merchant_access === null) {
@@ -22,8 +24,7 @@ class StoreComplaintUseCase
 
         $complaint = new Complaint();
         $complaint->azo_merchant_access_id = $merchant_access->id;
-        $complaint->meta = $storeComplaintDTO->meta;
-
+        $complaint->meta = $storeComplaintDTO->getMeta()->jsonSerialize();
         $complaint->save();
 
         return $complaint;

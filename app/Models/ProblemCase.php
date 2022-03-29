@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\ProblemCaseStatusEnum;
+use App\Enums\ProblemCaseTagTypeEnum;
 use App\Filters\ProblemCase\ProblemCaseFilters;
 use App\Mappings\ProblemCaseStatusMapping;
 use Carbon\Carbon;
@@ -24,7 +25,7 @@ use InvalidArgumentException;
  * @property int $id
  * @property int $merchant_id
  * @property int $store_id
- * @property int $status_id
+ * @property ProblemCaseStatusEnum $status_id
  * @property string $status_key
  * @property int $created_by_id
  * @property string $created_by_name
@@ -83,6 +84,7 @@ class ProblemCase extends Model
     ];
     protected $casts = [
         'application_items' => 'array',
+        'status_id' => ProblemCaseStatusEnum::class,
     ];
 
     public function merchant(): BelongsTo
@@ -103,7 +105,7 @@ class ProblemCase extends Model
     public function before_tags(): BelongsToMany
     {
         return $this->belongsToMany(ProblemCaseTag::class, 'problem_case_tag', 'problem_case_id', 'problem_case_tag_id')
-            ->where('type_id', ProblemCaseTag::BEFORE_TYPE);
+            ->where('type_id', ProblemCaseTagTypeEnum::BEFORE());
     }
 
     public function comments(): MorphMany
@@ -133,22 +135,22 @@ class ProblemCase extends Model
 
     public function isStatusNew(): bool
     {
-        return $this->status_id === ProblemCaseStatusEnum::NEW()->getValue();
+        return $this->status_id->equals(ProblemCaseStatusEnum::NEW());
     }
 
     public function isStatusInProcess(): bool
     {
-        return $this->status_id === ProblemCaseStatusEnum::IN_PROCESS()->getValue();
+        return $this->status_id->equals(ProblemCaseStatusEnum::IN_PROCESS());
     }
 
     public function isStatusDone(): bool
     {
-        return $this->status_id === ProblemCaseStatusEnum::DONE()->getValue();
+        return $this->status_id->equals(ProblemCaseStatusEnum::DONE());
     }
 
     public function isStatusFinished(): bool
     {
-        return $this->status_id === ProblemCaseStatusEnum::FINISHED()->getValue();
+        return $this->status_id->equals(ProblemCaseStatusEnum::FINISHED());
     }
 
     public function setStatus(ProblemCaseStatusEnum $statusEnum): self
@@ -181,11 +183,11 @@ class ProblemCase extends Model
 
     public function assertStatusSwitch(ProblemCaseStatusEnum $statusEnum): void
     {
-        if ($this->status_id !== null and array_key_exists($this->status_id, $this->getStatusMachineMapping()) === false) {
+        if ($this->status_id !== null and array_key_exists($this->status_id->getValue(), $this->getStatusMachineMapping()) === false) {
             throw new InvalidArgumentException('Initial status does not mapped');
         }
 
-        if ($this->status_id !== null and in_array($statusEnum, $this->getStatusMachineMapping()[$this->status_id]) === false) {
+        if ($this->status_id !== null and in_array($statusEnum, $this->getStatusMachineMapping()[$this->status_id->getValue()]) === false) {
             throw new InvalidArgumentException('Assigned status does not mapped');
         }
     }

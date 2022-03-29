@@ -34,11 +34,11 @@ class AzoMerchantAccessMiddleware
             throw new BusinessException('Unauthenticated', 'unauthenticated', 401);
         }
 
-        $azo_access_dto = new AzoAccessDto(
-            merchant_id: $azo_merchant_access->merchant_id,
-            store_id: $azo_merchant_access->store_id,
-            id: $azo_merchant_access->id,
-        );
+        $azo_access_dto = AzoAccessDto::fromArray([
+            'merchant_id' => $azo_merchant_access->merchant_id,
+            'store_id' => $azo_merchant_access->store_id,
+            'id' => $azo_merchant_access->id,
+        ]);
 
         $this->app->instance(AzoAccessDto::class, $azo_access_dto);
 

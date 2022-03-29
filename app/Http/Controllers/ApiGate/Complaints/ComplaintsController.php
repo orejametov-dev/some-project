@@ -11,8 +11,6 @@ class ComplaintsController extends Controller
 {
     public function store(StoreComplaintRequest $request, StoreComplaintUseCase $storeComplaintUseCase)
     {
-        $storeComplaintDTO = StoreComplaintDTO::fromArray($request->validated());
-
-        return $storeComplaintUseCase->execute($storeComplaintDTO);
+        return $storeComplaintUseCase->execute(StoreComplaintDTO::fromArray($request->validated()));
     }
 }

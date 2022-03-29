@@ -6,7 +6,7 @@ namespace App\UseCases\ProblemCase;
 
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use Alifuz\Utils\Gateway\Entities\GatewayApplication;
-use App\DTOs\ProblemCases\ProblemCaseDTO;
+use App\DTOs\ProblemCases\StoreProblemCaseDTO;
 use App\Enums\ProblemCaseStatusEnum;
 use App\HttpRepositories\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
@@ -24,7 +24,7 @@ abstract class AbstractStoreProblemCaseUseCase
     ) {
     }
 
-    public function execute(ProblemCaseDTO $problemCaseDTO): ?ProblemCase
+    public function execute(StoreProblemCaseDTO $problemCaseDTO): ?ProblemCase
     {
         $data = $this->getDataByIdentifier($problemCaseDTO->getIdentifier());
         $this->checkStatusToFinished($problemCaseDTO->getIdentifier());
@@ -47,7 +47,7 @@ abstract class AbstractStoreProblemCaseUseCase
         $problemCase->created_from_name = $this->gatewayApplication->getApplication()->getValue();
         $problemCase->post_or_pre_created_by_id = $data->post_or_pre_created_by_id;
         $problemCase->post_or_pre_created_by_name = $data->post_or_pre_created_by_name;
-        $problemCase->description = $problemCaseDTO->description;
+        $problemCase->description = $problemCaseDTO->getDescription();
 
         $this->setIdentifierNumberAndDate($problemCase, $problemCaseDTO->getIdentifier(), $data);
 
@@ -61,7 +61,7 @@ abstract class AbstractStoreProblemCaseUseCase
             created_from_str: $this->gatewayApplication->getApplication()->getValue(),
             created_by_id: $this->gatewayAuthUser->getId(),
             body: 'Создан проблемный кейс co статусом',
-            keyword: $this->problemCaseStatusMapping->getMappedValue(ProblemCaseStatusEnum::from($problemCase->status_id))['name'],
+            keyword: $this->problemCaseStatusMapping->getMappedValue($problemCase->status_id)['name'],
             action: 'create',
             class: 'info',
             action_at: null,

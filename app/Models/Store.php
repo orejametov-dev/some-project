@@ -55,7 +55,6 @@ use Illuminate\Http\Request;
  * @method static Builder|Store byMerchant($merchant_id)
  * @method static Builder|Store filterRequest(\Illuminate\Http\Request $request, array $filters = [])
  * @method static Builder|Store main()
- * @property string[] $fillable
  */
 class Store extends Model
 {

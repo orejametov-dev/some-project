@@ -15,11 +15,11 @@ class ApplicationConditionsController extends Controller
 {
     public function index(Request $request, AzoAccessDto $azoAccessDto): array
     {
-        return Cache::tags($azoAccessDto->merchant_id)->remember(
-            $request->fullUrl() . $azoAccessDto->store_id,
+        return Cache::tags($azoAccessDto->getMerchantId())->remember(
+            $request->fullUrl() . $azoAccessDto->getStoreId(),
             24 * 60,
             function () use ($request, $azoAccessDto) {
-                $store = Store::query()->findOrFail($azoAccessDto->store_id);
+                $store = Store::query()->findOrFail($azoAccessDto->getStoreId());
 
                 if ($request->has('post_alifshop') and $request->query('post_alifshop') == true) {
                     $special_conditions = $store->conditions()
@@ -31,7 +31,7 @@ class ApplicationConditionsController extends Controller
                         ->active()
                         ->where('post_alifshop', true)
                         ->where('is_special', false)
-                        ->byMerchant($azoAccessDto->merchant_id)
+                        ->byMerchant($azoAccessDto->getMerchantId())
                         ->orderRequest($request);
                 } else {
                     $special_conditions = $store->conditions()
@@ -43,7 +43,7 @@ class ApplicationConditionsController extends Controller
                         ->active()
                         ->where('post_merchant', true)
                         ->where('is_special', false)
-                        ->byMerchant($azoAccessDto->merchant_id)
+                        ->byMerchant($azoAccessDto->getMerchantId())
                         ->orderRequest($request);
                 }
 

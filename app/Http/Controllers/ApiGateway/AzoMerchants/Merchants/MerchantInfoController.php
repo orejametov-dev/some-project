@@ -40,7 +40,7 @@ class MerchantInfoController extends Controller
 
     public function update(UpdateMerchantInfo $request, $id, UpdateMerchantInfoUseCase $updateMerchantInfoUseCase)
     {
-        return $updateMerchantInfoUseCase->execute($id, UpdateMerchantInfoDTO::fromArray($request->validated()));
+        return $updateMerchantInfoUseCase->execute((int) $id, UpdateMerchantInfoDTO::fromArray($request->validated()));
     }
 
     public function getContractTrust($id, GetMerchantInfoTrustContractUseCase $getMerchantInfoTrustContractUseCase)

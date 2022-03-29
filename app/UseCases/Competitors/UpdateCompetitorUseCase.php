@@ -2,7 +2,7 @@
 
 namespace App\UseCases\Competitors;
 
-use App\DTOs\Competitors\CompetitorDTO;
+use App\DTOs\Competitors\SaveCompetitorDTO;
 use App\Models\Merchant;
 use App\UseCases\Merchants\FindMerchantByIdUseCase;
 
@@ -15,18 +15,18 @@ class UpdateCompetitorUseCase
     ) {
     }
 
-    public function execute(CompetitorDTO $competitorDTO): Merchant
+    public function execute(int $id, SaveCompetitorDTO $competitorDTO): Merchant
     {
-        $merchant = $this->findMerchantUseCase->execute($competitorDTO->merchant_id);
-        $competitor = $this->findCompetitorUseCase->execute($competitorDTO->competitor_id);
+        $merchant = $this->findMerchantUseCase->execute($id);
+        $competitor = $this->findCompetitorUseCase->execute($competitorDTO->getCompetitorId());
 
         $this->findMerchantCompetitorUseCase->execute($merchant, $competitor->id);
 
         $merchant->competitors()->detach($competitor->id);
         $merchant->competitors()->attach($competitor->id, [
-            'volume_sales' => $competitorDTO->volume_sales,
-            'percentage_approve' => (int) $competitorDTO->percentage_approve,
-            'partnership_at' => $competitorDTO->partnership_at,
+            'volume_sales' => $competitorDTO->getVolumeSales(),
+            'percentage_approve' => (int) $competitorDTO->getPercentageApprove(),
+            'partnership_at' => $competitorDTO->getPartnershipAt(),
         ]);
 
         return $merchant->load('competitors');

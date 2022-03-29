@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\UseCases\AdditionalAgreements;
 
 use App\DTOs\AdditionalAgreements\StoreAdditionalAgreementDTO;
+use App\Enums\AdditionalAgreementDocumentTypeEnum;
 use App\Exceptions\BusinessException;
 use App\Models\AdditionalAgreement;
 use App\Models\MerchantInfo;
@@ -25,7 +26,7 @@ class StoreAdditionalAgreementUseCase
             throw new BusinessException('Нет основного договора');
         }
 
-        if ($additionalAgreementDTO->getDocumentType() === AdditionalAgreement::LIMIT && $additionalAgreementDTO->getLimit() === null) {
+        if ($additionalAgreementDTO->getDocumentType() === AdditionalAgreementDocumentTypeEnum::LIMIT() && $additionalAgreementDTO->getLimit() === null) {
             throw new BusinessException('Лимит должен быть передан', 'params_not_exists', 400);
         }
 

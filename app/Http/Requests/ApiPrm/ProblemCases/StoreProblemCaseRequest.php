@@ -6,7 +6,7 @@ namespace App\Http\Requests\ApiPrm\ProblemCases;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProblemCaseSetAssignedRequest extends FormRequest
+class StoreProblemCaseRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,8 +26,9 @@ class ProblemCaseSetAssignedRequest extends FormRequest
     public function rules()
     {
         return [
-            'assigned_to_id' => 'required|integer',
-            'assigned_to_name' => 'required|string',
+            'credit_number' => 'required_without:application_id|string',
+            'application_id' => 'required_without:credit_number|integer',
+            'description' => 'required',
         ];
     }
 }

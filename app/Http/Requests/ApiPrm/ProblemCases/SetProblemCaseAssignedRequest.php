@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\ApiPrm\ProblemCases;
 
-use App\Enums\ProblemCaseStatusEnum;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProblemCaseSetStatusRequest extends FormRequest
+class SetProblemCaseAssignedRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,11 +26,8 @@ class ProblemCaseSetStatusRequest extends FormRequest
     public function rules()
     {
         return [
-            'status_id' => 'required|integer|in:'
-                . ProblemCaseStatusEnum::NEW()->getValue() . ','
-                . ProblemCaseStatusEnum::IN_PROCESS()->getValue() . ','
-                . ProblemCaseStatusEnum::DONE()->getValue() . ','
-                . ProblemCaseStatusEnum::FINISHED()->getValue(),
+            'assigned_to_id' => 'required|integer',
+            'assigned_to_name' => 'required|string',
         ];
     }
 }

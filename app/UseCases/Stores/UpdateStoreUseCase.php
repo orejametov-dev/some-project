@@ -14,19 +14,19 @@ class UpdateStoreUseCase
     ) {
     }
 
-    public function execute(UpdateStoresDTO $updateStoresDTO): Store
+    public function execute(int $id, UpdateStoresDTO $updateStoresDTO): Store
     {
-        $store = $this->findStoresUseCase->execute($updateStoresDTO->store_id);
+        $store = $this->findStoresUseCase->execute($id);
 
-        $store->name = $updateStoresDTO->name;
-        $store->phone = $updateStoresDTO->phone;
-        $store->address = $updateStoresDTO->address;
-        $store->region = $updateStoresDTO->region;
-        $store->district = $updateStoresDTO->district;
-        $store->lat = $updateStoresDTO->lat;
-        $store->long = $updateStoresDTO->long;
-        $store->responsible_person = $updateStoresDTO->responsible_person;
-        $store->responsible_person_phone = $updateStoresDTO->responsible_person_phone;
+        $store->name = $updateStoresDTO->getName();
+        $store->phone = $updateStoresDTO->getPhone();
+        $store->address = $updateStoresDTO->getAddress();
+        $store->region = $updateStoresDTO->getRegion();
+        $store->district = $updateStoresDTO->getDistrict();
+        $store->lat = $updateStoresDTO->getLat();
+        $store->long = $updateStoresDTO->getLong();
+        $store->responsible_person = $updateStoresDTO->getResponsiblePerson();
+        $store->responsible_person_phone = $updateStoresDTO->getResponsiblePersonPhone();
 
         $store->save();
 

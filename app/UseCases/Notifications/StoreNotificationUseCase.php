@@ -6,6 +6,7 @@ namespace App\UseCases\Notifications;
 
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\DTOs\Notifications\StoreNotificationDTO;
+use App\Enums\NotificationTypeEnum;
 use App\Exceptions\BusinessException;
 use App\Models\Merchant;
 use App\Models\Notification;
@@ -35,7 +36,7 @@ class StoreNotificationUseCase
         $notification->start_schedule = $storeNotificationDTO->getStartSchedule() ?? Carbon::now();
         $notification->end_schedule = $storeNotificationDTO->getEndSchedule() ?? Carbon::now()->addDay();
 
-        $notification->type = $storeNotificationDTO->getAllMerchants() !== null ? Notification::ALL_TYPE : Notification::CERTAIN_TYPE;
+        $notification->type = $storeNotificationDTO->getAllMerchants() !== null ? NotificationTypeEnum::ALL() : NotificationTypeEnum::CERTAIN();
         $validated_ids = $this->getStoreIdsByMerchants($storeNotificationDTO);
 
         DB::transaction(function () use ($notification, $validated_ids) {

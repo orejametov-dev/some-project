@@ -6,7 +6,7 @@ namespace App\Http\Requests\ApiPrm\Applications;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateApplicationConditions extends FormRequest
+class StoreApplicationConditionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,12 +26,17 @@ class UpdateApplicationConditions extends FormRequest
     public function rules()
     {
         return [
+            'merchant_id' => 'required',
             'store_ids' => 'nullable|array',
             'duration' => 'required|numeric|between:0,24',
             'commission' => 'required|integer|between:0,100',
             'special_offer' => 'nullable|string',
             'event_id' => 'nullable|integer',
-            'discount' => 'required|integer|between:0,100',
+            'discount'  => 'required|integer|between:0,100',
+            'post_merchant' => 'required|boolean',
+            'post_alifshop' => 'required|boolean',
+            'started_at' => 'nullable|date_format:Y-m-d',
+            'finished_at' => 'nullable|date_format:Y-m-d',
         ];
     }
 }

@@ -31,7 +31,7 @@ class AzoMerchantAccessesController extends Controller
     {
         $merchantUsersQuery = AzoMerchantAccess::query()
             ->with(['merchant', 'store'])
-            ->byMerchant($azoAccessDto->merchant_id)
+            ->byMerchant($azoAccessDto->getMerchantId())
             ->filterRequest($request, [QAzoMerchantAccessFilter::class])
             ->orderByDesc('updated_at');
 
@@ -41,7 +41,7 @@ class AzoMerchantAccessesController extends Controller
     public function show($id, AzoAccessDto $azoAccessDto): AzoMerchantAccess
     {
         $merchantUser = AzoMerchantAccess::query()
-            ->byMerchant($azoAccessDto->merchant_id)
+            ->byMerchant($azoAccessDto->getMerchantId())
             ->findOrFail((int) $id);
 
         return $merchantUser;

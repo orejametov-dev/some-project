@@ -57,16 +57,14 @@ class StoresController extends Controller
 
     public function store(StoreStoresRequest $request, SaveStoreUseCase $storeStoresUseCase): JsonResource
     {
-        $storeStoresDTO = StoreStoresDTO::fromArray($request->validated());
-        $store = $storeStoresUseCase->execute($storeStoresDTO);
+        $store = $storeStoresUseCase->execute(StoreStoresDTO::fromArray($request->validated()));
 
         return JsonResource::collection($store);
     }
 
     public function update($id, UpdateStoresRequest $request, UpdateStoreUseCase $updateStoresUseCase): JsonResource
     {
-        $updateStoresDTO = UpdateStoresDTO::fromArray((int) $id, $request->validated());
-        $store = $updateStoresUseCase->execute($updateStoresDTO);
+        $store = $updateStoresUseCase->execute((int) $id, UpdateStoresDTO::fromArray($request->validated()));
 
         return JsonResource::collection($store);
     }
