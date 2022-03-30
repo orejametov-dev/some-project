@@ -4,13 +4,13 @@
 4. Почистить лишние команды и вынести логику в UseCase - **done**
 5. Написать собственные правила request и response формата
 6. Переписать merchant user access - **done**
-7. вынести оставшиеся контроллеры в use cases
-8. почистить ненужные services, controllers, migrations, routes
+7. вынести оставшиеся контроллеры в use cases - **done**
+8. почистить ненужные services, controllers, migrations, routes - **done**
 9. проставить во всех классах declare(strict_types=1) - **done**
 10. проставить типы принимаемых и возвращаемых переменных
 11. начать писать кастомные эксепшены и переделать логику в Handler.php
-12. переделать статусы в enum и проставить тип в моделях enum, вынести из модели $statuses с биндингом id к имени
-13. Пересмотреть simple state machine
+12. переделать статусы в enum и проставить тип в моделях enum, вынести из модели $statuses с биндингом id к имени **done**
+13. Пересмотреть simple state machine **done**
 14. проставить правильные нейминги
 15. в eloquent отказаться от fillable, hidden и getters в пользу api resources и use cases
 16. отказаться от кастомного user в контроллерах и роутах **done**
