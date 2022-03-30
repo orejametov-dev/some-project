@@ -52,5 +52,7 @@ $kernel = $app->make(Kernel::class);
 $response = tap($kernel->handle(
     $request = Request::capture()
 ))->send();
-\Illuminate\Support\Facades\Log::info($request->fullUrl());
+if(str_contains($request->url(), '/gateway/')) {
+    \Illuminate\Support\Facades\Log::info($request->url());
+}
 $kernel->terminate($request, $response);
