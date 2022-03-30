@@ -53,6 +53,6 @@ $response = tap($kernel->handle(
     $request = Request::capture()
 ))->send();
 if(str_contains($request->url(), '/gateway/')) {
-    \Illuminate\Support\Facades\Log::info($request->url());
+    \Illuminate\Support\Facades\Log::info($request->url() . "||||" . $request->method());
 }
 $kernel->terminate($request, $response);
