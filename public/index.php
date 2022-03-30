@@ -52,5 +52,5 @@ $kernel = $app->make(Kernel::class);
 $response = tap($kernel->handle(
     $request = Request::capture()
 ))->send();
-
+\Illuminate\Support\Facades\Log::info($request->fullUrl());
 $kernel->terminate($request, $response);
