@@ -161,15 +161,4 @@ class MerchantRequest extends Model
     {
         return (new MerchantRequestFilters($request, $builder))->execute($filters);
     }
-
-    public function checkToMainCompleted(): void
-    {
-        $main = $this->user_name && $this->legal_name && $this->legal_name_prefix && $this->user_phone && $this->name && $this->region
-            && $this->categories && $this->approximate_sales;
-
-        if ($main === true) {
-            $this->main_completed = true;
-            $this->save();
-        }
-    }
 }
