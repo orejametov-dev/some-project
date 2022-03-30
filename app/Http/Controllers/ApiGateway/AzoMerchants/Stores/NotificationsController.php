@@ -19,11 +19,13 @@ use App\UseCases\Notifications\FindNotificationByIdUseCase;
 use App\UseCases\Notifications\RemoveNotificationUseCase;
 use App\UseCases\Notifications\StoreNotificationUseCase;
 use App\UseCases\Notifications\UpdateNotificationUseCase;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class NotificationsController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): JsonResource
     {
         $notifications = Notification::query()
             ->filterRequest($request, [
@@ -36,38 +38,42 @@ class NotificationsController extends Controller
             ->latest();
 
         if ($request->query('object') == true) {
-            return $notifications->first();
+            return new JsonResource($notifications->first());
         }
 
         if ($request->has('paginate') && $request->query('paginate') == false) {
-            return $notifications->get();
+            return JsonResource::collection($notifications->get());
         }
 
-        return $notifications->paginate($request->query('per_page') ?? 15);
+        return JsonResource::collection($notifications->paginate($request->query('per_page') ?? 15));
     }
 
-    public function show($id, FindNotificationByIdUseCase $findNotificationByIdUseCase)
+    public function show(int $id, FindNotificationByIdUseCase $findNotificationByIdUseCase): JsonResource
     {
-        $notification = $findNotificationByIdUseCase->execute((int) $id);
+        $notification = $findNotificationByIdUseCase->execute($id);
         $notification->load(['stores']);
 
-        return $notification;
+        return new JsonResource($notification);
     }
 
-    public function store(StoreNotificationRequest $request, StoreNotificationUseCase $storeNotificationUseCase)
+    public function store(StoreNotificationRequest $request, StoreNotificationUseCase $storeNotificationUseCase): JsonResource
     {
-        return $storeNotificationUseCase->execute(StoreNotificationDTO::fromArray($request->validated()));
+        $notification = $storeNotificationUseCase->execute(StoreNotificationDTO::fromArray($request->validated()));
+
+        return new JsonResource($notification);
     }
 
-    public function update($id, UpdateNotificationRequest $request, UpdateNotificationUseCase $updateNotificationUseCase)
+    public function update(int $id, UpdateNotificationRequest $request, UpdateNotificationUseCase $updateNotificationUseCase): JsonResource
     {
-        return $updateNotificationUseCase->execute((int) $id, UpdateNotificationDTO::fromArray($request->validated()));
+        $notification = $updateNotificationUseCase->execute($id, UpdateNotificationDTO::fromArray($request->validated()));
+
+        return new JsonResource($notification);
     }
 
-    public function remove($id, RemoveNotificationUseCase $removeNotificationUseCase)
+    public function remove(int $id, RemoveNotificationUseCase $removeNotificationUseCase): JsonResponse
     {
-        $removeNotificationUseCase->execute((int) $id);
+        $removeNotificationUseCase->execute($id);
 
-        return response()->json(['message' => 'Уведомление удалено успешно']);
+        return new JsonResponse(['message' => 'Уведомление удалено успешно']);
     }
 }

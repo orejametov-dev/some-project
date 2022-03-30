@@ -14,7 +14,7 @@ class DeleteMerchantFileUseCase
     ) {
     }
 
-    public function execute(int $id, int $file_id)
+    public function execute(int $id, int $file_id): void
     {
         $merchant = $this->findMerchantByIdUseCase->execute($id);
 

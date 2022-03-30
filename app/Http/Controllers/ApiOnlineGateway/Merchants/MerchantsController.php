@@ -36,12 +36,12 @@ class MerchantsController extends Controller
         return MerchantResource::collection($query->paginate($request->query('per_page') ?? 15));
     }
 
-    public function show($id): MerchantResource
+    public function show(int $id): MerchantResource
     {
         $merchant = Merchant::query()
             ->with('tags')
             ->active()
-            ->findOrFail((int) $id);
+            ->findOrFail($id);
 
         return new MerchantResource($merchant);
     }

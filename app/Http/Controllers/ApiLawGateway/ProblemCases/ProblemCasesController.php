@@ -10,18 +10,22 @@ use App\Http\Requests\ApiPrm\ProblemCases\AttachNewProblemCaseTagsRequest;
 use App\Http\Requests\ApiPrm\ProblemCases\StoreProblemCaseRequest;
 use App\UseCases\ProblemCase\NewAttachTagsProblemCaseUseCase;
 use App\UseCases\ProblemCase\StoreProblemCaseNumberCreditUseCase;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProblemCasesController extends Controller
 {
-    public function store(StoreProblemCaseRequest $request, StoreProblemCaseNumberCreditUseCase $storeProblemCasesUseCase)
+    public function store(StoreProblemCaseRequest $request, StoreProblemCaseNumberCreditUseCase $storeProblemCasesUseCase): JsonResource
     {
         $problemCaseDTO = StoreProblemCaseDTO::fromArray($request->validated());
+        $problemCase = $storeProblemCasesUseCase->execute($problemCaseDTO);
 
-        return $storeProblemCasesUseCase->execute($problemCaseDTO);
+        return new JsonResource($problemCase);
     }
 
-    public function attachTags($id, AttachNewProblemCaseTagsRequest $request, NewAttachTagsProblemCaseUseCase $newAttachTagsProblemCaseUseCase)
+    public function attachTags(int $id, AttachNewProblemCaseTagsRequest $request, NewAttachTagsProblemCaseUseCase $newAttachTagsProblemCaseUseCase): JsonResource
     {
-        return $newAttachTagsProblemCaseUseCase->execute((int) $id, (array) $request->input('tags'));
+        $problemCase = $newAttachTagsProblemCaseUseCase->execute($id, (array) $request->input('tags'));
+
+        return new JsonResource($problemCase);
     }
 }

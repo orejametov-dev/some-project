@@ -47,9 +47,9 @@ class StoresController extends Controller
         return JsonResource::collection($stores->paginate($request->query('per_page') ?? 15));
     }
 
-    public function show($id, FindStoreByIdUseCase $findStoreByIdUseCase): JsonResource
+    public function show(int $id, FindStoreByIdUseCase $findStoreByIdUseCase): JsonResource
     {
-        $store = $findStoreByIdUseCase->execute((int) $id);
+        $store = $findStoreByIdUseCase->execute($id);
         $store->load(['merchant', 'activity_reasons']);
 
         return new JsonResource($store);
@@ -62,38 +62,38 @@ class StoresController extends Controller
         return new JsonResource($store);
     }
 
-    public function update($id, UpdateStoresRequest $request, UpdateStoreUseCase $updateStoresUseCase): JsonResource
+    public function update(int $id, UpdateStoresRequest $request, UpdateStoreUseCase $updateStoresUseCase): JsonResource
     {
-        $store = $updateStoresUseCase->execute((int) $id, UpdateStoresDTO::fromArray($request->validated()));
+        $store = $updateStoresUseCase->execute($id, UpdateStoresDTO::fromArray($request->validated()));
 
         return new JsonResource($store);
     }
 
-    public function toggle($id, Request $request, ToggleStoreUseCase $toggleStoresUseCase): JsonResource
+    public function toggle(int $id, Request $request, ToggleStoreUseCase $toggleStoresUseCase): JsonResource
     {
         $this->validate($request, [
             'activity_reason_id' => 'integer|required',
         ]);
 
-        $store = $toggleStoresUseCase->execute((int) $id, (int) $request->input('activity_reason_id'));
+        $store = $toggleStoresUseCase->execute($id, (int) $request->input('activity_reason_id'));
 
         return new JsonResource($store);
     }
 
-    public function setTypeRegister($id, Request $request, SetTypeRegisterStoreUseCase $setTypeRegisterStoresUseCase): JsonResource
+    public function setTypeRegister(int $id, Request $request, SetTypeRegisterStoreUseCase $setTypeRegisterStoresUseCase): JsonResource
     {
         $request->validate([
             'client_type_register' => 'required|string',
         ]);
 
-        $store = $setTypeRegisterStoresUseCase->execute((int) $id, (string) $request->input('client_type_register'));
+        $store = $setTypeRegisterStoresUseCase->execute($id, (string) $request->input('client_type_register'));
 
         return new JsonResource($store);
     }
 
-    public function getConditions($id, Request $request): JsonResource
+    public function getConditions(int $id, Request $request): JsonResource
     {
-        $store = Store::query()->findOrFail((int) $id);
+        $store = Store::query()->findOrFail($id);
         $special_conditions = $store->conditions()->active()->get();
 
         $conditionQuery = Condition::query()

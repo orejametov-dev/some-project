@@ -9,11 +9,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiGate\Merchants\MerchantDetailForCredits;
 use App\Http\Resources\ApiGate\Merchants\MerchantsResource;
 use App\Models\Merchant;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class MerchantsController extends Controller
 {
-    public function getMerchantByTinForCredits($tin)
+    public function getMerchantByTinForCredits($tin): MerchantDetailForCredits
     {
         $merchant = Merchant::with('merchant_info')
             ->whereHas('merchant_info', function ($query) use ($tin) {
@@ -23,7 +25,7 @@ class MerchantsController extends Controller
         return new MerchantDetailForCredits($merchant);
     }
 
-    public function show($id)
+    public function show($id): MerchantsResource
     {
         $merchant_query = Merchant::with(['application_active_conditions']);
         if (preg_match('/^\d+$/', $id)) {
@@ -35,17 +37,17 @@ class MerchantsController extends Controller
         return new MerchantsResource($merchant);
     }
 
-    public function verifyToken(Request $request)
+    public function verifyToken(Request $request): JsonResponse
     {
         $merchant = Merchant::query()->where('token', $request->token)->firstOrFail();
 
-        return [
+        return new JsonResponse([
             'name' => $merchant->name,
             'merchant_id' => $merchant->id,
-        ];
+        ]);
     }
 
-    public function getMerchantByCompanyId($companyId)
+    public function getMerchantByCompanyId($companyId): JsonResource
     {
         $merchant = Merchant::query()->where('company_id', $companyId)->first(['id', 'name']);
 
@@ -53,6 +55,6 @@ class MerchantsController extends Controller
             throw new BusinessException('Мерчант не найден', 'object_not_found', 404);
         }
 
-        return $merchant;
+        return new JsonResource($merchant);
     }
 }

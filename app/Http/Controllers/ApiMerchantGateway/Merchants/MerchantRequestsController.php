@@ -28,7 +28,7 @@ class MerchantRequestsController extends Controller
         ];
     }
 
-    public function show($id): MerchantRequest
+    public function show(int $id): MerchantRequest
     {
         $merchant_request = MerchantRequest::query()->with('files')->find((int) $id);
 
