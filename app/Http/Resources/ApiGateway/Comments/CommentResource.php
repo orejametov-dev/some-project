@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources\ApiGateway\Comments;
 
 use App\Models\Comment;
@@ -8,7 +10,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 /**
  * @property Comment $resource
  */
-class IndexCommentResource extends JsonResource
+class CommentResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
