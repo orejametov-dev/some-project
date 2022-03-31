@@ -60,6 +60,7 @@ class MerchantRequestsController extends Controller
     public function show(int $id, FindMerchantRequestByIdUseCase $findMerchantRequestByIdUseCase): ShowMerchantRequestResource
     {
         $merchant_request = $findMerchantRequestByIdUseCase->execute($id);
+        $merchant_request->load('files');
 
         return new ShowMerchantRequestResource($merchant_request);
     }
