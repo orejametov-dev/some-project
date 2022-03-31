@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
  * @property int $id
  * @property string $body
  * @property int $type_id
+ * @property float $point
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Collection|ProblemCase[] $problem_cases
