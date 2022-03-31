@@ -27,9 +27,9 @@ class GenerateAdditionalAgreementDocUseCase
         }
 
         $template_path = match ($additional_agreement->document_type) {
-            AdditionalAgreementDocumentTypeEnum::LIMIT() => 'app/additional_agreement.docx',
-            AdditionalAgreementDocumentTypeEnum::VAT() => 'app/additional_agreement_vat.docx',
-            AdditionalAgreementDocumentTypeEnum::DELIVERY() => 'app/additional_agreement_delivery.docx',
+            AdditionalAgreementDocumentTypeEnum::LIMIT()->getValue() => 'app/additional_agreement.docx',
+            AdditionalAgreementDocumentTypeEnum::VAT()->getValue() => 'app/additional_agreement_vat.docx',
+            AdditionalAgreementDocumentTypeEnum::DELIVERY()->getValue() => 'app/additional_agreement_delivery.docx',
             default => null
         };
 
