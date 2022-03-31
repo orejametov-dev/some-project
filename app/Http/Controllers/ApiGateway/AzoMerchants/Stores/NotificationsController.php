@@ -14,16 +14,20 @@ use App\Filters\Notification\QNotificationFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiPrm\Notifications\StoreNotificationRequest;
 use App\Http\Requests\ApiPrm\Notifications\UpdateNotificationRequest;
+use App\Http\Resources\ApiGateway\Notifications\ShowNotificationResource;
+use App\Http\Resources\ApiMerchantGateway\Notifications\NotificationsResource;
 use App\Models\Notification;
 use App\UseCases\Notifications\FindNotificationByIdUseCase;
 use App\UseCases\Notifications\RemoveNotificationUseCase;
 use App\UseCases\Notifications\StoreNotificationUseCase;
 use App\UseCases\Notifications\UpdateNotificationUseCase;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class NotificationsController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): JsonResource
     {
         $notifications = Notification::query()
             ->filterRequest($request, [
@@ -36,38 +40,42 @@ class NotificationsController extends Controller
             ->latest();
 
         if ($request->query('object') == true) {
-            return $notifications->first();
+            return new NotificationsResource($notifications->first());
         }
 
         if ($request->has('paginate') && $request->query('paginate') == false) {
-            return $notifications->get();
+            return NotificationsResource::collection($notifications->get());
         }
 
-        return $notifications->paginate($request->query('per_page') ?? 15);
+        return NotificationsResource::collection($notifications->paginate($request->query('per_page') ?? 15));
     }
 
-    public function show($id, FindNotificationByIdUseCase $findNotificationByIdUseCase)
+    public function show(int $id, FindNotificationByIdUseCase $findNotificationByIdUseCase): ShowNotificationResource
     {
-        $notification = $findNotificationByIdUseCase->execute((int) $id);
+        $notification = $findNotificationByIdUseCase->execute($id);
         $notification->load(['stores']);
 
-        return $notification;
+        return new ShowNotificationResource($notification);
     }
 
-    public function store(StoreNotificationRequest $request, StoreNotificationUseCase $storeNotificationUseCase)
+    public function store(StoreNotificationRequest $request, StoreNotificationUseCase $storeNotificationUseCase): NotificationsResource
     {
-        return $storeNotificationUseCase->execute(StoreNotificationDTO::fromArray($request->validated()));
+        $notification = $storeNotificationUseCase->execute(StoreNotificationDTO::fromArray($request->validated()));
+
+        return new NotificationsResource($notification);
     }
 
-    public function update($id, UpdateNotificationRequest $request, UpdateNotificationUseCase $updateNotificationUseCase)
+    public function update(int $id, UpdateNotificationRequest $request, UpdateNotificationUseCase $updateNotificationUseCase): NotificationsResource
     {
-        return $updateNotificationUseCase->execute((int) $id, UpdateNotificationDTO::fromArray($request->validated()));
+        $notification = $updateNotificationUseCase->execute($id, UpdateNotificationDTO::fromArray($request->validated()));
+
+        return new NotificationsResource($notification);
     }
 
-    public function remove($id, RemoveNotificationUseCase $removeNotificationUseCase)
+    public function remove(int $id, RemoveNotificationUseCase $removeNotificationUseCase): JsonResponse
     {
-        $removeNotificationUseCase->execute((int) $id);
+        $removeNotificationUseCase->execute($id);
 
-        return response()->json(['message' => 'Уведомление удалено успешно']);
+        return new JsonResponse(['message' => 'Уведомление удалено успешно']);
     }
 }
