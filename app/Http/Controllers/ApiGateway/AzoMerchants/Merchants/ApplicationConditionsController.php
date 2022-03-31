@@ -15,6 +15,7 @@ use App\Http\Requests\ApiPrm\Applications\MassStoreApplicationConditionsRequest;
 use App\Http\Requests\ApiPrm\Applications\StoreApplicationConditionRequest;
 use App\Http\Requests\ApiPrm\Applications\TogglePostsApplicationConditionRequest;
 use App\Http\Requests\ApiPrm\Applications\UpdateApplicationConditionRequest;
+use App\Http\Resources\ApiGateway\ApplicationConditions\ApplicationConditionResource;
 use App\Models\Condition;
 use App\UseCases\ApplicationConditions\DeleteApplicationConditionUseCase;
 use App\UseCases\ApplicationConditions\MassSpecialStoreApplicationConditionUseCase;
@@ -23,11 +24,13 @@ use App\UseCases\ApplicationConditions\StoreApplicationConditionUseCase;
 use App\UseCases\ApplicationConditions\ToggleActiveApplicationConditionUseCase;
 use App\UseCases\ApplicationConditions\TogglePostsApplicationConditionUseCase;
 use App\UseCases\ApplicationConditions\UpdateApplicationConditionUseCase;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class ApplicationConditionsController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): JsonResource
     {
         $conditionQuery = Condition::query()
             ->with('stores')
@@ -35,54 +38,62 @@ class ApplicationConditionsController extends Controller
             ->orderRequest($request);
 
         if ($request->query('object') == true) {
-            return $conditionQuery->first();
+            return new ApplicationConditionResource($conditionQuery->first());
         }
 
         if ($request->has('paginate') and $request->query('paginate') == false) {
-            return $conditionQuery->get();
+            return ApplicationConditionResource::collection($conditionQuery->get());
         }
 
-        return $conditionQuery->paginate($request->query('per_page') ?? 15);
+        return ApplicationConditionResource::collection($conditionQuery->paginate($request->query('per_page') ?? 15));
     }
 
-    public function store(StoreApplicationConditionRequest $request, StoreApplicationConditionUseCase $storeApplicationConditionUseCase)
+    public function store(StoreApplicationConditionRequest $request, StoreApplicationConditionUseCase $storeApplicationConditionUseCase): ApplicationConditionResource
     {
-        return $storeApplicationConditionUseCase->execute(StoreConditionDTO::fromArray($request->validated()));
+        $condition = $storeApplicationConditionUseCase->execute(StoreConditionDTO::fromArray($request->validated()));
+
+        return new ApplicationConditionResource($condition);
     }
 
-    public function massStore(MassStoreApplicationConditionsRequest $request, MassStoreApplicationConditionUseCase $massStoreApplicationConditionUseCase)
+    public function massStore(MassStoreApplicationConditionsRequest $request, MassStoreApplicationConditionUseCase $massStoreApplicationConditionUseCase): JsonResponse
     {
         $massStoreApplicationConditionUseCase->execute(MassStoreConditionDTO::fromArray($request->validated()));
 
-        return response()->json(['message' => 'Условия изменены']);
+        return new JsonResponse(['message' => 'Условия изменены']);
     }
 
-    public function massSpecialStore(MassSpecialStoreApplicationConditionRequest $request, MassSpecialStoreApplicationConditionUseCase $massSpecialStoreApplicationConditionUseCase)
+    public function massSpecialStore(MassSpecialStoreApplicationConditionRequest $request, MassSpecialStoreApplicationConditionUseCase $massSpecialStoreApplicationConditionUseCase): JsonResponse
     {
         $massSpecialStoreApplicationConditionUseCase->execute(MassSpecialStoreConditionDTO::fromArray($request->validated()));
 
-        return response()->json(['message' => 'Условия изменены']);
+        return new JsonResponse(['message' => 'Условия изменены']);
     }
 
-    public function update($id, UpdateApplicationConditionRequest $request, UpdateApplicationConditionUseCase $updateApplicationConditionUseCase)
+    public function update(int $id, UpdateApplicationConditionRequest $request, UpdateApplicationConditionUseCase $updateApplicationConditionUseCase): ApplicationConditionResource
     {
-        return $updateApplicationConditionUseCase->execute((int) $id, UpdateConditionDTO::fromArray($request->validated()));
+        $condition = $updateApplicationConditionUseCase->execute($id, UpdateConditionDTO::fromArray($request->validated()));
+
+        return new ApplicationConditionResource($condition);
     }
 
-    public function delete($id, DeleteApplicationConditionUseCase $deleteApplicationConditionUseCase)
+    public function delete(int $id, DeleteApplicationConditionUseCase $deleteApplicationConditionUseCase): JsonResponse
     {
-        $deleteApplicationConditionUseCase->execute((int) $id);
+        $deleteApplicationConditionUseCase->execute($id);
 
-        return response()->json(['message' => 'Условие удалено']);
+        return new JsonResponse(['message' => 'Условие удалено']);
     }
 
-    public function toggle($id, ToggleActiveApplicationConditionUseCase $toggleActiveApplicationConditionUseCase)
+    public function toggle(int $id, ToggleActiveApplicationConditionUseCase $toggleActiveApplicationConditionUseCase): ApplicationConditionResource
     {
-        return $toggleActiveApplicationConditionUseCase->execute((int) $id);
+        $condition = $toggleActiveApplicationConditionUseCase->execute($id);
+
+        return new ApplicationConditionResource($condition);
     }
 
-    public function togglePosts($id, TogglePostsApplicationConditionRequest $request, TogglePostsApplicationConditionUseCase $togglePostsApplicationConditionUseCase)
+    public function togglePosts(int $id, TogglePostsApplicationConditionRequest $request, TogglePostsApplicationConditionUseCase $togglePostsApplicationConditionUseCase): ApplicationConditionResource
     {
-        return $togglePostsApplicationConditionUseCase->execute((int) $id, (bool) $request->input('post_merchant'), (bool) $request->input('post_alifshop'));
+        $condition = $togglePostsApplicationConditionUseCase->execute($id, (bool) $request->input('post_merchant'), (bool) $request->input('post_alifshop'));
+
+        return new ApplicationConditionResource($condition);
     }
 }
