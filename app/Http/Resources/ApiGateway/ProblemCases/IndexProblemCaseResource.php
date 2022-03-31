@@ -30,6 +30,7 @@ class IndexProblemCaseResource extends JsonResource
             'status_id' => $this->resource->status_id,
             'status_key' => $this->resource->status_key,
             'post_or_pre_created_by_name' => $this->resource->post_or_pre_created_by_name,
+            'created_at' => $this->resource->created_at,
             'merchant' => $this->whenLoaded('merchant'),
             'store' => $this->whenLoaded('store'),
         ];

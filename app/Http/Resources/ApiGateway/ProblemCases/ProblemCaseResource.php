@@ -36,6 +36,7 @@ class ProblemCaseResource extends JsonResource
             'application_items' => $this->resource->application_items,
             'comment_from_merchants' => $this->resource->comment_from_merchant,
             'deadline' => $this->resource->deadline,
+            'created_at' => $this->resource->created_at,
         ];
     }
 }
