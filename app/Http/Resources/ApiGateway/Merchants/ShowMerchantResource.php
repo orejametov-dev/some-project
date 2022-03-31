@@ -20,6 +20,7 @@ class ShowMerchantResource extends MerchantResource
     public function toArray($request)
     {
         return array_merge(parent::toArray($request), [
+            'token' => $this->resource->token,
             'has_generate_goods' => $this->resource->has_general_goods,
             'holding_initial_payment' => $this->resource->holding_initial_payment,
             'logo_path' => $this->resource->logo_path,
