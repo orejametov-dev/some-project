@@ -20,6 +20,7 @@ class ShowMerchantRequestResource extends MerchantRequestResource
     public function toArray($request)
     {
         return array_merge(parent::toArray($request), [
+            'status' => $this->resource->status,
             'files' => $this->whenLoaded('files'),
         ]);
     }
