@@ -5,19 +5,20 @@ declare(strict_types=1);
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Throwable;
 
 class BusinessException extends Exception
 {
-    protected $string_code;
+    protected string $string_code;
 
-    public function __construct($message = '', $string_code = '', $code = 400, Throwable $previous = null)
+    public function __construct(string $message = '', string $string_code = '', int $code = 400, Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
         $this->string_code = $string_code;
     }
 
-    public function render()
+    public function render(): JsonResponse
     {
         return response()->json(['message' => $this->getMessage(), 'code' => $this->string_code], $this->getCode());
     }

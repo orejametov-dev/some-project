@@ -36,9 +36,20 @@ class UpdateMerchantRequestUseCase
         $merchant_request->stores_count = $merchantRequestDTO->getStoresCount();
         $merchant_request->merchant_users_count = $merchantRequestDTO->getMerchantUsersCount();
         $merchant_request->approximate_sales = $merchantRequestDTO->getApproximateSales();
-        $merchant_request->save();
 
-        $merchant_request->checkToMainCompleted();
+        if ((
+            $merchant_request->user_name &&
+                $merchant_request->legal_name &&
+                $merchant_request->legal_name_prefix &&
+                $merchant_request->user_phone &&
+                $merchant_request->name &&
+                $merchant_request->region &&
+                $merchant_request->approximate_sales
+        ) === true) {
+            $merchant_request->main_completed = true;
+        }
+
+        $merchant_request->save();
 
         return $merchant_request;
     }
