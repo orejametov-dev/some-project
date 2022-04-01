@@ -8,11 +8,12 @@ use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\Exceptions\BusinessException;
 use App\Http\Controllers\Controller;
 use App\Models\AzoMerchantAccess;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
 
 class MerchantAccessController extends Controller
 {
-    public function checkToActiveMerchant(GatewayAuthUser $gatewayAuthUser)
+    public function checkToActiveMerchant(GatewayAuthUser $gatewayAuthUser): JsonResponse
     {
         return Cache::tags('azo_merchants')->remember('active_merchant_by_user_id_' . $gatewayAuthUser->getId(), 86400, function () use ($gatewayAuthUser) {
             $azo_merchant_access = AzoMerchantAccess::query()

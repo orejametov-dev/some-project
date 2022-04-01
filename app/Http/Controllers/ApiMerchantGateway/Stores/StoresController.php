@@ -8,11 +8,12 @@ use App\DTOs\Auth\AzoAccessDto;
 use App\Http\Controllers\Controller;
 use App\Models\Store;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Cache;
 
 class StoresController extends Controller
 {
-    public function index(Request $request, AzoAccessDto $azoAccessDto)
+    public function index(Request $request, AzoAccessDto $azoAccessDto): JsonResource
     {
         $stores = Store::query()
             ->with(['merchant'])
