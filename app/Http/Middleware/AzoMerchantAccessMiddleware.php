@@ -21,6 +21,13 @@ class AzoMerchantAccessMiddleware
     ) {
     }
 
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
+     */
     public function handle(Request $request, Closure $next)
     {
         $azo_merchant_access = Cache::tags('azo_merchants')->remember('azo_merchant_user_id_' . $this->gatewayAuthUser->getId(), 86400, function () {
@@ -34,11 +41,11 @@ class AzoMerchantAccessMiddleware
             throw new BusinessException('Unauthenticated', 'unauthenticated', 401);
         }
 
-        $azo_access_dto = new AzoAccessDto(
-            merchant_id: $azo_merchant_access->merchant_id,
-            store_id: $azo_merchant_access->store_id,
-            id: $azo_merchant_access->id,
-        );
+        $azo_access_dto = AzoAccessDto::fromArray([
+            'merchant_id' => $azo_merchant_access->merchant_id,
+            'store_id' => $azo_merchant_access->store_id,
+            'id' => $azo_merchant_access->id,
+        ]);
 
         $this->app->instance(AzoAccessDto::class, $azo_access_dto);
 

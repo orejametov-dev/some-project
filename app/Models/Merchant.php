@@ -6,7 +6,6 @@ namespace App\Models;
 
 use App\Filters\Merchant\MerchantFilters;
 use App\HttpRepositories\HttpResponses\Prm\CompanyHttpResponse;
-use App\HttpRepositories\Storage\StorageHttpRepository;
 use App\Traits\SortableByQueryParams;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,7 +17,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
 
 /**
  * App\Models\Merchant.
@@ -28,9 +26,10 @@ use Illuminate\Http\UploadedFile;
  * @property string|null $legal_name
  * @property string|null $legal_name_prefix
  * @property string|null $token
- * @property int $has_general_goods
+ * @property bool $has_general_goods
  * @property string|null $logo_url
  * @property bool $recommend
+ * @property bool $holding_initial_payment
  * @property int|null $maintainer_id
  * @property int|null $current_sales
  * @property int $company_id
@@ -51,7 +50,7 @@ use Illuminate\Http\UploadedFile;
  * @property-read Collection|Tag[] $tags
  * @property-read int|null $tags_count
  * @property int $payment_day
- * @property int $active
+ * @property bool $active
  * @property-read Collection|ActivityReason[] $activity_reasons
  * @property-read int|null $activity_reasons_count
  * @property-read Collection|Condition[] $application_active_conditions
@@ -72,24 +71,9 @@ class Merchant extends Model
     use SortableByQueryParams;
 
     protected $table = 'merchants';
-    protected $fillable = [
-        'name',
-        'legal_name',
-        'legal_name_prefix',
-        'token',
-        'logo_url',
-        'has_general_goods',
-        'active',
-    ];
     protected $appends = ['logo_path'];
     protected $hidden = ['logo_url'];
     public static string $percentage_of_limit = '* 0.95';
-    /*Поля моделей используется в model_hooks*/
-    public static array $attributeLabels = [
-        'name' => 'Название партнёра',
-        'legal_name' => 'Юридическое имя',
-        'token' => 'Токен алифшопа',
-    ];
 
     public function getLogoPathAttribute(): string|null
     {
@@ -178,54 +162,5 @@ class Merchant extends Model
     public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder
     {
         return (new MerchantFilters($request, $builder))->execute($filters);
-    }
-
-    public function uploadLogo(UploadedFile $uploadedAvatar): self
-    {
-        if ($this->logo_url) {
-            (new StorageHttpRepository())->destroy($this->logo_url);
-        }
-        $storage_file = (new StorageHttpRepository)->uploadFile($uploadedAvatar, 'merchants');
-
-        $this->logo_url = $storage_file['url'];
-        $this->save();
-
-        return $this;
-    }
-
-    public function deleteLogo(): void
-    {
-        if (!$this->logo_url) {
-            return;
-        }
-        (new StorageHttpRepository())->destroy($this->logo_url);
-
-        $this->logo_url = null;
-        $this->save();
-    }
-
-    public function uploadFile(UploadedFile $uploadedFile, string $type): File
-    {
-        $storage_file = (new StorageHttpRepository)->uploadFile($uploadedFile, 'merchants');
-        $merchant_file = new File();
-        $merchant_file->file_type = $type;
-        $merchant_file->mime_type = $storage_file['mime_type'];
-        $merchant_file->size = $storage_file['size'];
-        $merchant_file->url = $storage_file['url'];
-        $merchant_file->merchant_id = $this->id;
-        $merchant_file->save();
-
-        return $merchant_file;
-    }
-
-    public function deleteFile(int $file_id): void
-    {
-        $file = $this->files()->find($file_id);
-        if (!$file) {
-            return;
-        }
-
-        (new StorageHttpRepository())->destroy($this->logo_url);
-        $file->delete();
     }
 }

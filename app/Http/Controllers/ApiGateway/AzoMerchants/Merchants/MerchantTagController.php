@@ -5,51 +5,50 @@ declare(strict_types=1);
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ApiGateway\Tags\ShowTagResource;
+use App\Http\Resources\ApiGateway\Tags\TagResource;
 use App\Models\Tag;
+use App\UseCases\MerchantTags\FindMerchantTagByIdUseCase;
+use App\UseCases\MerchantTags\RemoveMerchantTagUseCase;
+use App\UseCases\MerchantTags\StoreMerchantTagUseCase;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class MerchantTagController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): JsonResource
     {
         $merchant_tag_query = Tag::query();
         if ($request->query('object') == 'true') {
-            return $merchant_tag_query->first();
+            return new TagResource($merchant_tag_query->first());
         }
 
-        return $merchant_tag_query->paginate($request->query('per_page') ?? 15);
+        return TagResource::collection($merchant_tag_query->paginate($request->query('per_page') ?? 15));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, StoreMerchantTagUseCase $storeMerchantTagUseCase): TagResource
     {
         $this->validate($request, [
             'title' => 'required|unique:merchant_tags,title|min:5|max:255',
         ]);
 
-        $merchant_tag = new Tag();
-        $merchant_tag->title = $request->input('title');
-        $merchant_tag->save();
+        $merchant_tags = $storeMerchantTagUseCase->execute($request->input('title'));
 
-        return $merchant_tag;
+        return new TagResource($merchant_tags);
     }
 
-    public function show($tag_id)
+    public function show(int $id, FindMerchantTagByIdUseCase $findMerchantTagByIdUseCase): ShowTagResource
     {
-        $tag = Tag::query()->findOrFail($tag_id);
+        $tag = $findMerchantTagByIdUseCase->execute($id);
 
-        return $tag->merchants;
+        return new ShowTagResource($tag->load('merchants'));
     }
 
-    public function removeTag($tag_id)
+    public function removeTag($id, RemoveMerchantTagUseCase $removeMerchantTagUseCase): JsonResponse
     {
-        $tag = Tag::query()->findOrFail($tag_id);
+        $removeMerchantTagUseCase->execute((int) $id);
 
-        if ($tag->merchants()->count()) {
-            return response()->json(['message' => 'Тег невозможно удалить.']);
-        }
-
-        $tag->delete();
-
-        return response()->json(['message' => 'Тэг успешно удалён.']);
+        return new JsonResponse(['message' => 'Тэг успешно удалён.']);
     }
 }

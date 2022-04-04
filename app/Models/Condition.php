@@ -56,17 +56,6 @@ class Condition extends Model
     use SortableByQueryParams;
 
     protected $table = 'application_conditions';
-    protected $fillable = [
-        'duration',
-        'commission',
-        'active',
-        'discount',
-        'special_offer', // should be unique by partner
-        'post_merchant',
-        'post_alifshop',
-        'started_at',
-        'finished_at',
-    ];
     protected $appends = ['title'];
 
     //Relationships

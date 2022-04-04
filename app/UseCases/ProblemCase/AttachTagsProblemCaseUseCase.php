@@ -10,24 +10,27 @@ use App\Models\ProblemCaseTag;
 
 class AttachTagsProblemCaseUseCase
 {
+    public function __construct(
+        private FindProblemCaseByIdUseCase $findProblemCaseByIdUseCase
+    ) {
+    }
+
     /**
-     * @param int $id
-     * @param array $tags_request
      * @throws BusinessException
      */
     public function execute(int $id, array $tags_request): ProblemCase
     {
-        $problemCase = ProblemCase::query()->find($id);
-
-        if ($problemCase === null) {
-            throw new BusinessException('Проблемный кейс не найден', 'problem_case_not_exists', 404);
-        }
-
+        $problemCase = $this->findProblemCaseByIdUseCase->execute($id);
         $problemCase->tags()->detach();
 
         $tags = [];
         foreach ($tags_request as $item) {
-            $tag = ProblemCaseTag::query()->firstOrCreate(['body' => $item['name'], 'type_id' => $item['type_id']]);
+            $tag = ProblemCaseTag::query()->first();
+            if ($tag === null) {
+                $tag = new ProblemCaseTag();
+                $tag->body = $item['name'];
+                $tag->type_id = $item['type_id'];
+            }
             $tags[] = $tag->id;
         }
         $problemCase->tags()->attach($tags);

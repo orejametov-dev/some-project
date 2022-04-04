@@ -12,6 +12,7 @@ use App\Exceptions\BusinessException;
 use App\HttpRepositories\Core\CoreHttpRepository;
 use App\Mappings\ProblemCaseStatusMapping;
 use App\Models\ProblemCase;
+use http\Exception\InvalidArgumentException;
 
 class StoreProblemCaseApplicationIdUseCase extends AbstractStoreProblemCaseUseCase
 {
@@ -40,14 +41,22 @@ class StoreProblemCaseApplicationIdUseCase extends AbstractStoreProblemCaseUseCa
         }
     }
 
-    protected function setIdentifierNumberAndDate(ProblemCase $problemCase, string|int $identifier_number, mixed $data): void
+    protected function setIdentifierNumberAndDate(ProblemCase $problemCase, string|int $identifier, mixed $data): void
     {
-        $problemCase->application_id = $identifier_number;
+        if (is_int($identifier) === false) {
+            throw new InvalidArgumentException('identifier should be string');
+        }
+
+        $problemCase->application_id = $identifier;
         $problemCase->application_created_at = $data->application_created_at;
     }
 
     protected function getDataByIdentifier(int|string $identifier): mixed
     {
+        if (is_int($identifier) === false) {
+            throw new InvalidArgumentException('identifier should be string');
+        }
+
         $data = $this->coreHttpRepository->getApplicationDataByApplicationId($identifier);
 
         if ($data === null) {

@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace App\UseCases\MerchantUsers;
 
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
-use App\Exceptions\BusinessException;
 use App\HttpRepositories\Auth\AuthHttpRepository;
 use App\HttpRepositories\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Jobs\ToggleMerchantRoleOfUser;
-use App\Models\Store;
+use App\UseCases\Stores\FindStoreByIdUseCase;
 
 class DestroyMerchantUserUseCase
 {
     public function __construct(
         private FindMerchantUserByIdUseCase $findMerchantUserUseCase,
+        private FindStoreByIdUseCase $findStoreByIdUseCase,
         private GatewayAuthUser $authUser,
         private FlushMerchantUserCacheUseCase $flushMerchantUserCacheUseCase
     ) {
@@ -24,10 +24,7 @@ class DestroyMerchantUserUseCase
     public function execute(int $merchant_user_id): void
     {
         $azo_merchant_access = $this->findMerchantUserUseCase->execute($merchant_user_id);
-        $store = Store::query()->find($azo_merchant_access->store_id);
-        if ($store === null) {
-            throw new BusinessException('Магазин не найден', 'object_not_found', 404);
-        }
+        $store = $this->findStoreByIdUseCase->execute($azo_merchant_access->store_id);
 
         $azo_merchant_access->delete();
         SendHook::dispatch(new HookData(

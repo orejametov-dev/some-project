@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\UseCases\Merchants;
 
+use App\Enums\AdditionalAgreementDocumentTypeEnum;
 use App\HttpRepositories\Core\CoreHttpRepository;
-use App\Models\AdditionalAgreement;
 use App\Models\Merchant;
 
 class UpdateMerchantCurrentSalesUseCase
@@ -30,7 +30,7 @@ class UpdateMerchantCurrentSalesUseCase
                 $total_limit = $merchant_info->limit;
                 $rest_limit = $merchant_info->limit - $merchant->current_sales;
                 $merchant_info->rest_limit = $rest_limit > 0 ? $rest_limit : 0;
-                if ($merchant->additional_agreements()->where('document_type', AdditionalAgreement::LIMIT)->exists()) {
+                if ($merchant->additional_agreements()->where('document_type', AdditionalAgreementDocumentTypeEnum::LIMIT())->exists()) {
                     $additional_agreements = $merchant->additional_agreements;
                     foreach ($additional_agreements as $additional_agreement) {
                         $total_limit += $additional_agreement->limit;
@@ -53,7 +53,7 @@ class UpdateMerchantCurrentSalesUseCase
         Merchant::query()
             ->leftJoin('merchant_infos', 'merchants.id', '=', 'merchant_infos.merchant_id')
             ->leftJoin('merchant_additional_agreements', 'merchants.id', '=', 'merchant_additional_agreements.merchant_id')
-            ->whereRaw('merchant_additional_agreements.document_type = ' . '"' . AdditionalAgreement::LIMIT . '"')
+            ->whereRaw('merchant_additional_agreements.document_type = ' . '"' . AdditionalAgreementDocumentTypeEnum::LIMIT() . '"')
             ->whereRaw("(IFNULL(merchant_infos.limit, 0) + IFNULL(merchant_additional_agreements.limit, 0)) $percentage_of_limit <= merchants.current_sales")
             ->whereNull('merchant_additional_agreements.limit_expired_at')
             ->update(['merchant_additional_agreements.limit_expired_at' => now()]);

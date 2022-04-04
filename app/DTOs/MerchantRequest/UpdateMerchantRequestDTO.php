@@ -15,6 +15,7 @@ final class UpdateMerchantRequestDTO extends AbstractEntity
         private array $categories,
         private string $region,
         private string $district,
+        private ?int $approximate_sales = null,
         private ?int $stores_count = null,
         private ?int $merchant_users_count = null
     ) {
@@ -34,6 +35,7 @@ final class UpdateMerchantRequestDTO extends AbstractEntity
             categories:  self::parseArray($data['categories']),
             region: self::parseString($data['region']),
             district:  self::parseString($data['district']),
+            approximate_sales: self::parseNullableInt($data['approximate_sales']),
             stores_count: self::parseNullableInt($data['stores_count']),
             merchant_users_count: self::parseNullableInt($data['merchant_users_count']),
         );
@@ -128,5 +130,13 @@ final class UpdateMerchantRequestDTO extends AbstractEntity
     public function getDistrict(): string
     {
         return $this->district;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getApproximateSales(): ?int
+    {
+        return $this->approximate_sales;
     }
 }

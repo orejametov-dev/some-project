@@ -5,87 +5,70 @@ declare(strict_types=1);
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
 use App\DTOs\MerchantInfos\StoreMerchantInfoDTO;
-use App\Exceptions\BusinessException;
+use App\DTOs\MerchantInfos\UpdateMerchantInfoDTO;
 use App\Filters\Merchant\MerchantIdFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiPrm\Merchants\StoreMerchantInfo;
 use App\Http\Requests\ApiPrm\Merchants\UpdateMerchantInfo;
+use App\Http\Resources\ApiGateway\MerchantInfo\IndexMerchantInfoResource;
+use App\Http\Resources\ApiGateway\MerchantInfo\MerchantInfoResource;
 use App\Models\MerchantInfo;
-use App\Services\WordService;
+use App\UseCases\MerchantInfos\GetMerchantInfoContractUseCase;
+use App\UseCases\MerchantInfos\GetMerchantInfoProcurationContractUseCase;
+use App\UseCases\MerchantInfos\GetMerchantInfoTrustContractUseCase;
 use App\UseCases\MerchantInfos\StoreMerchantInfoUseCase;
+use App\UseCases\MerchantInfos\UpdateMerchantInfoUseCase;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class MerchantInfoController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): JsonResource
     {
         $merchantInfoQuery = MerchantInfo::query()
             ->with('merchant:id,legal_name,legal_name_prefix')
             ->filterRequest($request, [MerchantIdFilter::class]);
 
         if ($request->query('object') == true) {
-            return $merchantInfoQuery->first();
+            return new IndexMerchantInfoResource($merchantInfoQuery->first());
         }
 
-        return $merchantInfoQuery->paginate($request->query('per_page') ?? 15);
+        return IndexMerchantInfoResource::collection($merchantInfoQuery->paginate($request->query('per_page') ?? 15));
     }
 
-    public function store(StoreMerchantInfo $request, StoreMerchantInfoUseCase $storeMerchantInfoUseCase)
+    public function store(StoreMerchantInfo $request, StoreMerchantInfoUseCase $storeMerchantInfoUseCase): MerchantInfoResource
     {
-        $merchantInfo = $storeMerchantInfoUseCase->execute(StoreMerchantInfoDTO::fromArray($request->validated()));
+        $merchant_info = $storeMerchantInfoUseCase->execute(StoreMerchantInfoDTO::fromArray($request->validated()));
 
-        return $merchantInfo;
+        return new MerchantInfoResource($merchant_info);
     }
 
-    public function update(UpdateMerchantInfo $request, $id)
+    public function update(int $id, UpdateMerchantInfo $request, UpdateMerchantInfoUseCase $updateMerchantInfoUseCase): MerchantInfoResource
     {
-        $merchant_info = MerchantInfo::query()->findOrFail($id);
+        $merchant_info = $updateMerchantInfoUseCase->execute($id, UpdateMerchantInfoDTO::fromArray($request->validated()));
 
-        $merchant_info->fill($request->validated());
-        $merchant_info->save();
-
-        return $merchant_info;
+        return new MerchantInfoResource($merchant_info);
     }
 
-    public function getContractTrust(WordService $wordService, $id)
+    public function getContractTrust(int $id, GetMerchantInfoTrustContractUseCase $getMerchantInfoTrustContractUseCase): BinaryFileResponse
     {
-        $merchant_info = MerchantInfo::query()->find($id);
+        $file_path = $getMerchantInfoTrustContractUseCase->execute($id);
 
-        if ($merchant_info === null) {
-            throw new BusinessException('Информация про мерчант не найдена', 'object_not_found', 404);
-        }
-
-        $contract_path = 'app/prm_merchant_contract_trust.docx';
-        $contract_file = $wordService->createContract($merchant_info, $contract_path);
-
-        return response()->download(storage_path($contract_file))->deleteFileAfterSend();
+        return response()->download(storage_path($file_path))->deleteFileAfterSend();
     }
 
-    public function getContractProcuration($id, WordService $wordService)
+    public function getContractProcuration(int $id, GetMerchantInfoProcurationContractUseCase $getMerchantInfoProcurationContractUseCase): BinaryFileResponse
     {
-        $merchant_info = MerchantInfo::query()->find($id);
+        $file_path = $getMerchantInfoProcurationContractUseCase->execute(($id));
 
-        if ($merchant_info === null) {
-            throw new BusinessException('Информация про мерчант не найдена', 'object_not_found', 404);
-        }
-
-        $contract_path = 'app/prm_merchant_contract_procuration.docx';
-        $contract_file = $wordService->createContract($merchant_info, $contract_path);
-
-        return response()->download(storage_path($contract_file))->deleteFileAfterSend();
+        return response()->download(storage_path($file_path))->deleteFileAfterSend();
     }
 
-    public function getContract(WordService $wordService, $id)
+    public function getContract($id, GetMerchantInfoContractUseCase $getMerchantInfoContractUseCase): BinaryFileResponse
     {
-        $merchant_info = MerchantInfo::query()->find($id);
+        $file_path = $getMerchantInfoContractUseCase->execute((int) $id);
 
-        if ($merchant_info === null) {
-            throw new BusinessException('Информация про мерчант не найдена', 'object_not_found', 404);
-        }
-
-        $contract_path = 'app/prm_merchant_contract.docx';
-        $contract_file = $wordService->createContract($merchant_info, $contract_path);
-
-        return response()->download(storage_path($contract_file))->deleteFileAfterSend();
+        return response()->download(storage_path($file_path))->deleteFileAfterSend();
     }
 }

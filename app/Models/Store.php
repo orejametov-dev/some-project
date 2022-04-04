@@ -55,7 +55,6 @@ use Illuminate\Http\Request;
  * @method static Builder|Store byMerchant($merchant_id)
  * @method static Builder|Store filterRequest(\Illuminate\Http\Request $request, array $filters = [])
  * @method static Builder|Store main()
- * @property string[] $fillable
  */
 class Store extends Model
 {
@@ -63,21 +62,6 @@ class Store extends Model
     use SortableByQueryParams;
 
     protected $table = 'stores';
-
-    protected $fillable = [
-        'name',
-        'is_main',
-        'phone',
-        'address',
-        'region',
-        'lat',
-        'long',
-        'responsible_person',
-        'responsible_person_phone',
-        'active',
-        'district',
-        'client_type_register',
-    ];
 
     public function notifications(): BelongsToMany
     {

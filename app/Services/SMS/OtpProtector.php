@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Services\SMS;
 
+use App\Enums\CacheTypeEnum;
 use App\Exceptions\ApiBusinessException;
-use App\Services\CacheService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 
@@ -18,7 +18,7 @@ class OtpProtector
     public function __construct(string $key)
     {
         $this->key = $key;
-        $this->cached_info = Cache::tags(CacheService::OTP)->get($this->key);
+        $this->cached_info = Cache::tags(CacheTypeEnum::OTP())->get($this->key);
     }
 
     public function writeOtpToCache(int $otp): void
@@ -29,7 +29,7 @@ class OtpProtector
 
         if (empty($this->cached_info['otps'])) {
             $generated_time = Carbon::now();
-            Cache::tags(CacheService::OTP)->put($this->key, [
+            Cache::tags(CacheTypeEnum::OTP())->put($this->key, [
                 'otps' => [$otp],
                 'generated_time' => $generated_time->toDateTimeString(),
             ], $ttl);
@@ -42,7 +42,7 @@ class OtpProtector
 
             $ttl = self::EXPIRES_IN - $past_seconds;
             $merged_codes = array_merge([$otp], $otps);
-            Cache::tags(CacheService::OTP)->put($this->key, [
+            Cache::tags(CacheTypeEnum::OTP())->put($this->key, [
                 'otps' => $merged_codes,
                 'generated_time' => $generated_time->toDateTimeString(),
             ], $ttl);
@@ -51,7 +51,7 @@ class OtpProtector
 
     public function verifyOtp(int $otp, bool $forget = true): void
     {
-        $this->cached_info = Cache::tags(CacheService::OTP)->get($this->key);
+        $this->cached_info = Cache::tags(CacheTypeEnum::OTP())->get($this->key);
         if (!$this->cached_info) {
             throw new ApiBusinessException('СМС код не был отправлен', 'otp_not_sent', [
                 'ru' => 'СМС код не был отправлен',
@@ -67,7 +67,7 @@ class OtpProtector
         }
 
         if ($forget) {
-            Cache::tags(CacheService::OTP)->forget($this->key);
+            Cache::tags(CacheTypeEnum::OTP())->forget($this->key);
         }
     }
 

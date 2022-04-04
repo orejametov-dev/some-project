@@ -4,8 +4,7 @@
 
 namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
-use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
-use App\DTOs\Competitors\CompetitorDTO;
+use App\DTOs\Competitors\SaveCompetitorDTO;
 use App\DTOs\Merchants\UpdateMerchantDTO;
 use App\Filters\CommonFilters\ActiveFilter;
 use App\Filters\CommonFilters\TagsFilter;
@@ -19,26 +18,33 @@ use App\Http\Requests\ApiPrm\Merchants\SetMainStoreRequest;
 use App\Http\Requests\ApiPrm\Merchants\SetResponsibleUserRequest;
 use App\Http\Requests\ApiPrm\Merchants\StoreMerchantRequest;
 use App\Http\Requests\ApiPrm\Merchants\UpdateMerchantRequest;
-use App\HttpRepositories\Prm\CompanyHttpRepository;
-use App\HttpRepositories\Warehouse\WarehouseHttpRepository;
-use App\Models\ActivityReason;
+use App\Http\Resources\ApiGateway\Merchants\IndexMerchantResource;
+use App\Http\Resources\ApiGateway\Merchants\MerchantResource;
+use App\Http\Resources\ApiGateway\Merchants\ShowMerchantResource;
 use App\Models\Merchant;
-use App\Models\Tag;
-use App\UseCases\Cache\FlushCacheUseCase;
 use App\UseCases\Competitors\AttachCompetitorUseCase;
 use App\UseCases\Competitors\DetachCompetitorUseCase;
 use App\UseCases\Competitors\UpdateCompetitorUseCase;
+use App\UseCases\Merchants\DeleteMerchantLogoUseCase;
+use App\UseCases\Merchants\FindMerchantByIdUseCase;
 use App\UseCases\Merchants\SetMerchantMainStoreUseCase;
+use App\UseCases\Merchants\SetMerchantTagsUseCase;
 use App\UseCases\Merchants\SetResponsibleUserUseCase;
 use App\UseCases\Merchants\StoreMerchantUseCase;
+use App\UseCases\Merchants\ToggleHoldingInitialPaymentUseCase;
+use App\UseCases\Merchants\ToggleMerchantActivityReasonUseCase;
+use App\UseCases\Merchants\ToggleMerchantGeneralGoodsUseCase;
+use App\UseCases\Merchants\ToggleMerchantRecommendUseCase;
 use App\UseCases\Merchants\UpdateMerchantUseCase;
+use App\UseCases\Merchants\UploadMerchantLogoUseCase;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 
 class MerchantsController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): JsonResource
     {
         $merchants = Merchant::query()
             ->with(['tags'])
@@ -52,82 +58,76 @@ class MerchantsController extends Controller
             ->orderRequest($request);
 
         if ($request->query('object') == 'true') {
-            return $merchants->first();
+            return new IndexMerchantResource($merchants->first());
         }
 
-        return $merchants->paginate($request->query('per_page') ?? 15);
+        return IndexMerchantResource::collection($merchants->paginate($request->query('per_page') ?? 15));
     }
 
-    public function show($id)
+    public function show(int $id, FindMerchantByIdUseCase $findMerchantByIdUseCase): ShowMerchantResource
     {
-        return Merchant::with(['stores', 'tags', 'activity_reasons', 'competitors'])->findOrFail($id);
+        $merchant = $findMerchantByIdUseCase->execute($id);
+        $merchant->load(['stores', 'tags', 'activity_reasons', 'competitors']);
+
+        return new ShowMerchantResource($merchant);
     }
 
-    public function store(StoreMerchantRequest $request, StoreMerchantUseCase $storeMerchantUseCase)
+    public function store(StoreMerchantRequest $request, StoreMerchantUseCase $storeMerchantUseCase): MerchantResource
     {
         $merchant = $storeMerchantUseCase->execute(
             company_id: (int) $request->input('company_id')
         );
 
-        return $merchant;
+        return new MerchantResource($merchant);
     }
 
-    public function update($id, UpdateMerchantRequest $request, UpdateMerchantUseCase $updateMerchantUseCase)
+    public function update(int $id, UpdateMerchantRequest $request, UpdateMerchantUseCase $updateMerchantUseCase): MerchantResource
     {
-        $updateMerchantDTO = UpdateMerchantDTO::fromArray((int) $id, $request->validated());
-        $merchant = $updateMerchantUseCase->execute($updateMerchantDTO);
+        $merchant = $updateMerchantUseCase->execute($id, UpdateMerchantDTO::fromArray($request->validated()));
 
-        return $merchant;
+        return new MerchantResource($merchant);
     }
 
-    public function uploadLogo($merchant_id, StoreFileRequest $request)
+    public function uploadLogo(int $id, StoreFileRequest $request, UploadMerchantLogoUseCase $uploadMerchantLogoUseCase): MerchantResource
     {
-        $merchant = Merchant::query()->findOrFail($merchant_id);
-        $merchant->uploadLogo($request->file('file'));
+        $merchant = $uploadMerchantLogoUseCase->execute($id, $request->file('file'));
 
-        return $merchant;
+        return new MerchantResource($merchant);
     }
 
-    public function removeLogo($merchant_id)
+    public function removeLogo(int $id, DeleteMerchantLogoUseCase $deleteMerchantLogoUseCase): JsonResponse
     {
-        $merchant = Merchant::query()->findOrFail($merchant_id);
-        $merchant->deleteLogo();
+        $deleteMerchantLogoUseCase->execute($id);
 
-        return response()->json(['message' => 'Логотип удалён']);
+        return new JsonResponse(['message' => 'Логотип удалён']);
     }
 
-    public function setResponsibleUser($id, SetResponsibleUserRequest $request, SetResponsibleUserUseCase $setResponsibleUserUseCase)
+    public function setResponsibleUser(int $id, SetResponsibleUserRequest $request, SetResponsibleUserUseCase $setResponsibleUserUseCase): MerchantResource
     {
-        return $setResponsibleUserUseCase->execute($id, $request->input('maintainer_id'));
+        $merchant = $setResponsibleUserUseCase->execute($id, $request->input('maintainer_id'));
+
+        return new MerchantResource($merchant);
     }
 
-    public function setMainStore($id, SetMainStoreRequest $request, SetMerchantMainStoreUseCase $setMainStoreUseCase)
+    public function setMainStore(int $id, SetMainStoreRequest $request, SetMerchantMainStoreUseCase $setMainStoreUseCase): MerchantResource
     {
-        return $setMainStoreUseCase->execute($id, $request->input('store_id'));
+        $merchant = $setMainStoreUseCase->execute($id, $request->input('store_id'));
+
+        return new MerchantResource($merchant);
     }
 
-    public function setTags($id, Request $request)
+    public function setTags(int $id, Request $request, SetMerchantTagsUseCase $setMerchantTagsUseCase): MerchantResource
     {
         $this->validate($request, [
             'tags' => 'required|array',
         ]);
-        $merchant = Merchant::query()->findOrFail($id);
-        $tags = $request->input('tags');
 
-        $tags = Tag::query()->whereIn('id', $tags)->get();
+        $merchant = $setMerchantTagsUseCase->execute($id, $request->input('tags'));
 
-        foreach ($request->input('tags') as $tag) {
-            if (!$tags->contains('id', $tag)) {
-                return response()->json(['message' => 'Указан не правильный тег'], 400);
-            }
-        }
-
-        $merchant->tags()->sync($tags);
-
-        return $merchant;
+        return new MerchantResource($merchant);
     }
 
-    public function hotMerchants()
+    public function hotMerchants(): JsonResponse
     {
         $percentage_of_limit = Merchant::$percentage_of_limit;
 
@@ -147,89 +147,63 @@ class MerchantsController extends Controller
                     ->from('merchant_infos')
                     ->whereColumn('merchants.id', 'merchant_infos.merchant_id');
             })
-            ->groupBy(['merchants.id', 'merchants.name', 'merchant_infos.limit']);
+            ->groupBy(['merchants.id', 'merchants.name', 'merchant_infos.limit', 'merchants.current_sales']);
 
-        return DB::table(DB::raw("({$merchant_query->toSql()}) as sub_query"))
+        return new JsonResponse(DB::table(DB::raw("({$merchant_query->toSql()}) as sub_query"))
             ->select([
                 'sub_query.id',
                 'sub_query.name',
-            ])->whereRaw("(IFNULL(sub_query.limit, 0) + IFNULL(sub_query.agreement_sum, 0)) $percentage_of_limit <= sub_query.current_sales")->get();
+            ])->whereRaw("(IFNULL(sub_query.limit, 0) + IFNULL(sub_query.agreement_sum, 0)) $percentage_of_limit <= sub_query.current_sales")->get());
     }
 
-    public function toggle($id, Request $request, FlushCacheUseCase $flushCacheUseCase, CompanyHttpRepository $companyHttpRepository)
+    public function toggle(int $id, Request $request, ToggleMerchantActivityReasonUseCase $toggleMerchantActivityReasonUseCase): MerchantResource
     {
         $this->validate($request, [
             'activity_reason_id' => 'integer|required',
         ]);
 
-        $activity_reason = ActivityReason::query()->where('type', 'MERCHANT')
-            ->findOrFail($request->input('activity_reason_id'));
+        $merchant = $toggleMerchantActivityReasonUseCase->execute($id, (int) $request->input('activity_reason_id'));
 
-        $merchant = Merchant::query()->findOrFail($id);
-        $merchant->active = !$merchant->active;
-        $merchant->save();
-
-        $merchant->activity_reasons()->attach($activity_reason->id, [
-            'active' => $merchant->active,
-            'created_by_id' => app(GatewayAuthUser::class)->getId(),
-            'created_by_name' => app(GatewayAuthUser::class)->getName(),
-        ]);
-
-        $companyHttpRepository->setStatusNotActive((int) $merchant->company_id);
-
-        $flushCacheUseCase->execute($merchant->id);
-
-        return $merchant;
+        return new MerchantResource($merchant);
     }
 
-    public function toggleGeneralGoods($id, Request $request, WarehouseHttpRepository $warehouseHttpRepository)
+    public function toggleGeneralGoods(int $id, ToggleMerchantGeneralGoodsUseCase $toggleMerchantGeneralGoodsUseCase): MerchantResource
     {
-        $merchant = Merchant::query()->findOrFail($id);
-        $merchant->has_general_goods = !$merchant->has_general_goods;
+        $merchant = $toggleMerchantGeneralGoodsUseCase->execute($id);
 
-        $warehouseHttpRepository->checkDuplicateSKUs($merchant->id);
-
-        $merchant->save();
-
-        Cache::tags($merchant->id)->flush();
-        Cache::tags('azo_merchants')->flush();
-        Cache::tags('company')->flush();
-
-        return $merchant;
+        return new MerchantResource($merchant);
     }
 
-    public function toggleRecommend($id)
+    public function toggleRecommend(int $id, ToggleMerchantRecommendUseCase $toggleMerchantRecommendUseCase): MerchantResource
     {
-        $merchant = Merchant::query()->findOrFail($id);
-        $merchant->recommend = !$merchant->recommend;
-        $merchant->save();
+        $merchant = $toggleMerchantRecommendUseCase->execute($id);
 
-        Cache::tags($merchant->id)->flush();
-        Cache::tags('azo_merchants')->flush();
-
-        return $merchant;
+        return new MerchantResource($merchant);
     }
 
-    public function attachCompetitor($id, CompetitorsRequest $request, AttachCompetitorUseCase $attachCompetitorUseCase)
+    public function toggleHoldingInitialPayment(int $id, ToggleHoldingInitialPaymentUseCase $holdingInitialPaymentUseCase): MerchantResource
     {
-        $competitorDTO = CompetitorDTO::fromArray((int) $id, $request->validated());
-        $response = $attachCompetitorUseCase->execute($competitorDTO);
-
-        return $response;
+        return new MerchantResource($holdingInitialPaymentUseCase->execute($id));
     }
 
-    public function updateCompetitor($id, CompetitorsRequest $request, UpdateCompetitorUseCase $updateCompetitorUseCase)
+    public function attachCompetitor(int $id, CompetitorsRequest $request, AttachCompetitorUseCase $attachCompetitorUseCase): MerchantResource
     {
-        $competitorDTO = CompetitorDTO::fromArray((int) $id, $request->validated());
-        $response = $updateCompetitorUseCase->execute($competitorDTO);
+        $merchant = $attachCompetitorUseCase->execute($id, SaveCompetitorDTO::fromArray($request->validated()));
 
-        return $response;
+        return new MerchantResource($merchant);
     }
 
-    public function detachCompetitor($id, Request $request, DetachCompetitorUseCase $detachCompetitorUseCase)
+    public function updateCompetitor($id, CompetitorsRequest $request, UpdateCompetitorUseCase $updateCompetitorUseCase): MerchantResource
     {
-        $detachCompetitorUseCase->execute((int) $id, (int) $request->input('competitor_id'));
+        $merchant = $updateCompetitorUseCase->execute((int) $id, SaveCompetitorDTO::fromArray($request->validated()));
 
-        return response()->json(['message' => 'Данные о конкуренте были удалены у этого мерчанта']);
+        return new MerchantResource($merchant);
+    }
+
+    public function detachCompetitor(int $id, Request $request, DetachCompetitorUseCase $detachCompetitorUseCase): JsonResponse
+    {
+        $detachCompetitorUseCase->execute($id, (int) $request->input('competitor_id'));
+
+        return new JsonResponse(['message' => 'Данные о конкуренте были удалены у этого мерчанта']);
     }
 }

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\UseCases\AdditionalAgreements;
 
+use App\Enums\AdditionalAgreementDocumentTypeEnum;
 use App\Exceptions\BusinessException;
-use App\Models\AdditionalAgreement;
 use App\Models\MerchantInfo;
 use App\Services\WordService;
 
@@ -26,10 +26,10 @@ class GenerateAdditionalAgreementDocUseCase
             throw new BusinessException('Доп информация не найдена', 'object_not_found', 404);
         }
 
-        $template_path = match ($additional_agreement->document_type) {
-            AdditionalAgreement::LIMIT => 'app/additional_agreement.docx',
-            AdditionalAgreement::VAT => 'app/additional_agreement_vat.docx',
-            AdditionalAgreement::DELIVERY => 'app/additional_agreement_delivery.docx',
+        $template_path = match ($additional_agreement->document_type->getValue()) {
+            AdditionalAgreementDocumentTypeEnum::LIMIT()->getValue() => 'app/additional_agreement.docx',
+            AdditionalAgreementDocumentTypeEnum::VAT()->getValue() => 'app/additional_agreement_vat.docx',
+            AdditionalAgreementDocumentTypeEnum::DELIVERY()->getValue() => 'app/additional_agreement_delivery.docx',
             default => null
         };
 

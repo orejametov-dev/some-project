@@ -24,21 +24,21 @@ class UpdateApplicationConditionUseCase
     ) {
     }
 
-    public function execute(UpdateConditionDTO $updateConditionDTO) : Condition
+    public function execute(int $id, UpdateConditionDTO $updateConditionDTO) : Condition
     {
-        $condition = $this->findConditionUseCase->execute($updateConditionDTO->condition_id);
+        $condition = $this->findConditionUseCase->execute($id);
 
-        if ($this->coreHttpRepository->checkApplicationToExistByConditionId($updateConditionDTO->condition_id)
-            && $condition->commission !== $updateConditionDTO->commission
-            && $condition->duration !== $updateConditionDTO->duration
-            && $condition->discount !== $updateConditionDTO->discount
+        if ($this->coreHttpRepository->checkApplicationToExistByConditionId($id)
+            && $condition->commission !== $updateConditionDTO->getCommission()
+            && $condition->duration !== $updateConditionDTO->getDuration()
+            && $condition->discount !== $updateConditionDTO->getDiscount()
         ) {
             throw new BusinessException('Условие не может быть изменено', 'not_allowed', 400);
         }
 
         $merchant = $condition->merchant;
 
-        $store_ids = $updateConditionDTO->store_ids ?? [];
+        $store_ids = $updateConditionDTO->getStoreIds();
 
         $merchant_stores = Store::query()
             ->where('merchant_id', $merchant->id)
@@ -62,12 +62,12 @@ class UpdateApplicationConditionUseCase
         $condition->stores()->detach();
         $condition->stores()->attach($store_ids);
 
-        $condition->duration = $updateConditionDTO->duration;
-        $condition->commission = $updateConditionDTO->commission;
-        $condition->discount = $updateConditionDTO->discount;
+        $condition->duration = $updateConditionDTO->getDuration();
+        $condition->commission = $updateConditionDTO->getCommission();
+        $condition->discount = $updateConditionDTO->getDiscount();
         $condition->is_special = empty($store_ids) === false;
-        $condition->special_offer = $updateConditionDTO->special_offer;
-        $condition->event_id = $updateConditionDTO->event_id;
+        $condition->special_offer = $updateConditionDTO->getSpecialOffer();
+        $condition->event_id = $updateConditionDTO->getEventId();
 
         $condition->save();
 

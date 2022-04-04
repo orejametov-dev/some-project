@@ -18,26 +18,26 @@ class SaveStoreUseCase
 
     public function execute(StoreStoresDTO $storeStoresDTO): Store
     {
-        $merchant = $this->findMerchantUseCase->execute($storeStoresDTO->merchant_id);
+        $merchant = $this->findMerchantUseCase->execute($storeStoresDTO->getMerchantId());
 
-        if (Store::query()->where('name', $storeStoresDTO->name)->exists() === true) {
+        if (Store::query()->where('name', $storeStoresDTO->getName())->exists() === true) {
             throw new BusinessException('Указанное имя уже занято другим магазином', 'object_not_found', 400);
         }
 
         $merchant_store = new Store();
-        $merchant_store->name = $storeStoresDTO->name;
+        $merchant_store->name = $storeStoresDTO->getName();
         $merchant_store->merchant_id = $merchant->id;
-        $merchant_store->responsible_person = $storeStoresDTO->responsible_person;
-        $merchant_store->responsible_person_phone = $storeStoresDTO->responsible_person_phone;
-        $merchant_store->address = $storeStoresDTO->address;
-        $merchant_store->region = $storeStoresDTO->region;
-        $merchant_store->district = $storeStoresDTO->district;
+        $merchant_store->responsible_person = $storeStoresDTO->getResponsiblePerson();
+        $merchant_store->responsible_person_phone = $storeStoresDTO->getResponsiblePersonPhone();
+        $merchant_store->address = $storeStoresDTO->getAddress();
+        $merchant_store->region = $storeStoresDTO->getRegion();
+        $merchant_store->district = $storeStoresDTO->getDistrict();
 
         if (Store::query()->where('merchant_id', $merchant->id)->count() === 0) {
             $merchant_store->is_main = true;
         }
 
-        if ($storeStoresDTO->responsible_person === null) {
+        if ($storeStoresDTO->getResponsiblePerson() === null) {
             $main_store = Store::query()
                 ->where('merchant_id', $merchant->id)
                 ->main()

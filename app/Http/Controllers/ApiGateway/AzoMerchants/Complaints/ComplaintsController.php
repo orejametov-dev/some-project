@@ -6,12 +6,14 @@ use App\Filters\CommonFilters\IdFilter;
 use App\Filters\Complaint\AzoMerchantAccessByAccessIdFilter;
 use App\Filters\Complaint\AzoMerchantAccessIdByUserIdFilter;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ApiGateway\Complaints\IndexComplaintResource;
 use App\Models\Complaint;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class ComplaintsController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): JsonResource
     {
         $complaints = Complaint::query()
             ->with('azo_merchant_access')
@@ -22,6 +24,6 @@ class ComplaintsController extends Controller
             ])
             ->orderRequest($request);
 
-        return $complaints->paginate($request->input('per_page') ?? 15);
+        return IndexComplaintResource::collection($complaints->paginate($request->input('per_page') ?? 15));
     }
 }

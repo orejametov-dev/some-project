@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
+use App\Enums\NotificationTypeEnum;
 use App\Filters\Notification\NotificationFilters;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -24,7 +24,7 @@ use Illuminate\Http\Request;
  * @property string $body_ru
  * @property Carbon $start_schedule
  * @property Carbon $end_schedule
- * @property string $type
+ * @property NotificationTypeEnum $type
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @method static Builder|Notification filterRequest(Request $request, array $filters = [])
@@ -43,44 +43,13 @@ class Notification extends Model
 {
     use HasFactory;
 
-    public const ALL_TYPE = 'ALL';
-    public const CERTAIN_TYPE = 'CERTAIN';
-
-    protected $fillable = [
-        'title_uz',
-        'title_ru',
-        'body_ru',
-        'body_uz',
-        'start_schedule',
-        'end_schedule',
-        'type',
+    protected $casts = [
+        'type' => NotificationTypeEnum::class,
     ];
-
-    public function setAllType(): self
-    {
-        $this->type = self::ALL_TYPE;
-
-        return $this;
-    }
-
-    public function setCertainType(): self
-    {
-        $this->type = self::CERTAIN_TYPE;
-
-        return $this;
-    }
 
     public function stores(): BelongsToMany
     {
         return $this->belongsToMany(Store::class, 'store_notification', 'notification_id', 'store_id');
-    }
-
-    public function setCreatedBy(GatewayAuthUser $user): self
-    {
-        $this->created_by_id = $user->getId();
-        $this->created_by_name = $user->getName();
-
-        return $this;
     }
 
     public function scopeOnlyByMerchant(Builder $query, int $merchant_id): Builder

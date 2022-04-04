@@ -36,7 +36,7 @@ use Illuminate\Http\Request;
  * @method static Builder|AzoMerchantAccess orderRequest(Request $request, string $default_order_str = 'id:desc')
  * @method static Builder|AzoMerchantAccess query()
  * @property int|null $company_user_id
- * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property Carbon|null $deleted_at
  * @method static Builder|AzoMerchantAccess byActiveMerchant()
  * @method static Builder|AzoMerchantAccess byActiveStore()
  * @method static Builder|AzoMerchantAccess filerRequest(Request $request, array $filters = [])
@@ -51,10 +51,6 @@ class AzoMerchantAccess extends Model
     use SoftDeletes;
 
     protected $table = 'azo_merchant_accesses';
-    protected $fillable = [
-        'user_name',
-        'phone',
-    ];
 
     public function store(): BelongsTo
     {

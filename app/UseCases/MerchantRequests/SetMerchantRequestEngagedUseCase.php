@@ -6,24 +6,21 @@ namespace App\UseCases\MerchantRequests;
 
 use App\Enums\MerchantRequestStatusEnum;
 use App\Exceptions\BusinessException;
-use App\HttpRepositories\Auth\AuthHttpRepository;
 use App\Models\MerchantRequest;
+use App\UseCases\Auth\FindAuthUserByIdUseCase;
 use Carbon\Carbon;
 
 class SetMerchantRequestEngagedUseCase
 {
     public function __construct(
-        private AuthHttpRepository $authHttpRepository,
+        private FindAuthUserByIdUseCase $findAuthUserByIdUseCase,
         private FindMerchantRequestByIdUseCase $findMerchantRequestByIdUseCase
     ) {
     }
 
     public function execute(int $id, int $engaged_by_id): MerchantRequest
     {
-        $user = $this->authHttpRepository->getUserById($engaged_by_id);
-        if ($user === null) {
-            throw new BusinessException('Пользователь не найден', 'user_not_exists', 404);
-        }
+        $user = $this->findAuthUserByIdUseCase->execute($engaged_by_id);
 
         $merchant_request = $this->findMerchantRequestByIdUseCase->execute($id);
 

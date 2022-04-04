@@ -26,8 +26,4 @@ class ConditionTemplate extends Model
     use HasFactory;
 
     protected $table = 'application_condition_templates';
-    protected $fillable = [
-        'duration',
-        'commission',
-    ];
 }

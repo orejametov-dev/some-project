@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\AdditionalAgreementDocumentTypeEnum;
 use App\Filters\AdditionalAgreement\AdditionalAgreementFilters;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -22,29 +23,23 @@ use Illuminate\Http\Request;
  * @property int $number
  * @property Carbon $limit_expired_at
  * @property int|null $rest_limit
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property-read Merchant $merchant
  * @method static Builder|AdditionalAgreement filterRequest(Request $request, array $filters = []))
  * @method static Builder|AdditionalAgreement newModelQuery()
  * @method static Builder|AdditionalAgreement newQuery()
  * @method static Builder|AdditionalAgreement query()
- * @property string|null $document_type
+ * @property AdditionalAgreementDocumentTypeEnum|null $document_type
  */
 class AdditionalAgreement extends Model
 {
     use HasFactory;
 
-    const LIMIT = 'limit';
-    const VAT = 'vat';
-    const DELIVERY = 'delivery';
-
     protected $table = 'merchant_additional_agreements';
-    protected $fillable = [
-        'limit',
-        'registration_date',
-        'number',
-        'document_type',
+
+    protected $casts = [
+        'document_type' => AdditionalAgreementDocumentTypeEnum::class,
     ];
 
     /**
