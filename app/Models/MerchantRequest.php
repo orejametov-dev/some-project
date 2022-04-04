@@ -96,6 +96,7 @@ class MerchantRequest extends Model
             ],
             MerchantRequestStatusEnum::ON_TRAINING()->getValue() => [
                 MerchantRequestStatusEnum::ALLOWED(),
+                MerchantRequestStatusEnum::TRASH(),
             ],
             MerchantRequestStatusEnum::ALLOWED()->getValue() => [],
             MerchantRequestStatusEnum::TRASH()->getValue() => [],
