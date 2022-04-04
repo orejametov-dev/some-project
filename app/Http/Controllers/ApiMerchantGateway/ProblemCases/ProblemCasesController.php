@@ -63,7 +63,7 @@ class ProblemCasesController extends Controller
 
     public function setStatus(int $id, ProblemCaseSetStatusRequest $request, SetStatusProblemCaseUseCase $setStatusProblemCaseUseCase, ProblemCaseStatusMapping $problemCaseStatusMapping): ProblemCaseResource
     {
-        $problemCase = $setStatusProblemCaseUseCase->execute((int) $id, (int) $request->input('status_id'));
+        $problemCase = $setStatusProblemCaseUseCase->execute($id, (int) $request->input('status_id'));
 
         return new ProblemCaseResource($problemCase);
     }
