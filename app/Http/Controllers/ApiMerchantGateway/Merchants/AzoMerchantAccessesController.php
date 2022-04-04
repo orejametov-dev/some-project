@@ -34,7 +34,7 @@ class AzoMerchantAccessesController extends Controller
             ->filterRequest($request, [QAzoMerchantAccessFilter::class])
             ->orderByDesc('updated_at');
 
-        //        return JsonResource::collection($merchantUsersQuery->paginate($request->query('per_page') ?? 15));
+//        return JsonResource::collection($merchantUsersQuery->paginate($request->query('per_page') ?? 15));
         return $merchantUsersQuery->paginate($request->query('per_page') ?? 15);
     }
 
