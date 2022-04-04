@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Resources\ApiGateway\ApplicationConditions;
 
+use App\Http\Resources\ApiGateway\Stores\StoreResource;
 use App\Models\Condition;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -31,6 +32,7 @@ class ApplicationConditionResource extends JsonResource
             'updated_at' => $this->resource->updated_at,
             'post_merchant' => $this->resource->post_merchant,
             'post_alifshop' => $this->resource->post_alifshop,
+            'stores' => $this->whenLoaded('stores')
         ];
     }
 }
