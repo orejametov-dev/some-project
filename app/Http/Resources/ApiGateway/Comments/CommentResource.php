@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Resources\ApiGateway\AdditionalAgreement;
+namespace App\Http\Resources\ApiGateway\Comments;
 
-use App\Models\AdditionalAgreement;
+use App\Models\Comment;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * @property AdditionalAgreement $resource
+ * @property Comment $resource
  */
-class IndexAdditionalAgreementResource extends JsonResource
+class CommentResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -22,10 +22,8 @@ class IndexAdditionalAgreementResource extends JsonResource
     {
         return [
             'id' => $this->resource->id,
-            'number' => $this->resource->number,
-            'limit'  => $this->resource->limit,
-            'limit_expired_at' => $this->resource->limit_expired_at,
-            'document_type' => $this->resource->document_type,
+            'created_by_name' => $this->resource->created_by_name,
+            'body' => $this->resource->body,
             'created_at' => $this->resource->created_at,
         ];
     }

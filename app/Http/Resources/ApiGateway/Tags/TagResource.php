@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Resources\ApiGateway\Comments;
+namespace App\Http\Resources\ApiGateway\Tags;
 
-use App\Models\Comment;
+use App\Models\Tag;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * @property Comment $resource
+ * @property Tag $resource
  */
-class IndexCommentResource extends JsonResource
+class TagResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -20,9 +20,9 @@ class IndexCommentResource extends JsonResource
     {
         return [
             'id' => $this->resource->id,
-            'created_by_name' => $this->resource->created_by_name,
-            'body' => $this->resource->body,
+            'title' => $this->resource->title,
             'created_at' => $this->resource->created_at,
+            'updated_at' => $this->resource->updated_at,
         ];
     }
 }

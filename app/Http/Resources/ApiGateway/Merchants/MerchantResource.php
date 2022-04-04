@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Resources\ApiGateway\AdditionalAgreement;
+namespace App\Http\Resources\ApiGateway\Merchants;
 
-use App\Models\AdditionalAgreement;
+use App\Models\Merchant;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * @property AdditionalAgreement $resource
+ * @property Merchant $resource
  */
-class IndexAdditionalAgreementResource extends JsonResource
+class MerchantResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -22,11 +22,12 @@ class IndexAdditionalAgreementResource extends JsonResource
     {
         return [
             'id' => $this->resource->id,
-            'number' => $this->resource->number,
-            'limit'  => $this->resource->limit,
-            'limit_expired_at' => $this->resource->limit_expired_at,
-            'document_type' => $this->resource->document_type,
+            'name' => $this->resource->name,
+            'legal_name' => $this->resource->legal_name,
+            'legal_name_prefix' => $this->resource->legal_name_prefix,
+            'active' => $this->resource->active,
+            'maintainer_id' => $this->resource->maintainer_id,
             'created_at' => $this->resource->created_at,
-        ];
+            ];
     }
 }

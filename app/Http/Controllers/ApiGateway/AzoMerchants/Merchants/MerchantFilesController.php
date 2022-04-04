@@ -6,14 +6,17 @@ namespace App\Http\Controllers\ApiGateway\AzoMerchants\Merchants;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiPrm\Merchants\UploadMerchantFileRequest;
+use App\Http\Resources\ApiGateway\Files\FileResource;
 use App\Models\File;
 use App\UseCases\Merchants\DeleteMerchantFileUseCase;
 use App\UseCases\Merchants\UploadMerchantFileUseCase;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class MerchantFilesController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): JsonResource
     {
         $filesQuery = File::query();
 
@@ -22,21 +25,23 @@ class MerchantFilesController extends Controller
         }
 
         if ($request->query('object') == 'true') {
-            return $filesQuery->first();
+            return new FileResource($filesQuery->first());
         }
 
-        return $filesQuery->paginate($request->query('per_page') ?? 15);
+        return FileResource::collection($filesQuery->paginate($request->query('per_page') ?? 15));
     }
 
-    public function upload(UploadMerchantFileRequest $request, UploadMerchantFileUseCase $uploadMerchantFileUseCase)
+    public function upload(UploadMerchantFileRequest $request, UploadMerchantFileUseCase $uploadMerchantFileUseCase): FileResource
     {
-        return $uploadMerchantFileUseCase->execute((int) $request->input('merchant_id'), $request->input('file_type'), $request->file('file'));
+        $file = $uploadMerchantFileUseCase->execute((int) $request->input('merchant_id'), $request->input('file_type'), $request->file('file'));
+
+        return new FileResource($file);
     }
 
-    public function delete($merchant_id, $file_id, DeleteMerchantFileUseCase $deleteMerchantFileUseCase)
+    public function delete(int $merchant_id, int $file_id, DeleteMerchantFileUseCase $deleteMerchantFileUseCase): JsonResponse
     {
-        $deleteMerchantFileUseCase->execute((int) $merchant_id, (int) $file_id);
+        $deleteMerchantFileUseCase->execute($merchant_id, $file_id);
 
-        return response()->json(['message' => 'Файл успешно удалён.']);
+        return new JsonResponse(['message' => 'Файл успешно удалён.']);
     }
 }

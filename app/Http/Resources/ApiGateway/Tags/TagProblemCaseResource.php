@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Resources\ApiGateway\AdditionalAgreement;
+namespace App\Http\Resources\ApiGateway\Tags;
 
-use App\Models\AdditionalAgreement;
+use App\Models\ProblemCaseTag;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * @property AdditionalAgreement $resource
+ * @property ProblemCaseTag $resource
  */
-class IndexAdditionalAgreementResource extends JsonResource
+class TagProblemCaseResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -22,10 +22,9 @@ class IndexAdditionalAgreementResource extends JsonResource
     {
         return [
             'id' => $this->resource->id,
-            'number' => $this->resource->number,
-            'limit'  => $this->resource->limit,
-            'limit_expired_at' => $this->resource->limit_expired_at,
-            'document_type' => $this->resource->document_type,
+            'body' => $this->resource->body,
+            'type_id' => $this->resource->type_id,
+            'point' => $this->resource->point,
             'created_at' => $this->resource->created_at,
         ];
     }

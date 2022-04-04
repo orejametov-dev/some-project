@@ -18,6 +18,9 @@ use App\Http\Requests\ApiPrm\Merchants\SetMainStoreRequest;
 use App\Http\Requests\ApiPrm\Merchants\SetResponsibleUserRequest;
 use App\Http\Requests\ApiPrm\Merchants\StoreMerchantRequest;
 use App\Http\Requests\ApiPrm\Merchants\UpdateMerchantRequest;
+use App\Http\Resources\ApiGateway\Merchants\IndexMerchantResource;
+use App\Http\Resources\ApiGateway\Merchants\MerchantResource;
+use App\Http\Resources\ApiGateway\Merchants\ShowMerchantResource;
 use App\Models\Merchant;
 use App\UseCases\Competitors\AttachCompetitorUseCase;
 use App\UseCases\Competitors\DetachCompetitorUseCase;
@@ -34,13 +37,14 @@ use App\UseCases\Merchants\ToggleMerchantGeneralGoodsUseCase;
 use App\UseCases\Merchants\ToggleMerchantRecommendUseCase;
 use App\UseCases\Merchants\UpdateMerchantUseCase;
 use App\UseCases\Merchants\UploadMerchantLogoUseCase;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 
 class MerchantsController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): JsonResource
     {
         $merchants = Merchant::query()
             ->with(['tags'])
@@ -54,68 +58,76 @@ class MerchantsController extends Controller
             ->orderRequest($request);
 
         if ($request->query('object') == 'true') {
-            return $merchants->first();
+            return new IndexMerchantResource($merchants->first());
         }
 
-        return $merchants->paginate($request->query('per_page') ?? 15);
+        return IndexMerchantResource::collection($merchants->paginate($request->query('per_page') ?? 15));
     }
 
-    public function show($id, FindMerchantByIdUseCase $findMerchantByIdUseCase)
+    public function show(int $id, FindMerchantByIdUseCase $findMerchantByIdUseCase): ShowMerchantResource
     {
-        $merchant = $findMerchantByIdUseCase->execute((int) $id);
+        $merchant = $findMerchantByIdUseCase->execute($id);
         $merchant->load(['stores', 'tags', 'activity_reasons', 'competitors']);
 
-        return $merchant;
+        return new ShowMerchantResource($merchant);
     }
 
-    public function store(StoreMerchantRequest $request, StoreMerchantUseCase $storeMerchantUseCase)
+    public function store(StoreMerchantRequest $request, StoreMerchantUseCase $storeMerchantUseCase): MerchantResource
     {
         $merchant = $storeMerchantUseCase->execute(
             company_id: (int) $request->input('company_id')
         );
 
-        return $merchant;
+        return new MerchantResource($merchant);
     }
 
-    public function update($id, UpdateMerchantRequest $request, UpdateMerchantUseCase $updateMerchantUseCase)
+    public function update(int $id, UpdateMerchantRequest $request, UpdateMerchantUseCase $updateMerchantUseCase): MerchantResource
     {
-        $merchant = $updateMerchantUseCase->execute((int) $id, UpdateMerchantDTO::fromArray($request->validated()));
+        $merchant = $updateMerchantUseCase->execute($id, UpdateMerchantDTO::fromArray($request->validated()));
 
-        return $merchant;
+        return new MerchantResource($merchant);
     }
 
-    public function uploadLogo($id, StoreFileRequest $request, UploadMerchantLogoUseCase $uploadMerchantLogoUseCase)
+    public function uploadLogo(int $id, StoreFileRequest $request, UploadMerchantLogoUseCase $uploadMerchantLogoUseCase): MerchantResource
     {
-        return $uploadMerchantLogoUseCase->execute((int) $id, $request->file('file'));
+        $merchant = $uploadMerchantLogoUseCase->execute($id, $request->file('file'));
+
+        return new MerchantResource($merchant);
     }
 
-    public function removeLogo($id, DeleteMerchantLogoUseCase $deleteMerchantLogoUseCase)
+    public function removeLogo(int $id, DeleteMerchantLogoUseCase $deleteMerchantLogoUseCase): JsonResponse
     {
-        $deleteMerchantLogoUseCase->execute((int) $id);
+        $deleteMerchantLogoUseCase->execute($id);
 
-        return response()->json(['message' => 'Логотип удалён']);
+        return new JsonResponse(['message' => 'Логотип удалён']);
     }
 
-    public function setResponsibleUser($id, SetResponsibleUserRequest $request, SetResponsibleUserUseCase $setResponsibleUserUseCase)
+    public function setResponsibleUser(int $id, SetResponsibleUserRequest $request, SetResponsibleUserUseCase $setResponsibleUserUseCase): MerchantResource
     {
-        return $setResponsibleUserUseCase->execute($id, $request->input('maintainer_id'));
+        $merchant = $setResponsibleUserUseCase->execute($id, $request->input('maintainer_id'));
+
+        return new MerchantResource($merchant);
     }
 
-    public function setMainStore($id, SetMainStoreRequest $request, SetMerchantMainStoreUseCase $setMainStoreUseCase)
+    public function setMainStore(int $id, SetMainStoreRequest $request, SetMerchantMainStoreUseCase $setMainStoreUseCase): MerchantResource
     {
-        return $setMainStoreUseCase->execute($id, $request->input('store_id'));
+        $merchant = $setMainStoreUseCase->execute($id, $request->input('store_id'));
+
+        return new MerchantResource($merchant);
     }
 
-    public function setTags($id, Request $request, SetMerchantTagsUseCase $setMerchantTagsUseCase)
+    public function setTags(int $id, Request $request, SetMerchantTagsUseCase $setMerchantTagsUseCase): MerchantResource
     {
         $this->validate($request, [
             'tags' => 'required|array',
         ]);
 
-        return $setMerchantTagsUseCase->execute((int) $id, $request->input('tags'));
+        $merchant = $setMerchantTagsUseCase->execute($id, $request->input('tags'));
+
+        return new MerchantResource($merchant);
     }
 
-    public function hotMerchants()
+    public function hotMerchants(): JsonResponse
     {
         $percentage_of_limit = Merchant::$percentage_of_limit;
 
@@ -135,57 +147,63 @@ class MerchantsController extends Controller
                     ->from('merchant_infos')
                     ->whereColumn('merchants.id', 'merchant_infos.merchant_id');
             })
-            ->groupBy(['merchants.id', 'merchants.name', 'merchant_infos.limit']);
+            ->groupBy(['merchants.id', 'merchants.name', 'merchant_infos.limit', 'merchants.current_sales']);
 
-        return DB::table(DB::raw("({$merchant_query->toSql()}) as sub_query"))
+        return new JsonResponse(DB::table(DB::raw("({$merchant_query->toSql()}) as sub_query"))
             ->select([
                 'sub_query.id',
                 'sub_query.name',
-            ])->whereRaw("(IFNULL(sub_query.limit, 0) + IFNULL(sub_query.agreement_sum, 0)) $percentage_of_limit <= sub_query.current_sales")->get();
+            ])->whereRaw("(IFNULL(sub_query.limit, 0) + IFNULL(sub_query.agreement_sum, 0)) $percentage_of_limit <= sub_query.current_sales")->get());
     }
 
-    public function toggle($id, Request $request, ToggleMerchantActivityReasonUseCase $toggleMerchantActivityReasonUseCase)
+    public function toggle(int $id, Request $request, ToggleMerchantActivityReasonUseCase $toggleMerchantActivityReasonUseCase): MerchantResource
     {
         $this->validate($request, [
             'activity_reason_id' => 'integer|required',
         ]);
 
-        return $toggleMerchantActivityReasonUseCase->execute((int) $id, (int) $request->input('activity_reason_id'));
+        $merchant = $toggleMerchantActivityReasonUseCase->execute($id, (int) $request->input('activity_reason_id'));
+
+        return new MerchantResource($merchant);
     }
 
-    public function toggleGeneralGoods($id, ToggleMerchantGeneralGoodsUseCase $toggleMerchantGeneralGoodsUseCase)
+    public function toggleGeneralGoods(int $id, ToggleMerchantGeneralGoodsUseCase $toggleMerchantGeneralGoodsUseCase): MerchantResource
     {
-        return $toggleMerchantGeneralGoodsUseCase->execute((int) $id);
+        $merchant = $toggleMerchantGeneralGoodsUseCase->execute($id);
+
+        return new MerchantResource($merchant);
     }
 
-    public function toggleRecommend($id, ToggleMerchantRecommendUseCase $toggleMerchantRecommendUseCase)
+    public function toggleRecommend(int $id, ToggleMerchantRecommendUseCase $toggleMerchantRecommendUseCase): MerchantResource
     {
-        return $toggleMerchantRecommendUseCase->execute((int) $id);
+        $merchant = $toggleMerchantRecommendUseCase->execute($id);
+
+        return new MerchantResource($merchant);
     }
 
-    public function toggleHoldingInitialPayment($id, ToggleHoldingInitialPaymentUseCase $holdingInitialPaymentUseCase): JsonResource
+    public function toggleHoldingInitialPayment(int $id, ToggleHoldingInitialPaymentUseCase $holdingInitialPaymentUseCase): MerchantResource
     {
-        return new JsonResource($holdingInitialPaymentUseCase->execute((int) $id));
+        return new MerchantResource($holdingInitialPaymentUseCase->execute($id));
     }
 
-    public function attachCompetitor($id, CompetitorsRequest $request, AttachCompetitorUseCase $attachCompetitorUseCase)
+    public function attachCompetitor(int $id, CompetitorsRequest $request, AttachCompetitorUseCase $attachCompetitorUseCase): MerchantResource
     {
-        $response = $attachCompetitorUseCase->execute((int) $id, SaveCompetitorDTO::fromArray($request->validated()));
+        $merchant = $attachCompetitorUseCase->execute($id, SaveCompetitorDTO::fromArray($request->validated()));
 
-        return $response;
+        return new MerchantResource($merchant);
     }
 
-    public function updateCompetitor($id, CompetitorsRequest $request, UpdateCompetitorUseCase $updateCompetitorUseCase)
+    public function updateCompetitor($id, CompetitorsRequest $request, UpdateCompetitorUseCase $updateCompetitorUseCase): MerchantResource
     {
-        $response = $updateCompetitorUseCase->execute((int) $id, SaveCompetitorDTO::fromArray($request->validated()));
+        $merchant = $updateCompetitorUseCase->execute((int) $id, SaveCompetitorDTO::fromArray($request->validated()));
 
-        return $response;
+        return new MerchantResource($merchant);
     }
 
-    public function detachCompetitor($id, Request $request, DetachCompetitorUseCase $detachCompetitorUseCase)
+    public function detachCompetitor(int $id, Request $request, DetachCompetitorUseCase $detachCompetitorUseCase): JsonResponse
     {
-        $detachCompetitorUseCase->execute((int) $id, (int) $request->input('competitor_id'));
+        $detachCompetitorUseCase->execute($id, (int) $request->input('competitor_id'));
 
-        return response()->json(['message' => 'Данные о конкуренте были удалены у этого мерчанта']);
+        return new JsonResponse(['message' => 'Данные о конкуренте были удалены у этого мерчанта']);
     }
 }
