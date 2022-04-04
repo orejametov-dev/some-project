@@ -16,6 +16,7 @@ final class UpdateMerchantDTO extends AbstractEntity
         private string $token,
     ) {
     }
+
     /**
      * @return int
      */
@@ -80,7 +81,6 @@ final class UpdateMerchantDTO extends AbstractEntity
             'legal_name' => $this->legal_name,
             'legal_name_prefix' => $this->legal_name_prefix,
             'token' => $this->token,
-            'min_application_price' => $this->min_application_price,
         ];
     }
 }
