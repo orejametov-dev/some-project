@@ -8,10 +8,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiGate\Conditions\ConditionsResource;
 use App\Models\Condition;
 use App\Models\Merchant;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class ConditionsController extends Controller
 {
-    public function getConditionByMerchantId($merchant_id, $condition_id)
+    public function getConditionByMerchantId(int $merchant_id, int $condition_id): ConditionsResource
     {
         $condition = Condition::active()
             ->byMerchant($merchant_id)->findOrFail($condition_id);
@@ -19,7 +20,7 @@ class ConditionsController extends Controller
         return new ConditionsResource($condition);
     }
 
-    public function getAlifshopConditionsByCompanyId($company_id)
+    public function getAlifshopConditionsByCompanyId(int $company_id): JsonResource
     {
         $merchant = Merchant::query()->where('company_id', $company_id)->firstOrFail();
 

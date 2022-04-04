@@ -20,8 +20,8 @@ class ProblemCasesController extends Controller
         return $storeProblemCasesUseCase->execute($problemCaseDTO);
     }
 
-    public function attachTags($id, AttachNewProblemCaseTagsRequest $request, NewAttachTagsProblemCaseUseCase $newAttachTagsProblemCaseUseCase)
+    public function attachTags(int $id, AttachNewProblemCaseTagsRequest $request, NewAttachTagsProblemCaseUseCase $newAttachTagsProblemCaseUseCase)
     {
-        return $newAttachTagsProblemCaseUseCase->execute((int) $id, (array) $request->input('tags'));
+        return $newAttachTagsProblemCaseUseCase->execute($id, (array) $request->input('tags'));
     }
 }

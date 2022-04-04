@@ -21,11 +21,12 @@ use App\Services\ClientTypeRegisterService;
 use App\Services\DistrictService;
 use App\Services\LegalNameService;
 use App\Services\RegionService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
 
 class AppController extends Controller
 {
-    public function index(MerchantRequestStatusMapping $merchantRequestStatusMapping, ProblemCaseStatusMapping $problemCaseStatusMapping)
+    public function index(MerchantRequestStatusMapping $merchantRequestStatusMapping, ProblemCaseStatusMapping $problemCaseStatusMapping): JsonResponse
     {
         $merchant_requests_count = MerchantRequest::query()->new()->count();
         $merchants_count = Merchant::query()->count();
@@ -59,7 +60,7 @@ class AppController extends Controller
             'avatar_link' => $authUser->getAvatarLink(),
         ];
 
-        return response()->json(compact(
+        return new JsonResponse(compact(
             'merchant_requests_count',
             'merchants_count',
             'stores_count',
@@ -80,7 +81,7 @@ class AppController extends Controller
         ));
     }
 
-    public function getDistricts(\Illuminate\Http\Request $request)
+    public function getDistricts(\Illuminate\Http\Request $request): array
     {
         if ($request->query('region')) {
             return DistrictService::getDistrictsByRegion($request->query('region'));

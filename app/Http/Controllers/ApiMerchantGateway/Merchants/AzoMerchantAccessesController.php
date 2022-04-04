@@ -39,22 +39,22 @@ class AzoMerchantAccessesController extends Controller
         return $merchantUsersQuery->paginate($request->query('per_page') ?? 15);
     }
 
-    public function show($id, AzoAccessDto $azoAccessDto): AzoMerchantAccess
+    public function show(int $id, AzoAccessDto $azoAccessDto): AzoMerchantAccess
     {
         $merchantUser = AzoMerchantAccess::query()
             ->byMerchant($azoAccessDto->getMerchantId())
-            ->findOrFail((int) $id);
+            ->findOrFail($id);
 
         return $merchantUser;
     }
 
-    public function update($id, Request $request, AzoAccessDto $azoAccessDto, GatewayAuthUser $gatewayAuthUser): AzoMerchantAccess
+    public function update(int $id, Request $request, AzoAccessDto $azoAccessDto, GatewayAuthUser $gatewayAuthUser): AzoMerchantAccess
     {
         $this->validate($request, [
             'store_id' => 'required|integer',
         ]);
 
-        $azo_merchant_access = AzoMerchantAccess::query()->findOrFail((int) $id);
+        $azo_merchant_access = AzoMerchantAccess::query()->findOrFail($id);
         $merchant = $azo_merchant_access->merchant;
         $old_store = $azo_merchant_access->store;
         $store = $merchant->stores()->where(['id' => $request->input('store_id')])->firstOrFail();

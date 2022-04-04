@@ -193,9 +193,9 @@ class MerchantsController extends Controller
         return new MerchantResource($merchant);
     }
 
-    public function updateCompetitor($id, CompetitorsRequest $request, UpdateCompetitorUseCase $updateCompetitorUseCase): MerchantResource
+    public function updateCompetitor(int $id, CompetitorsRequest $request, UpdateCompetitorUseCase $updateCompetitorUseCase): MerchantResource
     {
-        $merchant = $updateCompetitorUseCase->execute((int) $id, SaveCompetitorDTO::fromArray($request->validated()));
+        $merchant = $updateCompetitorUseCase->execute($id, SaveCompetitorDTO::fromArray($request->validated()));
 
         return new MerchantResource($merchant);
     }
