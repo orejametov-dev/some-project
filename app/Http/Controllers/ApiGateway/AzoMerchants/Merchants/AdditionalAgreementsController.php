@@ -16,6 +16,7 @@ use App\UseCases\AdditionalAgreements\DeleteAdditionalAgreementUseCase;
 use App\UseCases\AdditionalAgreements\GenerateAdditionalAgreementDocUseCase;
 use App\UseCases\AdditionalAgreements\StoreAdditionalAgreementUseCase;
 use App\UseCases\AdditionalAgreements\UpdateAdditionalAgreementUseCase;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -55,10 +56,10 @@ class AdditionalAgreementsController extends Controller
         return response()->download(storage_path($file_path))->deleteFileAfterSend();
     }
 
-    public function delete($id, DeleteAdditionalAgreementUseCase $deleteAdditionalAgreementUseCase)
+    public function delete($id, DeleteAdditionalAgreementUseCase $deleteAdditionalAgreementUseCase): JsonResponse
     {
         $deleteAdditionalAgreementUseCase->execute((int) $id);
 
-        return response()->json(['message' => 'Успешно удалено']);
+        return new JsonResponse(['message' => 'Успешно удалено']);
     }
 }

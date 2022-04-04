@@ -20,7 +20,10 @@ abstract class AbstractFilters
 
     abstract protected function getRequestBindings(): array;
 
-    public function execute($filters = [])
+    /**
+     * @param  string[] $filters
+     */
+    public function execute(array $filters = []): Builder
     {
         $drainedFilters = $this->drainPassedFilters($filters);
 
@@ -37,7 +40,7 @@ abstract class AbstractFilters
      * @property string[] $filters
      * @return string[]
      */
-    private function drainPassedFilters(array $filters) : array
+    private function drainPassedFilters(array $filters): array
     {
         $intersected = array_intersect($this->filters, $filters);
 

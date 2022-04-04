@@ -13,6 +13,10 @@ use App\Filters\Store\RegionFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiPrm\Stores\StoreStoresRequest;
 use App\Http\Requests\ApiPrm\Stores\UpdateStoresRequest;
+use App\Http\Resources\ApiGateway\ApplicationConditions\ApplicationConditionResource;
+use App\Http\Resources\ApiGateway\Stores\IndexStoreResource;
+use App\Http\Resources\ApiGateway\Stores\ShowStoreResource;
+use App\Http\Resources\ApiGateway\Stores\StoreResource;
 use App\Models\Condition;
 use App\Models\Store;
 use App\UseCases\Stores\FindStoreByIdUseCase;
@@ -27,7 +31,8 @@ class StoresController extends Controller
 {
     public function index(Request $request): JsonResource
     {
-        $stores = Store::query()->with(['merchant'])
+        $stores = Store::query()
+            ->with(['merchant'])
             ->filterRequest($request, [
                 QStoreFilter::class,
                 MerchantIdFilter::class,
@@ -36,64 +41,64 @@ class StoresController extends Controller
             ]);
 
         if ($request->query('object') == 'true') {
-            return new JsonResource($stores->first());
+            return new IndexStoreResource($stores->first());
         }
 
         if ($request->has('paginate') && ($request->query('paginate') == 'false'
                 or $request->query('paginate') === '0')) {
-            return JsonResource::collection($stores->get());
+            return IndexStoreResource::collection($stores->get());
         }
 
-        return JsonResource::collection($stores->paginate($request->query('per_page') ?? 15));
+        return IndexStoreResource::collection($stores->paginate($request->query('per_page') ?? 15));
     }
 
-    public function show($id, FindStoreByIdUseCase $findStoreByIdUseCase): JsonResource
+    public function show(int $id, FindStoreByIdUseCase $findStoreByIdUseCase): ShowStoreResource
     {
-        $store = $findStoreByIdUseCase->execute((int) $id);
+        $store = $findStoreByIdUseCase->execute($id);
         $store->load(['merchant', 'activity_reasons']);
 
-        return new JsonResource($store);
+        return new ShowStoreResource($store);
     }
 
-    public function store(StoreStoresRequest $request, SaveStoreUseCase $storeStoresUseCase): JsonResource
+    public function store(StoreStoresRequest $request, SaveStoreUseCase $storeStoresUseCase): StoreResource
     {
         $store = $storeStoresUseCase->execute(StoreStoresDTO::fromArray($request->validated()));
 
-        return new JsonResource($store);
+        return new StoreResource($store);
     }
 
-    public function update($id, UpdateStoresRequest $request, UpdateStoreUseCase $updateStoresUseCase): JsonResource
+    public function update(int $id, UpdateStoresRequest $request, UpdateStoreUseCase $updateStoresUseCase): StoreResource
     {
-        $store = $updateStoresUseCase->execute((int) $id, UpdateStoresDTO::fromArray($request->validated()));
+        $store = $updateStoresUseCase->execute($id, UpdateStoresDTO::fromArray($request->validated()));
 
-        return new JsonResource($store);
+        return new StoreResource($store);
     }
 
-    public function toggle($id, Request $request, ToggleStoreUseCase $toggleStoresUseCase): JsonResource
+    public function toggle(int $id, Request $request, ToggleStoreUseCase $toggleStoresUseCase): StoreResource
     {
         $this->validate($request, [
             'activity_reason_id' => 'integer|required',
         ]);
 
-        $store = $toggleStoresUseCase->execute((int) $id, (int) $request->input('activity_reason_id'));
+        $store = $toggleStoresUseCase->execute($id, (int) $request->input('activity_reason_id'));
 
-        return new JsonResource($store);
+        return new StoreResource($store);
     }
 
-    public function setTypeRegister($id, Request $request, SetTypeRegisterStoreUseCase $setTypeRegisterStoresUseCase): JsonResource
+    public function setTypeRegister(int $id, Request $request, SetTypeRegisterStoreUseCase $setTypeRegisterStoresUseCase): StoreResource
     {
         $request->validate([
             'client_type_register' => 'required|string',
         ]);
 
-        $store = $setTypeRegisterStoresUseCase->execute((int) $id, (string) $request->input('client_type_register'));
+        $store = $setTypeRegisterStoresUseCase->execute($id, (string) $request->input('client_type_register'));
 
-        return new JsonResource($store);
+        return new StoreResource($store);
     }
 
-    public function getConditions($id, Request $request): JsonResource
+    public function getConditions(int $id, Request $request): JsonResource
     {
-        $store = Store::query()->findOrFail((int) $id);
+        $store = Store::query()->findOrFail($id);
         $special_conditions = $store->conditions()->active()->get();
 
         $conditionQuery = Condition::query()
@@ -103,6 +108,6 @@ class StoresController extends Controller
             ->filterRequest($request, [])
             ->orderRequest($request)->get();
 
-        return JsonResource::collection($conditionQuery->merge($special_conditions)->sortByDesc('updated_at'));
+        return ApplicationConditionResource::collection($conditionQuery->merge($special_conditions)->sortByDesc('updated_at'));
     }
 }

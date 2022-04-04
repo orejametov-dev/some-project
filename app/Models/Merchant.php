@@ -34,7 +34,6 @@ use Illuminate\Http\Request;
  * @property int|null $maintainer_id
  * @property int|null $current_sales
  * @property int $company_id
- * @property int|null $min_application_price
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Collection|AdditionalAgreement[] $additional_agreements

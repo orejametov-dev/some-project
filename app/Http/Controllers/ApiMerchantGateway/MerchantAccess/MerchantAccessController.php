@@ -25,7 +25,7 @@ class MerchantAccessController extends Controller
             }
 
             return response()->json([
-                'active' => (bool) $azo_merchant_access->merchant->active == true && $azo_merchant_access->store->active == true,
+                'active' => (bool) $azo_merchant_access->merchant->active && $azo_merchant_access->store->active,
             ]);
         });
     }
