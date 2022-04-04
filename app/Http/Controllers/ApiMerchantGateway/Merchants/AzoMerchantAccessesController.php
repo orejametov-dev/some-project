@@ -27,7 +27,7 @@ use Illuminate\Support\Facades\Cache;
 
 class AzoMerchantAccessesController extends Controller
 {
-    public function index(Request $request, AzoAccessDto $azoAccessDto)
+    public function index(Request $request, AzoAccessDto $azoAccessDto): JsonResource
     {
         $merchantUsersQuery = AzoMerchantAccess::query()
             ->with(['merchant', 'store'])
@@ -35,8 +35,7 @@ class AzoMerchantAccessesController extends Controller
             ->filterRequest($request, [QAzoMerchantAccessFilter::class])
             ->orderByDesc('updated_at');
 
-//        return JsonResource::collection($merchantUsersQuery->paginate($request->query('per_page') ?? 15));
-        return $merchantUsersQuery->paginate($request->query('per_page') ?? 15);
+        return JsonResource::collection($merchantUsersQuery->paginate($request->query('per_page') ?? 15));
     }
 
     public function show(int $id, AzoAccessDto $azoAccessDto): AzoMerchantAccess
