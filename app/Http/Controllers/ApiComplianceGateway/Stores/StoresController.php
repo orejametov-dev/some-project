@@ -10,11 +10,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiComplianceGateway\Stores\StoresResource;
 use App\Models\Store;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Cache;
 
 class StoresController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): JsonResource
     {
         return Cache::tags('store_index')->remember($request->fullUrl(), 600, function () use ($request) {
             $storesQuery = Store::query()

@@ -10,11 +10,12 @@ use App\Http\Resources\ApiCredtisGateway\Merchants\MerchantsResource;
 use App\Http\Resources\ApiCredtisGateway\Merchants\SpecialMerchantResource;
 use App\Models\Merchant;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 
 class MerchantsController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): JsonResource
     {
         $query = Merchant::query()
             ->with('merchant_info')
@@ -28,7 +29,7 @@ class MerchantsController extends Controller
         return MerchantsResource::collection($query->paginate($request->query('per_page') ?? 15));
     }
 
-    public function indexSpecial(Request $request)
+    public function indexSpecial(Request $request): JsonResource
     {
         //Заказный роут от Рамиль ака
         $query = Merchant::query()
