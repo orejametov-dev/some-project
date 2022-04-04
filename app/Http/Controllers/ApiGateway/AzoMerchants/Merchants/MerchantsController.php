@@ -32,6 +32,7 @@ use App\UseCases\Merchants\SetMerchantTagsUseCase;
 use App\UseCases\Merchants\SetResponsibleUserUseCase;
 use App\UseCases\Merchants\StoreMerchantUseCase;
 use App\UseCases\Merchants\ToggleHoldingInitialPaymentUseCase;
+use App\UseCases\Merchants\ToggleIntegrationUseCase;
 use App\UseCases\Merchants\ToggleMerchantActivityReasonUseCase;
 use App\UseCases\Merchants\ToggleMerchantGeneralGoodsUseCase;
 use App\UseCases\Merchants\ToggleMerchantRecommendUseCase;
@@ -186,6 +187,11 @@ class MerchantsController extends Controller
         return new MerchantResource($holdingInitialPaymentUseCase->execute($id));
     }
 
+    public function toggleIntegration(int $id, ToggleIntegrationUseCase $toggleIntegrationUseCase): MerchantResource
+    {
+        return new MerchantResource($toggleIntegrationUseCase->execute($id));
+    }
+
     public function attachCompetitor(int $id, CompetitorsRequest $request, AttachCompetitorUseCase $attachCompetitorUseCase): MerchantResource
     {
         $merchant = $attachCompetitorUseCase->execute($id, SaveCompetitorDTO::fromArray($request->validated()));
@@ -193,7 +199,7 @@ class MerchantsController extends Controller
         return new MerchantResource($merchant);
     }
 
-    public function updateCompetitor($id, CompetitorsRequest $request, UpdateCompetitorUseCase $updateCompetitorUseCase): MerchantResource
+    public function updateCompetitor($id, CompetitorsRequest $request, UpdateCompetitorUseCase $updateCompetitorUseCase)
     {
         $merchant = $updateCompetitorUseCase->execute((int) $id, SaveCompetitorDTO::fromArray($request->validated()));
 

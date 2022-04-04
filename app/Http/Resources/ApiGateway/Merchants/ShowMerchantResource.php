@@ -23,6 +23,7 @@ class ShowMerchantResource extends MerchantResource
             'token' => $this->resource->token,
             'has_generate_goods' => $this->resource->has_general_goods,
             'holding_initial_payment' => $this->resource->holding_initial_payment,
+            'integration' => $this->resource->integration,
             'logo_path' => $this->resource->logo_path,
             'stores' => $this->whenLoaded('stores'),
             'tags' => $this->whenLoaded('tags'),
