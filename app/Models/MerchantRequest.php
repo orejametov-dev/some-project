@@ -129,7 +129,7 @@ class MerchantRequest extends Model
         return $builder->where('status_id', MerchantRequestStatusEnum::NEW());
     }
 
-    public function setStatus(MerchantRequestStatusEnum $statusEnum)
+    public function setStatus(MerchantRequestStatusEnum $statusEnum): void
     {
         $this->assertStatusSwitch($statusEnum);
         $this->status_updated_at = Carbon::now();
@@ -160,16 +160,5 @@ class MerchantRequest extends Model
     public function scopeFilterRequest(Builder $builder, Request $request, array $filters = []): Builder
     {
         return (new MerchantRequestFilters($request, $builder))->execute($filters);
-    }
-
-    public function checkToMainCompleted(): void
-    {
-        $main = $this->user_name && $this->legal_name && $this->legal_name_prefix && $this->user_phone && $this->name && $this->region
-            && $this->categories && $this->approximate_sales;
-
-        if ($main === true) {
-            $this->main_completed = true;
-            $this->save();
-        }
     }
 }

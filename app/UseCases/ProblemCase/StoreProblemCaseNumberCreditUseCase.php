@@ -12,6 +12,7 @@ use App\Exceptions\BusinessException;
 use App\HttpRepositories\Core\CoreHttpRepository;
 use App\Mappings\ProblemCaseStatusMapping;
 use App\Models\ProblemCase;
+use http\Exception\InvalidArgumentException;
 
 class StoreProblemCaseNumberCreditUseCase extends AbstractStoreProblemCaseUseCase
 {
@@ -42,6 +43,10 @@ class StoreProblemCaseNumberCreditUseCase extends AbstractStoreProblemCaseUseCas
 
     protected function getDataByIdentifier(int|string $identifier): mixed
     {
+        if (is_string($identifier) === false) {
+            throw new InvalidArgumentException('identifier should be string');
+        }
+
         $data = $this->coreHttpRepository->getApplicationDataByContractNumber($identifier);
 
         if ($data === null) {
@@ -51,9 +56,13 @@ class StoreProblemCaseNumberCreditUseCase extends AbstractStoreProblemCaseUseCas
         return $data;
     }
 
-    protected function setIdentifierNumberAndDate(ProblemCase $problemCase, int|string $identifier_number, mixed $data) : void
+    protected function setIdentifierNumberAndDate(ProblemCase $problemCase, int|string $identifier, mixed $data) : void
     {
-        $problemCase->credit_number = $identifier_number;
+        if (is_string($identifier) === false) {
+            throw new InvalidArgumentException('identifier should be string');
+        }
+
+        $problemCase->credit_number = $identifier;
         $problemCase->credit_contract_date = $data->credit_contract_date;
     }
 }
