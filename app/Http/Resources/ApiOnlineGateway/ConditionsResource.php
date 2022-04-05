@@ -8,6 +8,9 @@ use App\Models\Condition;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property Condition $resource
+ */
 class ConditionsResource extends JsonResource
 {
     /**
@@ -18,11 +21,10 @@ class ConditionsResource extends JsonResource
      */
     public function toArray($request)
     {
-        /** @var Condition|ConditionsResource $this */
         return [
-            'id' => $this->id,
-            'duration' => $this->duration,
-            'commission' => $this->commission,
+            'id' => $this->resource->id,
+            'duration' => $this->resource->duration,
+            'commission' => $this->resource->commission,
         ];
     }
 }

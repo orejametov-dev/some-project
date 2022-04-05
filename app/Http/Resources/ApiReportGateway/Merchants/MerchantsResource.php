@@ -7,6 +7,9 @@ namespace App\Http\Resources\ApiReportGateway\Merchants;
 use App\Models\Merchant;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property Merchant $resource
+ */
 class MerchantsResource extends JsonResource
 {
     /**
@@ -17,12 +20,11 @@ class MerchantsResource extends JsonResource
      */
     public function toArray($request)
     {
-        /** @var Merchant|MerchantsResource $this */
         return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'legal_name' => $this->legal_name,
-            'legal_name_prefix' => $this->legal_name_prefix,
+            'id' => $this->resource->id,
+            'name' => $this->resource->name,
+            'legal_name' => $this->resource->legal_name,
+            'legal_name_prefix' => $this->resource->legal_name_prefix,
         ];
     }
 }

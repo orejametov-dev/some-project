@@ -8,6 +8,9 @@ use App\Http\Resources\ApiMerchantGateway\Stores\StoresResource;
 use App\Models\ProblemCase;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property ProblemCase $resource
+ */
 class ProblemCaseResource extends JsonResource
 {
     /**
@@ -18,30 +21,29 @@ class ProblemCaseResource extends JsonResource
      */
     public function toArray($request)
     {
-        /** @var ProblemCase|ProblemCaseResource $this */
         return [
-            'id' => $this->id,
-            'merchant_id' => $this->merchant_id,
-            'store_id' => $this->store_id,
-            'store' => new StoresResource($this->store),
-            'credit_number' => $this->credit_number ?? null,
-            'application_id' => $this->application_id ?? null,
-            'client_id' => $this->client_id,
-            'title' => $this->search_index,
-            'description' => $this->description,
-            'status_key' => $this->status_key,
-            'status_id' => $this->status_id,
-            'created_by_id' => $this->created_by_id ?? null,
-            'created_by_name' => $this->created_by_name ?? null,
-            'merchant_comment' => $this->merchant_comment ?? null,
-            'application_items' => $this->application_items,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-            'tags' => $this->before_tags,
-            'engaged_by_id' => $this->engaged_by_id,
-            'engaged_by_name' => $this->engaged_by_name,
-            'deadline' => $this->deadline,
-            'comment_from_merchant' => $this->comment_from_merchant,
+            'id' => $this->resource->id,
+            'merchant_id' => $this->resource->merchant_id,
+            'store_id' => $this->resource->store_id,
+            'store' => new StoresResource($this->resource->store),
+            'credit_number' => $this->resource->credit_number ?? null,
+            'application_id' => $this->resource->application_id ?? null,
+            'client_id' => $this->resource->client_id,
+            'title' => $this->resource->search_index,
+            'description' => $this->resource->description,
+            'status_key' => $this->resource->status_key,
+            'status_id' => $this->resource->status_id,
+            'created_by_id' => $this->resource->created_by_id ?? null,
+            'created_by_name' => $this->resource->created_by_name ?? null,
+            'merchant_comment' => $this->resource->merchant_comment ?? null,
+            'application_items' => $this->resource->application_items,
+            'created_at' => $this->resource->created_at,
+            'updated_at' => $this->resource->updated_at,
+            'tags' => $this->resource->before_tags,
+            'engaged_by_id' => $this->resource->engaged_by_id,
+            'engaged_by_name' => $this->resource->engaged_by_name,
+            'deadline' => $this->resource->deadline,
+            'comment_from_merchant' => $this->resource->comment_from_merchant,
         ];
     }
 }

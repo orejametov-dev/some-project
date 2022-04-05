@@ -7,6 +7,9 @@ namespace App\Http\Resources\ApiMerchantGateway\Stores;
 use App\Models\Store;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property Store $resource
+ */
 class StoresResource extends JsonResource
 {
     /**
@@ -17,11 +20,9 @@ class StoresResource extends JsonResource
      */
     public function toArray($request)
     {
-        /** @var Store|StoresResource $this */
-
         return [
-            'id' => $this->id,
-            'name' => $this->name,
+            'id' => $this->resource->id,
+            'name' => $this->resource->name,
         ];
     }
 }

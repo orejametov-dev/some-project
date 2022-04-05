@@ -7,6 +7,9 @@ namespace App\Http\Resources\ApiMerchantGateway\Notifications;
 use App\Models\Notification;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property Notification $resource
+ */
 class NotificationsResource extends JsonResource
 {
     /**
@@ -17,16 +20,15 @@ class NotificationsResource extends JsonResource
      */
     public function toArray($request)
     {
-        /** @var Notification|NotificationsResource $this */
         return [
-            'id' => $this->id,
-            'title_ru' => $this->title_ru,
-            'title_uz' => $this->title_uz,
-            'body_uz' => $this->body_uz,
-            'body_ru' => $this->body_ru,
-            'start_schedule' => $this->start_schedule,
-            'end_schedule' => $this->end_schedule,
-            'created_at' => $this->created_at,
+            'id' => $this->resource->id,
+            'title_ru' => $this->resource->title_ru,
+            'title_uz' => $this->resource->title_uz,
+            'body_uz' => $this->resource->body_uz,
+            'body_ru' => $this->resource->body_ru,
+            'start_schedule' => $this->resource->start_schedule,
+            'end_schedule' => $this->resource->end_schedule,
+            'created_at' => $this->resource->created_at,
         ];
     }
 }

@@ -7,6 +7,9 @@ namespace App\Http\Resources\ApiGate\Merchants;
 use App\Models\Merchant;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property Merchant $resource
+ */
 class MerchantDetailForCredits extends JsonResource
 {
     /**
@@ -17,10 +20,9 @@ class MerchantDetailForCredits extends JsonResource
      */
     public function toArray($request)
     {
-        /** @var Merchant|\App\Http\Resources\ApiComplianceGateway\Merchants\MerchantsResource $this */
         return [
-            'id' => $this->id,
-            'legal_name' => $this->name,
+            'id' => $this->resource->id,
+            'legal_name' => $this->resource->name,
             'contract_number' => optional($this->whenLoaded('merchant_info'))->contract_number,
         ];
     }
