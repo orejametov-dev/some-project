@@ -6,8 +6,8 @@ namespace App\Http\Controllers\ApiComplianceGateway\ProblemCases;
 
 use App\DTOs\ProblemCases\StoreProblemCaseDTO;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ApiPrm\ProblemCases\AttachNewProblemCaseTagsRequest;
-use App\Http\Requests\ApiPrm\ProblemCases\StoreProblemCaseRequest;
+use App\Http\Requests\ApiPrmGateway\ProblemCases\AttachNewProblemCaseTagsRequest;
+use App\Http\Requests\ApiPrmGateway\ProblemCases\StoreProblemCaseRequest;
 use App\UseCases\ProblemCase\NewAttachTagsProblemCaseUseCase;
 use App\UseCases\ProblemCase\StoreProblemCaseApplicationIdUseCase;
 
