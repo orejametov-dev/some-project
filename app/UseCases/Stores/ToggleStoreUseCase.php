@@ -3,7 +3,7 @@
 namespace App\UseCases\Stores;
 
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
-use App\Exceptions\BusinessException;
+use App\Exceptions\NotFoundException;
 use App\Models\ActivityReason;
 use App\Models\Store;
 use App\UseCases\Cache\FlushCacheUseCase;
@@ -22,7 +22,7 @@ class ToggleStoreUseCase
         $active_reason = ActivityReason::query()->where('type', 'STORE')->find($activity_reason_id);
 
         if ($active_reason === null) {
-            throw new  BusinessException('Причина не найден', 'object_not_found', 404);
+            throw new  NotFoundException('Причина не найден');
         }
 
         $store = $this->findStoresUseCase->execute($id);

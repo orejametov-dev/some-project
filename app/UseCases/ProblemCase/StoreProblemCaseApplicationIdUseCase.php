@@ -8,7 +8,7 @@ use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use Alifuz\Utils\Gateway\Entities\GatewayApplication;
 use App\Enums\ProblemCaseStatusEnum;
 use App\Exceptions\ApiBusinessException;
-use App\Exceptions\BusinessException;
+use App\Exceptions\NotFoundException;
 use App\HttpRepositories\Core\CoreHttpRepository;
 use App\Mappings\ProblemCaseStatusMapping;
 use App\Models\ProblemCase;
@@ -60,7 +60,7 @@ class StoreProblemCaseApplicationIdUseCase extends AbstractStoreProblemCaseUseCa
         $data = $this->coreHttpRepository->getApplicationDataByApplicationId($identifier);
 
         if ($data === null) {
-            throw new BusinessException('Заявка не была найдена', 'object_not_found', 404);
+            throw new NotFoundException('Заявка не была найдена');
         }
 
         return $data;

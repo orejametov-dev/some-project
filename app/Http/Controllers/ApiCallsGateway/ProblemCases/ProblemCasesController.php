@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\ApiCallsGateway\ProblemCases;
 
 use App\DTOs\ProblemCases\StoreProblemCaseDTO;
-use App\Exceptions\BusinessException;
+use App\Exceptions\NotFoundException;
 use App\Filters\CommonFilters\ClientIdFilter;
 use App\Filters\CommonFilters\StatusIdFilter;
 use App\Filters\ProblemCase\QProblemCaseFilter;
@@ -43,7 +43,7 @@ class ProblemCasesController extends Controller
             ->find($id);
 
         if ($problemCases === null) {
-            throw new BusinessException('Проблем кейс не найден', 'object_not_found', 404);
+            throw new NotFoundException('Проблем кейс не найден');
         }
 
         return new ProblemCaseResource($problemCases);

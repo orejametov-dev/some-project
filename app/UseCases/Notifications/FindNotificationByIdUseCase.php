@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\UseCases\Notifications;
 
-use App\Exceptions\BusinessException;
+use App\Exceptions\NotFoundException;
 use App\Models\Notification;
 
 class FindNotificationByIdUseCase
@@ -13,7 +13,7 @@ class FindNotificationByIdUseCase
     {
         $notification = Notification::query()->find($id);
         if ($notification === null) {
-            throw new BusinessException('Оповещение не найдено', 'object_not_found', 404);
+            throw new NotFoundException('Оповещение не найдено');
         }
 
         return  $notification;

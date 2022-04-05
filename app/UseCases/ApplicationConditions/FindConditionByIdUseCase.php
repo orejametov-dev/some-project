@@ -2,7 +2,7 @@
 
 namespace App\UseCases\ApplicationConditions;
 
-use App\Exceptions\BusinessException;
+use App\Exceptions\NotFoundException;
 use App\Models\Condition;
 
 class FindConditionByIdUseCase
@@ -12,7 +12,7 @@ class FindConditionByIdUseCase
         $condition = Condition::query()->find($condition_id);
 
         if ($condition === null) {
-            throw new BusinessException('Условие не найдено', 'condition_not_found', 404);
+            throw new NotFoundException('Условие не найдено');
         }
 
         return $condition;

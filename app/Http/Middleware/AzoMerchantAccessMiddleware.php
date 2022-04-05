@@ -6,7 +6,7 @@ namespace App\Http\Middleware;
 
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\DTOs\Auth\AzoAccessDto;
-use App\Exceptions\BusinessException;
+use App\Exceptions\BadRequestException;
 use App\Models\AzoMerchantAccess;
 use Closure;
 use Illuminate\Contracts\Foundation\Application;
@@ -38,7 +38,7 @@ class AzoMerchantAccessMiddleware
         });
 
         if (!$azo_merchant_access) {
-            throw new BusinessException('Unauthenticated', 'unauthenticated', 401);
+            throw new BadRequestException('Unauthenticated');
         }
 
         $azo_access_dto = AzoAccessDto::fromArray([

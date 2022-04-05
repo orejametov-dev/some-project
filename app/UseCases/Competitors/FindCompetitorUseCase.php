@@ -2,7 +2,7 @@
 
 namespace App\UseCases\Competitors;
 
-use App\Exceptions\BusinessException;
+use App\Exceptions\NotFoundException;
 use App\Models\Competitor;
 
 class FindCompetitorUseCase
@@ -13,7 +13,7 @@ class FindCompetitorUseCase
             ->find($competitor_id);
 
         if ($competitor === null) {
-            throw new BusinessException('Конкурент не найден', 'object_not_found', 404);
+            throw new NotFoundException('Конкурент не найден');
         }
 
         return $competitor;
