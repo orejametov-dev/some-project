@@ -27,9 +27,7 @@ class FileResource extends JsonResource
             'url' => $this->resource->url,
             'size' => $this->resource->size,
             'merchant_id' => $this->resource->merchant_id,
-            'request_id' => $this->resource->request_id,
-            'created_at' => $this->resource->created_at,
-            'updated_at' => $this->resource->updated_at,
+            'link' => config('local_services.services_storage.domain') . $this->resource->url,
         ];
     }
 }

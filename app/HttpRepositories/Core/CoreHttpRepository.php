@@ -34,7 +34,7 @@ class CoreHttpRepository
         return MerchantApplicationsAndClientsCountByRangeDataResponse::fromArray($result);
     }
 
-    public function getApplicationDataByContractNumber(string $contract_number): ?CreditNumberApplicationDataResponse
+    public function getApplicationDataByContractNumber(string $contract_number): ? CreditNumberApplicationDataResponse
     {
         $data = $this->getHttpClient()->get("applications/$contract_number")->throw()->json();
 

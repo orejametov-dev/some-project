@@ -40,7 +40,6 @@ class UpdateMerchantUseCase
         $merchant->legal_name = $updateMerchantDTO->getLegalName();
         $merchant->legal_name_prefix = $updateMerchantDTO->getLegalNamePrefix();
         $merchant->token = $updateMerchantDTO->getToken();
-        $merchant->min_application_price = $updateMerchantDTO->getMinApplicationPrice();
         $merchant->save();
 
         $this->flushCacheUseCase->execute($merchant->id);
