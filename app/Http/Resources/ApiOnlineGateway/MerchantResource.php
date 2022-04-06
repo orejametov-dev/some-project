@@ -26,6 +26,7 @@ class MerchantResource extends JsonResource
             'name' => $this->resource->name,
             'tags' => $this->whenLoaded('tags'),
             'logo_path' => $this->resource->logo_path,
+            'integration' => $this->resource->integration,
             'recommend' => $this->resource->recommend,
         ];
     }

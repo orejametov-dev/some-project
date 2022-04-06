@@ -23,6 +23,9 @@ class TagProblemCaseResource extends JsonResource
         return [
             'id' => $this->resource->id,
             'body' => $this->resource->body,
+            'type_id' => $this->resource->type_id,
+            'point' => $this->resource->point,
+            'created_at' => $this->resource->created_at,
         ];
     }
 }

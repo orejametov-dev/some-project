@@ -23,7 +23,6 @@ use App\Services\SMS\OtpProtector;
 use App\Services\SMS\SmsMessages;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Cache;
 
 class AzoMerchantAccessesController extends Controller
@@ -39,13 +38,13 @@ class AzoMerchantAccessesController extends Controller
         return AzoMerchantAccessResource::collection($merchantUsersQuery->paginate($request->query('per_page') ?? 15));
     }
 
-    public function update($id, Request $request, AzoAccessDto $azoAccessDto, GatewayAuthUser $gatewayAuthUser): AzoMerchantAccess
+    public function update(int $id, Request $request, AzoAccessDto $azoAccessDto, GatewayAuthUser $gatewayAuthUser): AzoMerchantAccess
     {
         $this->validate($request, [
             'store_id' => 'required|integer',
         ]);
 
-        $azo_merchant_access = AzoMerchantAccess::query()->findOrFail((int) $id);
+        $azo_merchant_access = AzoMerchantAccess::query()->findOrFail($id);
         $merchant = $azo_merchant_access->merchant;
         $old_store = $azo_merchant_access->store;
         $store = $merchant->stores()->where(['id' => $request->input('store_id')])->firstOrFail();

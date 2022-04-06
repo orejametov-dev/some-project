@@ -36,10 +36,10 @@ class ProblemCasesController extends Controller
         return ProblemCaseResource::collection($problemCases->paginate($request->query('per_page') ?? 15));
     }
 
-    public function show($id): ProblemCaseResource
+    public function show(int $id): ProblemCaseResource
     {
         $problemCase = ProblemCase::with('before_tags')
-            ->find((int) $id);
+            ->find($id);
 
         if ($problemCase === null) {
             throw new BusinessException('Проблемный кейс не найден', 'object_not_found', 404);
@@ -48,13 +48,13 @@ class ProblemCasesController extends Controller
         return new ProblemCaseResource($problemCase);
     }
 
-    public function setCommentFromMerchant($id, Request $request): ProblemCaseResource
+    public function setCommentFromMerchant(int $id, Request $request): ProblemCaseResource
     {
         $this->validate($request, [
             'body' => 'string|required',
         ]);
 
-        $problemCase = ProblemCase::query()->findOrFail((int) $id);
+        $problemCase = ProblemCase::query()->findOrFail($id);
         $problemCase->comment_from_merchant = $request->input('body');
         $problemCase->save();
 
@@ -63,14 +63,14 @@ class ProblemCasesController extends Controller
 
     public function setStatus(int $id, ProblemCaseSetStatusRequest $request, SetStatusProblemCaseUseCase $setStatusProblemCaseUseCase, ProblemCaseStatusMapping $problemCaseStatusMapping): ProblemCaseResource
     {
-        $problemCase = $setStatusProblemCaseUseCase->execute((int) $id, (int) $request->input('status_id'));
+        $problemCase = $setStatusProblemCaseUseCase->execute($id, (int) $request->input('status_id'));
 
         return new ProblemCaseResource($problemCase);
     }
 
-    public function setEngage($id, GatewayAuthUser $gatewayAuthUser): ProblemCaseResource
+    public function setEngage(int $id, GatewayAuthUser $gatewayAuthUser): ProblemCaseResource
     {
-        $problemCase = ProblemCase::query()->findOrFail((int) $id);
+        $problemCase = ProblemCase::query()->findOrFail($id);
 
         $problemCase->engaged_by_id = $gatewayAuthUser->getId();
         $problemCase->engaged_by_name = $gatewayAuthUser->getName();
