@@ -20,7 +20,7 @@ class UnauthenticatedException extends AbstractException
         return Response::HTTP_BAD_REQUEST;
     }
 
-    public function getStringCode()
+    public function getStringCode(): string
     {
         return ExceptionEnum::STRING_CODE_UNAUTHENTICATED()->getValue();
     }

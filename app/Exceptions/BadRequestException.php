@@ -20,7 +20,7 @@ class BadRequestException extends AbstractException
         return Response::HTTP_BAD_REQUEST;
     }
 
-    public function getStringCode()
+    public function getStringCode(): string
     {
         return ExceptionEnum::STRING_CODE_BAD_REQUEST()->getValue();
     }

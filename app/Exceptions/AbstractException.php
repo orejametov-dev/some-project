@@ -10,9 +10,9 @@ use Throwable;
 
 abstract class AbstractException extends Exception
 {
-    abstract public function getStatus();
+    abstract public function getStatus(): int;
 
-    abstract public function getStringCode();
+    abstract public function getStringCode(): string;
 
     public function __construct(string $message = '', Throwable $previous = null)
     {
@@ -23,9 +23,9 @@ abstract class AbstractException extends Exception
     {
         return new JsonResponse(
             [
-            'message' => $this->getMessage(),
-            'code' => $this->getStringCode(),
-        ],
+                'message' => $this->getMessage(),
+                'code' => $this->getStringCode(),
+            ],
             $this->getStatus()
         );
     }
