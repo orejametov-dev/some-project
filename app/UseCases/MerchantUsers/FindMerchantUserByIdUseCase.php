@@ -2,7 +2,7 @@
 
 namespace App\UseCases\MerchantUsers;
 
-use App\Exceptions\BusinessException;
+use App\Exceptions\NotFoundException;
 use App\Models\AzoMerchantAccess;
 
 class FindMerchantUserByIdUseCase
@@ -11,7 +11,7 @@ class FindMerchantUserByIdUseCase
     {
         $azo_merchant_access = AzoMerchantAccess::query()->find($merchant_user_id);
         if ($azo_merchant_access === null) {
-            throw new BusinessException('Сотрудник не найден', 'object_not_found', 404);
+            throw new NotFoundException('Сотрудник не найден');
         }
 
         return $azo_merchant_access;

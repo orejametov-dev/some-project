@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\ApiGate\Merchants;
 
-use App\Exceptions\BusinessException;
+use App\Exceptions\NotFoundException;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiGate\MerchantInfos\MerchantInfoResource;
 use App\Models\MerchantInfo;
@@ -17,7 +17,7 @@ class MerchantInfoController extends Controller
             ->first();
 
         if ($merchant_info === null) {
-            throw new BusinessException('Основной договор не найден', 'object_not_found', 404);
+            throw new NotFoundException('Основной договор не найден');
         }
 
         return new MerchantInfoResource($merchant_info);

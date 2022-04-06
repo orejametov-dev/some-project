@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\UseCases\MerchantInfos;
 
-use App\Exceptions\BusinessException;
+use App\Exceptions\NotFoundException;
 use App\Models\MerchantInfo;
 
 class FindMerchantInfoByIdUseCase
@@ -13,7 +13,7 @@ class FindMerchantInfoByIdUseCase
     {
         $merchant_info = MerchantInfo::query()->find($id);
         if ($merchant_info === null) {
-            throw new BusinessException('Основной договор не найден', 'object_not_found', 404);
+            throw new NotFoundException('Основной договор не найден');
         }
 
         return $merchant_info;

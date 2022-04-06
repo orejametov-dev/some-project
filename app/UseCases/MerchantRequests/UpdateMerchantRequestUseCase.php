@@ -22,7 +22,7 @@ class UpdateMerchantRequestUseCase
         $merchant_request = $this->findMerchantRequestByIdUseCase->execute($id);
 
         if ($this->companyHttpRepository->getCompanyByName($merchantRequestDTO->getName())) {
-            throw new BusinessException('Указанное имя компании уже занято', 'object_not_found', 400);
+            throw new BusinessException('Указанное имя компании уже занято', 'company_name_exists', 400);
         }
 
         $merchant_request->name = $merchantRequestDTO->getName();

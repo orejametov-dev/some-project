@@ -2,7 +2,7 @@
 
 namespace App\UseCases\Merchants;
 
-use App\Exceptions\BusinessException;
+use App\Exceptions\NotFoundException;
 use App\Models\Merchant;
 
 class FindMerchantByIdUseCase
@@ -11,7 +11,7 @@ class FindMerchantByIdUseCase
     {
         $merchant = Merchant::query()->find($merchant_id);
         if ($merchant === null) {
-            throw new BusinessException('Мерчант не найден', 'object_not_found', 404);
+            throw new NotFoundException('Мерчант не найден');
         }
 
         return $merchant;

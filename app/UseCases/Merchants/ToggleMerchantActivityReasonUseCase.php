@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\UseCases\Merchants;
 
 use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
-use App\Exceptions\BusinessException;
+use App\Exceptions\NotFoundException;
 use App\HttpRepositories\Prm\CompanyHttpRepository;
 use App\Models\ActivityReason;
 use App\Models\Merchant;
@@ -26,7 +26,7 @@ class ToggleMerchantActivityReasonUseCase
         $activity_reason = ActivityReason::query()->where('type', 'MERCHANT')
             ->find($activity_reason_id);
         if ($activity_reason === null) {
-            throw new BusinessException('Причина не найдена', 'object_not_found', 404);
+            throw new NotFoundException('Причина не найдена');
         }
 
         $merchant = $this->findMerchantByIdUseCase->execute($id);

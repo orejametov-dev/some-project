@@ -2,7 +2,7 @@
 
 namespace App\UseCases\Stores;
 
-use App\Exceptions\BusinessException;
+use App\Exceptions\NotFoundException;
 use App\Models\Store;
 
 class FindStoreByIdUseCase
@@ -12,7 +12,7 @@ class FindStoreByIdUseCase
         $store = Store::query()->find($id);
 
         if ($store === null) {
-            throw new BusinessException('Магазин не найден', 'object_not_found', 404);
+            throw new NotFoundException('Магазин не найден');
         }
 
         return $store;
