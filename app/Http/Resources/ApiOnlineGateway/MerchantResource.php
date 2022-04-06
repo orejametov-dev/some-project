@@ -8,6 +8,9 @@ use App\Models\Merchant;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property Merchant $resource
+ */
 class MerchantResource extends JsonResource
 {
     /**
@@ -18,13 +21,13 @@ class MerchantResource extends JsonResource
      */
     public function toArray($request)
     {
-        /** @var Merchant|MerchantResource $this */
         return [
-            'id' => $this->id,
-            'name' => $this->name,
+            'id' => $this->resource->id,
+            'name' => $this->resource->name,
             'tags' => $this->whenLoaded('tags'),
-            'logo_path' => $this->logo_path,
-            'recommend' => $this->recommend,
+            'logo_path' => $this->resource->logo_path,
+            'integration' => $this->resource->integration,
+            'recommend' => $this->resource->recommend,
         ];
     }
 }

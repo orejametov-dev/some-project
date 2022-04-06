@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\ApiCallsGateway\Comments;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ApiPrm\Comments\IndexComments;
+use App\Http\Requests\ApiPrmGateway\Comments\IndexComments;
 use App\Models\Comment;
 
 class CommentsController extends Controller
