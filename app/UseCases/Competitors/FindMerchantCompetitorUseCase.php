@@ -2,7 +2,7 @@
 
 namespace App\UseCases\Competitors;
 
-use App\Exceptions\BusinessException;
+use App\Exceptions\NotFoundException;
 use App\Models\Competitor;
 use App\Models\Merchant;
 
@@ -13,7 +13,7 @@ class FindMerchantCompetitorUseCase
         $merchant_competitor = $merchant->competitors()->find($merchant_competitor_id);
 
         if ($merchant_competitor === null) {
-            throw new BusinessException('Информация по данному конкуренту не найдена', 'object_not_found', 404);
+            throw new NotFoundException('Информация по данному конкуренту не найдена');
         }
 
         return $merchant_competitor;

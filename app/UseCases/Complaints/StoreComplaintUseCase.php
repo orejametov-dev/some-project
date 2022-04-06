@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\UseCases\Complaints;
 
 use App\DTOs\Complaints\StoreComplaintDTO;
-use App\Exceptions\BusinessException;
+use App\Exceptions\NotFoundException;
 use App\Models\AzoMerchantAccess;
 use App\Models\Complaint;
 
@@ -19,7 +19,7 @@ class StoreComplaintUseCase
             ->first();
 
         if ($merchant_access === null) {
-            throw new BusinessException('Сотрудник не найден', 'object_not_found', 404);
+            throw new NotFoundException('Сотрудник не найден');
         }
 
         $complaint = new Complaint();

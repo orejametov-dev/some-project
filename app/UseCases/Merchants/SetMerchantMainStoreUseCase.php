@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\UseCases\Merchants;
 
-use App\Exceptions\BusinessException;
+use App\Exceptions\NotFoundException;
 use App\Models\Merchant;
 use App\Models\Store;
 
@@ -22,7 +22,7 @@ class SetMerchantMainStoreUseCase
         $store = Store::query()->where('merchant_id', $merchant->id)->find($store_id);
 
         if ($store === null) {
-            throw new BusinessException('Магазин не найден', 'object_not_found', 404);
+            throw new NotFoundException('Магазин не найден');
         }
 
         $store->is_main = true;

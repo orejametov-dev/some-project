@@ -21,7 +21,7 @@ class SaveStoreUseCase
         $merchant = $this->findMerchantUseCase->execute($storeStoresDTO->getMerchantId());
 
         if (Store::query()->where('name', $storeStoresDTO->getName())->exists() === true) {
-            throw new BusinessException('Указанное имя уже занято другим магазином', 'object_not_found', 400);
+            throw new BusinessException('Указанное имя уже занято другим магазином', 'store_name_exists', 400);
         }
 
         $merchant_store = new Store();

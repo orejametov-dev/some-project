@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\UseCases\Auth;
 
-use App\Exceptions\BusinessException;
+use App\Exceptions\NotFoundException;
 use App\HttpRepositories\Auth\AuthHttpRepository;
 use App\HttpRepositories\HttpResponses\Auth\AuthHttpResponse;
 
@@ -19,7 +19,7 @@ class FindAuthUserByIdUseCase
     {
         $user = $this->authHttpRepository->getUserById($id);
         if ($user === null) {
-            throw new BusinessException('Пользователь не найден', 'object_not_found', 404);
+            throw new NotFoundException('Пользователь не найден');
         }
 
         return $user;

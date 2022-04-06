@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\UseCases\MerchantRequests;
 
-use App\Exceptions\BusinessException;
+use App\Exceptions\NotFoundException;
 use App\Models\MerchantRequest;
 
 class FindMerchantRequestByIdUseCase
@@ -14,7 +14,7 @@ class FindMerchantRequestByIdUseCase
         $merchant_request = MerchantRequest::query()->find($id);
 
         if ($merchant_request === null) {
-            throw new BusinessException('Запрос на регистрацию мерчанта не найден', 'merchant_request_not_found', 404);
+            throw new NotFoundException('Запрос на регистрацию мерчанта не найден');
         }
 
         return $merchant_request;

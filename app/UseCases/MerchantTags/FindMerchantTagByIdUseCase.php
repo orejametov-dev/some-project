@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\UseCases\MerchantTags;
 
-use App\Exceptions\BusinessException;
+use App\Exceptions\NotFoundException;
 use App\Models\Tag;
 
 class FindMerchantTagByIdUseCase
@@ -13,7 +13,7 @@ class FindMerchantTagByIdUseCase
     {
         $tag = Tag::query()->find($id);
         if ($tag === null) {
-            throw new BusinessException('Тег не найден', 'object_not_found', 404);
+            throw new NotFoundException('Тег не найден');
         }
 
         return $tag;

@@ -8,7 +8,7 @@ use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use Alifuz\Utils\Gateway\Entities\GatewayApplication;
 use App\Enums\ProblemCaseStatusEnum;
 use App\Exceptions\ApiBusinessException;
-use App\Exceptions\BusinessException;
+use App\Exceptions\NotFoundException;
 use App\HttpRepositories\Core\CoreHttpRepository;
 use App\Mappings\ProblemCaseStatusMapping;
 use App\Models\ProblemCase;
@@ -50,7 +50,7 @@ class StoreProblemCaseNumberCreditUseCase extends AbstractStoreProblemCaseUseCas
         $data = $this->coreHttpRepository->getApplicationDataByContractNumber($identifier);
 
         if ($data === null) {
-            throw new BusinessException('Кредит не был найден', 'object_not_found', 404);
+            throw new NotFoundException('Кредит не был найден');
         }
 
         return $data;

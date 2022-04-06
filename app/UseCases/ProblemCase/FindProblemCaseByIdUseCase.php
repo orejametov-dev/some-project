@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\UseCases\ProblemCase;
 
-use App\Exceptions\BusinessException;
+use App\Exceptions\NotFoundException;
 use App\Models\ProblemCase;
 
 class FindProblemCaseByIdUseCase
@@ -14,7 +14,7 @@ class FindProblemCaseByIdUseCase
         $problemCase = ProblemCase::query()->find($id);
 
         if ($problemCase === null) {
-            throw new BusinessException('Проблемный кейс не найден', 'problem_case_not_exists', 404);
+            throw new NotFoundException('Проблемный кейс не найден');
         }
 
         return $problemCase;
