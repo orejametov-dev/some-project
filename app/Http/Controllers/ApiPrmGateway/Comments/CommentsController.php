@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\ApiCallsGateway\Comments;
+declare(strict_types=1);
+
+namespace App\Http\Controllers\ApiPrmGateway\Comments;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiPrmGateway\Comments\IndexComments;
-use App\Http\Resources\ApiCallsGateway\Comments\CommentResource;
+use App\Http\Resources\ApiGateway\Comments\CommentResource;
 use App\Models\Comment;
 use Illuminate\Http\Resources\Json\JsonResource;
 
