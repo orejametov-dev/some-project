@@ -10,11 +10,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiComplianceGateway\Merchants\MerchantsResource;
 use App\Models\Merchant;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Cache;
 
 class MerchantsController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): JsonResource
     {
         return Cache::tags('merchant_index')->remember($request->fullUrl(), 600, function () use ($request) {
             $merchantsQuery = Merchant::query()

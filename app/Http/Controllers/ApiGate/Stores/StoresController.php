@@ -10,7 +10,7 @@ use App\Models\Store;
 
 class StoresController extends Controller
 {
-    public function getStoreByMerchantId($merchant_id, $store_id)
+    public function getStoreByMerchantId(int $merchant_id, int $store_id): StoresResource
     {
         $store = Store::query()
             ->byMerchant($merchant_id)

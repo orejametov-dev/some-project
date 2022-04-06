@@ -45,9 +45,9 @@ class MerchantTagController extends Controller
         return new ShowTagResource($tag->load('merchants'));
     }
 
-    public function removeTag($id, RemoveMerchantTagUseCase $removeMerchantTagUseCase): JsonResponse
+    public function removeTag(int $id, RemoveMerchantTagUseCase $removeMerchantTagUseCase): JsonResponse
     {
-        $removeMerchantTagUseCase->execute((int) $id);
+        $removeMerchantTagUseCase->execute($id);
 
         return new JsonResponse(['message' => 'Тэг успешно удалён.']);
     }

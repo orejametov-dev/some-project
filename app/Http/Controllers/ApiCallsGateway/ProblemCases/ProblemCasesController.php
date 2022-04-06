@@ -18,10 +18,11 @@ use App\Models\ProblemCase;
 use App\UseCases\ProblemCase\NewAttachTagsProblemCaseUseCase;
 use App\UseCases\ProblemCase\StoreProblemCaseNumberCreditUseCase;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProblemCasesController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): JsonResource
     {
         $problemCases = ProblemCase::query()
             ->with(['merchant', 'before_tags'])
@@ -35,7 +36,7 @@ class ProblemCasesController extends Controller
         return ProblemCaseResource::collection($problemCases->paginate($request->query('per_page') ?? 15));
     }
 
-    public function show($id)
+    public function show(int $id): ProblemCaseResource
     {
         $problemCases = ProblemCase::query()
             ->with(['merchant', 'before_tags'])
@@ -49,19 +50,22 @@ class ProblemCasesController extends Controller
         return new ProblemCaseResource($problemCases);
     }
 
-    public function store(StoreProblemCaseRequest $request, StoreProblemCaseNumberCreditUseCase $storeProblemCasesUseCase)
+    public function store(StoreProblemCaseRequest $request, StoreProblemCaseNumberCreditUseCase $storeProblemCasesUseCase): ProblemCaseResource
     {
         $problemCaseDTO = StoreProblemCaseDTO::fromArray($request->validated());
+        $problemCase = $storeProblemCasesUseCase->execute($problemCaseDTO);
 
-        return $storeProblemCasesUseCase->execute($problemCaseDTO);
+        return new ProblemCaseResource($problemCase);
     }
 
-    public function attachTags($id, AttachNewProblemCaseTagsRequest $request, NewAttachTagsProblemCaseUseCase $newAttachTagsProblemCaseUseCase)
+    public function attachTags(int $id, AttachNewProblemCaseTagsRequest $request, NewAttachTagsProblemCaseUseCase $newAttachTagsProblemCaseUseCase): ProblemCaseResource
     {
-        return $newAttachTagsProblemCaseUseCase->execute((int) $id, (array) $request->input('tags'));
+        $problemCase = $newAttachTagsProblemCaseUseCase->execute($id, (array) $request->input('tags'));
+
+        return new ProblemCaseResource($problemCase);
     }
 
-    public function getStatusList(ProblemCaseStatusMapping $problemCaseStatusMapping)
+    public function getStatusList(ProblemCaseStatusMapping $problemCaseStatusMapping): array
     {
         return $problemCaseStatusMapping->getMappings();
     }

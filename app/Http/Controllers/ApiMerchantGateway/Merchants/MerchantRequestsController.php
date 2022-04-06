@@ -28,9 +28,9 @@ class MerchantRequestsController extends Controller
         ];
     }
 
-    public function show($id): MerchantRequest
+    public function show(int $id): MerchantRequest
     {
-        $merchant_request = MerchantRequest::query()->with('files')->find((int) $id);
+        $merchant_request = MerchantRequest::query()->with('files')->find($id);
 
         if ($merchant_request === null) {
             throw new BusinessException('Запрос мерчанта не найден', 'merchant_request_not_found', 404);
