@@ -23,6 +23,7 @@ use App\Services\SMS\OtpProtector;
 use App\Services\SMS\SmsMessages;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Cache;
 
 class AzoMerchantAccessesController extends Controller

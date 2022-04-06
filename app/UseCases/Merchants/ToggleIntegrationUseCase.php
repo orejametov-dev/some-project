@@ -2,6 +2,7 @@
 
 namespace App\UseCases\Merchants;
 
+use App\Models\Merchant;
 use App\UseCases\Cache\FlushCacheUseCase;
 
 class ToggleIntegrationUseCase
@@ -12,7 +13,7 @@ class ToggleIntegrationUseCase
     ) {
     }
 
-    public function execute(int $id)
+    public function execute(int $id): Merchant
     {
         $merchant = $this->findMerchantByIdUseCase->execute($id);
         $merchant->integration = !$merchant->integration;
