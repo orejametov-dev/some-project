@@ -8,18 +8,25 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Throwable;
 
-class AbstractException extends Exception
+abstract class AbstractException extends Exception
 {
-    protected string $string_code;
+    abstract public function getStatus();
 
-    public function __construct(string $message = '', string $string_code = '', int $code = 400, Throwable $previous = null)
+    abstract public function getStringCode();
+
+    public function __construct(string $message = '', Throwable $previous = null)
     {
-        parent::__construct($message, $code, $previous);
-        $this->string_code = $string_code;
+        parent::__construct($message, $this->getStatus(), $previous);
     }
 
     public function render(): JsonResponse
     {
-        return response()->json(['message' => $this->getMessage(), 'code' => $this->string_code], $this->getCode());
+        return new JsonResponse(
+            [
+            'message' => $this->getMessage(),
+            'code' => $this->getStringCode(),
+        ],
+            $this->getStatus()
+        );
     }
 }
