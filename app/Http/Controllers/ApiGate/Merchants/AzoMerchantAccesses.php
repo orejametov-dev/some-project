@@ -13,13 +13,15 @@ class AzoMerchantAccesses extends Controller
 {
     public function getByUserId(int $user_id): JsonResource
     {
-        return Cache::tags('azo_merchants')->remember('azo_merchant_user_id_' . $user_id, 86400, function () use ($user_id) {
+        $azo_merchant_access = Cache::tags('azo_merchants')->remember('azo_merchant_user_id_' . $user_id, 86400, function () use ($user_id) {
             $azo_merchant_access = AzoMerchantAccess::query()->with(['merchant', 'store'])
                 ->byActiveMerchant()
                 ->byActiveStore()
                 ->byUserId($user_id)->first();
 
-            return new JsonResource($azo_merchant_access);
+            return $azo_merchant_access;
         });
+
+        return new JsonResource($azo_merchant_access);
     }
 }
