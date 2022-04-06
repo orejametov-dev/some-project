@@ -9,7 +9,7 @@ use App\Models\MerchantInfo;
 
 class MerchantInfoController extends Controller
 {
-    public function getMerchantInfoByMerchantId($merchant_id): MerchantInfoResource
+    public function getMerchantInfoByMerchantId(int $merchant_id): MerchantInfoResource
     {
         $merchant_info = MerchantInfo::query()
             ->where('merchant_id', $merchant_id)

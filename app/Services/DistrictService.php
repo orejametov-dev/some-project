@@ -470,7 +470,7 @@ class DistrictService
                         'Шайхантахурский район',
                         'Юнусабадский район',
                         'Яккасарайский район',
-                        'Янгихаятский район'
+                        'Янгихаятский район',
                     ],
                 'body_uz' => [
                         'Olmazor tumani',
@@ -484,7 +484,7 @@ class DistrictService
                         'Shayxontoxur tumani',
                         'Yunusobod tumani',
                         'Yakkasaroy tumani',
-                        'Yangihayot tumani'
+                        'Yangihayot tumani',
                     ],
             ],
     ];

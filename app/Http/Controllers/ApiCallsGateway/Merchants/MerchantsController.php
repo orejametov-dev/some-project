@@ -10,7 +10,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class MerchantsController extends Controller
 {
-    public function getMerchantStores(Request $request, $merchant_id): JsonResource
+    public function getMerchantStores(Request $request, int $merchant_id): JsonResource
     {
         /** @var Merchant $merchant */
         $merchant = Merchant::query()->findOrFail($merchant_id);

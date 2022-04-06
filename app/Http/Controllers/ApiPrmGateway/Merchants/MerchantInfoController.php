@@ -67,9 +67,9 @@ class MerchantInfoController extends Controller
         return response()->download(storage_path($file_path))->deleteFileAfterSend();
     }
 
-    public function getContract($id, GetMerchantInfoContractUseCase $getMerchantInfoContractUseCase): BinaryFileResponse
+    public function getContract(int $id, GetMerchantInfoContractUseCase $getMerchantInfoContractUseCase): BinaryFileResponse
     {
-        $file_path = $getMerchantInfoContractUseCase->execute((int) $id);
+        $file_path = $getMerchantInfoContractUseCase->execute($id);
 
         return response()->download(storage_path($file_path))->deleteFileAfterSend();
     }

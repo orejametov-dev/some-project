@@ -44,23 +44,23 @@ class AdditionalAgreementsController extends Controller
         return new StoreAdditionalAgreementResource($additional_agreement);
     }
 
-    public function update($id, StoreAdditionalAgreements $request, UpdateAdditionalAgreementUseCase $updateAdditionalAgreementUseCase): UpdateAdditionalAgreementResource
+    public function update(int $id, StoreAdditionalAgreements $request, UpdateAdditionalAgreementUseCase $updateAdditionalAgreementUseCase): UpdateAdditionalAgreementResource
     {
-        $additional_agreement = $updateAdditionalAgreementUseCase->execute((int) $id, StoreAdditionalAgreementDTO::fromArray($request->validated()));
+        $additional_agreement = $updateAdditionalAgreementUseCase->execute($id, StoreAdditionalAgreementDTO::fromArray($request->validated()));
 
         return new UpdateAdditionalAgreementResource($additional_agreement);
     }
 
-    public function getAdditionalAgreementDoc($id, GenerateAdditionalAgreementDocUseCase $generateAdditionalAgreementDocUseCase): BinaryFileResponse
+    public function getAdditionalAgreementDoc(int $id, GenerateAdditionalAgreementDocUseCase $generateAdditionalAgreementDocUseCase): BinaryFileResponse
     {
-        $file_path = $generateAdditionalAgreementDocUseCase->execute((int) $id);
+        $file_path = $generateAdditionalAgreementDocUseCase->execute($id);
 
         return response()->download(storage_path($file_path))->deleteFileAfterSend();
     }
 
-    public function delete($id, DeleteAdditionalAgreementUseCase $deleteAdditionalAgreementUseCase): JsonResponse
+    public function delete(int $id, DeleteAdditionalAgreementUseCase $deleteAdditionalAgreementUseCase): JsonResponse
     {
-        $deleteAdditionalAgreementUseCase->execute((int) $id);
+        $deleteAdditionalAgreementUseCase->execute($id);
 
         return new JsonResponse(['message' => 'Успешно удалено']);
     }
