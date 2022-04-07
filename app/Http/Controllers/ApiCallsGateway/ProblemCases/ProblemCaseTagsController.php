@@ -20,6 +20,6 @@ class ProblemCaseTagsController extends Controller
                 QProblemCaseTagFilter::class,
             ]);
 
-        return TagProblemCaseResource::collection($tags->paginate($request->input('per_page') ?? 15));
+        return TagProblemCaseResource::collection($tags);
     }
 }
