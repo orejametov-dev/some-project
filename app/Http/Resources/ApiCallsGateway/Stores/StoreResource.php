@@ -7,6 +7,9 @@ namespace App\Http\Resources\ApiCallsGateway\Stores;
 use App\Models\Store;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property Store $resource
+ */
 class StoreResource extends JsonResource
 {
     /**
@@ -17,14 +20,13 @@ class StoreResource extends JsonResource
      */
     public function toArray($request)
     {
-        /** @var Store|StoreResource $this */
         return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'merchant_id' => $this->merchant_id,
-            'address' => $this->address,
-            'phone' => $this->phone,
-            'responsible_person' => $this->responsible_person,
+            'id' => $this->resource->id,
+            'name' => $this->resource->name,
+            'merchant_id' => $this->resource->merchant_id,
+            'address' => $this->resource->address,
+            'phone' => $this->resource->phone,
+            'responsible_person' => $this->resource->responsible_person,
         ];
     }
 }

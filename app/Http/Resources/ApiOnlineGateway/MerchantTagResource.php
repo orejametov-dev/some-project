@@ -8,6 +8,9 @@ use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property Tag $resource
+ */
 class MerchantTagResource extends JsonResource
 {
     /**
@@ -18,10 +21,9 @@ class MerchantTagResource extends JsonResource
      */
     public function toArray($request)
     {
-        /** @var Tag|MerchantTagResource $this */
         return [
-            'id' => $this->id,
-            'name' => $this->title,
+            'id' => $this->resource->id,
+            'name' => $this->resource->title,
         ];
     }
 }

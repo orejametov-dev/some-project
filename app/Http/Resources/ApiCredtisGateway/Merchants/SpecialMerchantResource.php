@@ -8,6 +8,9 @@ use App\Models\Merchant;
 use App\Services\LegalNameService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property Merchant $resource
+ */
 class SpecialMerchantResource extends JsonResource
 {
     /**
@@ -18,11 +21,10 @@ class SpecialMerchantResource extends JsonResource
      */
     public function toArray($request)
     {
-        /** @var Merchant|SpecialMerchantResource $this */
         return [
-            'merchant_ids' => $this->merchant_ids, /* @phpstan-ignore-line */
-            'legal_name' => LegalNameService::findNamePrefix($this->legal_name_prefix)['body_ru']['value'] . ' ' . $this->legal_name,
-            'logo_path' => $this->logo_path,
+            'merchant_ids' => $this->resource->merchant_ids, /* @phpstan-ignore-line */
+            'legal_name' => LegalNameService::findNamePrefix($this->resource->legal_name_prefix)['body_ru']['value'] . ' ' . $this->resource->legal_name,
+            'logo_path' => $this->resource->logo_path,
         ];
     }
 }

@@ -7,6 +7,9 @@ namespace App\Http\Resources\ApiGate\Conditions;
 use App\Models\Condition;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property Condition $resource
+ */
 class ConditionsResource extends JsonResource
 {
     /**
@@ -17,15 +20,14 @@ class ConditionsResource extends JsonResource
      */
     public function toArray($request)
     {
-        /** @var Condition|ConditionsResource $this */
         return [
-            'id' => $this->id,
-            'merchant_id' => $this->merchant_id,
-            'store_id' => $this->store_id,
-            'event_id' => $this->event_id,
-            'commission' => $this->commission,
-            'duration' => $this->duration,
-            'discount' => $this->discount,
+            'id' => $this->resource->id,
+            'merchant_id' => $this->resource->merchant_id,
+            'store_id' => $this->resource->store_id,
+            'event_id' => $this->resource->event_id,
+            'commission' => $this->resource->commission,
+            'duration' => $this->resource->duration,
+            'discount' => $this->resource->discount,
         ];
     }
 }

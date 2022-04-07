@@ -5,6 +5,9 @@ namespace App\Http\Resources\ApiGate\MerchantInfos;
 use App\Models\MerchantInfo;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property MerchantInfo $resource
+ */
 class MerchantInfoResource extends JsonResource
 {
     /**
@@ -15,13 +18,12 @@ class MerchantInfoResource extends JsonResource
      */
     public function toArray($request)
     {
-        /** @var MerchantInfo|MerchantInfoResource $this */
         return [
-            'merchant_id' => $this->merchant_id,
-            'director_name' =>  $this->director_name,
-            'contract_number' => $this->contract_number,
-            'contract_date' => $this->contract_date,
-            'tin' => $this->tin,
+            'merchant_id' => $this->resource->merchant_id,
+            'director_name' =>  $this->resource->director_name,
+            'contract_number' => $this->resource->contract_number,
+            'contract_date' => $this->resource->contract_date,
+            'tin' => $this->resource->tin,
         ];
     }
 }

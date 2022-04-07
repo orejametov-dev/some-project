@@ -7,6 +7,9 @@ namespace App\Http\Resources\ApiCallsGateway\Merchants;
 use App\Models\Merchant;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property Merchant $resource
+ */
 class MerchantResource extends JsonResource
 {
     /**
@@ -17,10 +20,9 @@ class MerchantResource extends JsonResource
      */
     public function toArray($request)
     {
-        /** @var Merchant|MerchantResource $this */
         return [
-            'id' => $this->id,
-            'name' => $this->name,
+            'id' => $this->resource->id,
+            'name' => $this->resource->name,
         ];
     }
 }

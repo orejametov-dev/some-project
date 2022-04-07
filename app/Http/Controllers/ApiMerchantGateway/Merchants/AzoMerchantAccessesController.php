@@ -9,6 +9,7 @@ use App\DTOs\Auth\AzoAccessDto;
 use App\Exceptions\ApiBusinessException;
 use App\Filters\AzoMerchantAccess\QAzoMerchantAccessFilter;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ApiMerchantGateway\AzoMerchantAccesses\AzoMerchantAccessResource;
 use App\HttpRepositories\Auth\AuthHttpRepository;
 use App\HttpRepositories\Hooks\DTO\HookData;
 use App\HttpRepositories\Notify\NotifyHttpRepository;
@@ -22,11 +23,12 @@ use App\Services\SMS\OtpProtector;
 use App\Services\SMS\SmsMessages;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Cache;
 
 class AzoMerchantAccessesController extends Controller
 {
-    public function index(Request $request, AzoAccessDto $azoAccessDto)
+    public function index(Request $request, AzoAccessDto $azoAccessDto): JsonResource
     {
         $merchantUsersQuery = AzoMerchantAccess::query()
             ->with(['merchant', 'store'])
@@ -34,17 +36,7 @@ class AzoMerchantAccessesController extends Controller
             ->filterRequest($request, [QAzoMerchantAccessFilter::class])
             ->orderByDesc('updated_at');
 
-//        return JsonResource::collection($merchantUsersQuery->paginate($request->query('per_page') ?? 15));
-        return $merchantUsersQuery->paginate($request->query('per_page') ?? 15);
-    }
-
-    public function show(int $id, AzoAccessDto $azoAccessDto): AzoMerchantAccess
-    {
-        $merchantUser = AzoMerchantAccess::query()
-            ->byMerchant($azoAccessDto->getMerchantId())
-            ->findOrFail($id);
-
-        return $merchantUser;
+        return AzoMerchantAccessResource::collection($merchantUsersQuery->paginate($request->query('per_page') ?? 15));
     }
 
     public function update(int $id, Request $request, AzoAccessDto $azoAccessDto, GatewayAuthUser $gatewayAuthUser): AzoMerchantAccess

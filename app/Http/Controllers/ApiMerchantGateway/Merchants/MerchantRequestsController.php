@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Controllers\ApiMerchantGateway\Merchants;
 
 use App\DTOs\MerchantRequest\StoreMerchantRequestDTO;
-use App\Exceptions\BusinessException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiMerchantsGateway\Merchants\MerchantRequestStoreMain;
-use App\Models\MerchantRequest;
+use App\Http\Resources\ApiMerchantGateway\MerchantRequest\MerchantRequestResource;
 use App\Services\DistrictService;
 use App\Services\LegalNameService;
 use App\Services\RegionService;
@@ -28,20 +27,11 @@ class MerchantRequestsController extends Controller
         ];
     }
 
-    public function show(int $id): MerchantRequest
+    public function storeMain(MerchantRequestStoreMain $request, StoreMerchantRequestUseCase $storeMerchantRequestUseCase): MerchantRequestResource
     {
-        $merchant_request = MerchantRequest::query()->with('files')->find($id);
+        $merchant_request = $storeMerchantRequestUseCase->execute(StoreMerchantRequestDTO::fromArray($request->validated()), false);
 
-        if ($merchant_request === null) {
-            throw new BusinessException('Запрос мерчанта не найден', 'merchant_request_not_found', 404);
-        }
-
-        return $merchant_request;
-    }
-
-    public function storeMain(MerchantRequestStoreMain $request, StoreMerchantRequestUseCase $storeMerchantRequestUseCase): MerchantRequest
-    {
-        return $storeMerchantRequestUseCase->execute(StoreMerchantRequestDTO::fromArray($request->validated()), false);
+        return new MerchantRequestResource($merchant_request);
     }
 
     public function getDistricts(Request $request): array
