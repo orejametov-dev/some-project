@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Resources\ApiGateway\Notifications;
 
-use App\Http\Resources\ApiGateway\ProblemCases\IndexProblemCaseResource;
 use App\Models\Notification;
 use Carbon\Carbon;
 
 /**
  * @property Notification $resource
  */
-class ShowNotificationResource extends IndexProblemCaseResource
+class ShowNotificationResource extends NotificationResource
 {
     /**
      * Transform the resource into an array.
