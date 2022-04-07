@@ -14,8 +14,8 @@ use App\Filters\Notification\QNotificationFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiPrmGateway\Notifications\StoreNotificationRequest;
 use App\Http\Requests\ApiPrmGateway\Notifications\UpdateNotificationRequest;
+use App\Http\Resources\ApiGateway\Notifications\NotificationResource;
 use App\Http\Resources\ApiGateway\Notifications\ShowNotificationResource;
-use App\Http\Resources\ApiMerchantGateway\Notifications\NotificationsResource;
 use App\Models\Notification;
 use App\UseCases\Notifications\FindNotificationByIdUseCase;
 use App\UseCases\Notifications\RemoveNotificationUseCase;
@@ -40,14 +40,14 @@ class NotificationsController extends Controller
             ->latest();
 
         if ($request->query('object') == true) {
-            return new NotificationsResource($notifications->first());
+            return new NotificationResource($notifications->first());
         }
 
         if ($request->has('paginate') && $request->query('paginate') == false) {
-            return NotificationsResource::collection($notifications->get());
+            return NotificationResource::collection($notifications->get());
         }
 
-        return NotificationsResource::collection($notifications->paginate($request->query('per_page') ?? 15));
+        return NotificationResource::collection($notifications->paginate($request->query('per_page') ?? 15));
     }
 
     public function show(int $id, FindNotificationByIdUseCase $findNotificationByIdUseCase): ShowNotificationResource
@@ -58,18 +58,18 @@ class NotificationsController extends Controller
         return new ShowNotificationResource($notification);
     }
 
-    public function store(StoreNotificationRequest $request, StoreNotificationUseCase $storeNotificationUseCase): NotificationsResource
+    public function store(StoreNotificationRequest $request, StoreNotificationUseCase $storeNotificationUseCase): NotificationResource
     {
         $notification = $storeNotificationUseCase->execute(StoreNotificationDTO::fromArray($request->validated()));
 
-        return new NotificationsResource($notification);
+        return new NotificationResource($notification);
     }
 
-    public function update(int $id, UpdateNotificationRequest $request, UpdateNotificationUseCase $updateNotificationUseCase): NotificationsResource
+    public function update(int $id, UpdateNotificationRequest $request, UpdateNotificationUseCase $updateNotificationUseCase): NotificationResource
     {
         $notification = $updateNotificationUseCase->execute($id, UpdateNotificationDTO::fromArray($request->validated()));
 
-        return new NotificationsResource($notification);
+        return new NotificationResource($notification);
     }
 
     public function remove(int $id, RemoveNotificationUseCase $removeNotificationUseCase): JsonResponse

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Resources\ApiGateway\Notifications;
 
 use App\Models\Notification;
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
@@ -25,7 +26,7 @@ class NotificationResource extends JsonResource
             'title_ru' => $this->resource->title_ru,
             'title_uz' => $this->resource->title_uz,
             'created_by_name' => $this->resource->created_by_name,
-            'start_schedule' => $this->resource->start_schedule,
+            'start_schedule' => Carbon::parse($this->resource->start_schedule),
         ];
     }
 }
