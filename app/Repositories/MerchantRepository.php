@@ -40,6 +40,37 @@ class MerchantRepository extends AbstractRepository
         $merchant->save();
     }
 
+    /**
+     * @param int $id
+     * @param string $name
+     * @return mixed
+     */
+    public function checkToNameExistsNotThisId(int $id, string $name): mixed
+    {
+        return $this->startConditions()->where('name', $name)
+            ->where('id', '!=', $id)->exists();
+    }
+
+    /**
+     * @param int $id
+     * @param string $token
+     * @return mixed
+     */
+    public function checkToTokenExistsNotThisId(int $id, string $token): mixed
+    {
+        return $this->startConditions()->where('token', $token)
+            ->where('id', '!=', $id)->exists();
+    }
+
+    /**
+     * @param int $company_id
+     * @return mixed
+     */
+    public function getMerchantByCompanyId(int $company_id): mixed
+    {
+        return $this->startConditions()->where('company_id', $company_id)->first(['id', 'name']);
+    }
+
 //    /**
 //     * @param Request $request
 //     * @param array $relations
