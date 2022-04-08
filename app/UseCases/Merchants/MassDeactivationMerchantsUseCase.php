@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\UseCases\Merchants;
 
+use App\Enums\CompanyEnum;
 use App\HttpRepositories\Core\CoreHttpRepository;
 use App\HttpRepositories\Prm\CompanyHttpRepository;
 use App\Models\ActivityReason;
@@ -30,6 +31,12 @@ class MassDeactivationMerchantsUseCase
             ->where('created_at', '<', $from_date)
             ->chunkById(100, function ($merchants) use ($from_date, $to_date) {
                 foreach ($merchants as $merchant) {
+                    $company = $this->companyHttpRepository->getCompanyById($merchant->company_id);
+
+                    if ($company->module_alifshop === CompanyEnum::YES()->getValue()) {
+                        continue;
+                    }
+
                     $activity_reasons = DB::table('merchant_activities')
                         ->where('merchant_id', $merchant->id)
                         ->orderByDesc('id')
