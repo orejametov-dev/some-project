@@ -9,17 +9,17 @@ use App\DTOs\Auth\AzoAccessDto;
 use App\Http\Controllers\Controller;
 use App\Models\AzoMerchantAccess;
 use App\Models\Condition;
-use App\Models\Merchant;
 use App\Models\Store;
+use App\UseCases\Merchants\FindMerchantByIdUseCase;
 use Illuminate\Support\Facades\Cache;
 
 class MerchantsController extends Controller
 {
     //роут для фронт мерчанта
-    public function getMerchantDetailsWithRelations(AzoAccessDto $azoAccessDto, GatewayAuthUser $gatewayAuthUser): array
+    public function getMerchantDetailsWithRelations(AzoAccessDto $azoAccessDto, GatewayAuthUser $gatewayAuthUser, FindMerchantByIdUseCase $findMerchantByIdUseCase): array
     {
-        $merchant = Cache::tags($azoAccessDto->getMerchantId())->remember('cache_of_merchant', 60 * 60, function () use ($azoAccessDto) {
-            return Merchant::query()->findOrFail($azoAccessDto->getMerchantId());
+        $merchant = Cache::tags($azoAccessDto->getMerchantId())->remember('cache_of_merchant', 60 * 60, function () use ($azoAccessDto, $findMerchantByIdUseCase) {
+            return $findMerchantByIdUseCase->execute($azoAccessDto->getMerchantId());
         });
 
         $conditions = Cache::tags($azoAccessDto->getMerchantId())->remember('cache_of_merchant_conditions', 60 * 60, function () use ($merchant) {

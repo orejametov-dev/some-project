@@ -39,7 +39,7 @@ class ToggleMerchantActivityReasonUseCase
             'created_by_name' => $this->gatewayAuthUser->getName(),
         ]);
 
-        $this->companyHttpRepository->setStatusNotActive((int) $merchant->company_id);
+        $this->companyHttpRepository->setStatusNotActive($merchant->company_id);
 
         $this->flushCacheUseCase->execute($merchant->id);
 

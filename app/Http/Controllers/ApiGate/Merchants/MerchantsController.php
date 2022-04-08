@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiGate\Merchants\MerchantDetailForCredits;
 use App\Http\Resources\ApiGate\Merchants\MerchantsResource;
 use App\Models\Merchant;
+use App\Repositories\MerchantRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -46,9 +47,9 @@ class MerchantsController extends Controller
         ];
     }
 
-    public function getMerchantByCompanyId(int $companyId): JsonResource
+    public function getMerchantByCompanyId(int $companyId, MerchantRepository $merchantRepository): JsonResource
     {
-        $merchant = Merchant::query()->where('company_id', $companyId)->first(['id', 'name']);
+        $merchant = $merchantRepository->getMerchantByCompanyId($companyId);
 
         if ($merchant === null) {
             throw new BusinessException('Мерчант не найден', 'object_not_found', 404);

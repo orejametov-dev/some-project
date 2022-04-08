@@ -7,11 +7,13 @@ namespace App\UseCases\Merchants;
 use App\DTOs\Merchants\UpdateMerchantDTO;
 use App\Exceptions\BusinessException;
 use App\Models\Merchant;
+use App\Repositories\MerchantRepository;
 use App\UseCases\Cache\FlushCacheUseCase;
 
 class UpdateMerchantUseCase
 {
     public function __construct(
+        private MerchantRepository $merchantRepository,
         private FlushCacheUseCase $flushCacheUseCase,
         private FindMerchantByIdUseCase $findMerchantUseCase
     ) {
@@ -22,15 +24,11 @@ class UpdateMerchantUseCase
      */
     public function execute(int $id, UpdateMerchantDTO $updateMerchantDTO): Merchant
     {
-        // check unique name
-        if (Merchant::query()->where('name', $updateMerchantDTO->getName())
-            ->where('id', '!=', $id)->exists()) {
+        if ($this->merchantRepository->checkToNameExistsNotThisId($id, $updateMerchantDTO->getName())) {
             throw new BusinessException('Мерчант с таким названием уже существует');
         }
-
         // check unique token
-        if (Merchant::query()->where('token', $updateMerchantDTO->getToken())
-            ->where('id', '!=', $id)->exists()) {
+        if ($this->merchantRepository->checkToTokenExistsNotThisId($id, $updateMerchantDTO->getToken())) {
             throw new BusinessException('Мерчант с таким токеном уже существует');
         }
 
@@ -40,7 +38,7 @@ class UpdateMerchantUseCase
         $merchant->legal_name = $updateMerchantDTO->getLegalName();
         $merchant->legal_name_prefix = $updateMerchantDTO->getLegalNamePrefix();
         $merchant->token = $updateMerchantDTO->getToken();
-        $merchant->save();
+        $this->merchantRepository->save($merchant);
 
         $this->flushCacheUseCase->execute($merchant->id);
 
