@@ -8,11 +8,13 @@ use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\Exceptions\BusinessException;
 use App\HttpRepositories\Prm\CompanyHttpRepository;
 use App\Models\Merchant;
+use App\Repositories\MerchantRepository;
 use App\UseCases\Cache\FlushCacheUseCase;
 
 class StoreMerchantUseCase
 {
     public function __construct(
+        private MerchantRepository $merchantRepository,
         private CompanyHttpRepository $companyHttpRepository,
         private FlushCacheUseCase $flushCacheUseCase,
         private GatewayAuthUser $gatewayAuthUser
@@ -23,12 +25,12 @@ class StoreMerchantUseCase
     {
         $company = $this->companyHttpRepository->getCompanyById($company_id);
 
-        if (Merchant::query()->where('company_id', $company_id)->exists()) {
+        if ($this->merchantRepository->existsByCompanyId($company_id)) {
             throw new BusinessException('Указаная компания уже имеет аъзо модуль');
         }
 
         $merchant = Merchant::fromDto($company, $this->gatewayAuthUser->getId());
-        $merchant->save();
+        $this->merchantRepository->save($merchant);
 
         $this->flushCacheUseCase->execute($merchant->id);
         $this->companyHttpRepository->setStatusExist($company->id);
