@@ -25,8 +25,8 @@ class RejectMerchantRequestUseCase
             throw new BusinessException('Причина отказа не найдена');
         }
 
-        if ($merchant_request->isInProcess() === false) {
-            throw new BusinessException('Статус заявки должен быть "На переговорах"');
+        if ($merchant_request->isInProcess() === false && $merchant_request->isOnTraining() === false) {
+            throw new BusinessException('Статус заявки должен быть "На переговорах" или "На обучение"');
         }
 
         $merchant_request->setStatus(MerchantRequestStatusEnum::TRASH());
