@@ -9,20 +9,11 @@ use Alifuz\Utils\Entities\AbstractEntity;
 final class UpdateMerchantDTO extends AbstractEntity
 {
     public function __construct(
-        private int $id,
         private string $name,
         private string $legal_name,
         private string $legal_name_prefix,
         private string $token,
     ) {
-    }
-
-    /**
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->id;
     }
 
     /**
@@ -63,7 +54,6 @@ final class UpdateMerchantDTO extends AbstractEntity
     public static function fromArray(array $data): static
     {
         return new static(
-            id: self::parseInt($id),
             name: self::parseString($data['name']),
             legal_name: self::parseString($data['legal_name']),
             legal_name_prefix: self::parseString($data['legal_name_prefix']),
