@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
-use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 abstract class AbstractRepository
@@ -28,10 +28,10 @@ abstract class AbstractRepository
     abstract protected function getModelClass(): string;
 
     /**
-     * @return Model|Application|mixed
+     * @return Builder
      */
-    protected function startConditions(): mixed
+    protected function startConditions(): Builder
     {
-        return clone $this->model;
+        return $this->model->newQuery();
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repositories;
 
 use App\Models\Merchant;
+use Illuminate\Database\Eloquent\Model;
 
 class MerchantRepository extends AbstractRepository
 {
@@ -24,9 +25,9 @@ class MerchantRepository extends AbstractRepository
 
     /**
      * @param int $company_id
-     * @return mixed
+     * @return bool
      */
-    public function existsByCompanyId(int $company_id): mixed
+    public function existsByCompanyId(int $company_id): bool
     {
         return $this->startConditions()->where('company_id', $company_id)->exists();
     }
@@ -43,9 +44,9 @@ class MerchantRepository extends AbstractRepository
     /**
      * @param int $id
      * @param string $name
-     * @return mixed
+     * @return bool
      */
-    public function checkToNameExistsNotThisId(int $id, string $name): mixed
+    public function checkToNameExistsNotThisId(int $id, string $name): bool
     {
         return $this->startConditions()->where('name', $name)
             ->where('id', '!=', $id)->exists();
@@ -54,9 +55,9 @@ class MerchantRepository extends AbstractRepository
     /**
      * @param int $id
      * @param string $token
-     * @return mixed
+     * @return bool
      */
-    public function checkToTokenExistsNotThisId(int $id, string $token): mixed
+    public function checkToTokenExistsNotThisId(int $id, string $token): bool
     {
         return $this->startConditions()->where('token', $token)
             ->where('id', '!=', $id)->exists();
@@ -64,9 +65,9 @@ class MerchantRepository extends AbstractRepository
 
     /**
      * @param int $company_id
-     * @return mixed
+     * @return Model|null
      */
-    public function getMerchantByCompanyId(int $company_id): mixed
+    public function getMerchantByCompanyId(int $company_id): ?Model
     {
         return $this->startConditions()->where('company_id', $company_id)->first(['id', 'name']);
     }
