@@ -46,7 +46,7 @@ class MerchantRepository extends AbstractRepository
      * @param string $name
      * @return bool
      */
-    public function checkToNameExistsNotThisId(int $id, string $name): bool
+    public function checkToNameExistsByIgnoringId(int $id, string $name): bool
     {
         return $this->startConditions()->where('name', $name)
             ->where('id', '!=', $id)->exists();
@@ -57,7 +57,7 @@ class MerchantRepository extends AbstractRepository
      * @param string $token
      * @return bool
      */
-    public function checkToTokenExistsNotThisId(int $id, string $token): bool
+    public function checkToTokenExistsByIgnoringId(int $id, string $token): bool
     {
         return $this->startConditions()->where('token', $token)
             ->where('id', '!=', $id)->exists();

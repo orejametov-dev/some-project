@@ -24,11 +24,11 @@ class UpdateMerchantUseCase
      */
     public function execute(int $id, UpdateMerchantDTO $updateMerchantDTO): Merchant
     {
-        if ($this->merchantRepository->checkToNameExistsNotThisId($id, $updateMerchantDTO->getName())) {
+        if ($this->merchantRepository->checkToNameExistsByIgnoringId($id, $updateMerchantDTO->getName())) {
             throw new BusinessException('Мерчант с таким названием уже существует');
         }
         // check unique token
-        if ($this->merchantRepository->checkToTokenExistsNotThisId($id, $updateMerchantDTO->getToken())) {
+        if ($this->merchantRepository->checkToTokenExistsByIgnoringId($id, $updateMerchantDTO->getToken())) {
             throw new BusinessException('Мерчант с таким токеном уже существует');
         }
 
