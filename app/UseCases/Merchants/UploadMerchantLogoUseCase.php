@@ -6,11 +6,13 @@ namespace App\UseCases\Merchants;
 
 use App\HttpRepositories\Storage\StorageHttpRepository;
 use App\Models\Merchant;
+use App\Repositories\MerchantRepository;
 use Illuminate\Http\UploadedFile;
 
 class UploadMerchantLogoUseCase
 {
     public function __construct(
+        private MerchantRepository $merchantRepository,
         private FindMerchantByIdUseCase $findMerchantByIdUseCase,
         private StorageHttpRepository $storageHttpRepository
     ) {
@@ -26,7 +28,7 @@ class UploadMerchantLogoUseCase
         $storage_file = $this->storageHttpRepository->uploadFile($uploaded_file, 'merchants');
 
         $merchant->logo_url = $storage_file->getUrl();
-        $merchant->save();
+        $this->merchantRepository->save($merchant);
 
         return $merchant;
     }
