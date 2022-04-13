@@ -5,10 +5,18 @@ declare(strict_types=1);
 namespace App\Repositories;
 
 use App\Models\Merchant;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
-class MerchantRepository extends AbstractRepository
+class MerchantRepository
 {
+    private Merchant|Builder $merchant;
+
+    public function __construct()
+    {
+        $this->merchant = Merchant::query();
+    }
+
     protected function getModelClass(): string
     {
         return Merchant::class;
@@ -20,7 +28,7 @@ class MerchantRepository extends AbstractRepository
      */
     public function findById(int $id): mixed
     {
-        return $this->startConditions()->find($id);
+        return $this->merchant->find($id);
     }
 
     /**
@@ -29,7 +37,7 @@ class MerchantRepository extends AbstractRepository
      */
     public function existsByCompanyId(int $company_id): bool
     {
-        return $this->startConditions()->where('company_id', $company_id)->exists();
+        return $this->merchant->where('company_id', $company_id)->exists();
     }
 
     /**
@@ -48,7 +56,7 @@ class MerchantRepository extends AbstractRepository
      */
     public function checkToNameExistsByIgnoringId(int $id, string $name): bool
     {
-        return $this->startConditions()->where('name', $name)
+        return $this->merchant->where('name', $name)
             ->where('id', '!=', $id)->exists();
     }
 
@@ -59,37 +67,16 @@ class MerchantRepository extends AbstractRepository
      */
     public function checkToTokenExistsByIgnoringId(int $id, string $token): bool
     {
-        return $this->startConditions()->where('token', $token)
+        return $this->merchant->where('token', $token)
             ->where('id', '!=', $id)->exists();
     }
 
     /**
      * @param int $company_id
-     * @return Model|null
+     * @return Merchant|Model|null
      */
-    public function getMerchantByCompanyId(int $company_id): ?Model
+    public function getMerchantByCompanyId(int $company_id): Merchant|Model|null
     {
-        return $this->startConditions()->where('company_id', $company_id)->first(['id', 'name']);
+        return $this->merchant->where('company_id', $company_id)->first(['id', 'name']);
     }
-
-//    /**
-//     * @param Request $request
-//     * @param array $relations
-//     * @param array $filter
-//     * @return mixed
-//     */
-//    public function index(Request $request, array $relations = [], array $filter = [], $all = false): mixed
-//    {
-//        $merchants = $this
-//            ->startConditions()
-//            ->with($relations)
-//            ->filter($request, $filter)
-//            ->orderRequest($request)
-//            ->paginate($request->query('per_page') ?? 15);
-//    }
-//
-//    public function filter(Builder $builder, Request $request, $filters = []): Builder
-//    {
-//        return (new MerchantFilters($request, $builder))->execute($filters);
-//    }
 }
