@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\ApiOnlineGateway\Merchants;
 
 use App\Filters\CommonFilters\TagsFilter;
+use App\Filters\Merchant\IntegrationFilter;
 use App\Filters\Merchant\QMerchantFilter;
 use App\Filters\Merchant\RegionMerchantFilter;
 use App\Http\Controllers\Controller;
@@ -29,6 +30,7 @@ class MerchantsController extends Controller
                 QMerchantFilter::class,
                 RegionMerchantFilter::class,
                 TagsFilter::class,
+                IntegrationFilter::class,
             ])
             ->orderByDesc('recommend')
             ->orderByDesc('current_sales');
