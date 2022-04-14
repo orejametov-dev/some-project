@@ -26,7 +26,7 @@ class StoreAdditionalAgreementUseCase
             throw new BusinessException('Нет основного договора');
         }
 
-        if ($additionalAgreementDTO->getDocumentType() === AdditionalAgreementDocumentTypeEnum::LIMIT() && $additionalAgreementDTO->getLimit() === null) {
+        if ($additionalAgreementDTO->getDocumentType()->equals(AdditionalAgreementDocumentTypeEnum::LIMIT()) && $additionalAgreementDTO->getLimit() === null) {
             throw new BusinessException('Лимит должен быть передан', 'params_not_exists', 400);
         }
 
