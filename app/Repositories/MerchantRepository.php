@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
+use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\Models\Merchant;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 class MerchantRepository
@@ -47,6 +49,31 @@ class MerchantRepository
     public function save(Merchant $merchant): void
     {
         $merchant->save();
+    }
+
+    /**
+     * @param Merchant $merchant
+     * @param Collection $tags
+     * @return void
+     */
+    public function syncTags(Merchant $merchant, Collection $tags): void
+    {
+        $merchant->tags()->sync($tags);
+    }
+
+    /**
+     * @param Merchant $merchant
+     * @param int $activity_reason_id
+     * @param GatewayAuthUser $gatewayAuthUser
+     * @return void
+     */
+    public function attachActivityReason(Merchant $merchant, int $activity_reason_id, GatewayAuthUser $gatewayAuthUser): void
+    {
+        $merchant->activity_reasons()->attach($activity_reason_id, [
+            'active' => $merchant->active,
+            'created_by_id' => $gatewayAuthUser->getId(),
+            'created_by_name' => $gatewayAuthUser->getName(),
+        ]);
     }
 
     /**
