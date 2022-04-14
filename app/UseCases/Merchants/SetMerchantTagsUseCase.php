@@ -7,11 +7,15 @@ namespace App\UseCases\Merchants;
 use App\Exceptions\BusinessException;
 use App\Models\Merchant;
 use App\Models\Tag;
+use App\Repositories\MerchantRepository;
+use App\Repositories\TagMerchantRepository;
 
 class SetMerchantTagsUseCase
 {
     public function __construct(
-        private FindMerchantByIdUseCase $findMerchantByIdUseCase
+        private FindMerchantByIdUseCase $findMerchantByIdUseCase,
+        private TagMerchantRepository $tagMerchantRepository,
+        private MerchantRepository $merchantRepository,
     ) {
     }
 
@@ -19,7 +23,8 @@ class SetMerchantTagsUseCase
     {
         $merchant = $this->findMerchantByIdUseCase->execute($id);
 
-        $tags = Tag::query()->whereIn('id', $tag_ids)->get();
+        $tags = $this->tagMerchantRepository->getByIds($tag_ids);
+
         // TODO validate tag_ids exist
 //
 //        foreach ($tag_ids as $tag) {
@@ -27,8 +32,7 @@ class SetMerchantTagsUseCase
 //                throw new BusinessException('Указан не правильный тег');
 //            }
 //        }
-
-        $merchant->tags()->sync($tags);
+        $this->merchantRepository->syncTags($merchant, $tags);
 
         return $merchant;
     }

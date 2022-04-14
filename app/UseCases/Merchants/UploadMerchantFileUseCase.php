@@ -6,13 +6,15 @@ namespace App\UseCases\Merchants;
 
 use App\HttpRepositories\Storage\StorageHttpRepository;
 use App\Models\File;
+use App\Repositories\FileRepository;
 use Illuminate\Http\UploadedFile;
 
 class UploadMerchantFileUseCase
 {
     public function __construct(
         private FindMerchantByIdUseCase $findMerchantByIdUseCase,
-        private StorageHttpRepository $storageHttpRepository
+        private StorageHttpRepository $storageHttpRepository,
+        private FileRepository $fileRepository,
     ) {
     }
 
@@ -27,7 +29,7 @@ class UploadMerchantFileUseCase
         $merchant_file->size = $storage_file->getSize();
         $merchant_file->url = $storage_file->getUrl();
         $merchant_file->merchant_id = $merchant->id;
-        $merchant_file->save();
+        $this->fileRepository->save($merchant_file);
 
         return $merchant_file;
     }

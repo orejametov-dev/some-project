@@ -3,6 +3,7 @@
 namespace App\UseCases\Merchants;
 
 use App\Models\Merchant;
+use App\Repositories\MerchantRepository;
 use App\UseCases\Cache\FlushCacheUseCase;
 
 class ToggleIntegrationUseCase
@@ -10,6 +11,7 @@ class ToggleIntegrationUseCase
     public function __construct(
         private FindMerchantByIdUseCase $findMerchantByIdUseCase,
         private FlushCacheUseCase $flushCacheUseCase,
+        private MerchantRepository $merchantRepository
     ) {
     }
 
@@ -17,7 +19,7 @@ class ToggleIntegrationUseCase
     {
         $merchant = $this->findMerchantByIdUseCase->execute($id);
         $merchant->integration = !$merchant->integration;
-        $merchant->save();
+        $this->merchantRepository->save($merchant);
 
         $this->flushCacheUseCase->execute($merchant->id);
 
