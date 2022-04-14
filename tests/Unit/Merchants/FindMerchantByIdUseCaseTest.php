@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Merchants;
 
 use App\Exceptions\NotFoundException;
 use App\Models\Merchant;
@@ -42,6 +42,6 @@ class FindMerchantByIdUseCaseTest extends TestCase
         $this->merchantRepository->method('findById')->willReturn($merchant);
         $response = $this->findMerchantByIdUseCase->execute(1);
 
-        static::assertEquals($merchant->id, $response->id);
+        static::assertIsObject($merchant, $response);
     }
 }
