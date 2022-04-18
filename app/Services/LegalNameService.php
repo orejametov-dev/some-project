@@ -13,7 +13,7 @@ class LegalNameService
             'body_uz' => [
                 'value' => 'MCHJ',
                 'description' => 'Masuliyati Cheklangan Jamiyat',
-           ],
+            ],
             'body_ru' => [
                 'value' => 'ООО',
                 'description' => 'Общество с Ограниченной Ответственностью',
@@ -80,6 +80,17 @@ class LegalNameService
             ],
         ],
 
+        'PC' => [
+            'body_uz' => [
+                'value' => 'IChK',
+                'description' => 'Ishlab Chiqarish Kooperativ',
+            ],
+            'body_ru' => [
+                'value' => 'ПК',
+                'description' => 'Производственный Кооператив',
+            ],
+        ],
+
     ];
 
     public static function getNamePrefixes(): array
@@ -91,7 +102,7 @@ class LegalNameService
     {
         if (!array_key_exists($prefix, self::$legal_name_prefixes)) {
             throw new ApiBusinessException("Такого юр.имени нету $prefix", 'prefix_not_have', [
-                'ru'  => 'Такого юридического лица не существует',
+                'ru' => 'Такого юридического лица не существует',
                 'uz' => 'Bunday yuridik shaxs mavjud emas',
             ], 400);
         }
