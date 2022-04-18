@@ -9,7 +9,9 @@ use App\Exceptions\BusinessException;
 use App\HttpRepositories\Core\CoreHttpRepository;
 use App\HttpRepositories\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
+use App\Repositories\ApplicationConditionRepository;
 use App\UseCases\Cache\FlushCacheUseCase;
+use App\UseCases\Merchants\FindMerchantByIdUseCase;
 
 class DeleteApplicationConditionUseCase
 {
@@ -17,7 +19,9 @@ class DeleteApplicationConditionUseCase
         private CoreHttpRepository $coreHttpRepository,
         private FindConditionByIdUseCase $findConditionUseCase,
         private FlushCacheUseCase $flushCacheUseCase,
-        private GatewayAuthUser $gatewayAuthUser
+        private GatewayAuthUser $gatewayAuthUser,
+        private ApplicationConditionRepository $applicationConditionRepository,
+        private FindMerchantByIdUseCase $findMerchantByIdUseCase,
     ) {
     }
 
@@ -30,8 +34,8 @@ class DeleteApplicationConditionUseCase
             throw new BusinessException('Условие не может быть удалено', '', 400);
         }
 
-        $merchant = $condition->merchant;
-        $condition->delete();
+        $merchant = $this->findMerchantByIdUseCase->execute($condition->merchant_id);
+        $this->applicationConditionRepository->delete($condition);
 
         SendHook::dispatch(new HookData(
             service: 'merchants',

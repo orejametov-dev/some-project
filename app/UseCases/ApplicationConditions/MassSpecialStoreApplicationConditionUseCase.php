@@ -12,8 +12,11 @@ use App\HttpRepositories\Alifshop\AlifshopHttpRepository;
 use App\HttpRepositories\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Models\Condition;
-use App\Models\Merchant;
+use App\Repositories\ApplicationConditionRepository;
+use App\Repositories\MerchantRepository;
+use App\Repositories\StoreRepository;
 use App\UseCases\Cache\FlushCacheUseCase;
+use Illuminate\Support\Collection;
 
 class MassSpecialStoreApplicationConditionUseCase
 {
@@ -21,15 +24,16 @@ class MassSpecialStoreApplicationConditionUseCase
         private AlifshopHttpRepository $alifshopHttpRepository,
         private CheckStartedAtAndFinishedAtConditionUseCase $checkStartedAtAndFinishedAtConditionUseCase,
         private FlushCacheUseCase $flushCacheUseCase,
-        private GatewayAuthUser $gatewayAuthUser
+        private GatewayAuthUser $gatewayAuthUser,
+        private ApplicationConditionRepository $applicationConditionRepository,
+        private MerchantRepository $merchantRepository,
+        private StoreRepository $storeRepository,
     ) {
     }
 
     public function execute(MassSpecialStoreConditionDTO $massSpecialStoreConditionDTO): void
     {
-        $merchants = Merchant::query()
-            ->whereIn('id', $massSpecialStoreConditionDTO->getMerchantIds())
-            ->get();
+        $merchants = $this->merchantRepository->getByIds($massSpecialStoreConditionDTO->getMerchantIds());
 
         if (array_diff($massSpecialStoreConditionDTO->getMerchantIds(), $merchants->pluck('id')->toArray()) != null) {
             throw new ApiBusinessException('Мерчант не существует', 'merchant_not_exists', [
@@ -40,7 +44,7 @@ class MassSpecialStoreApplicationConditionUseCase
         $this->checkStartedAtAndFinishedAtConditionUseCase->execute($massSpecialStoreConditionDTO->getStartedAt(), $massSpecialStoreConditionDTO->getFinishedAt());
 
         foreach ($merchants as $merchant) {
-            $main_store = $merchant->stores()->where('is_main', true)->first();
+            $main_store = $this->storeRepository->getByIdWithMerchantIdIsMain($merchant->id);
 
             if ($main_store === null) {
                 throw new BusinessException('У данного мерчанта нет основного магазина ' . $merchant->name, 'main_store_not_exists', 400);
@@ -59,7 +63,7 @@ class MassSpecialStoreApplicationConditionUseCase
             $condition->finished_at = $massSpecialStoreConditionDTO->getFinishedAt();
             $condition->active = $massSpecialStoreConditionDTO->getStartedAt() === null;
 
-            $condition->save();
+            $this->applicationConditionRepository->save($condition);
 
             SendHook::dispatch(new HookData(
                 service: 'merchants',
@@ -75,20 +79,19 @@ class MassSpecialStoreApplicationConditionUseCase
                 created_by_str: $this->gatewayAuthUser->getName(),
             ));
 
-            $merchant->load(['application_conditions' => function ($q) {
-                $q->active();
-            }]);
+            $conditions = $this->applicationConditionRepository->getByActiveTruePostAlifshopTrueWithMerchantId($merchant->id);
 
-            $conditions = $merchant->application_conditions->where('post_alifshop', true)->map(function ($item) {
-                return [
-                    'id' => $item->id,
-                    'commission' => $item->commission,
-                    'duration' => $item->duration,
-                    'event_id' => $item->event_id,
+            $item = [];
+            foreach ($conditions as $condition) {
+                $item[] = [
+                    'id' => $condition->id,
+                    'commission' => $condition->commission,
+                    'duration' => $condition->duration,
+                    'event_id' => $condition->event_id,
                 ];
-            });
+            }
 
-            $this->alifshopHttpRepository->storeOrUpdateConditions((int) $merchant->company_id, $conditions);
+            $this->alifshopHttpRepository->storeOrUpdateConditions($merchant->company_id, Collection::make($item));
             $this->flushCacheUseCase->execute($merchant->id);
         }
     }
