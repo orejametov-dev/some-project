@@ -34,6 +34,16 @@ class MerchantRepository
     }
 
     /**
+     * @param array $merchant_ids
+     * @return Merchant[]|Collection
+     */
+    public function getByIds(array $merchant_ids): Merchant|Collection
+    {
+        return $this->merchant->whereIn('id', $merchant_ids)
+            ->get();
+    }
+
+    /**
      * @param int $company_id
      * @return bool
      */
