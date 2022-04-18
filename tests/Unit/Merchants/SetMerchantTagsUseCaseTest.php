@@ -9,7 +9,7 @@ use App\Repositories\TagMerchantRepository;
 use App\UseCases\Merchants\FindMerchantByIdUseCase;
 use App\UseCases\Merchants\SetMerchantTagsUseCase;
 use Illuminate\Database\Eloquent\Collection;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class SetMerchantTagsUseCaseTest extends TestCase
 {
@@ -27,6 +27,8 @@ class SetMerchantTagsUseCaseTest extends TestCase
             tagMerchantRepository: $this->tagMerchantRepository,
             merchantRepository: $merchantRepository
         );
+
+        parent::setUp();
     }
 
     public function testSuccess()

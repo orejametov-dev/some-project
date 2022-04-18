@@ -24,6 +24,8 @@ class SetMerchantMainStoreUseCaseTest extends TestCase
             findMerchantUseCase: $this->findMerchantByIdUseCase,
             storeRepository: $this->storeRepository
         );
+
+        parent::setUp();
     }
 
     public function testNotFoundStore()

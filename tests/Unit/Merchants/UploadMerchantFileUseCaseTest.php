@@ -9,7 +9,7 @@ use App\Repositories\FileRepository;
 use App\UseCases\Merchants\FindMerchantByIdUseCase;
 use App\UseCases\Merchants\UploadMerchantFileUseCase;
 use Illuminate\Http\UploadedFile;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class UploadMerchantFileUseCaseTest extends TestCase
 {
@@ -27,6 +27,8 @@ class UploadMerchantFileUseCaseTest extends TestCase
             storageHttpRepository: $this->storageHttpRepository,
             fileRepository: $fileRepository,
         );
+
+        parent::setUp();
     }
 
     public function testSuccess()

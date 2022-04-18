@@ -9,7 +9,7 @@ use App\Repositories\MerchantRepository;
 use App\UseCases\Cache\FlushCacheUseCase;
 use App\UseCases\Merchants\FindMerchantByIdUseCase;
 use App\UseCases\Merchants\UpdateMerchantUseCase;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class UpdateMerchantUseCaseTest extends TestCase
 {
@@ -27,6 +27,8 @@ class UpdateMerchantUseCaseTest extends TestCase
             flushCacheUseCase: $flushCacheUseCase,
             findMerchantUseCase: $this->findMerchantUseCase,
         );
+
+        parent::setUp();
     }
 
     public function testMerchantNameExists()
