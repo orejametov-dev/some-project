@@ -27,6 +27,7 @@ class MerchantFilters extends AbstractFilters
         SpecialMerchantIdFilter::class,
         ActivityReasonIdFilter::class,
         IntegrationFilter::class,
+        RecommendFilter::class,
     ];
 
     protected function getRequestBindings(): array

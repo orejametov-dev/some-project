@@ -7,6 +7,7 @@ namespace App\Http\Controllers\ApiOnlineGateway\Merchants;
 use App\Filters\CommonFilters\TagsFilter;
 use App\Filters\Merchant\IntegrationFilter;
 use App\Filters\Merchant\QMerchantFilter;
+use App\Filters\Merchant\RecommendFilter;
 use App\Filters\Merchant\RegionMerchantFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiOnlineGateway\MerchantResource;
@@ -31,11 +32,12 @@ class MerchantsController extends Controller
                 RegionMerchantFilter::class,
                 TagsFilter::class,
                 IntegrationFilter::class,
+                RecommendFilter::class,
             ])
             ->orderByDesc('recommend')
             ->orderByDesc('current_sales');
 
-        return MerchantResource::collection($query->paginate($request->query('per_page') ?? 15));
+        return MerchantResource::collection($query->paginate($request->query('per_page') ?? 30));
     }
 
     public function show(int $id): MerchantResource
