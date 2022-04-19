@@ -8,7 +8,9 @@ use Alifuz\Utils\Gateway\Entities\Auth\GatewayAuthUser;
 use App\Exceptions\NotFoundException;
 use App\HttpRepositories\Prm\CompanyHttpRepository;
 use App\Models\Merchant;
+use App\Models\MerchantActivity;
 use App\Repositories\ActivityReasonRepository;
+use App\Repositories\MerchantActivityRepository;
 use App\Repositories\MerchantRepository;
 use App\UseCases\Cache\FlushCacheUseCase;
 
@@ -21,6 +23,7 @@ class ToggleMerchantActivityReasonUseCase
         private GatewayAuthUser $gatewayAuthUser,
         private MerchantRepository $merchantRepository,
         private ActivityReasonRepository $activityReasonRepository,
+        private MerchantActivityRepository $merchantActivityRepository,
     ) {
     }
 
@@ -36,7 +39,13 @@ class ToggleMerchantActivityReasonUseCase
         $merchant->active = !$merchant->active;
         $this->merchantRepository->save($merchant);
 
-        $this->merchantRepository->attachActivityReason($merchant, $activity_reason->id, $this->gatewayAuthUser);
+        $merchantActivity = new MerchantActivity();
+        $merchantActivity->merchant_id = $merchant->id;
+        $merchantActivity->activity_reason_id = $activity_reason->id;
+        $merchantActivity->active = $merchant->active;
+        $merchantActivity->created_by_id = $this->gatewayAuthUser->getId();
+        $merchantActivity->created_by_name = $this->gatewayAuthUser->getName();
+        $this->merchantActivityRepository->save($merchantActivity);
 
         $this->companyHttpRepository->setStatusNotActive($merchant->company_id);
 

@@ -8,6 +8,7 @@ use App\HttpRepositories\Prm\CompanyHttpRepository;
 use App\Models\ActivityReason;
 use App\Models\Merchant;
 use App\Repositories\ActivityReasonRepository;
+use App\Repositories\MerchantActivityRepository;
 use App\Repositories\MerchantRepository;
 use App\UseCases\Cache\FlushCacheUseCase;
 use App\UseCases\Merchants\FindMerchantByIdUseCase;
@@ -28,6 +29,7 @@ class ToggleMerchantActivityReasonUseCaseTest extends TestCase
         $gatewayAuthUser = $this->createMock(GatewayAuthUser::class);
         $merchantRepository = $this->createMock(MerchantRepository::class);
         $this->activityReasonRepository = $this->createMock(ActivityReasonRepository::class);
+        $merchantActivityRepository = $this->createMock(MerchantActivityRepository::class);
         $this->toggleMerchantActivityReasonUseCase = new ToggleMerchantActivityReasonUseCase(
             flushCacheUseCase: $flushCacheUseCase,
             companyHttpRepository: $companyHttpRepository,
@@ -35,6 +37,7 @@ class ToggleMerchantActivityReasonUseCaseTest extends TestCase
             gatewayAuthUser: $gatewayAuthUser,
             merchantRepository: $merchantRepository,
             activityReasonRepository: $this->activityReasonRepository,
+            merchantActivityRepository: $merchantActivityRepository,
         );
     }
 
