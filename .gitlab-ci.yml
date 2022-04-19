@@ -5,7 +5,7 @@ stages:
   - test
 
 variables:
-  PHP_IMAGE: $CI_REGISTRY/images/php:8.0-fpm-infra
+  PHP_IMAGE: $CI_REGISTRY/images/php:8.0-fpm-alpine-slim
 
 workflow:
   rules:
