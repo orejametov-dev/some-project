@@ -17,9 +17,36 @@ class StoreRepository
         $this->store = Store::query();
     }
 
-    public function store(Store $store): void
+    public function save(Store $store): void
     {
         $store->save();
+    }
+
+    /**
+     * @param int $id
+     * @return Store|Collection|null
+     */
+    public function getById(int $id): Store|Collection|null
+    {
+        return $this->store->find($id);
+    }
+
+    /**
+     * @param string $name
+     * @return bool
+     */
+    public function checkToNameExists(string $name): bool
+    {
+        return $this->store->where('name', $name)->exists();
+    }
+
+    /**
+     * @param int $merchant_id
+     * @return int
+     */
+    public function checkForTheCountByMerchantId(int $merchant_id): int
+    {
+        return $this->store->where('merchant_id', $merchant_id)->count();
     }
 
     /**
