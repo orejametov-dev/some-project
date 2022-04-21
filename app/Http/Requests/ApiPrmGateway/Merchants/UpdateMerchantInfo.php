@@ -36,7 +36,7 @@ class UpdateMerchantInfo extends FormRequest
             'bank_account' => 'required|digits:20',
             'bank_name' => 'required|max:255',
             'contract_date' => 'required|date_format:Y-m-d',
-            'contract_number' => 'required|integer'
+            'contract_number' => 'required|integer',
         ];
     }
 }
