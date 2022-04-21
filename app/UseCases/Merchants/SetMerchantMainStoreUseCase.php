@@ -27,7 +27,7 @@ class SetMerchantMainStoreUseCase
         }
 
         $store->is_main = true;
-        $this->storeRepository->store($store);
+        $this->storeRepository->save($store);
 
         $this->storeRepository->updateIsMainToFalseAnotherStore($merchant->id, $store_id);
 
