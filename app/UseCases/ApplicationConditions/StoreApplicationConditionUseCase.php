@@ -10,7 +10,10 @@ use App\Exceptions\BusinessException;
 use App\HttpRepositories\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Models\Condition;
-use App\Models\Store;
+use App\Models\SpecialStoreCondition;
+use App\Repositories\ApplicationConditionRepository;
+use App\Repositories\SpecialStoreConditionRepository;
+use App\Repositories\StoreRepository;
 use App\UseCases\Cache\FlushCacheUseCase;
 use App\UseCases\Merchants\FindMerchantByIdUseCase;
 
@@ -20,22 +23,22 @@ class StoreApplicationConditionUseCase
         private CheckStartedAtAndFinishedAtConditionUseCase $checkStartedAtAndFinishedAtConditionUseCase,
         private FindMerchantByIdUseCase $findMerchantUseCase,
         private FlushCacheUseCase $flushCacheUseCase,
-        private GatewayAuthUser $gatewayAuthUser
+        private GatewayAuthUser $gatewayAuthUser,
+        private StoreRepository $storeRepository,
+        private ApplicationConditionRepository $applicationConditionRepository,
+        private SpecialStoreConditionRepository $specialStoreConditionRepository,
     ) {
     }
 
-    public function execute(StoreConditionDTO $conditionDTO) : Condition
+    public function execute(StoreConditionDTO $conditionDTO): Condition
     {
         $merchant = $this->findMerchantUseCase->execute($conditionDTO->getMerchantId());
 
         $store_ids = $conditionDTO->getStoreIds();
 
-        $merchant_stores = Store::query()
-            ->where('merchant_id', $merchant->id)
-            ->where('active', true)
-            ->get();
+        $merchant_stores = $this->storeRepository->getByActiveTrueMerchantId($merchant->id);
 
-        $main_store = $merchant_stores->where('is_main', true)->first();
+        $main_store = $this->storeRepository->getByIsMainTrueMerchantId($merchant->id);
 
         if (array_diff($store_ids, $merchant_stores->whereIn('id', $store_ids)->pluck('id')->toArray()) != null) {
             throw new BusinessException('Указан не правильно магазин', 'wrong_store', 400);
@@ -66,10 +69,15 @@ class StoreApplicationConditionUseCase
         $condition->finished_at = $conditionDTO->getFinishedAt();
         $condition->active = $conditionDTO->getStartedAt() === null;
 
-        $condition->save();
+        $this->applicationConditionRepository->save($condition);
 
         if ($store_ids) {
-            $condition->stores()->attach($store_ids);
+            foreach ($store_ids as $store_id) {
+                $special_store_condition = new SpecialStoreCondition();
+                $special_store_condition->store_id = $store_id;
+                $special_store_condition->condition_id = $condition->id;
+                $this->specialStoreConditionRepository->save($special_store_condition);
+            }
         }
 
         SendHook::dispatch(new HookData(
@@ -88,6 +96,6 @@ class StoreApplicationConditionUseCase
 
         $this->flushCacheUseCase->execute($merchant->id);
 
-        return $condition->load('stores');
+        return $condition;
     }
 }

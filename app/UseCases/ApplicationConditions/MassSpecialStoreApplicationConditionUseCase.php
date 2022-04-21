@@ -44,7 +44,7 @@ class MassSpecialStoreApplicationConditionUseCase
         $this->checkStartedAtAndFinishedAtConditionUseCase->execute($massSpecialStoreConditionDTO->getStartedAt(), $massSpecialStoreConditionDTO->getFinishedAt());
 
         foreach ($merchants as $merchant) {
-            $main_store = $this->storeRepository->getByIdWithMerchantIdIsMain($merchant->id);
+            $main_store = $this->storeRepository->getByIsMainTrueMerchantId($merchant->id);
 
             if ($main_store === null) {
                 throw new BusinessException('У данного мерчанта нет основного магазина ' . $merchant->name, 'main_store_not_exists', 400);

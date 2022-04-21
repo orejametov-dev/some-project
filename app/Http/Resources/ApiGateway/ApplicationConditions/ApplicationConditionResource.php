@@ -31,7 +31,6 @@ class ApplicationConditionResource extends JsonResource
             'updated_at' => $this->resource->updated_at,
             'post_merchant' => $this->resource->post_merchant,
             'post_alifshop' => $this->resource->post_alifshop,
-            'stores' => $this->whenLoaded('stores'),
-        ];
+            ];
     }
 }
