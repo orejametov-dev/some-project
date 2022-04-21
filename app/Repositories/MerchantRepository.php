@@ -19,16 +19,11 @@ class MerchantRepository
         $this->merchant = Merchant::query();
     }
 
-    protected function getModelClass(): string
-    {
-        return Merchant::class;
-    }
-
     /**
      * @param int $id
-     * @return mixed
+     * @return Merchant|Collection|null
      */
-    public function findById(int $id): mixed
+    public function findById(int $id): Merchant|Collection|null
     {
         return $this->merchant->find($id);
     }
