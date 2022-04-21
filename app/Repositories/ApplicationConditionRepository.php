@@ -56,4 +56,18 @@ class ApplicationConditionRepository
             ->where('post_alifshop', '=', true)
             ->get();
     }
+
+    /**
+     * @param int $merchant_id
+     * @param int $duration
+     * @param int $commission
+     * @return bool
+     */
+    public function getByDurationAndCommissionWithMerchantIdExists(int $merchant_id, int $duration, int $commission): bool
+    {
+        return $this->condition->where('merchant_id', $merchant_id)
+            ->where('duration', $duration)
+            ->where('commission', $commission)
+            ->exists();
+    }
 }
