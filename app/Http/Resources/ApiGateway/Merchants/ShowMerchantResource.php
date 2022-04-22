@@ -25,6 +25,7 @@ class ShowMerchantResource extends MerchantResource
             'holding_initial_payment' => $this->resource->holding_initial_payment,
             'integration' => $this->resource->integration,
             'logo_path' => $this->resource->logo_path,
+            'recommend' =>$this->resource->recommend,
             'stores' => $this->whenLoaded('stores'),
             'tags' => $this->whenLoaded('tags'),
             'activity_reasons' => $this->whenLoaded('activity_reasons'),
