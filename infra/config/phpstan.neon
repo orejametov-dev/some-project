@@ -9,7 +9,6 @@ parameters:
         - /app/config
         - /app/database
         - /app/routes
-        - /app/tests
 
     level: 6
 

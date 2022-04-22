@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace App\UseCases\Merchants;
 
 use App\Models\Merchant;
-use Illuminate\Support\Facades\Cache;
+use App\Repositories\MerchantRepository;
+use App\UseCases\Cache\FlushCacheUseCase;
 
 class ToggleMerchantRecommendUseCase
 {
     public function __construct(
         private FindMerchantByIdUseCase $findMerchantByIdUseCase,
+        private FlushCacheUseCase $flushCacheUseCase,
+        private MerchantRepository $merchantRepository
     ) {
     }
 
@@ -18,10 +21,9 @@ class ToggleMerchantRecommendUseCase
     {
         $merchant = $this->findMerchantByIdUseCase->execute($id);
         $merchant->recommend = !$merchant->recommend;
-        $merchant->save();
+        $this->merchantRepository->save($merchant);
 
-        Cache::tags($merchant->id)->flush();
-        Cache::tags('azo_merchants')->flush();
+        $this->flushCacheUseCase->execute($merchant->id);
 
         return $merchant;
     }

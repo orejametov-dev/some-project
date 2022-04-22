@@ -6,13 +6,16 @@ namespace App\UseCases\Merchants;
 
 use App\HttpRepositories\Warehouse\WarehouseHttpRepository;
 use App\Models\Merchant;
-use Illuminate\Support\Facades\Cache;
+use App\Repositories\MerchantRepository;
+use App\UseCases\Cache\FlushCacheUseCase;
 
 class ToggleMerchantGeneralGoodsUseCase
 {
     public function __construct(
         private FindMerchantByIdUseCase $findMerchantByIdUseCase,
-        private WarehouseHttpRepository $warehouseHttpRepository
+        private WarehouseHttpRepository $warehouseHttpRepository,
+        private MerchantRepository $merchantRepository,
+        private FlushCacheUseCase $flushCacheUseCase,
     ) {
     }
 
@@ -22,11 +25,9 @@ class ToggleMerchantGeneralGoodsUseCase
         $this->warehouseHttpRepository->checkDuplicateSKUs($merchant->id);
 
         $merchant->has_general_goods = !$merchant->has_general_goods;
-        $merchant->save();
+        $this->merchantRepository->save($merchant);
 
-        Cache::tags($merchant->id)->flush();
-        Cache::tags('azo_merchants')->flush();
-        Cache::tags('company')->flush();
+        $this->flushCacheUseCase->execute($merchant->id);
 
         return $merchant;
     }

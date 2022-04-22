@@ -7,11 +7,13 @@ namespace App\UseCases\Merchants;
 use App\Exceptions\NotFoundException;
 use App\HttpRepositories\Auth\AuthHttpRepository;
 use App\Models\Merchant;
+use App\Repositories\MerchantRepository;
 
 class SetResponsibleUserUseCase
 {
     public function __construct(
         private AuthHttpRepository $authHttpRepository,
+        private MerchantRepository $merchantRepository,
         private FindMerchantByIdUseCase $findMerchantUseCase
     ) {
     }
@@ -25,7 +27,7 @@ class SetResponsibleUserUseCase
         $merchant = $this->findMerchantUseCase->execute($merchant_id);
         $merchant->maintainer_id = $maintainer_id;
 
-        $merchant->save();
+        $this->merchantRepository->save($merchant);
 
         return $merchant;
     }

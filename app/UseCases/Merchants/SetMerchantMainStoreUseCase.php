@@ -6,12 +6,13 @@ namespace App\UseCases\Merchants;
 
 use App\Exceptions\NotFoundException;
 use App\Models\Merchant;
-use App\Models\Store;
+use App\Repositories\StoreRepository;
 
 class SetMerchantMainStoreUseCase
 {
     public function __construct(
-        private FindMerchantByIdUseCase $findMerchantUseCase
+        private FindMerchantByIdUseCase $findMerchantUseCase,
+        private StoreRepository $storeRepository
     ) {
     }
 
@@ -19,18 +20,16 @@ class SetMerchantMainStoreUseCase
     {
         $merchant = $this->findMerchantUseCase->execute($merchant_id);
 
-        $store = Store::query()->where('merchant_id', $merchant->id)->find($store_id);
+        $store = $this->storeRepository->getByIdWihMerchantId($merchant->id, $store_id);
 
         if ($store === null) {
             throw new NotFoundException('Магазин не найден');
         }
 
         $store->is_main = true;
-        $store->save();
+        $this->storeRepository->store($store);
 
-        Store::query()->where('merchant_id', $merchant->id)->where('id', '<>', $store_id)->update([
-            'is_main' => false,
-        ]);
+        $this->storeRepository->setMainForSpecificStoreByIgnoringOtherStores($merchant->id, $store_id);
 
         return $merchant;
     }
