@@ -20,7 +20,7 @@ class DeleteMerchantLogoUseCase
     {
         $merchant = $this->findMerchantByIdUseCase->execute($id);
 
-        if ($merchant->logo_url == 0) {
+        if ($merchant->logo_url === null) {
             return;
         }
         $this->storageHttpRepository->destroy($merchant->logo_url);

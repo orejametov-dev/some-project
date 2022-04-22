@@ -18,11 +18,6 @@ class MerchantRepository
         $this->merchant = Merchant::query();
     }
 
-    protected function getModelClass(): string
-    {
-        return Merchant::class;
-    }
-
     /**
      * @param int $id
      * @return mixed
