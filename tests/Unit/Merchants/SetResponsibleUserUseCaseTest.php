@@ -8,7 +8,7 @@ use App\Models\Merchant;
 use App\Repositories\MerchantRepository;
 use App\UseCases\Merchants\FindMerchantByIdUseCase;
 use App\UseCases\Merchants\SetResponsibleUserUseCase;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class SetResponsibleUserUseCaseTest extends TestCase
 {
@@ -26,6 +26,8 @@ class SetResponsibleUserUseCaseTest extends TestCase
             merchantRepository: $merchantRepository,
             findMerchantUseCase: $this->findMerchantByIdUseCase
         );
+
+        parent::setUp();
     }
 
     public function testNotFoundUser()

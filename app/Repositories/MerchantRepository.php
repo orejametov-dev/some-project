@@ -20,11 +20,21 @@ class MerchantRepository
 
     /**
      * @param int $id
-     * @return mixed
+     * @return Merchant|Collection|null
      */
-    public function findById(int $id): mixed
+    public function findById(int $id): Merchant|Collection|null
     {
         return $this->merchant->find($id);
+    }
+
+    /**
+     * @param array $merchant_ids
+     * @return Merchant[]|Collection
+     */
+    public function getByIds(array $merchant_ids): Merchant|Collection
+    {
+        return $this->merchant->whereIn('id', $merchant_ids)
+            ->get();
     }
 
     /**

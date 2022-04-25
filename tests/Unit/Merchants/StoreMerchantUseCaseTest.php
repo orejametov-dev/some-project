@@ -9,7 +9,7 @@ use App\HttpRepositories\Prm\CompanyHttpRepository;
 use App\Repositories\MerchantRepository;
 use App\UseCases\Cache\FlushCacheUseCase;
 use App\UseCases\Merchants\StoreMerchantUseCase;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class StoreMerchantUseCaseTest extends TestCase
 {
@@ -29,6 +29,8 @@ class StoreMerchantUseCaseTest extends TestCase
             flushCacheUseCase: $flushCacheUseCase,
             gatewayAuthUser: $gatewayAuthUser
         );
+
+        parent::setUp();
     }
 
     public function testModuleAzoExists()

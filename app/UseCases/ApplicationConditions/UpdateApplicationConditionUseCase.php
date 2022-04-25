@@ -11,22 +11,30 @@ use App\HttpRepositories\Core\CoreHttpRepository;
 use App\HttpRepositories\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Models\Condition;
-use App\Models\Store;
+use App\Models\SpecialStoreCondition;
+use App\Repositories\ApplicationConditionRepository;
+use App\Repositories\SpecialStoreConditionRepository;
+use App\Repositories\StoreRepository;
 use App\UseCases\Cache\FlushCacheUseCase;
+use App\UseCases\Merchants\FindMerchantByIdUseCase;
 
 class UpdateApplicationConditionUseCase
 {
     public function __construct(
         private CoreHttpRepository $coreHttpRepository,
-        private FindConditionByIdUseCase $findConditionUseCase,
+        private FindConditionByIdUseCase $findConditionByIdUseCase,
         private FlushCacheUseCase $flushCacheUseCase,
-        private GatewayAuthUser $gatewayAuthUser
+        private GatewayAuthUser $gatewayAuthUser,
+        private StoreRepository $storeRepository,
+        private SpecialStoreConditionRepository $specialStoreConditionRepository,
+        private ApplicationConditionRepository $applicationConditionRepository,
+        private FindMerchantByIdUseCase $findMerchantByIdUseCase,
     ) {
     }
 
     public function execute(int $id, UpdateConditionDTO $updateConditionDTO) : Condition
     {
-        $condition = $this->findConditionUseCase->execute($id);
+        $condition = $this->findConditionByIdUseCase->execute($id);
 
         if ($this->coreHttpRepository->checkApplicationToExistByConditionId($id)
             && $condition->commission !== $updateConditionDTO->getCommission()
@@ -36,20 +44,18 @@ class UpdateApplicationConditionUseCase
             throw new BusinessException('Условие не может быть изменено', 'not_allowed', 400);
         }
 
-        $merchant = $condition->merchant;
+        $merchant = $this->findMerchantByIdUseCase->execute($condition->merchant_id);
 
         $store_ids = $updateConditionDTO->getStoreIds();
 
-        $merchant_stores = Store::query()
-            ->where('merchant_id', $merchant->id)
-            ->where('active', true)
-            ->get();
+        $merchant_stores = $this->storeRepository->getByActiveTrueMerchantId($merchant->id);
 
+        //dd($merchant_stores->whereIn('id', $store_ids)->pluck('id')->toArray(), $store_ids);
         if (array_diff($store_ids, $merchant_stores->whereIn('id', $store_ids)->pluck('id')->toArray()) != null) {
             throw new BusinessException('Указан не правильно магазин', 'wrong_store', 400);
         }
 
-        $main_store = $merchant_stores->where('is_main', true)->first();
+        $main_store = $this->storeRepository->getByIsMainTrueMerchantId($merchant->id);
 
         if ($main_store === null) {
             throw new BusinessException('У данного мерчанта нет основного магазина ' . $merchant->name, 'main_store_not_exists', 400);
@@ -59,8 +65,18 @@ class UpdateApplicationConditionUseCase
             $store_ids[] = $main_store->id;
         }
 
-        $condition->stores()->detach();
-        $condition->stores()->attach($store_ids);
+        // TODO fix need replace attach and detach
+        $special_store_conditions = $this->specialStoreConditionRepository->getByConditionId($condition->id);
+        foreach ($special_store_conditions as $special_store_condition) {
+            $this->specialStoreConditionRepository->delete($special_store_condition);
+        }
+
+        foreach ($store_ids as $store_id) {
+            $special_store_condition = new SpecialStoreCondition();
+            $special_store_condition->store_id = $store_id;
+            $special_store_condition->condition_id = $condition->id;
+            $this->specialStoreConditionRepository->save($special_store_condition);
+        }
 
         $condition->duration = $updateConditionDTO->getDuration();
         $condition->commission = $updateConditionDTO->getCommission();
@@ -69,7 +85,7 @@ class UpdateApplicationConditionUseCase
         $condition->special_offer = $updateConditionDTO->getSpecialOffer();
         $condition->event_id = $updateConditionDTO->getEventId();
 
-        $condition->save();
+        $this->applicationConditionRepository->save($condition);
 
         SendHook::dispatch(new HookData(
             service: 'merchants',

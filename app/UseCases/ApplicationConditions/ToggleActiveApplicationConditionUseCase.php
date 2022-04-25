@@ -9,7 +9,10 @@ use App\HttpRepositories\Alifshop\AlifshopHttpRepository;
 use App\HttpRepositories\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Models\Condition;
+use App\Repositories\ApplicationConditionRepository;
 use App\UseCases\Cache\FlushCacheUseCase;
+use App\UseCases\Merchants\FindMerchantByIdUseCase;
+use Illuminate\Support\Collection;
 
 class ToggleActiveApplicationConditionUseCase
 {
@@ -17,7 +20,9 @@ class ToggleActiveApplicationConditionUseCase
         private AlifshopHttpRepository $alifshopHttpRepository,
         private FindConditionByIdUseCase $findConditionUseCase,
         private FlushCacheUseCase $flushCacheUseCase,
-        private GatewayAuthUser $gatewayAuthUser
+        private GatewayAuthUser $gatewayAuthUser,
+        private ApplicationConditionRepository $applicationConditionRepository,
+        private FindMerchantByIdUseCase $findMerchantByIdUseCase,
     ) {
     }
 
@@ -25,9 +30,9 @@ class ToggleActiveApplicationConditionUseCase
     {
         $condition = $this->findConditionUseCase->execute($condition_id);
         $condition->active = !$condition->active;
-        $condition->save();
+        $this->applicationConditionRepository->save($condition);
 
-        $merchant = $condition->merchant;
+        $merchant = $this->findMerchantByIdUseCase->execute($condition->merchant_id);
 
         SendHook::dispatch(new HookData(
             service: 'merchants',
@@ -43,20 +48,19 @@ class ToggleActiveApplicationConditionUseCase
             created_by_str: $this->gatewayAuthUser->getName(),
         ));
 
-        $merchant->load(['application_conditions' => function ($q) {
-            $q->active();
-        }]);
+        $conditions = $this->applicationConditionRepository->getByActiveTruePostAlifshopTrueWithMerchantId($merchant->id);
 
-        $conditions = $merchant->application_conditions->where('post_alifshop', true)->map(function ($item) {
-            return [
-                'id' => $item->id,
-                'commission' => $item->commission,
-                'duration' => $item->duration,
-                'event_id' => $item->event_id,
+        $item = [];
+        foreach ($conditions as $condition_item) {
+            $item[] = [
+                'id' => $condition_item->id,
+                'commission' => $condition_item->commission,
+                'duration' => $condition_item->duration,
+                'event_id' => $condition_item->event_id,
             ];
-        });
+        }
 
-        $this->alifshopHttpRepository->storeOrUpdateConditions($merchant->company_id, $conditions);
+        $this->alifshopHttpRepository->storeOrUpdateConditions($merchant->company_id, Collection::make($item));
         $this->flushCacheUseCase->execute($merchant->id);
 
         return $condition;

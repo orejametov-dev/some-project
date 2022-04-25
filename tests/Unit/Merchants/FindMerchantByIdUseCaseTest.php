@@ -6,7 +6,7 @@ use App\Exceptions\NotFoundException;
 use App\Models\Merchant;
 use App\Repositories\MerchantRepository;
 use App\UseCases\Merchants\FindMerchantByIdUseCase;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class FindMerchantByIdUseCaseTest extends TestCase
 {
@@ -17,6 +17,8 @@ class FindMerchantByIdUseCaseTest extends TestCase
     {
         $this->merchantRepository = $this->createMock(MerchantRepository::class);
         $this->findMerchantByIdUseCase = new FindMerchantByIdUseCase($this->merchantRepository);
+
+        parent::setUp();
     }
 
     public function testNotFound(): void

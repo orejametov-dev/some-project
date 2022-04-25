@@ -8,7 +8,7 @@ use App\Models\Merchant;
 use App\Repositories\FileRepository;
 use App\UseCases\Merchants\DeleteMerchantFileUseCase;
 use App\UseCases\Merchants\FindMerchantByIdUseCase;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class DeleteMerchantFileUseCaseTest extends TestCase
 {
@@ -26,6 +26,8 @@ class DeleteMerchantFileUseCaseTest extends TestCase
             storageHttpRepository: $this->storageHttpRepository,
             fileRepository: $fileRepository,
         );
+
+        parent::setUp();
     }
 
     public function testSuccess()

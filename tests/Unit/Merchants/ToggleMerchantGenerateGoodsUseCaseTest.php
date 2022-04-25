@@ -8,7 +8,7 @@ use App\Repositories\MerchantRepository;
 use App\UseCases\Cache\FlushCacheUseCase;
 use App\UseCases\Merchants\FindMerchantByIdUseCase;
 use App\UseCases\Merchants\ToggleMerchantGeneralGoodsUseCase;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class ToggleMerchantGenerateGoodsUseCaseTest extends TestCase
 {
@@ -27,6 +27,8 @@ class ToggleMerchantGenerateGoodsUseCaseTest extends TestCase
             merchantRepository: $merchantRepository,
             flushCacheUseCase: $flushCacheUseCase,
         );
+
+        parent::setUp();
     }
 
     public function testSuccess()

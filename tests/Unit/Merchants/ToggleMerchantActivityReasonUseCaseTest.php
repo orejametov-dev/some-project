@@ -13,7 +13,7 @@ use App\Repositories\MerchantRepository;
 use App\UseCases\Cache\FlushCacheUseCase;
 use App\UseCases\Merchants\FindMerchantByIdUseCase;
 use App\UseCases\Merchants\ToggleMerchantActivityReasonUseCase;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class ToggleMerchantActivityReasonUseCaseTest extends TestCase
 {
@@ -39,6 +39,8 @@ class ToggleMerchantActivityReasonUseCaseTest extends TestCase
             activityReasonRepository: $this->activityReasonRepository,
             merchantActivityRepository: $merchantActivityRepository,
         );
+
+        parent::setUp();
     }
 
     public function testNotFoundActivityReason()

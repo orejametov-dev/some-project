@@ -7,7 +7,7 @@ use App\Models\Merchant;
 use App\Repositories\MerchantRepository;
 use App\UseCases\Merchants\DeleteMerchantLogoUseCase;
 use App\UseCases\Merchants\FindMerchantByIdUseCase;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class DeleteMerchantLogoUseCaseTest extends TestCase
 {
@@ -24,6 +24,8 @@ class DeleteMerchantLogoUseCaseTest extends TestCase
             storageHttpRepository: $storageHttpRepository,
             merchantRepository: $merchantRepository,
         );
+
+        parent::setUp();
     }
 
     public function testSuccess()

@@ -7,7 +7,7 @@ use App\Repositories\MerchantRepository;
 use App\UseCases\Cache\FlushCacheUseCase;
 use App\UseCases\Merchants\FindMerchantByIdUseCase;
 use App\UseCases\Merchants\ToggleHoldingInitialPaymentUseCase;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class ToggleHoldingInitialPaymentUseCaseTest extends TestCase
 {
@@ -24,6 +24,8 @@ class ToggleHoldingInitialPaymentUseCaseTest extends TestCase
             flushCacheUseCase: $flushCacheUseCase,
             merchantRepository:  $merchantRepository
         );
+
+        parent::setUp();
     }
 
     public function testSuccess()

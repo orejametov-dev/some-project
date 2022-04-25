@@ -12,9 +12,12 @@ use App\HttpRepositories\Alifshop\AlifshopHttpRepository;
 use App\HttpRepositories\Hooks\DTO\HookData;
 use App\Jobs\SendHook;
 use App\Models\Condition;
-use App\Models\ConditionTemplate;
-use App\Models\Merchant;
+use App\Repositories\ApplicationConditionRepository;
+use App\Repositories\ConditionTemplateRepository;
+use App\Repositories\MerchantRepository;
+use App\Repositories\StoreRepository;
 use App\UseCases\Cache\FlushCacheUseCase;
+use Illuminate\Support\Collection;
 
 class MassStoreApplicationConditionUseCase
 {
@@ -22,15 +25,17 @@ class MassStoreApplicationConditionUseCase
         private AlifshopHttpRepository $alifshopHttpRepository,
         private CheckStartedAtAndFinishedAtConditionUseCase $checkStartedAtAndFinishedAtConditionUseCase,
         private FlushCacheUseCase $flushCacheUseCase,
-        private GatewayAuthUser $gatewayAuthUser
+        private GatewayAuthUser $gatewayAuthUser,
+        private MerchantRepository $merchantRepository,
+        private ConditionTemplateRepository $conditionTemplateRepository,
+        private ApplicationConditionRepository $applicationConditionRepository,
+        private StoreRepository $storeRepository,
     ) {
     }
 
     public function execute(MassStoreConditionDTO $massStoreConditionDTO) : void
     {
-        $merchants = Merchant::query()
-            ->whereIn('id', $massStoreConditionDTO->getMerchantIds())
-            ->get();
+        $merchants = $this->merchantRepository->getByIds($massStoreConditionDTO->getMerchantIds());
 
         if (array_diff($massStoreConditionDTO->getMerchantIds(), $merchants->pluck('id')->toArray()) != null) {
             throw new ApiBusinessException('Мерчант не существует', 'merchant_not_exists', [
@@ -38,9 +43,7 @@ class MassStoreApplicationConditionUseCase
             ], 400);
         }
 
-        $templates = ConditionTemplate::query()
-            ->whereIn('id', $massStoreConditionDTO->getTemplateIds())
-            ->get();
+        $templates = $this->conditionTemplateRepository->getByIds($massStoreConditionDTO->getTemplateIds());
 
         if (array_diff($massStoreConditionDTO->getTemplateIds(), $templates->pluck('id')->toArray()) != null) {
             throw new ApiBusinessException('Условие не существует', 'merchant_not_exists', [
@@ -52,10 +55,8 @@ class MassStoreApplicationConditionUseCase
 
         foreach ($merchants as $merchant) {
             foreach ($templates as $template) {
-                $condition = Condition::query()->where('merchant_id', $merchant->id)
-                    ->where('duration', $template->duration)
-                    ->where('commission', $template->commission)
-                    ->exists();
+                $condition = $this->applicationConditionRepository
+                    ->getByDurationAndCommissionWithMerchantIdExists($merchant->id, $template->duration, $template->commission);
 
                 if ($condition) {
                     throw new BusinessException(
@@ -69,7 +70,7 @@ class MassStoreApplicationConditionUseCase
         }
 
         foreach ($merchants as $merchant) {
-            $main_store = $merchant->stores()->where('is_main', true)->first();
+            $main_store = $this->storeRepository->getByIsMainTrueMerchantId($merchant->id);
 
             if ($main_store === null) {
                 throw new BusinessException('У данного мерчанта нет основного магазина ' . $merchant->name, 'main_store_not_exists', 400);
@@ -87,7 +88,7 @@ class MassStoreApplicationConditionUseCase
                 $condition->finished_at = $massStoreConditionDTO->getFinishedAt();
                 $condition->active = $massStoreConditionDTO->getStartedAt() === null;
 
-                $condition->save();
+                $this->applicationConditionRepository->save($condition);
 
                 SendHook::dispatch(new HookData(
                     service: 'merchants',
@@ -104,20 +105,19 @@ class MassStoreApplicationConditionUseCase
                 ));
             }
 
-            $merchant->load(['application_conditions' => function ($q) {
-                $q->active();
-            }]);
+            $conditions = $this->applicationConditionRepository->getByActiveTruePostAlifshopTrueWithMerchantId($merchant->id);
 
-            $conditions = $merchant->application_conditions->where('post_alifshop', true)->map(function ($item) {
-                return [
-                    'id' => $item->id,
-                    'commission' => $item->commission,
-                    'duration' => $item->duration,
-                    'event_id' => $item->event_id,
+            $item = [];
+            foreach ($conditions as $condition) {
+                $item[] = [
+                    'id' => $condition->id,
+                    'commission' => $condition->commission,
+                    'duration' => $condition->duration,
+                    'event_id' => $condition->event_id,
                 ];
-            });
+            }
 
-            $this->alifshopHttpRepository->storeOrUpdateConditions((int) $merchant->company_id, $conditions);
+            $this->alifshopHttpRepository->storeOrUpdateConditions($merchant->company_id, Collection::make($item));
             $this->flushCacheUseCase->execute($merchant->id);
         }
     }

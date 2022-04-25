@@ -34,6 +34,33 @@ class StoreRepository
 
     /**
      * @param int $merchant_id
+     * @return Store|null
+     */
+    public function getByIsMainTrueMerchantId(int $merchant_id): Store|null
+    {
+        /** @var Store $store */
+        $store = $this->store
+            ->where('merchant_id', $merchant_id)
+            ->where('is_main', true)
+            ->first();
+
+        return $store;
+    }
+
+    /**
+     * @param int $merchant_id
+     * @return Store[]|Collection
+     */
+    public function getByActiveTrueMerchantId(int $merchant_id): Store|Collection
+    {
+        return $this->store
+            ->where('merchant_id', $merchant_id)
+            ->where('active', true)
+            ->get();
+    }
+
+    /**
+     * @param int $merchant_id
      * @param int $store_id
      * @return int|bool
      */
