@@ -10,7 +10,6 @@ use App\Filters\Merchant\MerchantIdFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiPrmGateway\Merchants\StoreMerchantInfo;
 use App\Http\Requests\ApiPrmGateway\Merchants\UpdateMerchantInfo;
-use App\Http\Resources\ApiGateway\MerchantInfo\IndexMerchantInfoResource;
 use App\Http\Resources\ApiGateway\MerchantInfo\MerchantInfoResource;
 use App\Models\MerchantInfo;
 use App\UseCases\MerchantInfos\GetMerchantInfoContractUseCase;
@@ -33,10 +32,10 @@ class MerchantInfoController extends Controller
             ->filterRequest($request, [MerchantIdFilter::class]);
 
         if ($request->query('object') == true) {
-            return new IndexMerchantInfoResource($merchantInfoQuery->first());
+            return new MerchantInfoResource($merchantInfoQuery->first());
         }
 
-        return IndexMerchantInfoResource::collection($merchantInfoQuery->paginate($request->query('per_page') ?? 15));
+        return MerchantInfoResource::collection($merchantInfoQuery->paginate($request->query('per_page') ?? 15));
     }
 
     public function store(StoreMerchantInfo $request, StoreMerchantInfoUseCase $storeMerchantInfoUseCase): MerchantInfoResource
