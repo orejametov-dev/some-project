@@ -41,6 +41,7 @@ class MerchantInfoResource extends JsonResource
             'address' => $this->resource->address,
             'bank_account' => $this->resource->bank_account,
             'bank_name' => $this->resource->bank_name,
-            ];
+            'merchant' => $this->whenLoaded('merchant'),
+        ];
     }
 }
