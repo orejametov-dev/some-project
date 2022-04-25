@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\DTOs\MerchantInfos;
 
 use Alifuz\Utils\Entities\AbstractEntity;
+use Carbon\Carbon;
 
 final class UpdateMerchantInfoDTO extends AbstractEntity
 {
@@ -18,6 +19,8 @@ final class UpdateMerchantInfoDTO extends AbstractEntity
         private string $bank_account,
         private string $bank_name,
         private string $address,
+        private int $contract_number,
+        private Carbon $contract_date
     ) {
     }
 
@@ -107,8 +110,26 @@ final class UpdateMerchantInfoDTO extends AbstractEntity
             self::parseString($data['oked']),
             self::parseString($data['bank_account']),
             self::parseString($data['bank_name']),
-            self::parseString($data['address'])
+            self::parseString($data['address']),
+            self::parseInt($data['contract_number']),
+            self::parseCarbon($data['contract_date'])
         );
+    }
+
+    /**
+     * @return int
+     */
+    public function getContractNumber(): int
+    {
+        return $this->contract_number;
+    }
+
+    /**
+     * @return Carbon
+     */
+    public function getContractDate(): Carbon
+    {
+        return $this->contract_date;
     }
 
     /**

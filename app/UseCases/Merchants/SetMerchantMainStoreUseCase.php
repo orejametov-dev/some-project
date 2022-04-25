@@ -29,7 +29,7 @@ class SetMerchantMainStoreUseCase
         $store->is_main = true;
         $this->storeRepository->store($store);
 
-        $this->storeRepository->updateIsMainToFalseAnotherStore($merchant->id, $store_id);
+        $this->storeRepository->setMainForSpecificStoreByIgnoringOtherStores($merchant->id, $store_id);
 
         return $merchant;
     }

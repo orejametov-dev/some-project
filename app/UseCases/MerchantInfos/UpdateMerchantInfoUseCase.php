@@ -27,6 +27,8 @@ class UpdateMerchantInfoUseCase
         $merchant_info->bank_account = $updateMerchantInfoDTO->getBankAccount();
         $merchant_info->bank_name = $updateMerchantInfoDTO->getBankName();
         $merchant_info->address = $updateMerchantInfoDTO->getAddress();
+        $merchant_info->contract_date = $updateMerchantInfoDTO->getContractDate();
+        $merchant_info->contract_number = $updateMerchantInfoDTO->getContractNumber();
 
         $merchant_info->save();
 
