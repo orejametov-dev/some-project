@@ -22,12 +22,12 @@ class ClientTypeRegisterService
         ],
     ];
 
-    public static function getClientTypeRegister(): array
+    public function getClientTypeRegister(): array
     {
         return self::$client_type_register;
     }
 
-    public static function getOneByKey(string $type): array
+    public function getOneByKey(string $type): array
     {
         $type_register = array_search($type, array_column(self::$client_type_register, 'key', 'key'));
 

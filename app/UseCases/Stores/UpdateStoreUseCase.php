@@ -4,13 +4,15 @@ namespace App\UseCases\Stores;
 
 use App\DTOs\Stores\UpdateStoresDTO;
 use App\Models\Store;
+use App\Repositories\StoreRepository;
 use App\UseCases\Cache\FlushCacheUseCase;
 
 class UpdateStoreUseCase
 {
     public function __construct(
         private FindStoreByIdUseCase $findStoresUseCase,
-        private FlushCacheUseCase $flushCacheUseCase
+        private FlushCacheUseCase $flushCacheUseCase,
+        private StoreRepository $storeRepository,
     ) {
     }
 
@@ -28,7 +30,7 @@ class UpdateStoreUseCase
         $store->responsible_person = $updateStoresDTO->getResponsiblePerson();
         $store->responsible_person_phone = $updateStoresDTO->getResponsiblePersonPhone();
 
-        $store->save();
+        $this->storeRepository->save($store);
 
         $this->flushCacheUseCase->execute($store->merchant_id);
 

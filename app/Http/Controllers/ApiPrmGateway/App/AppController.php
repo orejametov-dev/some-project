@@ -26,7 +26,7 @@ use Illuminate\Support\Facades\Cache;
 
 class AppController extends Controller
 {
-    public function index(MerchantRequestStatusMapping $merchantRequestStatusMapping, ProblemCaseStatusMapping $problemCaseStatusMapping): JsonResponse
+    public function index(MerchantRequestStatusMapping $merchantRequestStatusMapping, ProblemCaseStatusMapping $problemCaseStatusMapping, ClientTypeRegisterService $clientTypeRegisterService): JsonResponse
     {
         $merchant_requests_count = MerchantRequest::query()->new()->count();
         $merchants_count = Merchant::query()->count();
@@ -51,7 +51,7 @@ class AppController extends Controller
 
         $regions = RegionService::getRegions();
 
-        $client_type_register = ClientTypeRegisterService::getClientTypeRegister();
+        $client_type_register = $clientTypeRegisterService->getClientTypeRegister();
 
         $me = [
             'id' => $authUser->getId(),

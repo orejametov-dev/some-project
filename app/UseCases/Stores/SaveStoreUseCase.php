@@ -5,6 +5,7 @@ namespace App\UseCases\Stores;
 use App\DTOs\Stores\StoreStoresDTO;
 use App\Exceptions\BusinessException;
 use App\Models\Store;
+use App\Repositories\StoreRepository;
 use App\UseCases\Cache\FlushCacheUseCase;
 use App\UseCases\Merchants\FindMerchantByIdUseCase;
 
@@ -13,6 +14,7 @@ class SaveStoreUseCase
     public function __construct(
         private FindMerchantByIdUseCase $findMerchantUseCase,
         private FlushCacheUseCase $flushCacheUseCase,
+        private StoreRepository $storeRepository,
     ) {
     }
 
@@ -20,7 +22,7 @@ class SaveStoreUseCase
     {
         $merchant = $this->findMerchantUseCase->execute($storeStoresDTO->getMerchantId());
 
-        if (Store::query()->where('name', $storeStoresDTO->getName())->exists() === true) {
+        if ($this->storeRepository->checkToNameExists($storeStoresDTO->getName()) === true) {
             throw new BusinessException('Указанное имя уже занято другим магазином', 'store_name_exists', 400);
         }
 
@@ -33,15 +35,12 @@ class SaveStoreUseCase
         $merchant_store->region = $storeStoresDTO->getRegion();
         $merchant_store->district = $storeStoresDTO->getDistrict();
 
-        if (Store::query()->where('merchant_id', $merchant->id)->count() === 0) {
+        if ($this->storeRepository->checkForTheCountByMerchantId($merchant->id) === 0) {
             $merchant_store->is_main = true;
         }
 
         if ($storeStoresDTO->getResponsiblePerson() === null) {
-            $main_store = Store::query()
-                ->where('merchant_id', $merchant->id)
-                ->main()
-                ->first();
+            $main_store = $this->storeRepository->getByIsMainTrueMerchantId($merchant->id);
 
             if ($main_store !== null) {
                 $merchant_store->responsible_person = $main_store->responsible_person;
@@ -49,7 +48,7 @@ class SaveStoreUseCase
             }
         }
 
-        $merchant_store->save();
+        $this->storeRepository->save($merchant_store);
 
         $this->flushCacheUseCase->execute($merchant->id);
 
