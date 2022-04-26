@@ -16,10 +16,14 @@ class MerchantInfoResource extends JsonResource
      * Transform the resource into an array.
      *
      * @param \Illuminate\Http\Request $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable|null
      */
     public function toArray($request)
     {
+        if ($this->resource === null) {
+            return null;
+        }
+
         return [
             'id' => $this->resource->id,
             'merchant_id' => $this->resource->id,
@@ -37,6 +41,7 @@ class MerchantInfoResource extends JsonResource
             'address' => $this->resource->address,
             'bank_account' => $this->resource->bank_account,
             'bank_name' => $this->resource->bank_name,
-            ];
+            'merchant' => $this->whenLoaded('merchant'),
+        ];
     }
 }

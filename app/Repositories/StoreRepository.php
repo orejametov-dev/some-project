@@ -91,7 +91,7 @@ class StoreRepository
      * @param int $store_id
      * @return int|bool
      */
-    public function updateIsMainToFalseAnotherStore(int $merchant_id, int $store_id): int|bool
+    public function setMainForSpecificStoreByIgnoringOtherStores(int $merchant_id, int $store_id): int|bool
     {
         return $this->store->where('merchant_id', $merchant_id)->where('id', '<>', $store_id)->update([
             'is_main' => false,

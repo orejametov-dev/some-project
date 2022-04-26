@@ -16,7 +16,6 @@ use App\Http\Requests\ApiPrmGateway\Applications\StoreApplicationConditionReques
 use App\Http\Requests\ApiPrmGateway\Applications\TogglePostsApplicationConditionRequest;
 use App\Http\Requests\ApiPrmGateway\Applications\UpdateApplicationConditionRequest;
 use App\Http\Resources\ApiGateway\ApplicationConditions\ApplicationConditionResource;
-use App\Http\Resources\ApiGateway\ApplicationConditions\IndexApplicationConditionResource;
 use App\Models\Condition;
 use App\UseCases\ApplicationConditions\DeleteApplicationConditionUseCase;
 use App\UseCases\ApplicationConditions\MassSpecialStoreApplicationConditionUseCase;
@@ -39,20 +38,19 @@ class ApplicationConditionsController extends Controller
             ->orderRequest($request);
 
         if ($request->query('object') == true) {
-            return new IndexApplicationConditionResource($conditionQuery->first());
+            return new ApplicationConditionResource($conditionQuery->first());
         }
 
         if ($request->has('paginate') and $request->query('paginate') == false) {
-            return IndexApplicationConditionResource::collection($conditionQuery->get());
+            return ApplicationConditionResource::collection($conditionQuery->get());
         }
 
-        return IndexApplicationConditionResource::collection($conditionQuery->paginate($request->query('per_page') ?? 15));
+        return ApplicationConditionResource::collection($conditionQuery->paginate($request->query('per_page') ?? 15));
     }
 
     public function store(StoreApplicationConditionRequest $request, StoreApplicationConditionUseCase $storeApplicationConditionUseCase): ApplicationConditionResource
     {
         $condition = $storeApplicationConditionUseCase->execute(StoreConditionDTO::fromArray($request->validated()));
-        $condition->load('stores');
 
         return new ApplicationConditionResource($condition);
     }
