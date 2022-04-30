@@ -10,12 +10,12 @@ use Illuminate\Database\Eloquent\Collection;
 
 class ActivityReasonRepository
 {
-    private ActivityReason|Builder $activityReason;
-
-    public function __construct()
-    {
-        $this->activityReason = ActivityReason::query();
-    }
+//    private ActivityReason|Builder $activityReason;
+//
+//    public function __construct()
+//    {
+//        $this->activityReason = ActivityReason::query();
+//    }
 
     /**
      * @param string $type
@@ -24,7 +24,7 @@ class ActivityReasonRepository
      */
     public function getByIdWithType(string $type, int $activity_reason_id): ActivityReason|Collection|null
     {
-        return $this->activityReason
+        return ActivityReason::query()
             ->where('type', $type)
             ->find($activity_reason_id);
     }

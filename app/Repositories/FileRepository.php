@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
+use App\Models\Condition;
 use App\Models\File;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
 class FileRepository
 {
-    private File|Builder $file;
-
-    public function __construct()
-    {
-        $this->file = File::query();
-    }
+//    private File|Builder $file;
+//
+//    public function __construct()
+//    {
+//        $this->file = File::query();
+//    }
 
     /**
      * @param File $file
@@ -42,6 +43,6 @@ class FileRepository
      */
     public function getByIdWithMerchantId(int $merchant_id, int $file_id): File|Collection|null
     {
-        return $this->file->where('merchant_id', $merchant_id)->find($file_id);
+        return File::query()->where('merchant_id', $merchant_id)->find($file_id);
     }
 }

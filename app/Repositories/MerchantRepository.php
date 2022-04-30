@@ -11,12 +11,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class MerchantRepository
 {
-    private Merchant|Builder $merchant;
-
-    public function __construct()
-    {
-        $this->merchant = Merchant::query();
-    }
+//    private Merchant|Builder $merchant;
+//
+//    public function __construct()
+//    {
+//        $this->merchant = Merchant::query();
+//    }
 
     /**
      * @param int $id
@@ -24,7 +24,7 @@ class MerchantRepository
      */
     public function findById(int $id): Merchant|Collection|null
     {
-        return $this->merchant->find($id);
+        return Merchant::query()->find($id);
     }
 
     /**
@@ -33,7 +33,7 @@ class MerchantRepository
      */
     public function getByIds(array $merchant_ids): Merchant|Collection
     {
-        return $this->merchant->whereIn('id', $merchant_ids)
+        return Merchant::query()->whereIn('id', $merchant_ids)
             ->get();
     }
 
@@ -43,7 +43,7 @@ class MerchantRepository
      */
     public function existsByCompanyId(int $company_id): bool
     {
-        return $this->merchant->where('company_id', $company_id)->exists();
+        return Merchant::query()->where('company_id', $company_id)->exists();
     }
 
     /**
@@ -72,7 +72,7 @@ class MerchantRepository
      */
     public function checkToNameExistsByIgnoringId(int $id, string $name): bool
     {
-        return $this->merchant->where('name', $name)
+        return Merchant::query()->where('name', $name)
             ->where('id', '!=', $id)->exists();
     }
 
@@ -83,7 +83,7 @@ class MerchantRepository
      */
     public function checkToTokenExistsByIgnoringId(int $id, string $token): bool
     {
-        return $this->merchant->where('token', $token)
+        return Merchant::query()->where('token', $token)
             ->where('id', '!=', $id)->exists();
     }
 
@@ -93,6 +93,6 @@ class MerchantRepository
      */
     public function getMerchantByCompanyId(int $company_id): Merchant|Model|null
     {
-        return $this->merchant->where('company_id', $company_id)->first(['id', 'name']);
+        return Merchant::query()->where('company_id', $company_id)->first(['id', 'name']);
     }
 }

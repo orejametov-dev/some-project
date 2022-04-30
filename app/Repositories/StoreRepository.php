@@ -10,12 +10,12 @@ use Illuminate\Database\Eloquent\Collection;
 
 class StoreRepository
 {
-    private Store|Builder $store;
-
-    public function __construct()
-    {
-        $this->store = Store::query();
-    }
+//    private Store|Builder $store;
+//
+//    public function __construct()
+//    {
+//        Store::query( = Store::query();
+//    }
 
     public function save(Store $store): void
     {
@@ -28,7 +28,7 @@ class StoreRepository
      */
     public function getById(int $id): Store|Collection|null
     {
-        return $this->store->find($id);
+        return Store::query()->find($id);
     }
 
     /**
@@ -37,7 +37,7 @@ class StoreRepository
      */
     public function checkToNameExists(string $name): bool
     {
-        return $this->store->where('name', $name)->exists();
+        return Store::query()->where('name', $name)->exists();
     }
 
     /**
@@ -46,7 +46,7 @@ class StoreRepository
      */
     public function checkForTheCountByMerchantId(int $merchant_id): int
     {
-        return $this->store->where('merchant_id', $merchant_id)->count();
+        return Store::query()->where('merchant_id', $merchant_id)->count();
     }
 
     /**
@@ -56,7 +56,7 @@ class StoreRepository
      */
     public function getByIdWihMerchantId(int $merchant_id, int $store_id): Store|Collection|null
     {
-        return $this->store->where('merchant_id', $merchant_id)->find($store_id);
+        return Store::query()->where('merchant_id', $merchant_id)->find($store_id);
     }
 
     /**
@@ -66,7 +66,7 @@ class StoreRepository
     public function getByIsMainTrueMerchantId(int $merchant_id): Store|null
     {
         /** @var Store $store */
-        $store = $this->store
+        $store = Store::query()
             ->where('merchant_id', $merchant_id)
             ->where('is_main', true)
             ->first();
@@ -80,7 +80,7 @@ class StoreRepository
      */
     public function getByActiveTrueMerchantId(int $merchant_id): Store|Collection
     {
-        return $this->store
+        return Store::query()
             ->where('merchant_id', $merchant_id)
             ->where('active', true)
             ->get();
@@ -93,7 +93,7 @@ class StoreRepository
      */
     public function setMainForSpecificStoreByIgnoringOtherStores(int $merchant_id, int $store_id): int|bool
     {
-        return $this->store->where('merchant_id', $merchant_id)->where('id', '<>', $store_id)->update([
+        return Store::query()->where('merchant_id', $merchant_id)->where('id', '<>', $store_id)->update([
             'is_main' => false,
         ]);
     }

@@ -2,15 +2,18 @@ include infra/local/.env
 
 #init:
 first-run:
+	sudo ifconfig lo0 alias 127.0.4.1 || true
 	docker login ginger.alifshop.uz:443
 	make build
 	chmod o+rw storage bootstrap/
 	make create-mysql-database
 	make setup-hooks
 up:
+	sudo ifconfig lo0 alias 127.0.4.1 || true
 	docker network create alif || true
 	make docker-compose COMMAND="up -d"
 build:
+	sudo ifconfig lo0 alias 127.0.4.1 || true
 	docker network create alif || true
 	make docker-compose COMMAND="up --build -d"
 down:

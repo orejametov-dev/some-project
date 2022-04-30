@@ -34,7 +34,7 @@ class SaveStoreUseCase
         $merchant_store->address = $storeStoresDTO->getAddress();
         $merchant_store->region = $storeStoresDTO->getRegion();
         $merchant_store->district = $storeStoresDTO->getDistrict();
-
+        dd($this->storeRepository->checkForTheCountByMerchantId($merchant->id));
         if ($this->storeRepository->checkForTheCountByMerchantId($merchant->id) === 0) {
             $merchant_store->is_main = true;
         }

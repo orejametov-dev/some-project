@@ -10,12 +10,12 @@ use Illuminate\Database\Eloquent\Collection;
 
 class ApplicationConditionRepository
 {
-    private Condition|Builder $condition;
-
-    public function __construct()
-    {
-        $this->condition = Condition::query();
-    }
+//    private Condition|Builder $condition;
+//
+//    public function __construct()
+//    {
+//        $this->condition = Condition::query();
+//    }
 
     /**
      * @param Condition $condition
@@ -41,7 +41,7 @@ class ApplicationConditionRepository
      */
     public function getById(int $condition_id): Condition|Collection|null
     {
-        return $this->condition->find($condition_id);
+        return Condition::query()->find($condition_id);
     }
 
     /**
@@ -50,7 +50,7 @@ class ApplicationConditionRepository
      */
     public function getByActiveTruePostAlifshopTrueWithMerchantId(int $merchant_id): Condition|Collection
     {
-        return $this->condition
+        return Condition::query()
             ->where('merchant_id', $merchant_id)
             ->where('active', '=', true)
             ->where('post_alifshop', '=', true)
@@ -65,7 +65,7 @@ class ApplicationConditionRepository
      */
     public function getByDurationAndCommissionWithMerchantIdExists(int $merchant_id, int $duration, int $commission): bool
     {
-        return $this->condition->where('merchant_id', $merchant_id)
+        return Condition::query()->where('merchant_id', $merchant_id)
             ->where('duration', $duration)
             ->where('commission', $commission)
             ->exists();

@@ -10,12 +10,12 @@ use Illuminate\Database\Eloquent\Collection;
 
 class ConditionTemplateRepository
 {
-    private ConditionTemplate|Builder $conditionTemplate;
-
-    public function __construct()
-    {
-        $this->conditionTemplate = ConditionTemplate::query();
-    }
+//    private ConditionTemplate|Builder $conditionTemplate;
+//
+//    public function __construct()
+//    {
+//        $this->conditionTemplate = ConditionTemplate::query();
+//    }
 
     /**
      * @param array $condition_template_ids
@@ -23,7 +23,7 @@ class ConditionTemplateRepository
      */
     public function getByIds(array $condition_template_ids): ConditionTemplate|Collection
     {
-        return $this->conditionTemplate
+        return ConditionTemplate::query()
             ->whereIn('id', $condition_template_ids)
             ->get();
     }

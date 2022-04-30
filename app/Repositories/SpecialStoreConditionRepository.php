@@ -10,12 +10,12 @@ use Illuminate\Database\Eloquent\Collection;
 
 class SpecialStoreConditionRepository
 {
-    private SpecialStoreCondition|Builder $specialStoreCondition;
-
-    public function __construct()
-    {
-        $this->specialStoreCondition = SpecialStoreCondition::query();
-    }
+//    private SpecialStoreCondition|Builder $specialStoreCondition;
+//
+//    public function __construct()
+//    {
+//        $this->specialStoreCondition = SpecialStoreCondition::query();
+//    }
 
     /**
      * @param SpecialStoreCondition $specialStoreCondition
@@ -41,7 +41,7 @@ class SpecialStoreConditionRepository
      */
     public function getByConditionId(int $condition_id): Collection|SpecialStoreCondition|null
     {
-        return $this->specialStoreCondition
+        return SpecialStoreCondition::query()
             ->where('condition_id', $condition_id)
             ->get();
     }
